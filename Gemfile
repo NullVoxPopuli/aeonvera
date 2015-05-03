@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 ##########
 # Core
 ##########
-ruby ENV['RUBY_VERSION'] || '2.2.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
