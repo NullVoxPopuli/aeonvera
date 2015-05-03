@@ -42,48 +42,14 @@ module ApplicationHelper
 
   def show_public_link?
     event = (defined?(current_event) ? current_event : @event)
-    event.present? && event.persisted? &&
-      defined?(current_user) && current_user.present? &&
-      !(current_user.hosted_event_ids.include?(event.id) || current_user.collaborated_event_ids.include?(event.id))
-  end
+    event_exists = event.present? && event.persisted?
+    user_exists = (defined?(current_user) && current_user.present?)
 
-  def options_for(links: {})
-    @dropdowns ||= 0
-
-    content_tag(:a, "data-dropdown" => "drop#{@dropdowns += 1}",
-                href: "#",
-                style: "line-height: 46px; color: white;"
-    ){
-      content_tag(:i, :class => "fa fa-ellipsis-v") {}
-    } +
-      content_tag(:ul,
-                  id: "drop#{@dropdowns}",
-                  :class => "medium f-dropdown left",
-                  "data-dropdown-content" => "",
-    "aria-hidden"=>"false") {
-      if links.is_a?(Hash)
-        options_from_hash(links).html_safe
-      elsif links.is_a?(Array)
-        options_from_array(links).html_safe
-      end
-    }
-  end
-
-  # hash should be:
-  #  link_name => link_url
-  def options_from_hash(hash)
-    result = ""
-    hash.each { |name, url|
-      result += content_tag(:li) { link_to name, url }
-    }
-    return result
-  end
-
-  # array should be of hashes
-  def options_from_array(array)
-    array.map { | hash |
-      options_from_hash(hash)
-    }.join(content_tag(:li, class: "divider") {content_tag(:hr){}})
+    event_exists && user_exists &&
+    !(
+      current_user.hosted_event_ids.include?(event.id) ||
+      current_user.collaborated_event_ids.include?(event.id)
+    )
   end
 
   def hosted_event_links(event = @event)
@@ -109,23 +75,6 @@ module ApplicationHelper
         "Revenue Summary" => revenue_hosted_event_path(event)
       }
     ]
-  end
-
-  def dropdown_options(links: [], options: {})
-    @dropdowns ||= 0
-
-    align = options[:align] || "right"
-
-    content_tag(:a, "data-dropdown" => "drop#{@dropdowns +=1 }", href: "#", class: "#{align}") {
-      content_tag(:i, class: "fa fa-ellipsis-v") {}
-    } +
-    content_tag(:ul, id: "drop#{@dropdowns}", class: "f-dropdown", "data-dropdown-content" => "") {
-      links.map do |link|
-        content_tag(:li) {
-          link_to( link[:name], link[:path], link[:options] )
-        }
-      end.join.html_safe
-    }
   end
 
   # Tables are used everywhere, and are pretty much all rendered

@@ -9,20 +9,6 @@ module CompetitionsHelper
 	end
 
 	def competition_menu_options(competition)
-		dropdown_options(
-			links: [
-				{
-					name: "Edit",
-					path: edit_hosted_event_competition_path(@event, competition)
-				},
-				{
-					name: "Destroy",
-					path: hosted_event_competition_path(@event, competition), 
-					options: {
-						:method => :delete
-					}
-				}
-			]
-		)
+		dropdown_option_menu_for(competition, [:edit, :destroy])
 	end
 end
