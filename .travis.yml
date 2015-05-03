@@ -2,8 +2,8 @@ language: ruby
 rvm:
   - 2.0
   - 2.2
-  - ruby-head
 script: bundle exec rspec
+bundler_args: "--without documentation"
 addons:
   code_climate:
     repo_token: {{CODECLIMATE_REPO_TOKEN}}

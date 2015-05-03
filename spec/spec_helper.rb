@@ -85,6 +85,10 @@ RSpec.configure do |config|
   Capybara.javascript_driver = :poltergeist
   Capybara.server_port = 3001
 
+  require 'headless'
+  headless = Headless.new
+  headless.start
+
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
@@ -97,6 +101,7 @@ RSpec.configure do |config|
 
   config.before(:each, js: true) do
     # speeds up feature testing
+
     if Capybara.javascript_driver == :webkit
       # tracking
       page.driver.block_url "https://stats.g.doubleclick.net"
@@ -111,6 +116,8 @@ RSpec.configure do |config|
     DatabaseCleaner.cleaning do
       example.run
     end
+
+    Capybara.reset_sessions!
   end
 
   config.after(type: :feature) do |example|
