@@ -85,11 +85,12 @@ RSpec.configure do |config|
   Capybara.server_port = 3001
   Capybara.javascript_driver = :webkit
   if ENV["TRAVIS"]
-    Capybara.javascript_driver = :selenium
+    Capybara.register_driver :poltergeist do |app|
+      Capybara::Poltergeist::Driver.new(app, { debug: true })
+    end
 
-    require 'headless'
-    headless = Headless.new
-    headless.start
+    Capybara.javascript_driver = :poltergeist
+
   end
 
   config.before(:suite) do
@@ -118,8 +119,6 @@ RSpec.configure do |config|
     DatabaseCleaner.cleaning do
       example.run
     end
-
-    Capybara.reset_sessions!
   end
 
   config.after(type: :feature) do |example|
