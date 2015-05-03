@@ -155,8 +155,6 @@ group :test do
   gem "capybara-webkit", "~> 1.4.0"
   # Alternative Javascript Driver - used on travis.ci
   gem "poltergeist"
-  # controls headless browsing
-  gem "headless"
 
   # For opening web pages for debugging
   gem 'launchy'
