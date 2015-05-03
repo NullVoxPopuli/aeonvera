@@ -1,5 +1,6 @@
 language: ruby
 rvm:
+  - 2.0
   - 2.2
   - ruby-head
 script: bundle exec rspec
