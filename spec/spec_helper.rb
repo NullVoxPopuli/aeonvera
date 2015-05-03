@@ -4,8 +4,18 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'database_cleaner'
-require 'simplecov'
-SimpleCov.start
+
+# for local test coverage metrics
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
+end
+
+# for test coverage reporting to codeclimate
+if ENV['CODECLIMATE_REPO_TOKEN']
+  require 'codeclimate-test-reporter'
+  CodeClimate::TestReporter.start
+end
 
 load_schema = lambda do
   load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default

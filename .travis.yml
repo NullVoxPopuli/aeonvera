@@ -1,0 +1,17 @@
+language: ruby
+rvm:
+  - 2.2
+  - ruby-head
+script: bundle exec rspec
+addons:
+  code_climate:
+    repo_token: ''
+branches:
+  only: master
+notifications:
+  email:
+    on_failure: change
+services:
+  - redis-server
+addons:
+  postgresql: 9.3

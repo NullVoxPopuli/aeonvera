@@ -158,4 +158,7 @@ group :test do
   gem 'launchy'
   # Coverage Metrics
   gem 'simplecov', :require => false
+
+  # Coverage Reporting
+  gem 'codeclimate-test-reporter'
 end
