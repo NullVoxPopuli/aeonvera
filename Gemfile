@@ -153,6 +153,9 @@ group :test do
   gem "capybara"
   # Javascript testing
   gem "capybara-webkit", "~> 1.4.0"
+  # Alternative Javascript Driver - used on travis.ci
+  gem "poltergeist"
+  
   # For opening web pages for debugging
   gem 'launchy'
   # Coverage Metrics
