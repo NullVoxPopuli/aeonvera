@@ -16,6 +16,11 @@ addons:
   postgresql: 9.3
   code_climate:
     repo_token: {{CODECLIMATE_REPO_TOKEN}}
+  hosts:
+    - test.local.vhost
+    - testevent.test.local.vhost
+    - edited.test.local.vhost
+
 services:
   - redis-server
 

@@ -9,8 +9,6 @@ module FormHelpers
     @package = create(:package, event: @event)
     url = "http:#{@event.url}:#{Capybara.server_port}"
 
-    ap url if ENV["TRAVIS"]
-
     visit url
     selects_package
     selects_orientation
