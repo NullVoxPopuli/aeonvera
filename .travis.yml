@@ -7,14 +7,14 @@ matrix:
     - rvm: ruby-head
 env:
   - TRAVIS=true
-  
-script: CODECLIMATE_REPO_TOKEN={{CODECLIMATE_REPO_TOKEN}} bundle exec rspec
+
+script: bundle exec rspec
 bundler_args: "--local --without documentation"
 
 addons:
   postgresql: 9.3
   code_climate:
-    repo_token: {{CODECLIMATE_REPO_TOKEN}}
+    repo_token: 1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896
   hosts:
     - test.local.vhost
     - testevent.test.local.vhost
