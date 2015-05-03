@@ -9,6 +9,6 @@ module CompetitionsHelper
 	end
 
 	def competition_menu_options(competition)
-		dropdown_option_menu_for(competition, [:edit, :destroy])
+		dropdown_option_menu_for(competition, actions: [:edit, :destroy])
 	end
 end

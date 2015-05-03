@@ -29,7 +29,7 @@ module DropdownMenuHelper
     actions.each do |link_action|
       link_option = {
         name: link_action.to_s.titleize,
-        path: event_url_for(object, link_action)
+        path: event_url_for(object, action: link_action)
       }
 
       if link_action == :destroy

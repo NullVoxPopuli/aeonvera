@@ -32,7 +32,7 @@ module ApplicationHelper
 
   def event_url_for(item, action: nil)
     url_objects = [:hosted, @event, item]
-    url_objects << action if action.present?
+    url_objects.unshift(action) if action.present? and action != :destroy
     url_for(url_objects)
   end
 

@@ -89,6 +89,11 @@ FactoryGirl.define do
     event
   end
 
+  factory :competition do
+    name "Jack and Jill"
+    kind Competition::JACK_AND_JILL
+  end
+
   factory :discount do
     name "My Discount"
     value 5
