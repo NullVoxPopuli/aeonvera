@@ -46,16 +46,7 @@ class HostedEvents::AttendancesController < ApplicationController
     payment_method = params[:payment_method]
     if Payable::Methods::ALL.include?(payment_method)
 
-      orders = @attendance.orders.unpaid
-      if orders.empty?
-        new_order = @attendance.new_order
-        new_order.payment_method = payment_method
-        if params[:check_number]
-          new_order.add_check_number(params[:check_number])
-        end
-        orders = [new_order]
-      end
-      orders.map{ |o| o.paid = true; o.save }
+      @attendance.mark_orders_as_paid!(check_number: params[:check_number])
 
       if @attendance.owes_nothing?
         return render file: '/hosted_events/checkin/mark_paid'

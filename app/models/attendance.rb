@@ -123,6 +123,26 @@ class Attendance < ActiveRecord::Base
     order
   end
 
+  def mark_orders_as_paid!(data)
+    check_number = data[:check_number]
+
+    orders = self.orders.unpaid
+    if orders.empty?
+      new_order = self.new_order
+      new_order.payment_method = payment_method
+      if check_number
+        new_order.add_check_number(check_number)
+      end
+      orders = [new_order]
+    end
+
+    orders.map{ |o|
+      o.paid = true;
+      o.paid_amount = o.calculate_paid_amount
+      o.save
+    }
+  end
+
   def attendee_name
     if self.attendee
       self.attendee.name.titleize
