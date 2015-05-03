@@ -8,7 +8,7 @@ matrix:
 env:
   - TRAVIS=true
 
-script: bundle exec rspec
+script: CODECLIMATE_REPO_TOKEN={{CODECLIMATE_REPO_TOKEN}} bundle exec rspec
 bundler_args: "--local --without documentation"
 
 addons:
