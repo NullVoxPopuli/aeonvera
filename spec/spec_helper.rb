@@ -80,7 +80,8 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
   config.include FormHelpers, type: :feature
   Warden.test_mode!
-  Capybara.javascript_driver = :webkit
+  # Capybara.javascript_driver = :webkit
+  Capybara.javascript_driver = :poltergeist
   Capybara.server_port = 3001
 
 
