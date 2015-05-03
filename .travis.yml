@@ -9,7 +9,7 @@ env:
   - TRAVIS=true
 
 script: bundle exec rspec
-bundler_args: "--without documentation"
+bundler_args: "--local --without documentation"
 
 addons:
   postgresql: 9.3

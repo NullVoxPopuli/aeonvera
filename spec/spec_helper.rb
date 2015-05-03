@@ -3,8 +3,6 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
-require 'database_cleaner'
-require 'capybara/poltergeist'
 
 load_schema = lambda do
   load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default
@@ -69,57 +67,6 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
   config.include FormHelpers, type: :feature
   Warden.test_mode!
-
-  Capybara.server_port = 3001
-  #Capybara.javascript_driver = :webkit
-  #if ENV["TRAVIS"]
-  Capybara.default_wait_time = 8 # Seconds to wait before timeout error. Default is 2
-
-  # Register slightly larger than default window size...
-  Capybara.register_driver :poltergeist do |app|
-    Capybara::Poltergeist::Driver.new(app,
-      {
-        debug: false, # change this to true to troubleshoot
-        window_size: [1300, 1000] # this can affect dynamic layout
-      }
-    )
-  end
-
-  Capybara.javascript_driver = :poltergeist
-  #end
-
-  config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.before(:each, js: true) do
-    # speeds up feature testing
-
-    if Capybara.javascript_driver == :webkit
-      # tracking
-      page.driver.block_url "https://stats.g.doubleclick.net"
-      page.driver.block_url "www.google-analytics.com"
-
-      # test event url
-      page.driver.allow_url("testevent.test.local.vhost")
-    else
-      page.driver.browser.url_blacklist = [
-        "https://stats.g.doubleclick.net",
-        "www.google-analytics.com"
-      ]
-    end
-  end
-
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
-  end
 
   config.after(type: :feature) do |example|
     Warden.test_reset!
