@@ -40,24 +40,6 @@ module ApplicationHelper
     "http://" + event.subdomain + '.' + current_domain + request.port_string + path
   end
 
-  def nav_title
-
-    if show_public_link?
-      content_tag(:h1) {
-        link_to current_event.name, public_registration_hosted_event_path(current_event, protocol: 'http')
-      }
-    elsif @event && @event.persisted?
-      content_tag(:h1, style: "display: inline-block;") {
-        link_to( @event.name, hosted_event_path(@event) )
-      }+
-        options_for(links: hosted_event_links)
-    else
-      content_tag(:h1) {
-        link_to APPLICATION_CONFIG["app_name"], root_path
-      }
-    end
-  end
-
   def show_public_link?
     event = (defined?(current_event) ? current_event : @event)
     event.present? && event.persisted? &&
