@@ -1,3 +1,6 @@
+# @TODO consider breaking this out in to:
+#   PercentDiscount, and AmountDiscount,
+#   or something similarly named
 class Discount < ActiveRecord::Base
   self.inheritance_column = "discount_type"
 
@@ -66,6 +69,22 @@ class Discount < ActiveRecord::Base
 
   def display_value
     "-#{discount}"
+  end
+
+
+  # @return a (hopefully) negative number representing
+  #   how much money will be added to the item's cost.
+  #   this value is returned as negative, because if
+  #   all discounted values are negative, then it's easier
+  #   to decide how to display the discount in human-readable
+  #   terms.
+  def discounted_amount_of(item)
+    if self.kind == DOLLARS_OFF
+      return 0 - self.value
+    else
+      # percent
+      return 0 - (item.price * (self.value / 100))
+    end
   end
 
   private
