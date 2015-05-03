@@ -62,4 +62,4 @@
 
 ## License
 
-[Artistic License 2.0](LICENSE)
+[GNU AFFERO GENERAL PUBLIC LICENSE](LICENSE.md)
