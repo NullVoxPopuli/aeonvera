@@ -4,8 +4,8 @@
 
  Also supports swing dancing scenes / organizations.
  ------------------------------
- 
- L. Preston Sego III
+
+ L. Preston Sego III  
  Precognition, LLC
 
  ------------------------------
