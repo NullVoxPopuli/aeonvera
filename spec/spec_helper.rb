@@ -70,7 +70,7 @@ RSpec.configure do |config|
   config.include FormHelpers, type: :feature
   Warden.test_mode!
 
-  # Capybara.server_port = 3001
+  Capybara.server_port = 3001
   #Capybara.javascript_driver = :webkit
   #if ENV["TRAVIS"]
   Capybara.default_wait_time = 8 # Seconds to wait before timeout error. Default is 2

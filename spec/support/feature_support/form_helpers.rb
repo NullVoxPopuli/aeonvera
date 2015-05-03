@@ -7,7 +7,11 @@ module FormHelpers
 
     @discount = create(:discount, code: 'discount', host: @event)
     @package = create(:package, event: @event)
-    visit "http:#{@event.url}:#{Capybara.server_port}"
+    url = "http:#{@event.url}:#{Capybara.server_port}"
+
+    ap url if ENV["TRAVIS"]
+
+    visit url
     selects_package
     selects_orientation
     provides_address
