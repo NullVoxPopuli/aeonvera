@@ -155,7 +155,6 @@ GEM
       railties (>= 3.1.0)
       sass (>= 3.3.0, < 3.5)
     hashie (3.4.1)
-    headless (2.0.0)
     hpricot (0.8.6)
     html2slim (0.2.0)
       hpricot
@@ -382,7 +381,6 @@ DEPENDENCIES
   font-awesome-rails
   formatted_rails_logger
   foundation-rails
-  headless
   html2slim
   i18n
   jbuilder (~> 1.2)

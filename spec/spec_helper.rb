@@ -6,18 +6,6 @@ require 'rspec/autorun'
 require 'database_cleaner'
 require 'capybara/poltergeist'
 
-# for local test coverage metrics
-if ENV['COVERAGE']
-  require 'simplecov'
-  SimpleCov.start
-end
-
-# for test coverage reporting to codeclimate
-if ENV['CODECLIMATE_REPO_TOKEN']
-  require 'codeclimate-test-reporter'
-  CodeClimate::TestReporter.start
-end
-
 load_schema = lambda do
   load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default
   ActiveRecord::Migrator.up('db/migrate') # use migrations
@@ -83,15 +71,22 @@ RSpec.configure do |config|
   Warden.test_mode!
 
   Capybara.server_port = 3001
-  Capybara.javascript_driver = :webkit
-  if ENV["TRAVIS"]
-    Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, { debug: true })
-    end
+  #Capybara.javascript_driver = :webkit
+  #if ENV["TRAVIS"]
+  Capybara.default_wait_time = 8 # Seconds to wait before timeout error. Default is 2
 
-    Capybara.javascript_driver = :poltergeist
-
+  # Register slightly larger than default window size...
+  Capybara.register_driver :poltergeist do |app|
+    Capybara::Poltergeist::Driver.new(app,
+      {
+        debug: false, # change this to true to troubleshoot
+        window_size: [1300, 1000] # this can affect dynamic layout
+      }
+    )
   end
+
+  Capybara.javascript_driver = :poltergeist
+  #end
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
@@ -112,6 +107,11 @@ RSpec.configure do |config|
 
       # test event url
       page.driver.allow_url("testevent.test.local.vhost")
+    else
+      page.driver.browser.url_blacklist = [
+        "https://stats.g.doubleclick.net",
+        "www.google-analytics.com"
+      ]
     end
   end
 
