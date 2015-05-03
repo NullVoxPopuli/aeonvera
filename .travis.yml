@@ -7,6 +7,7 @@ matrix:
     - rvm: ruby-head
 env:
   - TRAVIS=true
+  - CODECLIMATE_REPO_TOKEN={{CODECLIMATE_REPO_TOKEN}}
 
 script: CODECLIMATE_REPO_TOKEN={{CODECLIMATE_REPO_TOKEN}} bundle exec rspec
 bundler_args: "--local --without documentation"
