@@ -17,7 +17,7 @@
 
 ## Issues / Bug Reports
 
- [Submit an idea or bug report here](https://github.com/NullVoxPopuli/aeonvera-todo)
+ [Submit an idea or bug report here](https://github.com/NullVoxPopuli/aeonvera/issues)
 
 ## Servers
 
