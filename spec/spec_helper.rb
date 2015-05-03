@@ -81,14 +81,16 @@ RSpec.configure do |config|
   config.include Warden::Test::Helpers, type: :feature
   config.include FormHelpers, type: :feature
   Warden.test_mode!
-  # Capybara.javascript_driver = :webkit
-  Capybara.javascript_driver = :poltergeist
+
   Capybara.server_port = 3001
+  Capybara.javascript_driver = :webkit
+  if ENV["TRAVIS"]
+    Capybara.javascript_driver = :selenium
 
-  require 'headless'
-  headless = Headless.new
-  headless.start
-
+    require 'headless'
+    headless = Headless.new
+    headless.start
+  end
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction

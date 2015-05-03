@@ -16,3 +16,5 @@ services:
   - redis-server
 addons:
   postgresql: 9.3
+env:
+  - TRAVIS=true
