@@ -4,6 +4,7 @@ require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'database_cleaner'
+require 'capybara/poltergeist'
 
 # for local test coverage metrics
 if ENV['COVERAGE']
@@ -96,13 +97,14 @@ RSpec.configure do |config|
 
   config.before(:each, js: true) do
     # speeds up feature testing
+    if Capybara.javascript_driver == :webkit
+      # tracking
+      page.driver.block_url "https://stats.g.doubleclick.net"
+      page.driver.block_url "www.google-analytics.com"
 
-    # tracking
-    page.driver.block_url "https://stats.g.doubleclick.net"
-    page.driver.block_url "www.google-analytics.com"
-
-    # test event url
-    page.driver.allow_url("testevent.test.local.vhost")
+      # test event url
+      page.driver.allow_url("testevent.test.local.vhost")
+    end
   end
 
   config.around(:each) do |example|
