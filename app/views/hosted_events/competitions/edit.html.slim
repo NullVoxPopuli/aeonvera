@@ -1,0 +1,8 @@
+h1 Editing competition
+
+.well
+	= form_for [@event, @competition], url: hosted_event_competition_path do |f|
+		== render partial: 'form', locals: { f: f }
+
+= link_to 'Back', hosted_event_competitions_path(event_id: @event.id), :class => "btn btn-primary"
+

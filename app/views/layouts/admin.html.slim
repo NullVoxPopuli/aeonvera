@@ -1,0 +1,53 @@
+doctype html
+html
+	head
+		title = APPLICATION_CONFIG["app_name"]
+		meta name="author" content="Preston Sego"
+		= csrf_meta_tags
+		= yield :meta_tags
+
+		= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
+		= stylesheet_link_tag params[:controller]
+		= yield :stylesheets
+
+		= javascript_include_tag "application", "data-turbolinks-track" => true
+		javascript:
+			window.AUTH_TOKEN = "#{form_authenticity_token}";
+
+		= javascript_include_tag params[:controller]
+		= yield :javascipts
+
+
+	body class="#{params[:controller]} #{params[:action]}"
+		.fixed
+			nav.top-bar data-options="is_hover:false"
+				ul.title-area
+					li.name
+						h1
+							a
+								= APPLICATION_CONFIG["app_name"]
+								| :&nbsp;
+								= Rails.env
+
+					li.toggle-topbar
+						a href="#"
+
+				section.top-bar-section
+					ul.right
+
+					ul.left
+						li
+							= link_to "Users", admin_users_path
+						li
+							= link_to "Events", admin_events_path
+
+
+
+		- if notice
+			.alert-box#notice = notice
+		- if alert
+			.alert-box.alert#alert = alert
+
+		.shell
+			= content_for?(:content) ? yield(:content) : yield
+		= render "shared/dev_info"

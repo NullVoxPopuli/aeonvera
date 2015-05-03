@@ -1,0 +1,43 @@
+doctype html
+html
+  head
+    title = APPLICATION_CONFIG["app_name"]
+    meta name="author" content="Preston Sego"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    meta name="title" content="#{params[:controller]}/#{params[:action]} by #{APPLICATION_CONFIG["app_name"]} - Swing Dance Registration Service / Software / System."
+    meta name="description" content="Swing Dance Registration. Registration System. Registration Software. Event Registration. Swing Dance. Dance. Dance Registration."
+    = csrf_meta_tags
+
+    = stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
+    = stylesheet_link_tag params[:controller]
+    = yield :stylesheets
+
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    javascript:
+      Stripe.setPublishableKey('#{stripe_publishable_key}');
+      window.AUTH_TOKEN = "#{form_authenticity_token}";
+
+    - if event = (@event or (defined?(current_event) ? current_event : nil))
+      javascript:
+        window.AeonVera["event"] = #{raw event.as_json.to_json};
+
+    = javascript_include_tag params[:controller]
+    = yield :javascipts
+    = google_analytics_code
+
+  body class="#{params[:controller]} #{params[:action]}"
+    .off-canvas-wrap data-offcanvas='true'
+      .inner-wrap
+        = render partial: "/shared/menu/menu"
+        = render partial: '/shared/notices'
+
+        section.main-section
+          .shell
+            = content_for?(:content) ? yield(:content) : yield
+
+        footer
+          = render partial: "shared/footer"
+          = render partial: "shared/dev_info"
+
+
+        a.exit-off-canvas

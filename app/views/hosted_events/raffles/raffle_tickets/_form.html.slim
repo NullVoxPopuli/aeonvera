@@ -1,0 +1,12 @@
+= render partial: "shared/error_messages", locals: { target: @raffle_ticket }
+
+.panel
+  = f.label :name
+  = f.text_field :name, required: true, :class => "form-control"
+  = f.label :price
+  = f.number_field :price, required: true, step: :any
+  = f.fields_for :metadata do |m|
+    = m.label :number_of_tickets
+    = m.number_field :number_of_tickets, required: :true, placeholder: 1, value: (@raffle_ticket.metadata["number_of_tickets"] || 1)
+
+= f.submit 'Save', :class => "button small"

@@ -1,0 +1,11 @@
+- content_for :side_nav do
+
+  li = link_to "Payment Processing", organization_payment_processors_path(@organization)
+  li = link_to "Dances", organization_dances_path(@organization)
+  li = link_to "Lessons", organization_lessons_path(@organization)
+  li = link_to "Memberships", organization_membership_options_path(@organization)
+  li = link_to "Membership Discounts", organization_membership_discounts_path(@organization)
+  li = link_to "Reports", organization_report_index_path(@organization)
+  li = link_to "Officers", organization_collaborators_path(@organization)
+
+= render template: "layouts/two_pane"

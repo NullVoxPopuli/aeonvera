@@ -1,0 +1,2 @@
+git push staging master
+heroku run rake db:migrate --app aeonvera-staging

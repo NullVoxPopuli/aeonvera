@@ -1,0 +1,104 @@
+javascript:
+	EVENT = #{current_event.registration_json.to_json.html_safe};
+
+-if @attendance.errors.any?
+	#error_explanation
+		h2
+			| Please correct the following&nbsp;
+			= pluralize(@attendance.errors.count, "error")
+		ul
+			- @attendance.errors.full_messages.each do |msg|
+				li = msg
+
+
+= f.hidden_field :pricing_tier_id
+
+ul.small-block-grid-2
+	- if current_event.has_packages?
+		li
+			fieldset.packages
+				legend Select A Package
+				= packages(f)
+
+	- if current_event.has_levels?
+		li
+			fieldset.levels
+				legend Select a level
+				= levels(f)
+	li
+		fieldset.dance-orientation
+			legend Dance Orientation
+			= f.radio_button :dance_orientation, Attendance::LEAD
+			= f.label :lead
+			= f.radio_button :dance_orientation, Attendance::FOLLOW
+			= f.label :follow
+
+- if current_event.has_volunteers?
+	fieldset.volunteers
+		legend Volunteering
+		= f.label :interested_in_volunteering do
+			= f.check_box :interested_in_volunteering, checked: @attendance.interested_in_volunteering?
+			| I am interested in Volunteering
+
+- if current_event.has_competitions?
+	fieldset
+		legend Competitions
+		= competitions
+
+- if current_event.has_line_items?
+	fieldset
+		legend Additional Items
+		= line_items
+
+- if current_event.has_shirts? && current_event.shirts_available?
+	fieldset
+		legend Shirt options
+		= shirts
+
+- unless current_event.housing_status == Event::HOUSING_DISABLED
+	= render partial: "/register/form_housing", locals: { f: f }
+
+ul.small-block-grid-2
+	li
+		fieldset
+			legend Tell us about yourself
+
+			= f.label :name
+			= f.text_field :name, value: current_user.name
+
+			= f.fields_for :metadata do |metadata|
+				- if current_event.has_volunteers?
+					p
+						= metadata.label :phone_number, 'Phone Number'
+						= metadata.text_field :phone_number, value: @attendance.metadata_safe['phone_number'], placeholder: 'Optional unless volunteering '
+
+				= metadata.fields_for :address do |a|
+					- address = @attendance.metadata_safe["address"] || {}
+
+					p
+						= a.label :line1, 'Address 1'
+						= a.text_field :line1, value: address["line1"]
+					p
+						= a.label :line2, 'Address 2'
+						= a.text_field :line2, value: address["line2"]
+					p
+						= a.label :city
+						= a.text_field :city, value: address["city"]
+					p
+						= a.label :state
+						= a.text_field :state, size: 2, value: address["state"]
+					p
+						= a.label :zip, 'Zip Code'
+						= a.text_field :zip, value: address["zip"]
+
+
+footer.buttons
+	- submit_text = @attendance.persisted? ? "Update" : "Register"
+	= f.submit submit_text, class: "button left"
+	= link_to "Cancel", root_url, class: "right button secondary"
+
+.summary.right.top style="top: 45px; right: 0px; left: auto; position: fixed; display: none;"
+	table.line-items
+	div
+		| Total
+		.total.right

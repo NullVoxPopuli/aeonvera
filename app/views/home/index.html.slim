@@ -1,0 +1,30 @@
+.row style='margin: 0 auto;'
+  .columns.large-2.small-0
+  .columns.large-8.small-12.small-centered.large-centered
+    h1.text-center = APPLICATION_CONFIG["app_name"]
+    h6.text-center An easy way to manage registration for your event
+    br
+    .panel.callout.radius style='padding: 20px;'
+      p
+        | Curious who is hosting with
+        span<
+          = APPLICATION_CONFIG["app_name"]
+        span
+          |? Checkout the
+        span<>
+          = link_to "Event Calendar", calendar_home_index_path
+      hr
+      = link_to "Create Your Event", new_hosted_event_path, :class => "button success"
+      = link_to "List of Features", features_path, :class => "button secondary"
+
+
+      hr
+      | Please
+      span<>
+        = link_to('Login', new_user_session_path, :class => "button primary")
+      | or
+      span<>
+        = link_to('Sign Up', new_user_registration_path, :class => "button primary")
+      | to continue.
+
+  .columns.large-2.small-0

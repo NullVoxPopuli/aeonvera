@@ -1,0 +1,7 @@
+- css_class = defined?(klass) ? klass : ""
+- meth = defined?(method_name) ? method_name : "name"
+
+- collection.each do |item|
+	div class="#{css_class}"
+		= item.send(meth)
+	

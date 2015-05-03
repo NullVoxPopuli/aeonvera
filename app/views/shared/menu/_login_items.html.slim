@@ -1,0 +1,8 @@
+- if user_signed_in?
+	= link_to(destroy_user_session_url(subdomain: false), method: :delete) do
+		i.fa.fa-sign-out
+		| Logout
+- else
+	= link_to(new_user_session_path) do
+		i.fa.fa-sign-in
+		| Login

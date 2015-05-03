@@ -1,0 +1,80 @@
+= render partial: "shared/error_messages", locals: { target: @event }
+
+.row.panel
+	.columns.large-6.medium-6.small-12
+		= f.label :name
+		= f.text_field :name, required: true
+		= f.label :short_description
+		= f.text_field :short_description
+		= render partial: '/shared/forms/domain', locals: { f: f }
+		= f.label :location
+		= f.text_field :location, required: true
+		= f.label :starts_at
+		= f.date_field :starts_at, required: true
+		= f.label :ends_at
+		= f.date_field :ends_at, required: true
+		= f.label :mail_payments_end_at
+		= f.date_field :mail_payments_end_at
+		= f.label :electronic_payments_end_at
+		= f.date_field :electronic_payments_end_at
+		= f.label :refunds_end_at
+		= f.date_field :refunds_end_at
+		= f.label :shirt_sales_end_at
+		= f.date_field :shirt_sales_end_at
+		= f.label :show_at_the_door_prices_at
+		= f.date_field :show_at_the_door_prices_at
+
+		= f.fields_for :opening_tier_attributes, @event.opening_tier do |opt|
+			= opt.label :date, "Registration Opens"
+			ul.medium-block-grid-1.large-block-grid-2
+				li
+					.row = opt.label :date, "Date"
+					.row
+						= opt.date_select :date, { required: true }, { class: 'small-3' }
+				li
+					.row = opt.label :date, "Time"
+					.row
+						= opt.time_select :date, { required: true, ignore_date: true }, { class: 'small-3' }
+						/= opt.time_zone_select :date, ActiveSupport::TimeZone.all, { required: true }, { class: 'small-3', id: 'event_opening_tier_attributes_date_6i', name: 'event[opening_tier_attributes][date(6i)]' }
+
+
+	.columns.large-6.medium-6.small-12
+		.allow-discounts
+			= f.check_box :allow_discounts
+			= f.label :allow_discounts
+		.allow-discounts
+			= f.check_box :allow_combined_discounts
+			= f.label :allow_combined_discounts
+		.has-volunteers
+			= f.check_box :has_volunteers
+			= f.label :has_volunteers
+			| Allows people to opt in to helping out with simple tasks during the event. It is up to the organizers of this event to determine which of these people does what.
+		hr
+
+		.housing-status
+			= f.label :housing_status, "Housing"
+			fieldset
+				= f.collection_radio_buttons :housing_status, housing_form_options, :first, :last
+		.housing-nights
+			= f.label :housing_nights, "Housing Nights"
+			fieldset
+				= f.collection_check_boxes :housing_nights, days_of_the_week, :first, :last
+
+		= f.check_box :show_on_public_calendar
+		= f.label :show_on_public_calendar
+		br
+		= f.check_box :make_attendees_pay_fees
+		= f.label :make_attendees_pay_fees
+		br
+		= f.check_box :accept_only_electronic_payments
+		= f.label :accept_only_electronic_payments
+
+		= f.label :logo
+		- if @event.logo.present?
+			= image_tag @event.logo.url(:thumb)
+		= f.file_field :logo
+
+= link_to 'Back', hosted_events_path, :class => "button secondary small"
+= f.submit 'Save', :class => "button small"
+br
+br

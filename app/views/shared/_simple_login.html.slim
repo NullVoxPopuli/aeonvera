@@ -1,0 +1,11 @@
+.well-centered
+  h3 Please Sign in
+
+  .panel
+    = form_tag session_path(:user) do
+      = text_field_tag 'user[email]', '', autofocus: true
+      = password_field_tag 'user[password]'
+
+      button Sign in
+
+  = link_to "Forgot your password?", new_password_path(:user)

@@ -1,0 +1,28 @@
+h2 = "#{current_organization.name} Registration History"
+table
+  thead
+    tr
+      th Date
+      th Amount
+      th Status
+      th Purchased
+  tbody
+    - @attendances.each do |attendance|
+      - paid = attendance.owes_nothing?
+      - status = paid ? "Paid" : "Unpaid"
+
+
+      tr
+        td
+          - created = l attendance.created_at, format: :abbr
+          = link_to created, register_path(attendance)
+        td
+          - if paid
+            = number_to_currency(attendance.paid_amount)
+          - else
+            = number_to_currency(attendance.amount_owed)
+        td.order-payment-status data-paid="#{paid}" = status
+        td
+          - attendance.line_items.each do |item|
+           = item.name
+           br

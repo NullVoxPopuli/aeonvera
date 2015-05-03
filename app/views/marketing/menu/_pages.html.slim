@@ -1,0 +1,8 @@
+li = link_to "Home", root_path
+li = link_to "Features", features_path
+li = link_to "Pricing", pricing_path
+li = link_to "FAQ", faq_path
+
+- if show_login
+  li.divider
+  = render partial: "/marketing/menu/user_items"

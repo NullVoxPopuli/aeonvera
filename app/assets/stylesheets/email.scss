@@ -1,0 +1,90 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ * http://bootswatch.com/cosmo/ <- bootstrap theme
+ *
+ *= require_self
+ *= require font-awesome
+ *= require footer
+*/
+
+body{
+  font-family: Helvetica, Arial;
+}
+
+.shell{
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+header{
+  background: #333;
+  color: white;
+  padding: 40px;
+}
+
+table{
+  border: 1px solid gray;
+
+  td{
+    padding: 10px;
+  }
+
+  thead{
+    td, th{
+      line-height: 2em;
+      background: #eee;
+      color: #333;
+      border-bottom: 1px solid gray;
+    }
+  }
+
+  tbody{
+    tr:nth(2n){
+      background: #fafaff;
+    }
+    td{
+
+    }
+  }
+}
+
+.right{
+  float: right;
+}
+
+footer{
+  margin-top: 0px;
+  text-align: center;
+  width: 100%;
+  font-size: 0.8em;
+  background: #333333;
+  padding: 10px 40px;
+  color: #aaa;
+
+  a{
+    color: #aaa;
+    font-size: 0.8em
+  }
+
+  ul.inline-list{
+    margin: 0;
+  }
+  .row.copy{
+    display: none;
+  }
+}
+
+table tr td.order-payment-status {
+  text-align: center;
+  background: #ffaaaa;
+  &[data-paid='true'] {
+    background: #aaddaa;
+  }
+}

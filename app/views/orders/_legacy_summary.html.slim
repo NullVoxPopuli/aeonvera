@@ -1,0 +1,44 @@
+table width="100%"
+  thead
+    tr
+      th Item
+      th Price
+  tbody
+    - order.legacy_line_items.each do |item|
+      tr
+        td = item["name"]
+        td = number_to_currency item["price"]
+    - order.discounts.each do |discount|
+      tr
+        td = (discount["to"].present? ? discount["to"] : "Discount")
+        td
+          - if discount["kind"].to_i == Discount::DOLLARS_OFF
+            = "-#{number_to_currency discount["amount"]}"
+          - else
+            = "%#{discount["amount"]}"
+    tr
+      td Total
+      td = number_to_currency order.legacy_total
+
+    - if order.paid?
+      tr
+        td.order-payment-status data-paid="#{order.paid}" colspan="2"
+          = "Paid on #{order.updated_at.to_s(:short)} via #{order.payment_method}"
+
+.right
+  | Prices as of:&nbsp;
+  = order.created_at.to_s(:long)
+- if buttons
+  - event = attendance.event
+  - if event.has_payment_processor?
+    - if (not attendance.owes_nothing?)
+      - @order = attendance.orders.unpaid.first
+      - if event.has_payment_processor?(Integration::STRIPE) && !event.over?
+        = form_tag(hosted_event_payments_path(hosted_event_id: @attendance.event.id, order_id: @order.id)) do
+          = stripe_checkout_script(@attendance.event.name, order.total)
+    - else
+      span.button.small.success
+        | You are Registered!
+  - else
+    span.button.small.success You are Registered!
+    span.small<> * Amount owed to be collected upon arrival

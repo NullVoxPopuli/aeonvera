@@ -1,0 +1,32 @@
+// Place all the styles related to the HostedEvents::POS controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.shell{
+	width: auto;
+}
+.tablet-nav
+{
+	span{
+		width: 50%;
+		display: inline-block;
+		padding: 20px;
+
+		a{
+			background: #eee;
+			color: black;
+			display: block;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+			padding: 0 20px;
+			text-align: center;
+			line-height: 150px;
+			font-size: 40px;
+			font-weight: 200;
+		}
+		a:hover{
+			text-decoration: none;
+			background: darken(#eee, 10%);
+			transition: 0.5s;
+		}
+	}
+
+}

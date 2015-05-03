@@ -1,0 +1,107 @@
+javascript:
+  $(function(){
+    var totalsArea = $('.additional-items tbody');
+    var totalField = $('#items_amount_paid');
+    var formItems = $('.panel .items');
+
+    $('button.add').click(function(e){
+      var noItems = $('tr.no-items');
+      var target = $(e.target);
+      var container = target.closest('td');
+      var price = container.data('price');
+      var currency = container.data('currency');
+      var name = container.data('name');
+      var klass = container.data('klass');
+      var id = container.data('id');
+
+
+      if (noItems.length > 0){
+        noItems.remove();
+        /* create header */
+        var header = $("<tr></tr>");
+        header.append("<td></td>");
+        header.append("<td>Name</td>");
+        header.append("<td>Price</td>");
+        totalsArea.append(header);
+      }
+
+      /* add item to form */
+      var itemNumber = ""; //formItems.find('input').length / 3;
+      var hiddenIdField = $("<input class='items_" + id + "' id='items_items' name='items[items][" + itemNumber + "][id]' type='hidden'>");
+      var hiddenPriceField = $("<input class='items_" + id + "' id='items_items' name='items[items][" + itemNumber + "][price]' type='hidden'>");
+      var hiddenNameField = $("<input class='items_" + id + "' id='items_items' name='items[items][" + itemNumber + "][name]' type='hidden'>");
+      var hiddenKlassField = $("<input class='items_" + id + "' id='items_items' name='items[items][" + itemNumber + "][klass]' type='hidden'>");
+      hiddenIdField.val(id);
+      hiddenPriceField.val(price);
+      hiddenNameField.val(name);
+      hiddenKlassField.val(klass);
+      formItems.append(hiddenIdField);
+      formItems.append(hiddenPriceField);
+      formItems.append(hiddenNameField);
+      formItems.append(hiddenKlassField);
+
+      /* add item to UI */
+
+      var row = $("<tr class='items_" + id + "'></tr>");
+      var removeButton = $("<td><a data-price='" + price + "' href='javascript:void(0);'>Remove</a></td>");
+      row.append(removeButton);
+      removeButton.find('a').click(function(e){
+        $(".items_" + id).remove();
+        var target = $(e.target);
+        var price = target.data('price');
+        price = parseFloat(totalField.val()) - parseFloat(price);
+        if (price < 0){
+            price = 0;
+        }
+        totalField.val(price);
+      });
+      row.append("<td>" + name + "</td>");
+      row.append("<td>" + currency + "</td>");
+      totalsArea.append(row);
+
+      totalField.val(parseFloat(totalField.val()) + parseFloat(price));
+
+      return false;
+    });
+  });
+
+= render partial: "/shared/table_filter", locals: { klass: "items", width: "50%" }
+
+table.line-items.items
+  - @line_items.each do |item|
+    tr: td data-price="#{item.current_price}" data-name="#{item.name}" data-klass="#{item.class.name.demodulize}" data-currency="#{number_to_currency(item.current_price)}" data-id="#{item.id}"
+      span
+        button.button.add
+            | Add
+            = " (#{number_to_currency(item.current_price)})"
+      span = item.name
+
+table.shirts.items
+  - @shirts.each do |item|
+    tr: td data-price="#{item.current_price}" data-name="#{item.name}" data-klass="#{item.class.name.demodulize}" data-currency="#{number_to_currency(item.current_price)}" data-id="#{item.id}"
+      span
+        button.button.add
+          | Add
+          = " (#{number_to_currency(item.current_price)})"
+      span = item.name
+
+
+
+= form_for(:items, url: hosted_event_individual_item_path(@event, id: @attendance), method: :post) do |f|
+  .panel style="position: fixed; right: 5px; top: 50px;"
+    h3
+      ' Summary for
+      = @attendance.attendee_name
+    table.additional-items
+      tbody
+        tr.no-items
+          td No Additional Items
+    hr
+    .items
+    = f.label :amount_owed, "Amount Owed"
+    = f.number_field :amount_paid, value: '0.0', step: :any, min: 0
+    .check
+      = f.label :check_number, "Check Number"
+      = f.text_field :check_number
+    = f.select :payment_method, options_for_select(Payable::Methods::ALL, "Cash")
+    = f.submit "Submit as Paid", class: "button success"

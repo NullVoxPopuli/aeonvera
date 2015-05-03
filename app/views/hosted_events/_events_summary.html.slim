@@ -1,0 +1,34 @@
+- events = defined?(events) ? events : (@events || [])
+
+table.responsive
+	tr
+		th Name
+		/th A la Carte
+		th.text-center colspan="3" Attendees
+		th Shirts Sold
+		/th.text-center colspan="3" Revenue
+		th Registration Opens
+		th Event Starts
+	tr
+		/ Name
+		th
+		/ A la Carte
+		/th Total
+		/ Attendances
+		th Total
+		th Leads
+		th Follows
+		/th w/ Shirts
+		/th w/ Competitions
+		/ Shirts
+		th Total
+		/ Revenue
+		/th Total
+		/th Pre Event Start
+		/th Post Event Start
+		/ Registration
+		th
+		/ Event Start
+		th
+	- events.each do |event|
+		= render partial: "/hosted_events/hosted_event_row", locals: { event: event }

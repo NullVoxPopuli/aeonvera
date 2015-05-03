@@ -1,0 +1,6 @@
+= f.label :subdomain
+.row.collapse
+  .columns.small-9
+    = f.text_field :domain
+  .columns.small-3
+    span.postfix = ".#{current_domain}"

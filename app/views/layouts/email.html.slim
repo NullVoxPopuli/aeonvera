@@ -1,0 +1,12 @@
+= stylesheet_link_tag "email"
+
+header
+  .shell
+    h1 = yield :header
+
+.shell
+  br
+  = yield :body
+  = yield
+
+= render partial: "/shared/email_footer"

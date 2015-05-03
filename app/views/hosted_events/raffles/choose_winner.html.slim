@@ -1,0 +1,5 @@
+h1 style="font-size:3em"
+	span> Winner:
+	= @raffle.winner.attendee_name
+
+= link_to "Choose Again", choose_winner_hosted_event_raffle_path(@event, @raffle)

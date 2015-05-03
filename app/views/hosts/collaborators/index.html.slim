@@ -1,0 +1,50 @@
+h1 The #{@host.name} Team
+
+table
+  thead
+    tr
+      th Name
+      th Title / Role
+      / - if current_user.can_edit_collaborator?(@event)
+        / th
+      / - if current_user.can_delete_collaborator?(@event)
+        / th
+      th Email
+  tbody
+    tr
+      td = @host.hosted_by.name
+      td Admin
+      / td
+      / td
+      td = @host.hosted_by.email
+    - if @collaborators.size > 0
+      - @collaborators.each do |user|
+        tr
+          td = user.name
+          td = @host.collaborations.where(user_id: user.id).first.title
+          / - if current_user.can_edit_collaborator?(@event)
+            td = link_to "Edit", @decorator.edit_collaborator_path(user.id)
+          / - if current_user.can_delete_collaborator?(@event)
+            td = link_to "Remove", @decorator.collaborator_update_path(user.id), method: :delete
+          td = user.email
+br
+br
+
+/ = link_to 'Invite someone to help with the event', "#", class: "btn btn-primary"
+
+h4 Invite someone to collaborate
+
+.invite-form
+  = form_tag(@decorator.invite_collaborator_path, remote: true) do
+    = label_tag :email
+    = email_field_tag :email
+    = submit_tag "Invite", class: "button tiny"
+
+javascript:
+  $(".invite-form").on("ajax:success", "form", function(){
+      var email = $("#email").val();
+      AeonVera.notice( email + " has been invited." );
+      $("#email").val("")
+  });
+
+span After they have accepted the invitation, you can change what they can access, and what parts of your event / organization they can edit

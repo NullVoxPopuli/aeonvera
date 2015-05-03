@@ -1,0 +1,16 @@
+javascript:
+	$(function() {
+	    $('.datepicker input').datetimepicker();
+	});
+= render partial: "shared/error_messages", locals: { target: @line_item }
+= f.label :name
+= f.text_field :name, required: true
+= f.label :price
+= f.number_field :price, required: true, step: :any
+= f.label :picture
+= f.file_field :picture
+= f.label :expires_at
+.datepicker
+	= f.datetime_field :expires_at
+
+= f.submit 'Save', :class => "button small"

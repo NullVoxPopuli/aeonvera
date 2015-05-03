@@ -1,0 +1,13 @@
+= render partial: "shared/error_messages", locals: { target: @level }
+
+.form-group
+	= f.label :name
+	.col-lg-12
+		= f.text_field :name, required: true, :class => "form-control"
+.form-group
+	= f.label :requires
+	.col-lg-12
+		= f.select :requirement, requirement_options
+
+.form-group
+	= f.submit 'Save', :class => "button small"

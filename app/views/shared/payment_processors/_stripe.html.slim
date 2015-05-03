@@ -1,0 +1,28 @@
+.pricing-table
+  .title
+    = image_tag 'stripe-logo-light.png'
+  .price
+    small
+      .row
+        .medium-5.columns
+          a href='https://stripe.com/us/pricing'
+            span 2.9% + 30¢
+        .medium-7.columns
+          span<> per transaction to Stripe
+  - if !@payable.beta?
+    .price
+      small
+        .row
+          .medium-5.columns
+            = link_to terms_of_service_url
+              span<> 0.75%
+          .medium-7.columns
+            span<> per transaction to ÆONVERA
+
+  .cta-button
+    - if @payable.has_payment_processor?(Integration::STRIPE)
+      = link_to stripe_disconnect_path, method: :delete, class: 'button warning'
+        span Remove Connection With Stripe
+    - else
+      = link_to stripe_connect_path, class: 'button primary'
+        span Connect With Stripe

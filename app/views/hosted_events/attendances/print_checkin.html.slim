@@ -1,0 +1,31 @@
+= content_for :stylesheets do
+  = stylesheet_link_tag 'packet_printout', media: "print"
+
+h2 = "#{@event.name} Check-In"
+table
+  thead
+    tr
+      th Name
+      th Owe $
+      th Orientation
+      th Package
+      th Level
+      th Competition
+      th Shirts
+  tbody
+    - @attendances.each do |attendance|
+      tr
+        td = attendance.attendee_name
+        td = number_to_currency(attendance.amount_owed)
+        td = attendance.dance_orientation
+        td = attendance.package.name if attendance.package
+        td = attendance.level.name if attendance.level
+        td
+          - attendance.competitions.each do |competition|
+            = competition.name
+            | &nbsp;-&nbsp;
+            - if competition.id == 5
+              = attendance.crossover_orientation
+
+            br
+        td = list_of_shirts_for(attendance)

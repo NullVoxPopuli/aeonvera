@@ -1,0 +1,2 @@
+module HostedEvents::PosHelper
+end

@@ -1,0 +1,37 @@
+a.tooltip {
+    margin-top: 1px;
+    background: url(/assets/help_grey.gif) no-repeat;
+    height: 14px;
+    width: 14px;
+    float: right;
+    position: relative;
+    text-decoration: none;
+}
+
+a.tooltip:hover:after {
+    background: #F1E893;
+    border-radius: 5px;
+    bottom: 26px;
+    color: #4f4f4f;
+    content: attr(data-title);
+    left: 20%;
+    padding: 8px;
+    position: absolute;
+    z-index: 98;
+    width: 220px;
+}
+
+a.tooltip:hover:before {
+    border: solid;
+    border-color: #F1E893 transparent;
+    border-width: 6px 6px 0 6px;
+    bottom: 20px;
+    content: "";
+    left: 50%;
+    position: absolute;
+    z-index: 99;
+}
+
+a.tooltip.callout-left:hover:after {
+    margin-left: -215px;
+}

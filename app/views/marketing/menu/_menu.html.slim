@@ -1,0 +1,32 @@
+.show-for-small
+  nav.top-bar.tab-bar role='navigation' data-topbar=''
+    / - if content_for?(:side_nav)
+    /   section.left-small
+    /     a.left-off-canvas-toggle.menu-icon
+    /       span
+
+    section.left-small.tab-bar-section
+      h1.title = APPLICATION_CONFIG[:app_name]
+
+    section.right-small
+      a.right-off-canvas-toggle.menu-icon
+        span
+        / = fa_icon 'bars'
+
+  aside.right-off-canvas-menu
+    ul.off-canvas-list
+      = render partial: '/marketing/menu/pages', locals: { show_login: true }
+
+
+nav.top-bar.hide-for-small data-options="is_hover:false" role="navigation" data-topbar=""
+  ul.title-area
+    / title area
+    li.name = nav_title
+    li.divider
+  section.left.top-bar-section
+    ul.pages
+      = render partial: '/marketing/menu/pages', locals: { show_login: false }
+  section.top-bar-section
+    / right nav section
+    ul.right.auth
+      = render partial: '/marketing/menu/user_items'

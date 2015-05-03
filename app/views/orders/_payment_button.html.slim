@@ -1,0 +1,20 @@
+- event = attendance.event
+
+- if [Payable::Methods::STRIPE, Payable::Methods::PAYPAL].include?(order.payment_method)
+  - if event.has_payment_processor?(Integration::STRIPE)
+    = form_tag(payments_path(host_id: attendance.host.id, host_type: attendance.host.class.name, order_id: order.id)) do
+      = stripe_checkout_script(event.name, order.total)
+span.small
+  span<> Paying with:
+  span<> = order.payment_method
+  - if order.payment_method == Payable::Methods::STRIPE
+    span<> --
+    span<> = what_is_stripe_tooltip
+
+- if !event.accept_only_electronic_payments?
+  br
+  button data-dropdown="changepayment" aria-controls="changepayment" aria-expanded="false" class="tiny button dropdown" Change Payment Method
+  ul#changepayment.f-dropdown data-dropdown-content='true' aria-hidden='true'
+    li = link_to 'Stripe (Credit Card)', set_payment_method_register_path(id: attendance.id, order_id: order.id, payment_method: 'Stripe'), method: :post
+    li = link_to 'Cash', set_payment_method_register_path(id: attendance.id, order_id: order.id, payment_method: 'Cash'), method: :post
+    li = link_to 'Check', set_payment_method_register_path(id: attendance.id, order_id: order.id, payment_method: 'Check'), method: :post

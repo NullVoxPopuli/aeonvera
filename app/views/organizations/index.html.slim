@@ -1,0 +1,40 @@
+- if @public_organizations.size > 0
+  h1 Organizations
+
+  table
+    thead
+      tr
+        th Name
+        th City
+        th State
+    - @public_organizations.each do |organization|
+      tr
+        td = link_to organization.name, organization.url
+        td = organization.city
+        td = organization.state
+
+
+- if @all_organizations.size > 0
+  h1 Your Organizations
+
+  table
+    thead
+      tr
+        th Name
+        th Tagline
+        th City
+        th State
+    - @all_organizations.each do |organization|
+      tr
+        td
+          = link_to organization.name, organization_path(organization)
+          = organization_menu_options(organization)
+        td = organization.tagline
+        td = organization.city
+        td = organization.state
+
+- else
+  | You are not a part of any organizations
+br
+br
+= link_to "Create an Organization", new_organization_path, :class => "button small"

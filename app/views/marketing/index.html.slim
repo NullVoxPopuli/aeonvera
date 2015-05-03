@@ -1,0 +1,22 @@
+.imageoverlay.text-center.panel.bg-header.header
+    h1.text-center = APPLICATION_CONFIG["app_name"]
+    h6.subheader.text-center Event registration designed for dancers.
+
+.row style='margin: 0 auto;'
+  .columns.medium-6.text-center
+    h3 Looking for an event?
+    hr
+    = link_to "Event Calendar", calendar_home_index_path, :class => "button success"
+
+  .columns.medium-6.text-center
+    h3 Hosting an event?
+    hr
+    = link_to "Create Your Event", new_hosted_event_path, :class => "button success"
+
+
+hr
+.text-center
+  span<>
+    = link_to('Login', new_user_session_path, :class => "button primary")
+  span<>
+    = link_to('Sign Up', new_user_registration_path, :class => "button primary")

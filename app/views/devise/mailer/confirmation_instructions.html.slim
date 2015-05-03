@@ -1,0 +1,17 @@
+= content_for :header do
+	| Confirm Your Email
+
+= content_for :body do
+  p = "Welcome #{@resource.name}!"
+  p
+    | You can confirm your account email through the link below:
+  p
+    = link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)
+
+  p
+
+  	| If you need to, you can review the&nbsp;
+  	= link_to "Terms of Service", terms_of_service_url
+  br
+
+= render file: "/layouts/email"

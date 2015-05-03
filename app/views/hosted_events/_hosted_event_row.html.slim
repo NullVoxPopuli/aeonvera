@@ -1,0 +1,16 @@
+tr data-id="#{event.id}"
+	td
+		= link_to event.name, hosted_event_path(event)
+		= options_for(links: hosted_event_links(event))
+	/td = event.orders.where(attendance_id: nil).count
+	td = event.attendances.count
+	td = event.attendances.leads.count
+	td = event.attendances.follows.count
+	/td = event.attendances.with_shirts.count.count
+	/td = event.attendances.with_competitions.count.count
+	td = event.shirts_sold
+	/td = number_to_currency(event.revenue)
+	/td = number_to_currency(event.preregistration_revenue)
+	/td	= number_to_currency(event.postregistration_revenue)
+	td = l event.opening_tier.date, format: :with_zone if event.opening_tier
+	td = event.starts_at.to_date.to_s(:long)

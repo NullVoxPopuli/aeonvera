@@ -1,0 +1,21 @@
+javascript:
+	$(function(){
+		$('#pass_attendance_id').select2({
+			allowClear: true,
+			placeholder: 'Select Atendee',
+			dropdownAutoWidth: true
+		}).select2('val', #{@pass.new_record? ? 'null' : @pass.attendance_id });
+	});
+= render partial: '/shared/error_messages', locals: { target: @pass }
+
+= f.label :name
+= f.text_field :name, required: true, placeholder: 'SwingIN 2014 Jack and Jill 1st Place'
+
+= f.label :intended_for
+= f.text_field :intended_for, placeholder: 'Name of Recipient'
+= f.label :attendee
+= f.select :attendance_id, options_for_select(attendance_options)
+br
+br
+.actions
+	= f.submit 'Save', class: 'button primary'

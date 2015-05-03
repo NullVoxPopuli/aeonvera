@@ -1,13 +1,59 @@
-# aeonvera-todo
+# [ÆONVERA](https://www.aeonvera.com)
 
-This site* is for feature requests, bug reports, and other tasks that need to be done on ÆONVERA.   
-[Please click the issues button on the right-hand side of this page to get to the "issues" page.](https://github.com/NullVoxPopuli/aeonvera-todo/issues)
+ A generic registration system aimed towards swing dance events.
 
-All suggestions welcome :-)
+ Also supports swing dancing scenes / organizations.
+ ------------------------------
 
-# [Visit ÆONVERA](https://www.aeonvera.com)
- 
- _______________________________________________________
- 
- 
-*This site is actually just an empty repository, real site linked above (to aeonvera)
+ By:
+ L. Preston Sego III
+ Precognition, LLC
+
+ ## Issues / Bug Reports
+
+ [Submit an idea or bug report here](https://github.com/NullVoxPopuli/aeonvera-todo)
+
+ ## Servers
+
+  * [Production (aeonvera.com)](https://www.aeonvera.com)
+  * [Staging (aeonvera-staging.work)](http://aeonvera-staging.work/)
+  * [Development (swing.vhost:3000)](http://swing.vhost:3000)
+
+ ## Environment Setup
+
+  * Ruby Version >= 2.2
+  * PostgreSQL >= 9.3
+
+     bundle install
+     rake db:create
+     rake db:migrate # to
+     rails s
+
+ ## Environment Variables
+
+  * S3_ACCESS_KEY_ID
+  * S3_SECRET_ACCESS_KEY
+  * STRIPE_CLIENT_ID
+  * STRIPE_SECRET_KEY
+  * STRIPE_PUBLISHABLE_KEY
+  * REDISCLOUD_URL
+  * MANDRILL_USERNAME
+  * MANDRILL_APIKEY
+  * DEVISE_SECRET_KEY
+  * COOKIE_SECRET_KEY
+  * TRUSTED_IP
+
+ ## Tests
+
+ To run all the tests
+
+     rspec
+
+ To run the coverage report
+
+     COVERAGE=true rspec
+
+
+ ## License
+
+ [Artistic License 2.0](LICENSE)

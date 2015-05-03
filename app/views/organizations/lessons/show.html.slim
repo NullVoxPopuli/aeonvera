@@ -1,0 +1,10 @@
+table
+  thead
+    tr
+      th
+      th Name
+  tbody
+    - @users.each do |user|
+      tr
+        td = @counts[user.id]
+        td = user.name

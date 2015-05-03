@@ -1,0 +1,13 @@
+.payment-status {
+  ul.payment_methods {
+    width: initial;
+    max-width: auto;
+    &.large {
+      max-width: auto;
+    }
+    li {
+      line-height: 1.5em;
+      padding: 0 10px;
+    }
+  }
+}

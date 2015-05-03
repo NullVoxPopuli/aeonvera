@@ -1,0 +1,24 @@
+h1 = "Membership Options for #{@organization.name}"
+
+table
+  thead
+    tr
+      th Name
+      th Price
+      th Duration
+      th # Members
+      th
+
+  tbody
+    - @membership_options.each do |membership|
+      tr
+        td
+          = membership.name
+          = membership_option_menu_options(membership)
+        td = number_to_currency(membership.price)
+        td = membership.duration_in_words
+        td = membership.members.count
+        td = link_to "Members", organization_membership_option_members_path(@organization, membership)
+br
+
+= link_to 'New Membership Option', new_organization_membership_option_path, class: "button"

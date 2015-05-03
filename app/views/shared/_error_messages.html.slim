@@ -1,0 +1,10 @@
+- if target.errors.any?
+	#error_explanation
+	 	h2
+	 		- if defined? title
+	 			= title
+	 		- else
+	 			= "#{pluralize(target.errors.count, "error")} prohibited this event from being saved:"
+	 	ul
+			- target.errors.full_messages.each do |message|
+				li = message

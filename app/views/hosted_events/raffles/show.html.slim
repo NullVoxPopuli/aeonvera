@@ -1,0 +1,30 @@
+h1 = @raffle.name
+= link_to "Choose Winner", choose_winner_hosted_event_raffle_path(@event, @raffle), :class => "button small"
+| &nbsp;
+= link_to 'Edit Raffle', edit_hosted_event_raffle_path(@event, @raffle), :class => "button small"
+| &nbsp;
+= link_to 'Back', hosted_event_raffles_path(@event), :class => "button small"
+
+- if @raffle.winner.present?
+  h4
+    span> Winner:
+    = @raffle.winner.attendee_name
+
+- if @raffle_tickets.present?
+  table
+    tr
+      th Name
+      th # Purchased
+      th Price
+      th
+        span # Number of Tickets
+        = tooltip_tag('A higher number of tickets will give a person a higher change of winning.')
+    - @raffle_tickets.each do |ticket|
+      tr
+        td
+          = link_to ticket.name, hosted_event_raffle_raffle_ticket_path(@event, @raffle, ticket)
+        td = ticket.attendances.count
+        td = number_to_currency(ticket.price)
+        th = ticket.metadata['number_of_tickets']
+br
+= link_to "New Ticket", new_hosted_event_raffle_raffle_ticket_path(@event, @raffle), :class => "button small success"

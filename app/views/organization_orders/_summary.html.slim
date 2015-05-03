@@ -1,0 +1,15 @@
+- event = attendance.host
+- show_net_received = local_assigns.try(:[], :net_received) || false
+
+= render partial: '/orders/summary_table', locals: local_assigns.merge(show_net_received: show_net_received, event: event)
+
+- if event.has_payment_processor?
+  - if (not attendance.owes_nothing?)
+    = render partial: '/organization_orders/payment_button', locals: { order: order, attendance: @attendance }
+
+  - else
+    span.button.small.success
+      | You are Signed Up!
+- else
+  span.button.small.success You are Signed Up!
+  span.small<> * Amount owed to be collected upon arrival

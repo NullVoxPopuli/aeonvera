@@ -1,0 +1,28 @@
+h1
+  | Registration for
+  span<>
+    = current_event.name
+  | &nbsp;opens in...
+h2.countdown
+
+= javascript_include_tag "jquery.countdown.min"
+
+javascript:
+  $(function(){
+    $("h2.countdown").countdown('#{@date.strftime("%Y/%m/%d %H:%M:%S")}', function(event) {
+      $(this).html(event.strftime('%w weeks %d days %H:%M:%S'));
+    });
+  });
+
+
+p
+  | While you are waiting, feel free to
+  ul
+    li Create a Login and Password
+    li
+      | You will receive a confirmation email. Click on the link in that email to finalize your registration.
+      ul
+        li Email confirmation helps prevent spam
+        li You, the registrant, will not be required to re-enter your information on other events on ÆONVERA
+    li Wait for registration to open (or just stare at the above countdown)
+    li If you are not sent back to this page after confirming your email, come back to this page to begin your registration for this event.

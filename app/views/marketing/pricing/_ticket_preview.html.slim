@@ -1,0 +1,40 @@
+.row style="margin: auto;"
+  .small-12.columns
+    .row
+      .medium-6.columns.medium-offset-3
+        .pricing-table
+          .title
+            h3 style="color: white;" Preview Your Ticket Costs
+            h4 style="color: white;" You are in control
+          .description
+            .row
+              .small-5.columns Ticket Price
+              .small-7.columns
+                .row.collapse
+                  .small-3.columns
+                    span.prefix style="padding: 10px;" $
+                  .small-9.columns
+                    input#ticketPrice type="text" placeholder="75"
+          .description
+            .row
+              .small-5.columns#serviceFee
+              .small-7.columns#cardFee
+            .row
+              .small-5.columns
+                .text-center = "#{APPLICATION_CONFIG["app_name"]} Fee"
+              .small-7.columns
+                .text-center Gateway Processing Fee
+          .description
+            .row
+              .small-5.columns Buyer Pays
+              .small-7.columns#buyerPays
+          .description
+            .row
+              .small-5.columns You Get
+              .small-7.columns#youGet
+          .description
+            .row
+              .small-12
+                label
+                  input#absorbFees type="checkbox" /
+                  | Absorb the fees into your price instead

@@ -1,0 +1,20 @@
+
+
+h1 Pricing Tables
+
+table.table.table-bordered.table-striped.table-condensed
+	tr
+		th Package
+		- if @pricing_tiers.present?
+			- @pricing_tiers.each do |tier|
+				th = tier.date ? tier.date.to_date.to_s(:long) : "After #{tier.registrants} registrants"
+		th At The Door
+	- @event.packages.each do |package|
+		tr
+			td = link_to(package.name, hosted_event_package_path(@event, package))
+			- if @pricing_tiers.present?
+				- @pricing_tiers.each do |tier|
+					td = number_to_currency(package.price_at_tier(tier))
+			td = number_to_currency(package.at_the_door_price)
+
+

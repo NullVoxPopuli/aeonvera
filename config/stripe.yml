@@ -1,0 +1,7 @@
+# these test credentials are not capable of actually processing payments
+client_id: ca_4oEqCCUzDfLTBqXsFbXyklhVUP8XdOfO
+secret_key: sk_test_aAZ0hU8Fhuxt3Xfdebe5I3dA
+publishable_key: pk_test_tRYRr2ep1galbJf13I2N23vd
+
+access_token_url: https://connect.stripe.com/oauth/token
+authorize_url: https://connect.stripe.com/oauth/authorize

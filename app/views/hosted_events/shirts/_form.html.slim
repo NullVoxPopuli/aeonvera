@@ -1,0 +1,17 @@
+= render partial: "shared/error_messages", locals: { target: @shirt }
+= f.label :name
+= f.text_field :name, required: true
+= f.label :price
+= f.number_field :price, required: true, step: :any
+= f.label :picture
+= f.file_field :picture
+
+= f.label :sizes
+= f.fields_for :metadata do |m|
+  / = m.collection_check_boxes :sizes, LineItem::Shirt::ALL_SIZES, :to_s, :to_s
+  - LineItem::Shirt::ALL_SIZES.each do |size|
+    = m.check_box "sizes][", { checked: @shirt.sizes.include?(size)}, size, ""
+    = m.label size
+
+
+= f.submit 'Save', :class => "button small"

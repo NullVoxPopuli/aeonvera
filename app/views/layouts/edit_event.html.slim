@@ -1,0 +1,16 @@
+- content_for :stylesheets do
+  = stylesheet_link_tag "hosted_events"
+
+- content_for :side_nav do
+
+  li = link_to "Payment Processing", hosted_event_payment_processors_path(@event)
+  li = link_to "Levels", hosted_event_levels_path(@event)
+  li = link_to "Discounts", hosted_event_discounts_path(@event)
+  li = link_to "Packages", hosted_event_packages_path(@event)
+  li = link_to "Pricing Tiers", hosted_event_pricing_tiers_path(@event)
+  li = link_to "Competitions", hosted_event_competitions_path(@event)
+  li = link_to "A la Carte Items", hosted_event_line_items_path(@event)
+  li = link_to "Shirts", hosted_event_shirts_path(@event)
+  li = link_to "Raffles", hosted_event_raffles_path(@event)
+
+= render template: "layouts/two_pane"

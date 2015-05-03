@@ -1,0 +1,11 @@
+@media only screen and (min-width: 38em) {
+
+}
+
+@media only screen and (max-width: 60em){
+	nav .top-bar-section ul.right {
+		// max-width: 361px;
+		overflow: hidden;
+		max-height: 45px;
+	}
+}

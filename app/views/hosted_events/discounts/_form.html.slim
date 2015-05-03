@@ -1,0 +1,22 @@
+= render partial: "shared/error_messages", locals: { target: @discount }
+
+.panel
+	= f.label :name, "Code"
+	= f.text_field :name
+
+	= f.label :value, "Amount"
+	= f.number_field :value, min: 0
+
+	= f.label :kind
+	= f.select :kind, kind_options
+
+	= f.label :allowed_number_of_uses
+	= f.number_field :allowed_number_of_uses, step: "1"
+
+	/ = f.label :affects
+	/ = f.select :affects, affects_options
+	= f.hidden_field :affects, value: "Final Price"
+
+.text-right
+	= back_button(hosted_event_discounts_path)
+	= f.submit 'Save', :class => "button small"

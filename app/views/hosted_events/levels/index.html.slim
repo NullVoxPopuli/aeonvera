@@ -1,0 +1,29 @@
+h1
+  span<>
+    | Levels for
+    span<> = @event.name
+
+table.table.table-striped.table-bordered.table-condensed
+  tr
+    th Name
+    th # Leads
+    th # Follows
+    th Total
+    th Requires
+
+  - @levels.each do |level|
+    - next if (level.deleted? and level.attendances.count == 0)
+
+    tr
+      td class="#{'deleted' if level.deleted?}"
+        - name = level.deleted? ? "[Deleted] #{level.name}" : level.name
+        = link_to name, hosted_event_level_path(@event, level)
+        = level_menu_options(level)
+      td = level.attendances.leads.count
+      td = level.attendances.follows.count
+      td = level.attendances.count
+      td = level.requirement_name
+
+br
+
+= link_to 'New Level', new_hosted_event_level_path, :class => "button small"

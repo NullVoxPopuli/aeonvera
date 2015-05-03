@@ -1,0 +1,39 @@
+p#notice = notice
+
+.row
+  .left.columns.small-11
+    h3 style="overflow: hidden; white-space: nowrap;" = @event.name
+  .right.columns.small-1
+    = link_to "Edit", edit_hosted_event_path(@event), class: "button small right inline"
+
+hr
+
+.row
+  .medium-3.columns
+    row
+      .small-12.columns.text-center
+        label Total Registrants
+        h3 = @event_decorator.total_registrants
+    .row
+      .small-6.columns.text-center
+        label Leads
+        h4 = @event_decorator.total_leads
+      .small-6.columns.text-center
+        label Follows
+        h4 = @event_decorator.total_follows
+
+    hr
+    .row
+      .small-12.columns.text-center
+        label Revenue
+        h3 = number_to_currency @event_decorator.revenue
+
+    -if @event_decorator.unpaid > 0
+      .row
+        .small-12.columns.text-center
+          label Unpaid
+          h3 = number_to_currency @event_decorator.unpaid
+
+  .medium-9.columns
+    label Most Recent Registrations
+    = render partial: "/hosted_events/attendances/attendances", locals: { subject: @event, attendances: @event_decorator.recent_attendees, title: false }

@@ -1,0 +1,8 @@
+app_name: "ÆONVERA"
+support_email: "support@aeonvera.com"
+admin_subdomain: "admin"
+domain:
+  development: swing.vhost
+  staging: "aeonvera-staging.work"
+  production: "aeonvera.com"
+  test: "test.local.vhost"

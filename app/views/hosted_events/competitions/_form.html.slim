@@ -1,0 +1,17 @@
+
+= render partial: "shared/error_messages", locals: { target: @competition }
+
+.form-group
+	= f.label :name
+	= f.text_field :name, required: true, :class => "form-control"
+.form-group
+	= f.label :initial_price
+	= f.number_field :initial_price, min: 0, step: :any
+.form-group
+	= f.label :at_the_door_price
+	= f.number_field :at_the_door_price, min: 0, step: :any
+.form-group
+	= f.label :kind
+	= f.select :kind, competition_options(@competition)
+
+.actions = f.submit 'Save', :class => "btn btn-primary"

@@ -1,0 +1,20 @@
+h1
+	| Pricing Tiers for
+	= @event.name
+
+table.table.table-bordered.table-striped.table-condensed
+	tr
+		th Increase By
+		th Increases After
+
+	- opening = @event.opening_tier
+	- @pricing_tiers.each do |pricing_tier|
+		- next if pricing_tier == opening
+		tr data-id="#{pricing_tier.id}"
+			td = number_to_currency(pricing_tier.increase_by_dollars)
+			td
+				= increases_when(pricing_tier)
+				= pricing_tier_table_options(pricing_tier)
+br
+
+= link_to 'New Pricing tier', new_hosted_event_pricing_tier_path

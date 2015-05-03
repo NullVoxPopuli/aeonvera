@@ -1,0 +1,37 @@
+- show_discount_field = (defined?(allow_discounts) ? allow_discounts : true)
+- show_net_received = (defined?(net_received) ? net_received :  false)
+
+
+- orders.each do |order|
+  - if order.is_legacy?
+   = render partial: 'orders/legacy_summary', locals: {order: order, attendance: attendance, buttons: buttons  }
+  - else
+    - if (buttons && (not order.paid?) && current_event.accept_only_electronic_payments?)
+      - order.update!(payment_method: Payable::Methods::STRIPE)
+    = render partial: 'orders/summary', locals: { order: order, attendance: attendance, buttons: buttons, net_received: show_net_received }
+
+    - if !order.paid? && show_discount_field
+      - if order.total.to_i != 0
+        - if current_event.allow_discounts?
+          .clearfix
+          br
+          .right.clearfix style="margin-right: 20px"
+            .row.collapse.discount-container
+              label Discount Code
+              .columns.small-9
+                = text_field_tag :discount, "", placeholder: "acme-competition-winner"
+              .columns.small-3
+                = link_to "Apply", apply_discount_register_path(attendance, order_id: order.id), class: "button tiny postfix", id: "discount_for_#{order.id}", method: :post
+          .clearfix
+          javascript:
+            $(function(){
+              var link = $("#discount_for_#{order.id}");
+              var href = link.attr('href');
+              var field = link.parent().parent().find('input');
+
+              field.bind('keyup input paste', function(e){
+                var self = $(this);
+                var newHref = href + '&code=' + self.val();
+                link.attr('href', newHref);
+              });
+            });

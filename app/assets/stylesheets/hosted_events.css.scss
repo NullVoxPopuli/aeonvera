@@ -1,0 +1,12 @@
+.housing-status, .housing-nights, .has-volunteers, .packages, .allow-discounts{
+	label, input{
+		display: inline;
+	}
+	label{
+		padding: 5px;
+	}
+	label:after{
+ 		content:"\A"; white-space:pre; 	
+ 	}
+
+}

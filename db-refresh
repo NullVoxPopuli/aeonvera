@@ -1,0 +1,1 @@
+rake db:drop; heroku pg:pull DATABASE_URL aeonvera_development --app aeonvera

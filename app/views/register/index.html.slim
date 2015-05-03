@@ -1,0 +1,25 @@
+- content_for :meta_tags do
+	meta name="viewport" content="target-densitydpi=150"
+	meta name="viewport" content="width=device-width"
+	meta name="viewport" content="initial-scale=1.0"
+	meta name="viewport" content=" maximum-scale=1"
+
+
+.text-center
+	h1.hide-for-small
+		= @current_event.name
+	h3.show-for-small
+	  = @current_event.name
+	h5.hide-for-small
+		= @current_event.short_description
+	h6.show-for-small
+	  = @current_event.short_description
+
+
+	hr
+	
+
+	= link_to('Sign Up', new_user_registration_path)
+	span<> or
+	= link_to('Login', new_user_session_path)
+	span<> to register for this event

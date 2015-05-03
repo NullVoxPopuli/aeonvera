@@ -1,0 +1,7 @@
+= "Total: #{number_to_currency(@orders.map(&:total).inject(:+))}"
+table
+  - @orders.each do |order|
+    tr
+      td = order.created_at.to_s(:long)
+      td = order.line_items.map(&:name).join(", ")
+      td = order.total

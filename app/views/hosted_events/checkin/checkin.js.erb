@@ -1,0 +1,5 @@
+/*<%= flash %>*/
+var row = $("tr[data-id=<%= @attendance.id %>]");
+row.find(".checked-in-at").html("<%= @attendance.checked_in_at.try(:to_s, :long) %>");
+row.find("td:last-child .checkin").hide();
+row.find("td:last-child .uncheckin").show();

@@ -1,0 +1,27 @@
+h1 = "Lessons for #{@organization.name}"
+
+table
+  thead
+    tr
+      th Name
+      th Date
+      th Start
+      th End
+      th Registrations Starts At
+      th Registration Closes At
+
+  tbody
+    - @lessons.each do |lesson|
+      tr
+        td
+          = link_to lesson.name, organization_lesson_path(@organization, lesson)
+          = lesson_menu_options(lesson)
+        td = lesson.schedule_to_words
+        td = l lesson.starts_at, format: :short_time
+        td = l lesson.ends_at, format: :short_time
+        td = l lesson.registration_opens_at, format: :abbr if lesson.registration_opens_at
+        td = l lesson.registration_closes_at, format: :abbr if lesson.registration_closes_at
+
+br
+
+= link_to 'New Lesson', new_organization_lesson_path, class: "button"

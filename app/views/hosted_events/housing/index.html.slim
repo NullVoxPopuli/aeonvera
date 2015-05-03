@@ -1,0 +1,52 @@
+= link_to "Requesting CSV", hosted_event_housing_index_path(@event, format: 'csv')
+| &nbsp;|&nbsp;
+= link_to "Providing CSV", hosted_event_housing_index_path(@event, providing: true, format: 'csv')
+h1 Requesting Housing
+
+table.table.table-bordered.table-striped.table-condensed
+	tr
+		th Name
+		th Date Registered
+		th Roommate Gender Preference
+		th Requires Transportation
+		th Allergies
+		th Smoking Preference
+		th Notes
+
+	- if @needing_housing.present?
+		- @needing_housing.each do |attendance|
+			- housing = attendance.requested_housing_data
+			tr
+				td = attendance.attendee_name
+				td = attendance.created_at.to_date.to_s(:long)
+				td = housing["gender"]
+				td = housing["transportation"].to_b
+				td = housing["allergies"]
+				td = housing["smoking"]
+				td = housing["notes"]
+
+
+h1 Providing Housing
+
+table.table.table-bordered.table-striped.table-condensed
+	tr
+		th Name
+		th Date Registered
+		th Housing Gender Preference
+		th Has Room for # People
+		th Offering Transportation
+		th Can Transport # People
+		th Smoking Present
+		th Has Pets
+	- if @providing_housing.present?
+		- @providing_housing.each do |attendance|
+			- housing = attendance.providing_housing_data
+			tr
+				td = attendance.attendee_name
+				td = attendance.created_at.to_date.to_s(:long)
+				td = housing["gender"]
+				td = housing["room_for"]
+				td = housing["transportation"].to_b
+				td = housing["transportation_for"]
+				td = housing["smoking"]
+				td = housing["have_pets"].to_b

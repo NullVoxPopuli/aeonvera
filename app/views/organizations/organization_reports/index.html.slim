@@ -1,0 +1,18 @@
+h2 Orders
+table
+  thead
+    tr
+      th Name
+      th Ordered
+      th Paid
+      th Owes
+  tbody
+    - @orders.each do |order|
+      tr
+        td = order.user.name
+        td
+          - order.line_items.each do |item|
+            = "#{item.quantity} x #{item.name}"
+            br
+        td = order.paid?
+        td = order.total

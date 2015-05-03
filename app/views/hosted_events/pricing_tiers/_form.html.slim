@@ -1,0 +1,15 @@
+= render partial: "shared/error_messages", locals: { target: @pricing_tier }
+
+fieldset
+	.form-group
+		= f.label :increase_by_dollars
+		= f.number_field :increase_by_dollars, required: true, class: "form-control", step: "any"
+	.form-group.after-date
+		= f.label :date, "After Date"
+		= f.date_field :date
+
+		= f.label :registrants, "After Total Registrants"
+		= f.number_field :registrants
+
+
+.actions = f.submit 'Save', class: "button small"

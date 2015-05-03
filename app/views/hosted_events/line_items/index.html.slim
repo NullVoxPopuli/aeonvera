@@ -1,0 +1,25 @@
+h1
+	| Items for
+	= @event.name
+
+table.table.table-striped.table-bordered.table-condensed
+	tr
+		th Name
+		th # Purchased
+		th Price
+		th Expires At
+		th
+
+	- @line_items.each do |line_item|
+		tr
+			td
+				= link_to line_item.name, hosted_event_line_item_path(@event, line_item)
+				= line_item_menu_options(line_item)
+			td = line_item.attendances.count
+			td = number_to_currency(line_item.price)
+			td = line_item.expires_at
+			td = line_item.item_type
+
+br
+
+= link_to 'New Item', new_hosted_event_line_item_path, :class => "button small"

@@ -1,0 +1,82 @@
+- title = (defined?(show_title) ? show_title :  true)
+- buttons = (defined?(show_buttons) ? show_buttons :  true)
+- hide_information = (defined?(hide_details) ? hide_details :  true)
+- a = (defined?(attendance) ? attendance : @attendance)
+- attendance = a
+
+
+.review
+  - if title
+    h1
+      | Review Registration of&nbsp;
+      = attendance.attendee_name
+    p
+      = attendance.attendee_name
+      | &nbsp;is&nbsp;
+      = "not" if !attendance.attending?
+      | &nbsp;attending.
+
+  = render partial: "/orders/all", locals: {orders: attendance.orders, buttons: false, attendance: attendance, allow_discounts: false, net_received: true}
+
+
+  h3.info-toggle
+    i.fa.fa-caret-right
+    | &nbsp;Information
+  .info-container
+    - if attendance.interested_in_volunteering?
+      fieldset
+        legend Volunteering
+        em
+          | You are interested in Volunteering.
+    - if attendance.needs_housing?
+      fieldset
+        legend Housing Request
+        - housing_request = attendance.metadata_safe["need_housing"] || {}
+        table
+          tr
+            th Prefer to stay with
+            td = housing_request["gender"]
+          tr
+            th Need Transportation?
+            td = housing_request["transportation"]  == "1"
+          tr
+            th Allergies
+            td = housing_request["allergies"]
+          tr
+            th Air Quality / Smoking Preference
+            td = housing_request["smoking"]
+          tr
+            th Notes
+            td = housing_request["notes"]
+    - if attendance.providing_housing?
+      fieldset
+        legend Housing Provision
+        - housing_provision = attendance.metadata_safe["providing_housing"] || {}
+        table
+          tr
+            th Prefer to house
+            td = housing_provision["gender"]
+          tr
+            th Can provide transportation
+            td = housing_provision["transportation"] == 1
+          tr
+            th Number of People to House
+            td = housing_provision["room_for"]
+          tr
+            th Number of People that can be Transported
+            td = housing_provision["transportation_for"]
+          tr
+            th Your house has smoke
+            td = housing_provision["smoking"] == 1
+          tr
+            th Your house has pets
+            td = housing_provision["have_pets"] == 1
+    - if (address = attendance.metadata_safe["address"]).present?
+      fieldset
+        legend Address
+        = render partial: "/shared/address", locals: { address: address }
+
+  - if attendance.attending?
+    = link_to "Not Attending", hosted_event_attendance_path(@event, attendance), method: :delete, class: "button alert small"
+  - else
+    = link_to "Attending", hosted_event_cancelled_attendance_path(@event, attendance), method: :delete, class: "button success small"

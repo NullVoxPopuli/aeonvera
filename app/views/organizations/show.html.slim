@@ -1,0 +1,15 @@
+h1 = @organization.name
+h4
+  = @organization.tagline
+h6
+  span = @organization.city
+  |,&nbsp;
+  span = @organization.state
+
+- if @total_members > 0
+  span
+    = @total_members
+    span<> Total Members
+br
+br
+= link_to 'Edit', edit_organization_path(@organization), :class => "button primary"

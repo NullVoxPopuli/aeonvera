@@ -1,0 +1,28 @@
+javascript:
+	$(function(){
+		$('select#attendee_list').select2({
+			placeholder: 'Select Attendee',
+			allowClear: true,
+			dropdownAutoWidth: true
+		}).on('change', function(e){
+			console.log(e)
+			/* creat the next button */
+			var button = $('a.next.button');
+			button.attr('href', '/hosted_events/' +
+				#{@event.id} +
+				'/individual_items/' +
+				e.val +
+				'/new');
+			button.show();
+		});
+	});
+
+h2 Search for attendee
+
+.already-registered
+	ul#attendee_list
+		= select_tag( 'attendee_list', options_from_collection_for_select(@attendances, :id, :attendee_name), include_blank: true)
+
+= link_to 'Next', '#', class: "button success next", style: 'display: none;'
+
+/ a.button.not-registered href="#" Not Listed?

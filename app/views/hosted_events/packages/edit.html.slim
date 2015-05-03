@@ -1,0 +1,5 @@
+h1 Editing package
+
+.well
+	= form_for [@event, @package], url: hosted_event_package_path do |f|
+		== render partial: "form", locals: { f: f }

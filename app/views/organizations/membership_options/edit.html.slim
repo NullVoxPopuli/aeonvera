@@ -1,0 +1,4 @@
+h1 Edit membership
+
+= form_for([@organization, @membership_option], url: organization_membership_option_path) do |f|
+  = render partial: "form", locals: { f: f }

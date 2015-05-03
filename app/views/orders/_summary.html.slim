@@ -1,0 +1,26 @@
+- event = attendance.host
+- show_net_received = local_assigns.try(:[], :net_received) || false
+
+= render partial: '/orders/summary_table', locals: local_assigns.merge(show_net_received: show_net_received, event: event)
+
+- if show_net_received
+  = link_to "Resend Receipt", resend_receipt_hosted_event_attendance_path(hosted_event: event, id: attendance.id, order_id: order.id), class: "button small", method: :post
+
+
+.right
+  span
+    | Prices as of:&nbsp;
+    = order.created_at.to_s(:long)
+
+- if buttons
+  - if event.has_payment_processor?
+    - if (not attendance.owes_nothing?)
+      -if !event.over?
+        = render partial: '/orders/payment_button', locals: { order: order, attendance: @attendance }
+
+    - else
+      span.button.small.success
+        | You are Registered!
+  - else
+    span.button.small.success You are Registered!
+    span.small<> * Amount owed to be collected upon arrival

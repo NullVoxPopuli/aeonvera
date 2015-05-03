@@ -1,0 +1,20 @@
+h1 = @raffle_ticket.name
+= link_to 'Edit Ticket', edit_hosted_event_raffle_raffle_ticket_path(@event, @raffle, @raffle_ticket), :class => "button small"
+| &nbsp;
+
+= link_to 'Back', hosted_event_raffle_path(@event, @raffle), :class => "button small"
+
+br
+span Attendees with this ticket
+table
+  tr
+    th Name
+  - if @raffle_ticket.attendances.count > 0
+    - @raffle_ticket.attendances.each do |attendance|
+      tr
+        td = attendance.attendee_name
+  - else
+    tr: td No one has bought this ticket
+br
+
+= link_to "Delete", hosted_event_raffle_raffle_ticket_path(@event, @raffle, @raffle_ticket), :class => 'button small alert', method: :delete

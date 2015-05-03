@@ -1,0 +1,37 @@
+h1 Listing packages
+
+table.table.table-bordered.table-striped.table-condensed
+  tr
+    th width="30%" Name
+    th # Leads
+    th # Follows
+    th Total
+    th
+      | Current Price
+      = current_price_help
+    th Max Attendees
+    th Require Track?
+    th Expires
+
+  - @packages.each do |package|
+    - next if (package.deleted? and package.attendances.count == 0)
+    tr
+      td class="#{'deleted' if package.deleted?}"
+        - name = package.deleted? ? "[Deleted] #{package.name}" : package.name
+        = link_to name, hosted_event_package_path(@event, package)
+        = package_menu_options(package)
+      td = package.attendances.leads.count
+      td = package.attendances.follows.count
+      td = package.attendances.count
+      td = number_to_currency(package.current_price)
+      td = package.attendee_limit
+      td = package.requires_track
+      td = package.expires_at.to_date.to_s(:long) if package.expires_at
+br
+
+= link_to 'New Package', new_hosted_event_package_path
+
+javascript:
+  $(function(){
+    $("#current-price-popover").popover();
+  });

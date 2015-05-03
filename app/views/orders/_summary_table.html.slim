@@ -1,0 +1,52 @@
+table width="100%"
+  thead
+    tr
+      th
+      th Item
+      th Price
+  tbody
+    - order.line_items.each do |line_item|
+      - item = line_item.line_item
+      tr
+        td = item.class.name.titleize.gsub("Line Item/", "")
+        - if item.is_a?(Discount) and item.kind == Discount::PERCENT_OFF
+          td = item.code
+          td = item.display_value
+        - else
+          td
+            - if item.is_a?(LineItem::Shirt)
+              = line_item.name
+              | &nbsp;-&nbsp;
+              span<>
+                = shirt_with_size_and_quantity_summary(line_item, attendance: attendance)
+            - elsif line_item.quantity > 1
+              = "#{line_item.quantity} x #{line_item.name}"
+            - else
+              = line_item.name
+
+
+          td = number_to_currency line_item.total
+    - total = order.total
+    - sub_total = order.sub_total
+    - if total > sub_total
+      - if event.make_attendees_pay_fees?
+        tr
+          td
+          td Convenience Fee
+          td = number_to_currency(total - sub_total)
+    tr
+      td
+      td Total
+      td = number_to_currency order.total
+    - if order.paid?
+      tr
+        td.order-payment-status data-paid="#{order.paid}" colspan="3"
+          = "Paid #{number_to_currency(order.paid_amount)} on #{order.updated_at.to_s(:short)} via #{order.payment_method}"
+      - if show_net_received
+        tr
+          td
+          td
+            = "Net Received: #{number_to_currency(order.net_received)}"
+          td
+            = what_is_this_stripe_fee_tooltip("Fees: ")
+            = number_to_currency(order.total_fee_amount)

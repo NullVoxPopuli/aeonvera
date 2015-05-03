@@ -1,0 +1,3 @@
+class EventOrder < Order
+
+end

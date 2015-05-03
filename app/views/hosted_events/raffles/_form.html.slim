@@ -1,0 +1,8 @@
+= render partial: "shared/error_messages", locals: { target: @raffle }
+
+.form-group
+	= f.label :name
+	.col-lg-12
+		= f.text_field :name, required: true, :class => "form-control"
+.form-group
+	= f.submit 'Save', :class => "button small"

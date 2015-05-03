@@ -1,0 +1,32 @@
+footer.buttons{
+  bottom: 40px;
+  right: 0px;
+  left: auto;
+  border: 1px solid gray;
+  border-right: none;
+  background: lighten(#2795b6, 30%);
+  padding: 3px;
+  width: auto;
+  max-height: 70px;
+  input, a{
+    margin-bottom: 0px;
+  }
+}
+
+.register-footer{
+  position: fixed;
+  bottom: 60px;
+  right: 20px;
+  left: auto;
+  display: block;
+
+  .register-buttons{
+    padding: 10px;
+    width: auto;
+
+    input, a{
+      margin-bottom: 0px;
+    }
+  }
+
+}

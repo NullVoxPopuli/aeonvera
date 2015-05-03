@@ -1,0 +1,17 @@
+css:
+  .payment_methods{
+  width: 100px !important; max-width: 100px !important;
+  }
+a.button.tiny style="margin-bottom: 0"  href="#" data-dropdown="payment_methods_#{attendance.id}" Mark Paid
+ul.payment_methods.large.f-dropdown id="payment_methods_#{attendance.id}"
+  - Payable::Methods::ALL.each do |meth|
+    - if meth == Payable::Methods::CHECK
+      li
+        button.small#collect-check-number style="margin-bottom: 0; padding: 8px 30px" Check
+        .check-number-form style="display: none;"
+          = form_tag(send("#{path}_path", event, attendance), method: :put, remote: true) do
+            = label_tag :check_number, "Check Number"
+            = text_field_tag :check_number, "", placeholder: "e.g.: 1574"
+            = hidden_field_tag :payment_method, Payable::Methods::CHECK
+    - else
+      li = checkin_pay_link(attendance: attendance, payment_method: meth, path: path)

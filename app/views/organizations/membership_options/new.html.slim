@@ -1,0 +1,4 @@
+h1 Create membership
+
+= form_for([@organization, @membership_option], as: :membership_option, url: organization_membership_options_path) do |f|
+  = render partial: "form", locals: { f: f }

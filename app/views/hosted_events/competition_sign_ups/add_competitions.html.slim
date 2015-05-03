@@ -1,0 +1,31 @@
+h2
+	| Adding competitions for&nbsp;
+	= @attendance.attendee_name
+
+h3 Current Competitions
+- if @attendance.has_competitions?
+	- @attendance.competitions.each do |competition|
+		= competition.name
+		br
+- else
+	= @attendance.attendee_name
+	| &nbsp;is not signed up for any competitions.
+
+
+h3 Available Competitions
+table.available-competitions style="font-size: 1.5em;"
+	- if @available_competitions.present?
+		- @available_competitions.each do |competition|
+			tr: td.competition
+				= form_for(competition, url: hosted_event_competition_sign_ups_path(@event, id: @attendance, competition_id: competition.id), method: :post) do |f|
+					div = competition.name
+					div
+						.left = f.submit "Add", class: "button"
+						.left style="padding-left: 10px;"
+							= label_tag :amount_paid
+							= f.number_field :amount_paid, value: competition.current_price
+	- else
+		= @attendance.attendee_name
+		| &nbsp;is signed up for all the competitions.
+
+

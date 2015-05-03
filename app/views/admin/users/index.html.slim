@@ -1,0 +1,27 @@
+h2
+	| Total Users:&nbsp;
+	= @users.size
+table
+	thead
+		tr
+			th 
+			th Name
+			th Email
+			th Confirmation
+			th Current IP
+			th Sign IN Count
+	tbody
+		- @users.each do |user|
+			tr
+				td = link_to "Assume Control", assume_control_admin_user_path(user)
+				td = user.name
+				td = user.email
+				td 
+					-if user.confirmed_at.present?
+						= user.confirmed_at
+					- else
+						= form_for(user, :as => :user, :url => confirmation_path(:user), format: "js", :html => { :method => :post, style: "margin: 0;" }) do |f|
+							= f.hidden_field :email, :autofocus => true, value: user.email
+							= f.submit "Resend Confirmation", :class => "button small", style: "margin: 0"
+				td = user.current_sign_in_ip
+				td = user.sign_in_count

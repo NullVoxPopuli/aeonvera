@@ -1,0 +1,7 @@
+h1
+  span Editing
+  span<>
+    = @organization.name
+
+= form_for(@organization) do |f|
+  == render partial: 'form', locals: { f: f }

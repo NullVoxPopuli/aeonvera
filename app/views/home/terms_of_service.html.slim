@@ -1,0 +1,29 @@
+header
+	h1.terms-title
+		| ÆONVERA Terms of Service Agreement 
+		span.for
+			|(Non-Organizers)
+
+	table
+		tr
+			td.status
+				h6
+					em Last updated: February 17, 2014
+				h6
+					em
+						a data-target="updates" recent updates
+			td.tos
+				h5
+					a data-target="non-organizers" Non-Organizers
+					| |
+					a data-target="organizers" Organizers
+
+
+
+.terms
+	article.non-organizers
+		= render partial: "tos_non_organizers"
+	article.organizers
+		= render partial: "tos_organizers"
+	article.updates
+		= render partial: "tos_updates"

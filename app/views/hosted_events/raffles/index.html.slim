@@ -1,0 +1,27 @@
+h1
+  span> Raffles for
+  = @event.name
+
+- if @raffles.present?
+  table.table.table-striped.table-bordered.table-condensed
+    tr
+      th Name
+      th Winner
+
+    - @raffles.each do |raffle|
+      tr
+        td class="#{'deleted' if raffle.deleted?}"
+          - name = raffle.deleted? ? "[Deleted] #{raffle.name}" : raffle.name
+          = link_to name, hosted_event_raffle_path(@event, raffle)
+          = raffle_menu_options(raffle)
+        td
+          - if raffle.winner.present?
+            = raffle.winner.attendee_name
+          - else
+            span No Winner Chosen
+- else
+  span There are no raffles for this event
+br
+br
+
+= link_to 'New Raffle', new_hosted_event_raffle_path, :class => "button small"

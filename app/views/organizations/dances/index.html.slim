@@ -1,0 +1,27 @@
+h1 = "Dances for #{@organization.name}"
+
+table
+  thead
+    tr
+      th Name
+      th Date
+      th Start
+      th End
+      th Registrations Starts At
+      th Registration Closes At
+
+  tbody
+    - @dances.each do |dance|
+      tr
+        td
+          = dance.name
+          = dance_menu_options(dance)
+        td = dance.schedule_to_words
+        td = l dance.starts_at, format: :short_time
+        td = l dance.ends_at, format: :short_time
+        td = l dance.registration_opens_at, format: :abbr if dance.registration_opens_at
+        td = l dance.registration_closes_at, format: :abbr if dance.registration_closes_at
+
+br
+
+= link_to 'New Dance', new_organization_dance_path, class: "button"

@@ -1,0 +1,26 @@
+table.table.table-bordered.table-striped.table-condensed
+  tr
+    - columns.each do |column|
+      - if column.is_a?(Hash)
+        - title = (column[:title] or column[:name])
+      - else
+        - title = column.to_s.titleize
+      th = title
+  - if collection.present?
+    - collection.each do |item|
+      tr
+        - columns.each do |column|
+          / default name column
+          - if column == :name
+            td
+              = link_to item.name, event_url_for(item)
+              = send("#{klass.name.tableize.singularize}_menu_options", item)
+          - else
+            td
+              = item.send(column)
+  - else
+    tr
+      td colspan="#{columns.size}"
+        | No&nbsp;
+        span.object = klass.name.titleize
+        | &nbsp;(s) found

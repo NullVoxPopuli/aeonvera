@@ -1,0 +1,15 @@
+li
+  - if user_signed_in?
+    = link_to(edit_user_registration_path, class: "button secondary") do
+      span Edit Profile
+  - else
+    = link_to(new_user_registration_path, class: "button") do
+      span Sign Up
+
+li
+  - if user_signed_in?
+    = link_to(destroy_user_session_url, method: "delete", class: "button secondary") do
+      span Logout
+  - else
+    = link_to(new_user_session_path, class: "button") do
+      span Login

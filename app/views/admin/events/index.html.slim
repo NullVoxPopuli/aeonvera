@@ -1,0 +1,16 @@
+table
+	thead
+		tr
+			th Name
+			th Date
+			th Owner
+			th On Calendar
+			th Beta
+	tbody
+		- @events.each do |event|
+			tr
+				td = event.name
+				td = event.starts_at
+				td = event.hosted_by.name
+				th = event.show_on_public_calendar
+				td = link_to event.beta.to_s, toggle_beta_admin_event_path(event)

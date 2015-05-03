@@ -1,0 +1,4 @@
+h1 Editing Item
+
+= form_for [@event, @line_item], url: hosted_event_line_item_path do |f|
+	== render partial: 'form', locals: { f: f }
