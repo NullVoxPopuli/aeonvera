@@ -201,15 +201,7 @@ module Payable
 
 
   def checks
-    c = (self.metadata["checks"] || [])
-    c.map{|h| h.default_proc = proc do |h, k|
-        case k
-        when String then sym = k.to_sym; h[sym] if h.key?(sym)
-        when Symbol then str = k.to_s; h[str] if h.key?(str)
-        end
-      end
-    }
-    c
+    items_from_metadata("checks")
   end
 
   def checks=(checks)
@@ -228,6 +220,18 @@ module Payable
     else
       0
     end
+  end
+
+  def items_from_metadata(key)
+    c = (self.metadata[key] || [])
+    c.map{|h| h.default_proc = proc do |h, k|
+        case k
+        when String then sym = k.to_sym; h[sym] if h.key?(sym)
+        when Symbol then str = k.to_s; h[str] if h.key?(str)
+        end
+      end
+    }
+    c
   end
 
 end

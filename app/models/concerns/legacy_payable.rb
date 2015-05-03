@@ -56,15 +56,7 @@ module LegacyPayable
   end
 
   def legacy_line_items
-    l = (self.metadata["line_items"] || [])
-    l.map{|h| h.default_proc = proc do |h, k|
-        case k
-        when String then sym = k.to_sym; h[sym] if h.key?(sym)
-        when Symbol then str = k.to_s; h[str] if h.key?(str)
-        end
-      end
-    }
-    l
+    items_from_metadata("line_items")
   end
 
   def legacy_line_items=(items)
@@ -72,15 +64,7 @@ module LegacyPayable
   end
 
   def discounts
-    d = (self.metadata["discounts"] || [])
-    d.map{|h| h.default_proc = proc do |h, k|
-        case k
-        when String then sym = k.to_sym; h[sym] if h.key?(sym)
-        when Symbol then str = k.to_s; h[str] if h.key?(str)
-        end
-      end
-    }
-    d
+    items_from_metadata("discounts")
   end
 
   def discounts=(discounts)
