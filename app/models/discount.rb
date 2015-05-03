@@ -58,6 +58,7 @@ class Discount < ActiveRecord::Base
     KIND_NAMES[kind]
   end
 
+  # @TODO Move this to a discount decorator
   def discount
     case kind
     when DOLLARS_OFF
@@ -67,11 +68,12 @@ class Discount < ActiveRecord::Base
     end
   end
 
+  # TODO Move this to a discount decorator
   def display_value
     "-#{discount}"
   end
 
-
+  # @param [LineItem] any object that has a price method that returns a number
   # @return a (hopefully) negative number representing
   #   how much money will be added to the item's cost.
   #   this value is returned as negative, because if
@@ -79,15 +81,38 @@ class Discount < ActiveRecord::Base
   #   to decide how to display the discount in human-readable
   #   terms.
   def discounted_amount_of(item)
-    if self.kind == DOLLARS_OFF
+    if amount_discount?
       return 0 - self.value
     else
       # percent
-      return 0 - (item.price * (self.value / 100))
+      return 0 - (item.price * value_as_percent)
+    end
+  end
+
+  # @praam [Number] total the total cost / value
+  # @return [Number] the total with the discount applied
+  def apply_discount_to_total(total)
+    if amount_discount?
+      return total - self.value
+    else
+      return total * (1 - value_as_percent)
     end
   end
 
   private
+
+  def amount_discount?
+    self.kind == DOLLARS_OFF
+  end
+
+  def percent_discount?
+    self.kind == PERCENT_OFF
+  end
+
+  # simple conversion to percent
+  def value_as_percent
+    self.value / 100
+  end
 
   def code_is_valid?
     if code.present? and code.include?("&")
