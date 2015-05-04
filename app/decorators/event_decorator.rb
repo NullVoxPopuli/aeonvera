@@ -18,11 +18,11 @@ class EventDecorator < Draper::Decorator
 	end
 
 	def revenue
-		@revenue ||= object.revenue
+		@revenue ||= object.revenue || 0
 	end
 
 	def unpaid
-		@unpaid ||= object.unpaid_total
+		@unpaid ||= object.unpaid_total || 0
 	end
 
 end
