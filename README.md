@@ -1,5 +1,7 @@
 # [ÆONVERA](https://www.aeonvera.com)
 
+[![Join the chat at https://gitter.im/NullVoxPopuli/aeonvera](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/NullVoxPopuli/aeonvera?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
  A generic registration system aimed towards swing dance events.
 
  Also supports swing dancing scenes / organizations.
