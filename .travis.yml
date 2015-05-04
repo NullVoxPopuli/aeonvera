@@ -27,5 +27,8 @@ branches:
   only: master
 
 notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/b7f4be974c0a0ac9c09c
   email:
     on_failure: change
