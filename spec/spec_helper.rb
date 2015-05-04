@@ -62,7 +62,6 @@ RSpec.configure do |config|
 
   # RSpec
   config.include Devise::TestHelpers, type: :controller
-
   # https://github.com/plataformatec/devise/wiki/How-To:-Test-with-Capybara
   config.include Warden::Test::Helpers, type: :feature
   config.include FormHelpers, type: :feature

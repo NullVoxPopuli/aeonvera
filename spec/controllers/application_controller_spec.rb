@@ -2,6 +2,20 @@ require "spec_helper"
 
 describe ApplicationController do
 
+	describe '#back' do
+		before(:each) do
+			login
+		end
+
+		it 'chops off the most right /whatever part of the URL' do
+			@request.env["HTTP_REFERER"] = "/hosted_events/1/discounts/2"
+
+			expect(controller).to receive(:redirect_to){ "/hosted_events/1/discounts" }
+			controller.back
+		end
+
+	end
+
 	it "ignores the public www" do
 		request.stub(:host_with_port).and_return("www.#{controller.send(:current_domain)}")
 		controller.send(:check_subdomain).should be_nil # returns nothing
