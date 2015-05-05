@@ -139,7 +139,7 @@ end
 
 group :test do
   # In memory database for speed
-  gem "sqlite3"
+  gem "sqlite3-ruby"
 
   # The test runner
   gem "rspec"
