@@ -1,5 +1,3 @@
-
-
 h1 Pricing Tables
 
 table.table.table-bordered.table-striped.table-condensed
@@ -7,14 +5,26 @@ table.table.table-bordered.table-striped.table-condensed
 		th Package
 		- if @pricing_tiers.present?
 			- @pricing_tiers.each do |tier|
-				th = tier.date ? tier.date.to_date.to_s(:long) : "After #{tier.registrants} registrants"
+				th
+					- if tier.date
+						= tier.date.to_date.to_s(:long)
+					- if tier.date and tier.registrants
+						span<> or
+						br
+					- if tier.registrants
+						= "After #{tier.registrants} registrants"
+
 		th At The Door
-	- @event.packages.each do |package|
+	- package_totals = @packages.inject({}){ |h, p| h[p.id] = p.initial_price; h }
+	- @packages.each do |package|
 		tr
 			td = link_to(package.name, hosted_event_package_path(@event, package))
 			- if @pricing_tiers.present?
 				- @pricing_tiers.each do |tier|
-					td = number_to_currency(package.price_at_tier(tier))
+					td
+						- value = package.initial_price
+						- unless package.ignore_pricing_tiers
+							- value = package_totals[package.id] += tier.amount
+						= number_to_currency(value)
+
 			td = number_to_currency(package.at_the_door_price)
-
-
