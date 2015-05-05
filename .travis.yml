@@ -9,6 +9,10 @@ env:
   - TRAVIS=true
 
 script: bundle exec rspec
+before_srcipt:
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - cp config/database.travis.yml config/database.yml
+
 bundler_args: "--local --without documentation"
 
 addons:
