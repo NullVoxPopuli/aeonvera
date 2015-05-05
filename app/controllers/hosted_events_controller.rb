@@ -109,8 +109,9 @@ class HostedEventsController < ApplicationController
   end
 
   def pricing_tables
+    @event_decorator = @event.decorate
     @packages = @event.packages
-    @pricing_tiers = @event.pricing_tiers
+    @pricing_tiers = @event_decorator.pricing_tiers_in_order
   end
 
   def volunteers

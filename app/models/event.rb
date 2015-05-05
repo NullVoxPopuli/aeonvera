@@ -45,7 +45,7 @@ class Event < ActiveRecord::Base
     class_name: "LineItem",
     as: :host
 
-  has_many :pricing_tiers, -> { order("date ASC") }
+  has_many :pricing_tiers, -> { order("registrants ASC, date ASC") }
   has_one :opening_tier, -> { order("date ASC") }, class_name: "PricingTier"
 
   validates :hosted_by, presence: true
