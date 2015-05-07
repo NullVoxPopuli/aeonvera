@@ -60,9 +60,10 @@ describe Organization do
     end
 
     it 'returns a lesson that has no dates' do
-      lesson = create(:lesson, host: @organization)
+      lesson = create(:lesson, host: @organization,
+      registration_opens_at: nil, registration_closes_at: nil)
 
-      result = @organization.available_lessons
+      result = @organization.available_lessons.to_a
       expect(result).to include(lesson)
       expect(result.count).to eq 1
     end

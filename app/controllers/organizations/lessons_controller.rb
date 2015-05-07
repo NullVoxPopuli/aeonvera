@@ -23,6 +23,28 @@ class Organizations::LessonsController < ApplicationController
     @counts = user_proxy.group(:user_id).count
   end
 
+  def duplicate
+    @old_lesson = @organization.lessons.find(params[:id])
+
+    @lesson = @organization.lessons.new(@old_lesson.duplicatable_attributes)
+    @lesson.name = "Copy of #{@old_lesson.name}"
+
+    respond_to do |format|
+      if @lesson.save
+        format.html {
+          flash[:notice] = "Lesson duplicated"
+          redirect_to action: :edit, id: @lesson.id
+        }
+      else
+        format.html {
+          flash[:notice] = "Lesson not duplicated"
+
+          render action: 'edit'
+        }
+      end
+    end
+  end
+
   def new
     @lesson = LineItem::Lesson.new
   end
@@ -51,7 +73,7 @@ class Organizations::LessonsController < ApplicationController
     @lesson = @organization.lessons.new(lesson_params)
 
     respond_to do |format|
-      if @lesson.save!
+      if @lesson.save
         format.html {
           flash[:notice] = "Lesson created"
           redirect_to action: :index

@@ -61,6 +61,12 @@ FactoryGirl.define do
 
   factory :lesson, class: LineItem::Lesson do
     name "A Lesson!"
+    description "description"
+    price 10
+    starts_at 2.days.from_now
+    ends_at 3.days.from_now
+    registration_opens_at 1.days.from_now
+    registration_closes_at 2.days.from_now
   end
 
   factory :membership_option, class: LineItem::MembershipOption do

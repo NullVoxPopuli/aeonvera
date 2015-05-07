@@ -51,6 +51,10 @@ class Order < ActiveRecord::Base
     self.save
   end
 
+  def owes
+    paid? ? 0 : total
+  end
+
   def save_payment_errors(errors)
     self.metadata[:errors] = errors
     self.save
@@ -154,25 +158,4 @@ class Order < ActiveRecord::Base
     host_type == Organization.name
   end
 
-  # def self.pay(token: "", payer_id: "", force: false, payment_method: Payable::Methods::PAYPAL)
-  #   begin
-  #     if force
-  #
-  #     else
-  #       order = self.find_by_payment_token(token)
-  #       order.payer_id = payer_id
-  #       order.paid = true
-  #       order.payment_method = payment_method
-  #       order.save
-  #
-  #       # put this in a background worker
-  #       @paypal = PaypalExpressCheckoutInterface.new(order)
-  #       @paypal.do_express_checkout
-  #
-  #       return order
-  #     end
-  #   rescue => e
-  #     raise e
-  #   end
-  # end
 end

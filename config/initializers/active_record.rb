@@ -4,6 +4,12 @@ class ActiveRecord::Base
 		self.errors.size > 0
 	end
 
+	def duplicatable_attributes
+		attributes.keep_if { |k, v|
+			!["id", "updated_at", "created_at", "deleted_at"].include?(k)
+		}
+	end
+
 	# Thread safe approach to disabling timestamp updates.
 	# Useful when we need to modify data without altering updated_at.
 	# http://blog.bigbinary.com/2009/01/21/override-automatic-timestamp-in-activerecord-rails.html

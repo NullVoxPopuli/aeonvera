@@ -10,7 +10,7 @@ Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,
     {
       debug: false, # change this to true to troubleshoot
-      window_size: [1300, 1000] # this can affect dynamic layout
+      window_size: [2560, 1440] # this can affect dynamic layout
     }
   )
 end
