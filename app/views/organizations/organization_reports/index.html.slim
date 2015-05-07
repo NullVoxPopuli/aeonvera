@@ -3,6 +3,7 @@ table
   thead
     tr
       th Name
+      th Member
       th Ordered
       th Paid
       th Owes
@@ -10,6 +11,7 @@ table
     - @orders.each do |order|
       tr
         td = order.user.name
+        td = user_is_a_member?(order.user, @organization)
         td
           - order.line_items.each do |item|
             = "#{item.quantity} x #{item.name}"
