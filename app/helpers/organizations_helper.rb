@@ -29,6 +29,10 @@ module OrganizationsHelper
     end
   end
 
+  def user_is_a_member?(user, org = current_organization)
+    user.is_member_of?(org) if user
+  end
+
   def current_membership_status_text
     if current_user_membership_active?
       "Active"
