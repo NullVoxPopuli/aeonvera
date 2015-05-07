@@ -44,6 +44,25 @@ describe Order do
     end
   end
 
+  describe '#owes' do
+
+    it 'has not been paid' do
+      o = Order.new
+      allow(o).to receive(:total){ 10 }
+
+      expect(o.owes).to eq 10
+    end
+
+    it 'has been paid' do
+      o = Order.new
+      allow(o).to receive(:total){ 10 }
+      allow(o).to receive(:paid?){ true }
+
+      expect(o.owes).to eq 0
+    end
+
+  end
+
 
   describe 'package + discount' do
     let(:event){ create(:event) }

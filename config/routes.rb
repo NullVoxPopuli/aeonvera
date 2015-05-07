@@ -138,7 +138,12 @@ AeonVera::Application.routes.draw do
     resources :report, controller: "organizations/organization_reports"
     resources :payment_processors, controller: "organizations/payment_processors"
     resources :dances, controller: "organizations/dances"
-    resources :lessons, controller: "organizations/lessons"
+    resources :lessons, controller: "organizations/lessons" do
+      member do
+        post :duplicate
+      end
+    end
+
     resources :membership_discounts, controller: "organizations/membership_discounts"
     resources :membership_options, controller: "organizations/membership_options" do
       resources :members, controller: "organizations/membership_options/members"

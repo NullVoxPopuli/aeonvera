@@ -15,4 +15,4 @@ table
             = "#{item.quantity} x #{item.name}"
             br
         td = order.paid?
-        td = order.total
+        td = number_to_currency order.owes
