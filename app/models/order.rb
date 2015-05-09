@@ -158,4 +158,31 @@ class Order < ActiveRecord::Base
     host_type == Organization.name
   end
 
+  def self.to_csv(options = {})
+    CSV.generate(options) do |csv|
+      csv << ["Name", "Email", "Registered At", "Payment Method", "Paid",
+        "Total Fees", "Net Received", "Line Items"]
+      all.each do |order|
+
+        order_user = order.user
+
+        line_item_list = order.line_items.map do |i|
+          "#{i.quantity} x #{i.name} @ #{i.price}"
+        end.join(", ")
+
+        row = [
+            order_user.try(:name) || "Unknown",
+            order_user.try(:email) || "Unknown",
+            order.created_at,
+            order.payment_method,
+            order.paid_amount,
+            order.total_fee_amount,
+            order.net_amount_received,
+            line_item_list
+        ]
+        csv << row
+      end
+    end
+  end
+
 end

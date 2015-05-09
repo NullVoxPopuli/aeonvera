@@ -6,6 +6,13 @@ class Organizations::OrganizationReportsController < ApplicationController
 
   def index
     @orders = @organization.orders
+
+    respond_to do |format|
+      format.html{}
+      format.csv{
+        send_data @orders.to_csv
+      }
+    end
   end
 
 end
