@@ -4,7 +4,7 @@ class HostedEvents::CustomFieldsController < ApplicationController
 
   set_resource CustomField
   set_resource_parent Event
-  set_param_white_list(
+  set_param_whitelist(
     :label, :kind, :default_value, :editable
   )
 

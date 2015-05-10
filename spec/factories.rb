@@ -55,6 +55,10 @@ FactoryGirl.define do
 
   end
 
+  factory :custom_field do
+    label "A field "
+  end
+
   factory :dance, class: LineItem::Dance do
     name "A Dance!"
   end
