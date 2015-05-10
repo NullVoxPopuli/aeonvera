@@ -9,6 +9,7 @@ describe HostedEvents::CustomFieldsController do
 
   describe '#index' do
     it 'sets the collection' do
+      create(:custom_field, host: @event, user: @user)
       get :index, hosted_event_id: @event.id
 
       expect(assigns(:custom_fields)).to be_present

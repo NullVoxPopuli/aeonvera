@@ -8,5 +8,7 @@ class HostedEvents::CustomFieldsController < ApplicationController
     :label, :kind, :default_value, :editable
   )
 
+  layout "edit_event"
+
 
 end

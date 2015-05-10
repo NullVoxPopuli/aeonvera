@@ -91,6 +91,8 @@ ul.small-block-grid-2
 						= a.label :zip, 'Zip Code'
 						= a.text_field :zip, value: address["zip"]
 
+= render "custom_fields"
+
 
 footer.buttons
 	- submit_text = @attendance.persisted? ? "Update" : "Register"

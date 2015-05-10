@@ -1,0 +1,4 @@
+h1 Editing Custom Field
+
+= form_for [@event, @custom_field], url: hosted_event_custom_field_path do |f|
+  == render partial: 'form', locals: { f: f }
