@@ -14,4 +14,31 @@ module CustomFieldHelper
     dropdown_option_menu_for(custom_field, actions: [:edit, :destroy])
   end
 
+  def field_for_custom_field(custom_field)
+    id = "custom_fields_#{custom_field.id}"
+    name = "custom_fields[#{custom_field.id}]"
+    default_value = custom_field.default_value
+
+    if custom_field.editable?
+      case custom_field.kind
+        when CustomField::KIND_TEXT
+          text_field_tag name, nil, placeholder: default_value
+        when CustomField::KIND_FORMATTED_TEXT
+          text_area_tag name, default_value
+        when CustomField::KIND_NUMBER
+          number_field_tag name, nil, placeholder: default_value
+        # when CustomField::KIND_DATE
+        # when CustomField::KIND_TIME
+        # when CustomField::KIND_DATETIME
+        when CustomField::KIND_CHECKBOX
+          check_box_tag name, '1', false
+        # when CustomField::KIND_RADIO
+        # when CustomField::KIND_RANGE
+        # when CustomField::KIND_PHONE
+      end
+    else
+      custom_field.default_value.html_safe
+    end
+  end
+
 end
