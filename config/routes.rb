@@ -178,7 +178,7 @@ AeonVera::Application.routes.draw do
 
     resources :payment_processors, controller: "hosted_events/payment_processors"
     resources :payments, controller: "hosted_events/payments"
-
+    resources :custom_fields, controller: "hosted_events/custom_fields"
     resources :reports, controller: "hosted_events/reports"
     resources :checkin, controller: "hosted_events/checkin"
     resources :raffles, controller: "hosted_events/raffles" do
