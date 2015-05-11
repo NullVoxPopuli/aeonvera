@@ -52,6 +52,13 @@ describe HostedEvents::CustomFieldsController do
 
       expect(assigns(:custom_field)).to be_present
     end
+
+    it 'sets the user to the current user' do
+      post :create, hosted_event_id: @event.id, custom_field: build(:custom_field).attributes
+
+      field = assigns(:custom_field)
+      expect(field.user).to eq @user
+    end
   end
 
   describe '#update' do

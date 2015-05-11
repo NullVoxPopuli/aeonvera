@@ -10,5 +10,8 @@ class HostedEvents::CustomFieldsController < ApplicationController
 
   layout "edit_event"
 
+  def before_create
+    @custom_field.user = current_user
+  end
 
 end
