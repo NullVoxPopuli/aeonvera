@@ -295,7 +295,8 @@ class RegisterController < ApplicationController
       :interested_in_volunteering,
       :pricing_tier_id,
       :dance_orientation,
-      :discount_ids => [],
+      discount_ids: [],
+      custom_field_responses: [custom_field_id: :value],
       metadata: [
         :phone_number,
         :need_housing => [
@@ -349,6 +350,16 @@ class RegisterController < ApplicationController
         # the shirts need to be added to the line item ids, so that
         # we can record the price
         whitelisted[:line_item_ids] = whitelisted[:line_item_ids] + shirts.keys if add_to_line_items
+      end
+
+      binding.pry
+      # data should look like:
+      # custom_fields: {
+      #   custom_field_id: value,
+      #   custom_field_id2: value
+      # }
+      if custom_fields = params[:custom_field_responses]
+        whitelisted[:custom_field_responses] = custom_fields
       end
     end
   end

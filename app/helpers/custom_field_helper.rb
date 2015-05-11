@@ -15,10 +15,11 @@ module CustomFieldHelper
   end
 
   def field_for_custom_field(custom_field)
-    id = "custom_fields_#{custom_field.id}"
-    name = "custom_fields[#{custom_field.id}]"
+    id = "custom_field_responses_#{custom_field.id}"
+    name = "custom_field_responses[][value]"
     default_value = custom_field.default_value
 
+    hidden_field_tag("custom_field_responses[][custom_field_id]", custom_field.id) +
     if custom_field.editable?
       case custom_field.kind
         when CustomField::KIND_TEXT

@@ -7,6 +7,7 @@ class HostedEvents::CustomFieldsController < ApplicationController
   set_param_whitelist(
     :label, :kind, :default_value, :editable
   )
+  
 
   layout "edit_event"
 

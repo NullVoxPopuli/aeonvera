@@ -12,6 +12,7 @@ class Attendance < ActiveRecord::Base
 
   belongs_to :host, polymorphic: true
 
+  has_many :custom_field_responses, as: :writer
   has_many :orders
   has_many :attendance_line_items
   # has_many :line_items, -> { where("item_type = '' OR item_type IS NULL") }, through: :attendance_line_items

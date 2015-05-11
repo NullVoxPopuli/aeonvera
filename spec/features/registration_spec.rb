@@ -12,6 +12,39 @@ describe 'Registration' do
     @opening_tier.save
   end
 
+  context 'custom fields' do
+    before(:each) do
+      @package = create(:package, event: @event)
+
+      @custom1 = create(:custom_field, host: @event, user: @user)
+      @custom2 = create(:custom_field, label: 'value 2', host: @event, user: @user, default_value: '2')
+      @custom1_id = "#custom_fields_#{@custom1.id}"
+      @custom2_id = "#custom_fields_#{@custom2.id}"
+      @custom1_name = "custom_fields[#{@custom1.id}]"
+      @custom2_name = "custom_fields[#{@custom2.id}]"
+    end
+
+    it 'renders the custom_fields on the form' do
+      visit @event.url
+      expect(page).to have_selector(@custom1_id)
+      expect(page).to have_selector(@custom2_id)
+    end
+
+    it 'fills out the custom_fields, creating CustomFieldResponses' do
+      visit @event.url
+      selects_orientation
+      selects_package
+      provides_address
+
+      fill_in @custom1_name, with: "value 1"
+
+      expect{
+        submit_form
+        expect(page).to_not have_content("error")
+      }.to change(CustomFieldResponse, :count).by(2)
+    end
+  end
+
   context 'payments' do
     before(:each) do
       allow_any_instance_of(Event).to receive(:has_payment_processor?){ true }
