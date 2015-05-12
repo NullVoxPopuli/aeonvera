@@ -178,9 +178,10 @@ GEM
     json (1.8.2)
     launchy (2.4.3)
       addressable (~> 2.3)
-    lazy_crud (0.9.4)
+    lazy_crud (0.9.5)
       activesupport
       i18n
+      responders
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
