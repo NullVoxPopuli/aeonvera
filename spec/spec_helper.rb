@@ -2,7 +2,6 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 
 load_schema = lambda do
   # ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')

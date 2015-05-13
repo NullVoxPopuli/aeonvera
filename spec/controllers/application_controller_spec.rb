@@ -18,7 +18,7 @@ describe ApplicationController do
 
 	it "ignores the public www" do
 		request.stub(:host_with_port).and_return("www.#{controller.send(:current_domain)}")
-		controller.send(:check_subdomain).should be_nil # returns nothing
+		expect(controller.send(:check_subdomain)).to be_nil # returns nothing
 	end
 
 	context "we are not on the www subdomain" do
@@ -33,7 +33,7 @@ describe ApplicationController do
 			allow(Subdomain).to receive(:is_event?){ true }
 			allow(Subdomain).to receive(:matches?){ true }
 
-			controller.should_receive(:drop_subdomain_and_redirect)
+			allow(controller).to receive(:drop_subdomain_and_redirect)
 			result = controller.send(:check_subdomain)
 		end
 

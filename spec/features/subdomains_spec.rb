@@ -35,7 +35,7 @@ describe 'Subdomains' do
 
       it 'navigates to a more recent event when the previous event with the same domain is over' do
         event = create(:event, domain: 'my', name: "hidden", hosted_by: @user, starts_at: 4.days.ago, ends_at: 2.days.ago)
-        @event = create(:event, domain: 'my', name: "newer!", domain: event.domain, hosted_by: @user)
+        @event = create(:event, domain: 'my', name: "newer!", hosted_by: @user)
 
         expect(event.url).to eq @event.url
 
