@@ -16,6 +16,8 @@ RSpec.configure do |config|
     ap 'Using postgres' if using_postgresql?
     ap 'Using sqlite' if using_sqlite3?
     DatabaseCleaner.strategy = :transaction
+    # DatabaseCleaner.strategy = :transaction if using_sqlite3?
+    # DatabaseCleaner.strategy = :truncation if using_postgresql?
     DatabaseCleaner.clean_with(:truncation)
   end
 
