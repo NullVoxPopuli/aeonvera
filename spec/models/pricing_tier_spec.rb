@@ -103,8 +103,8 @@ describe PricingTier do
 
         # pt3 should not be recognized yet
         expect(package.current_price).to eq (
-          package.initial_price + pt.increase_by_dollars +
-          pt2.increase_by_dollars
+          package.initial_price + pt2.increase_by_dollars +
+          pt3.increase_by_dollars
         )
       end
     end
