@@ -11,13 +11,13 @@ env:
 before_srcipt:
   - psql -c 'create database travis_ci_test;' -U postgres
   - cp config/database.travis.yml config/database.yml
-  - RAILS_ENV=test rake db:create; rake db:migrate
+  # - RAILS_ENV=test rake db:create; rake db:migrate
 script: bundle exec rspec
 
 bundler_args: "--local --without documentation"
 
 addons:
-  postgresql: 9.3
+  postgresql: "9.3"
   code_climate:
     repo_token: 1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896
   hosts:
