@@ -201,7 +201,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    paranoia (2.1.1)
+    paranoia (2.1.2)
       activerecord (~> 4.0)
     pg (0.18.1)
     poltergeist (1.6.0)

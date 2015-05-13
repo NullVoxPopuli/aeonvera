@@ -2,7 +2,7 @@ class CustomFieldResponse < ActiveRecord::Base
   include SoftDeletable
 
   belongs_to :writer, polymorphic: true
-  belongs_to :custom_field
+  belongs_to :custom_field, -> { with_deleted }
 
   validate :writer, presence: true
   validate :custom_field, presence: true
