@@ -1,0 +1,10 @@
+h2 Preview Custom Field
+
+br
+= render partial: "custom_field", locals: { custom_field: @custom_field }
+
+= edit_button(edit_hosted_event_custom_field_path)
+| &nbsp;
+= back_button(hosted_event_custom_fields_path)
+| &nbsp;
+= delete_button(hosted_event_custom_field_path)

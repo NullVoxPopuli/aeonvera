@@ -76,6 +76,12 @@
         legend Address
         = render partial: "/shared/address", locals: { address: address }
 
+    - if (responses = attendance.custom_field_responses.with_values).present?
+      fieldset
+        legend Other
+        = render partial: "/shared/custom_field_responses", locals: { responses: responses }
+
+
   - if attendance.attending?
     = link_to "Not Attending", hosted_event_attendance_path(@event, attendance), method: :delete, class: "button alert small"
   - else

@@ -55,6 +55,16 @@ FactoryGirl.define do
 
   end
 
+  factory :custom_field do
+    label "A field "
+    kind CustomField::KIND_TEXT
+  end
+
+  factory :custom_field_response do
+    value nil
+    custom_field
+  end
+
   factory :dance, class: LineItem::Dance do
     name "A Dance!"
   end

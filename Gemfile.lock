@@ -178,6 +178,10 @@ GEM
     json (1.8.2)
     launchy (2.4.3)
       addressable (~> 2.3)
+    lazy_crud (0.9.5)
+      activesupport
+      i18n
+      responders
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
@@ -197,7 +201,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
-    paranoia (2.1.1)
+    paranoia (2.1.2)
       activerecord (~> 4.0)
     pg (0.18.1)
     poltergeist (1.6.0)
@@ -388,6 +392,7 @@ DEPENDENCIES
   jquery-turbolinks
   jquery-ui-rails
   launchy
+  lazy_crud
   mail
   newrelic_rpm
   nprogress-rails

@@ -199,8 +199,8 @@ development:
   # executed since starting the mongrel.
   # NOTE: There is substantial overhead when running in developer mode.
   # Do not use for production or load testing.
-  developer_mode: false
-  monitor_mode: false
+  developer_mode: true
+  monitor_mode: true
 
 test:
   <<: *default_settings

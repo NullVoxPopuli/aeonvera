@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150502150746) do
+ActiveRecord::Schema.define(version: 20150509134258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,29 @@ ActiveRecord::Schema.define(version: 20150502150746) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+  end
+
+  create_table "custom_field_responses", force: true do |t|
+    t.text     "value"
+    t.integer  "writer_id"
+    t.string   "writer_type"
+    t.integer  "custom_field_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "custom_fields", force: true do |t|
+    t.string   "label"
+    t.integer  "kind"
+    t.text     "default_value"
+    t.boolean  "editable",      default: true, null: false
+    t.integer  "host_id"
+    t.string   "host_type"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "discounted_items", force: true do |t|
