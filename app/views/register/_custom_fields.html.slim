@@ -1,2 +1,5 @@
-- current_event.custom_fields.each do |custom_field|
-  = render partial: '/hosted_events/custom_fields/custom_field', locals: { custom_field: custom_field }
+= form.fields_for :custom_field_responses do |cf|
+  - custom_field = cf.object.custom_field
+  label = custom_field.label
+  = cf.hidden_field :custom_field_id, value: custom_field.id
+  = field_for_custom_field(custom_field, cf, cf.object.value)

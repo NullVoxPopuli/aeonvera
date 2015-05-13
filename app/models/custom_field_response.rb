@@ -7,4 +7,9 @@ class CustomFieldResponse < ActiveRecord::Base
   validate :writer, presence: true
   validate :custom_field, presence: true
 
+  scope :with_values, -> {
+    column = CustomFieldResponse.arel_table[:value]
+    where(column.not_eq(nil).or(column.not_eq('')))
+  }
+
 end

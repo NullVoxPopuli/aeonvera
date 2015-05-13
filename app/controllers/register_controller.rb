@@ -120,6 +120,13 @@ class RegisterController < ApplicationController
 
   def new
     @attendance = EventAttendance.new
+
+    # throw in the custom fields
+    current_event.custom_fields.each do |cf|
+      @attendance.custom_field_responses << CustomFieldResponse.new(
+        custom_field: cf
+      )
+    end
     # @attendance.build_address
   end
 
@@ -296,7 +303,7 @@ class RegisterController < ApplicationController
       :pricing_tier_id,
       :dance_orientation,
       discount_ids: [],
-      custom_field_responses: [custom_field_id: :value],
+      custom_field_responses_attributes: [:custom_field_id, :value],
       metadata: [
         :phone_number,
         :need_housing => [
@@ -350,16 +357,6 @@ class RegisterController < ApplicationController
         # the shirts need to be added to the line item ids, so that
         # we can record the price
         whitelisted[:line_item_ids] = whitelisted[:line_item_ids] + shirts.keys if add_to_line_items
-      end
-
-      binding.pry
-      # data should look like:
-      # custom_fields: {
-      #   custom_field_id: value,
-      #   custom_field_id2: value
-      # }
-      if custom_fields = params[:custom_field_responses]
-        whitelisted[:custom_field_responses] = custom_fields
       end
     end
   end

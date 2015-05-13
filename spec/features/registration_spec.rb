@@ -18,10 +18,10 @@ describe 'Registration' do
 
       @custom1 = create(:custom_field, host: @event, user: @user)
       @custom2 = create(:custom_field, label: 'value 2', host: @event, user: @user, default_value: '2')
-      @custom1_id = "#custom_fields_#{@custom1.id}"
-      @custom2_id = "#custom_fields_#{@custom2.id}"
-      @custom1_name = "custom_fields[#{@custom1.id}]"
-      @custom2_name = "custom_fields[#{@custom2.id}]"
+      @custom1_id = "#attendance_custom_field_responses_attributes_0_value"
+      @custom2_id = "#attendance_custom_field_responses_attributes_1_value"
+      @custom1_name = "attendance[custom_field_responses_attributes][0][value]"
+      @custom2_name = "attendance[custom_field_responses_attributes][1][value]"
     end
 
     it 'renders the custom_fields on the form' do
