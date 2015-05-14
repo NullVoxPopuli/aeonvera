@@ -60,6 +60,7 @@ class PricingTier < ActiveRecord::Base
   # this is useful for figuring out what the price is going to be
   def price_of(package)
     result = package.initial_price
+
     if allowed_packages.empty? or allowed_packages.include?(package)
       (event.pricing_tiers).each do |pt|
         result += pt.amount if pt.should_apply_amount?
