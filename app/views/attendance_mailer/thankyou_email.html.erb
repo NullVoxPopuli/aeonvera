@@ -16,3 +16,10 @@ The organizers are aware of your registration, and should be happy to see you at
 <br>
 If you have any questions about <%= @event.name %>,
 feel free to email the event organizers.
+<br>
+<br>
+<% if @event.registration_email_disclaimer.present? %>
+  <small>
+    <%= @event.registration_email_disclaimer.html_safe %>
+  </small>
+<% end %>
