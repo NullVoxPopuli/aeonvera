@@ -18,7 +18,7 @@ If you have any questions about <%= @event.name %>,
 feel free to email the event organizers.
 <br>
 <br>
-<% if @event.registration_email_disclaimer.present? %>
+<% if @event.try(:registration_email_disclaimer).present? %>
   <small>
     <%= @event.registration_email_disclaimer.html_safe %>
   </small>
