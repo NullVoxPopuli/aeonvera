@@ -79,9 +79,10 @@ describe 'Organization / Scene Registration' do
     it 'cancels the registration' do
       registers_for_organization
       click_link "Cancel"
+      # 
       # expect{
-      #   click_link "I'm sure, cancel registration."
-      # }.to change(Attendance, :count).by(-1)
+      #   click_button "I'm sure, cancel registration."
+      # }.to change(Attendance.where(attending: true), :count).by(-1)
     end
 
   end

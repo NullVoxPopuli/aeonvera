@@ -96,15 +96,21 @@ describe PricingTier do
       end
 
       it 'calculates with multiple total number tiers' do
-        # allow(event).to receive(:attendances){ double(count: 30, where: Array.new(30, true)) }
         pt2 = create(:pricing_tier, event: event, registrants: 20)
         pt3 = create(:pricing_tier, event: event, registrants: 40)
-        allow_any_instance_of(Event).to receive(:attendances){ double(count: 20)}
+
+        allow_any_instance_of(Event).to receive(:attendances){ double(count: 20) }
+
+        expect(pt.should_apply_amount?).to eq true
+        expect(pt2.should_apply_amount?).to eq true
+        expect(pt3.should_apply_amount?).to eq false
+
+        expect(event.current_tier).to eq pt2
 
         # pt3 should not be recognized yet
-        expect(package.current_price).to eq (
-          package.initial_price + pt2.increase_by_dollars +
-          pt3.increase_by_dollars
+        result = package.current_price
+        expect(result).to eq (
+          package.initial_price + pt.increase_by_dollars + pt2.increase_by_dollars
         )
       end
     end

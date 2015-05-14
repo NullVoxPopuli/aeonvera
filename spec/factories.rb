@@ -154,6 +154,10 @@ FactoryGirl.define do
     end
   end
 
+  factory :organization_attendance, class: OrganizationAttendance do
+
+  end
+
   factory :attendee, class: User do
     first_name "Attendee"
     last_name "Test"
