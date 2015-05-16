@@ -99,7 +99,9 @@ describe PricingTier do
         pt2 = create(:pricing_tier, event: event, registrants: 20)
         pt3 = create(:pricing_tier, event: event, registrants: 40)
 
-        allow_any_instance_of(Event).to receive(:attendances){ double(count: 20) }
+        20.times do
+          create(:attendance, event: event)
+        end
 
         expect(pt.should_apply_amount?).to eq true
         expect(pt2.should_apply_amount?).to eq true
