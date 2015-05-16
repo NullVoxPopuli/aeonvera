@@ -26,6 +26,7 @@
 
 		= f.fields_for :opening_tier_attributes, @event.opening_tier do |opt|
 			= opt.label :date, "Registration Opens"
+			
 			ul.medium-block-grid-1.large-block-grid-2
 				li
 					.row = opt.label :date, "Date"
@@ -73,6 +74,12 @@
 		- if @event.logo.present?
 			= image_tag @event.logo.url(:thumb)
 		= f.file_field :logo
+
+		br
+		hr
+		= f.label :registration_email_disclaimer
+		= f.text_area :registration_email_disclaimer
+		span This is seen on registration emails, but not payment receipts
 
 = link_to 'Back', hosted_events_path, :class => "button secondary small"
 = f.submit 'Save', :class => "button small"

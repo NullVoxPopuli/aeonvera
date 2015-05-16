@@ -120,6 +120,13 @@ class RegisterController < ApplicationController
 
   def new
     @attendance = EventAttendance.new
+
+    # throw in the custom fields
+    current_event.custom_fields.each do |cf|
+      @attendance.custom_field_responses << CustomFieldResponse.new(
+        custom_field: cf
+      )
+    end
     # @attendance.build_address
   end
 
@@ -295,7 +302,8 @@ class RegisterController < ApplicationController
       :interested_in_volunteering,
       :pricing_tier_id,
       :dance_orientation,
-      :discount_ids => [],
+      discount_ids: [],
+      custom_field_responses_attributes: [:custom_field_id, :value],
       metadata: [
         :phone_number,
         :need_housing => [

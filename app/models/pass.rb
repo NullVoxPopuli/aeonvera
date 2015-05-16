@@ -4,8 +4,6 @@ class Pass < ActiveRecord::Base
 
 	belongs_to :discountable, polymorphic: true
 
-
-
 	def discount_for
 		self.discountable.try(:name)
 	end

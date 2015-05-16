@@ -159,21 +159,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_event
-    id = (params[:hosted_event_id] or params[:id])
-    begin
-      @event = current_user.hosted_events.find(id)
-    rescue ActiveRecord::RecordNotFound => e
-      # user is not hosting the requested event
-      begin
-        @event = current_user.collaborated_events.find(id)
-      rescue ActiveRecord::RecordNotFound => e
-        # user has nothing to do with the requested event
-        redirect_to action: "index"
-      end
-    end
-  end
-
   # overrides devise hook
   def after_sign_in_path_for(resource)
     stored_location_for(resource) || root_path

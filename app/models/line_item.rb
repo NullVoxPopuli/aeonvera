@@ -30,6 +30,16 @@ class LineItem < ActiveRecord::Base
     validates_attachment_file_name :picture, :matches => [/png\Z/, /jpe?g\Z/, /gif\Z/]
 
 
-  scope :active, ->{ where("expires_at > ? OR expires_at IS NULL", Time.now) }
+  scope :active, ->{
+    time = Time.now
+    expires_at = arel_table[:expires_at]
+    becomes_available_at = arel_table[:becomes_available_at]
+
+    where(
+      expires_at.gt(time).or(expires_at.eq(nil))
+    ).where(
+      becomes_available_at.lt(time).or(becomes_available_at.eq(nil))
+    )
+  }
 
 end

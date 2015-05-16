@@ -1,24 +1,24 @@
-h1
-	| Items for
-	= @event.name
+h2 = "Items for #{@event.name}"
 
 table.table.table-striped.table-bordered.table-condensed
-	tr
-		th Name
-		th # Purchased
-		th Price
-		th Expires At
-		th
+  tr
+    th Name
+    th # Purchased
+    th Price
+    th Becomes Available At
+    th Expires At
+    th
 
-	- @line_items.each do |line_item|
-		tr
-			td
-				= link_to line_item.name, hosted_event_line_item_path(@event, line_item)
-				= line_item_menu_options(line_item)
-			td = line_item.attendances.count
-			td = number_to_currency(line_item.price)
-			td = line_item.expires_at
-			td = line_item.item_type
+  - @line_items.each do |line_item|
+    tr
+      td
+        = link_to line_item.name, hosted_event_line_item_path(@event, line_item)
+        = line_item_menu_options(line_item)
+      td = line_item.attendances.count
+      td = number_to_currency(line_item.price)
+      td = l line_item.becomes_available_at, format: :with_zone
+      td = l line_item.expires_at, format: :with_zone
+      td = line_item.item_type
 
 br
 

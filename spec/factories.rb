@@ -55,6 +55,16 @@ FactoryGirl.define do
 
   end
 
+  factory :custom_field do
+    label "A field "
+    kind CustomField::KIND_TEXT
+  end
+
+  factory :custom_field_response do
+    value nil
+    custom_field
+  end
+
   factory :dance, class: LineItem::Dance do
     name "A Dance!"
   end
@@ -67,6 +77,10 @@ FactoryGirl.define do
     ends_at 3.days.from_now
     registration_opens_at 1.days.from_now
     registration_closes_at 2.days.from_now
+  end
+
+  factory :line_item, class: LineItem do
+    name "A line item"
   end
 
   factory :membership_option, class: LineItem::MembershipOption do
@@ -142,6 +156,10 @@ FactoryGirl.define do
     after(:build) do |attendance, evaluator|
       attendance.dance_orientation = 0
     end
+  end
+
+  factory :organization_attendance, class: OrganizationAttendance do
+
   end
 
   factory :attendee, class: User do

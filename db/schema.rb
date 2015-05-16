@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150502150746) do
+ActiveRecord::Schema.define(version: 20150515032046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,29 @@ ActiveRecord::Schema.define(version: 20150502150746) do
     t.datetime "deleted_at"
   end
 
+  create_table "custom_field_responses", force: true do |t|
+    t.text     "value"
+    t.integer  "writer_id"
+    t.string   "writer_type"
+    t.integer  "custom_field_id", null: false
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "custom_fields", force: true do |t|
+    t.string   "label"
+    t.integer  "kind"
+    t.text     "default_value"
+    t.boolean  "editable",      default: true, null: false
+    t.integer  "host_id"
+    t.string   "host_type"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "discounted_items", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -158,6 +181,7 @@ ActiveRecord::Schema.define(version: 20150502150746) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+    t.text     "registration_email_disclaimer"
   end
 
   add_index "events", ["domain"], name: "index_events_on_domain", using: :btree
@@ -218,6 +242,7 @@ ActiveRecord::Schema.define(version: 20150502150746) do
     t.integer  "duration_unit"
     t.datetime "registration_opens_at"
     t.datetime "registration_closes_at"
+    t.datetime "becomes_available_at"
   end
 
   add_index "line_items", ["host_id", "host_type", "item_type"], name: "index_line_items_on_host_id_and_host_type_and_item_type", using: :btree

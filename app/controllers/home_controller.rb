@@ -1,4 +1,5 @@
 class HomeController < ApplicationController
+  respond_to :html, :json
 
   skip_before_filter :authenticate_user!, except: [:welcome]
 
@@ -25,7 +26,7 @@ class HomeController < ApplicationController
   end
 
   def calendar
-    upcoming_events
+    respond_with(upcoming_events)
   end
 
   def terms_of_service

@@ -13,6 +13,8 @@ class Event < ActiveRecord::Base
     :extend => Extensions::Integrations,
     as: :owner
 
+
+  has_many :custom_fields, as: :host
   has_many :orders, as: :host
   has_many :attendances,
     -> { where(attending: true).order("attendances.created_at DESC") },

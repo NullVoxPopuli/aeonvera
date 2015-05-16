@@ -1,6 +1,5 @@
 class HostedEvents::PaymentProcessorsController < ApplicationController
-
-  before_action :set_event
+  include SetsEvent
 
   layout "edit_event"
 

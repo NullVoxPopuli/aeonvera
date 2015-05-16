@@ -1,7 +1,3 @@
-javascript:
-	$(function() {
-	    $('.datepicker input').datetimepicker();
-	});
 = render partial: "shared/error_messages", locals: { target: @line_item }
 = f.label :name
 = f.text_field :name, required: true
@@ -9,8 +5,34 @@ javascript:
 = f.number_field :price, required: true, step: :any
 = f.label :picture
 = f.file_field :picture
+
+
+
+= f.label :becomes_available_at
+
+.row
+  .small-7.columns
+    .row = f.label :becomes_available_at, "Date"
+    .row
+      = f.date_select :becomes_available_at, { required: true }, { class: 'small-3' }
+  .small-5.columns
+    .row = f.label :becomes_available_at, "Time"
+    .row
+      = f.time_select :becomes_available_at, { required: true, ignore_date: true }, { class: 'small-3' }
+      /= opt.time_zone_select :d	ate, ActiveSupport::TimeZone.all, { required: true }, { class: 'small-3', id: 'event_opening_tier_attributes_date_6i', name: 'event[opening_tier_attributes][date(6i)]' }
+
+
+
 = f.label :expires_at
-.datepicker
-	= f.datetime_field :expires_at
+.row
+  .small-7.columns
+    .row = f.label :expires_at, "Date"
+    .row
+      = f.date_select :expires_at, { required: true }, { class: 'small-3' }
+  .small-5.columns
+    .row = f.label :expires_at, "Time"
+    .row
+      = f.time_select :expires_at, { required: true, ignore_date: true }, { class: 'small-3' }
+      /= opt.time_zone_select :date, ActiveSupport::TimeZone.all, { required: true }, { class: 'small-3', id: 'event_opening_tier_attributes_date_6i', name: 'event[opening_tier_attributes][date(6i)]' }
 
 = f.submit 'Save', :class => "button small"

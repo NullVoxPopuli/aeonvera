@@ -15,6 +15,8 @@ gem 'activerecord-session_store'
 # model helpers
 gem 'date_time_attribute'
 gem 'recurring_select'
+# controller helpers
+gem 'lazy_crud'
 
 # Permissions / Authorization
 gem "authorizable", github: "NullVoxPopuli/authorizable"
