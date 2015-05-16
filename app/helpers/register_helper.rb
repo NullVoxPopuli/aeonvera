@@ -35,7 +35,7 @@ module RegisterHelper
   end
 
   def line_items
-    current_event.line_items.map{ |item|
+    current_event.line_items.active.map{ |item|
       id = "attendance_line_item_ids_#{item.id}"
       label_tag(id){
         check_box_tag("attendance[line_item_ids][]", item.id, @attendance.line_items.include?(item), id: id) +

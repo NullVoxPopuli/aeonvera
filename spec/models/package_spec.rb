@@ -27,6 +27,7 @@ describe Package do
     end
 
     it 'does not change if the tiers are not yet eligible' do
+      event.attendances.destroy_all
       tier = create(:pricing_tier, date: 19.days.from_now, event: event)
       tier2 = create(:pricing_tier, registrants: 10, event: event)
       expect(package.current_price).to eq package.initial_price

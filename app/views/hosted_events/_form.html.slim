@@ -26,6 +26,7 @@
 
 		= f.fields_for :opening_tier_attributes, @event.opening_tier do |opt|
 			= opt.label :date, "Registration Opens"
+			
 			ul.medium-block-grid-1.large-block-grid-2
 				li
 					.row = opt.label :date, "Date"

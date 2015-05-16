@@ -79,6 +79,10 @@ FactoryGirl.define do
     registration_closes_at 2.days.from_now
   end
 
+  factory :line_item, class: LineItem do
+    name "A line item"
+  end
+
   factory :membership_option, class: LineItem::MembershipOption do
     name "Yearly Membership"
     duration_unit Duration::DURATION_YEAR
