@@ -1,6 +1,8 @@
 class HostedEvents::AttendancesController < ApplicationController
 
   include SetsEvent
+  include MarkPaid
+  
   before_action :set_attendance, only: [:mark_paid, :edit, :update, :destroy, :resend_receipt]
 
   layout "hosted_events"
@@ -42,22 +44,6 @@ class HostedEvents::AttendancesController < ApplicationController
     @attendances = @event.attendances.joins(:attendee).reorder('users.last_name, users.first_name')
   end
 
-  def mark_paid
-    payment_method = params[:payment_method]
-    if Payable::Methods::ALL.include?(payment_method)
-
-      @attendance.mark_orders_as_paid!(check_number: params[:check_number])
-
-      if @attendance.owes_nothing?
-        return render file: '/hosted_events/checkin/mark_paid'
-      else
-        return render file: '/hosted_events/checkin/error.js.erb'
-      end
-    end
-
-    # if something didn't flow correctly, just don't do anything
-    render nothing: true
-  end
 
   def show
     @attendance = @event.all_attendances.find(params[:id])
