@@ -21,6 +21,12 @@ table width="100%"
                 = shirt_with_size_and_quantity_summary(line_item, attendance: attendance)
             - elsif line_item.quantity > 1
               = "#{line_item.quantity} x #{line_item.name}"
+            - elsif item.is_a?(Competition)
+              - competition_response = order.attendance.competition_responses.where(competition_id: item.id).first
+              - if item.requires_orientation?
+                = "#{item.name}: #{competition_response.dance_orientation}"
+              - else
+                = item.name
             - else
               = line_item.name
 

@@ -19,7 +19,8 @@ class User < ActiveRecord::Base
   has_many :hosted_events, class_name: "Event", foreign_key: "hosted_by_id"
   has_many :event_attendances,
     ->{ where("attendance_type = '#{EventAttendance.name}'") },
-    foreign_key: "attendee_id"
+    foreign_key: "attendee_id",
+    class_name: EventAttendance.name
 
   has_many :attended_events, through: :event_attendances, source: :host, source_type: Event.name
   has_many :attendances, foreign_key: "attendee_id"

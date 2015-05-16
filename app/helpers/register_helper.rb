@@ -24,16 +24,6 @@ module RegisterHelper
     }.join.html_safe
   end
 
-  def competitions
-    current_event.competitions.map { |competition|
-      id = "attendance_competition_ids_#{competition.id}"
-      label_tag(id){
-        check_box_tag("attendance[competition_ids][]", competition.id, @attendance.competitions.include?(competition), id: id) +
-        label_with_price(competition)
-      }
-    }.join.html_safe
-  end
-
   def line_items
     current_event.line_items.active.map{ |item|
       id = "attendance_line_item_ids_#{item.id}"

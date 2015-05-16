@@ -74,6 +74,7 @@ class Attendance < ActiveRecord::Base
 
   accepts_nested_attributes_for :custom_field_responses
 
+
   def add(object)
     send("#{object.class.name.demodulize.underscore.pluralize}") << object
   end

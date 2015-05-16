@@ -39,8 +39,7 @@ class RegisterController < ApplicationController
   # - let them review what they've signed up for before sending them off
   # to the payment service
   def create
-    @attendance = EventAttendance.new(registration_params)
-    @attendance.event = current_event
+    @attendance = current_event.attendances.build(registration_params)
     @attendance.attendee = current_user
     @attendance.pricing_tier_id = current_event.current_pricing_tier.id
 
@@ -96,6 +95,7 @@ class RegisterController < ApplicationController
   end
 
   def edit
+    retrieve_competition_options
     if !@attendance.owes_money?
       flash[:notice] = "Please contact a #{current_event.name} organizer for help with editing your registration"
       redirect_to action: "show"
@@ -127,6 +127,8 @@ class RegisterController < ApplicationController
         custom_field: cf
       )
     end
+
+    retrieve_competition_options
     # @attendance.build_address
   end
 
@@ -148,6 +150,7 @@ class RegisterController < ApplicationController
     apply_discounts
 
     respond_to do |format|
+
       if @attendance.update(registration_params)
         update_order_line_items
         format.html{
@@ -208,6 +211,15 @@ class RegisterController < ApplicationController
   # PRIVATE
   ###################################
   private
+
+  def retrieve_competition_options
+    # throw in competition options
+    (current_event.competitions - @attendance.competitions).each do |c|
+      @attendance.competition_responses << CompetitionResponse.new(
+        competition: c
+      )
+    end
+  end
 
   def apply_discounts
     # associate discounts
@@ -304,6 +316,7 @@ class RegisterController < ApplicationController
       :dance_orientation,
       discount_ids: [],
       custom_field_responses_attributes: [:custom_field_id, :value],
+      competition_responses_attributes: [:competition_id, :dance_orientation, :partner_name],
       metadata: [
         :phone_number,
         :need_housing => [
@@ -338,7 +351,6 @@ class RegisterController < ApplicationController
           ]
         }
       ],
-      competition_ids: [],
       line_item_ids: []
     ).tap do |whitelisted|
       if shirts = params[:attendance].try(:[], :metadata).try(:[], :shirts)
@@ -357,6 +369,9 @@ class RegisterController < ApplicationController
         # the shirts need to be added to the line item ids, so that
         # we can record the price
         whitelisted[:line_item_ids] = whitelisted[:line_item_ids] + shirts.keys if add_to_line_items
+      elsif competitions = params[:attendance].try(:[], :competition_responses_attributes)
+        selected = competitions.keep_if{|c| t[:dance_orientation].present? }
+        whitelisted[:competition_responses_attributes] = selected
       end
     end
   end

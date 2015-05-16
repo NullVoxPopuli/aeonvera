@@ -43,7 +43,8 @@ ul.small-block-grid-2
 - if current_event.has_competitions?
 	fieldset
 		legend Competitions
-		= competitions
+		= render partial: "competition_responses", locals: { form: f }
+
 
 - if current_event.has_line_items?
 	fieldset

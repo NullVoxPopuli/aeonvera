@@ -1,0 +1,15 @@
+= form.fields_for :competition_responses do |c|
+  - competition = c.object.competition
+  label: strong = label_with_price(competition)
+  = c.hidden_field :competition_id, value: competition.id
+
+  - if competition.requires_orientation?
+    = c.radio_button :dance_orientation, Attendance::LEAD
+    = c.label :lead
+    = c.radio_button :dance_orientation, Attendance::FOLLOW
+    = c.label :follow
+
+  - if competition.kind == Competition::STRICTLY
+    = c.label :partner_name
+    = c.text_field :partner_name
+  br
