@@ -31,8 +31,20 @@ module DropdownMenuHelper
     result = []
 
     actions.each do |link_action|
+      name = ""
+
+      if link_action.is_a?(Hash)
+        name = link_action[:name]
+        link_action = link_action[:action]
+      else
+        name = link_action.to_s.titleize
+      end
+
+      # show is implied when no verb is provided on a get request
+      link_action = "" if link_action == :show
+
       link_option = {
-        name: link_action.to_s.titleize,
+        name: name,
         path: event_url_for(object, action: link_action)
       }
 
