@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150514011458) do
+ActiveRecord::Schema.define(version: 20150515032046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,6 +242,7 @@ ActiveRecord::Schema.define(version: 20150514011458) do
     t.integer  "duration_unit"
     t.datetime "registration_opens_at"
     t.datetime "registration_closes_at"
+    t.datetime "becomes_available_at"
   end
 
   add_index "line_items", ["host_id", "host_type", "item_type"], name: "index_line_items_on_host_id_and_host_type_and_item_type", using: :btree
