@@ -33,6 +33,10 @@ class Competition < ActiveRecord::Base
 		[JACK_AND_JILL, CROSSOVER_JACK_AND_JILL].include?(kind)
 	end
 
+	def requires_partner?
+		self.kind == STRICTLY
+	end
+
 	def current_price
 		self.initial_price
 	end
