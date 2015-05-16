@@ -61,10 +61,22 @@ module AeonVera
     }
 
     config.middleware.use ExceptionNotification::Rack,
-    email: {
-      email_prefix: "[#{Rails.env}] AeonVera: ",
-      sender_address: 'support@aeonvera.com',
-      exception_recipients: ['preston@aeonvera.com']
-    }
+      email: {
+        email_prefix: "[#{Rails.env}] AeonVera: ",
+        sender_address: 'support@aeonvera.com',
+        exception_recipients: ['preston@aeonvera.com']
+      }
+
+    # if Rails.env.devoplement?
+      config.middleware.insert_before 0, "Rack::Cors" do
+        allow do
+          origins "*"
+          resource "*",
+            :headers => :any,
+            :methods => [:get, :post, :delete, :put, :options, :head],
+            :credentials => true
+        end
+      # end
+    end
   end
 end

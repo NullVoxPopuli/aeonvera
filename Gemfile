@@ -10,6 +10,8 @@ gem 'rails'
 gem 'i18n'
 # Use Active Record to store sessions
 gem 'activerecord-session_store'
+# for cross-origin resource sharing
+gem 'rack-cors', :require => 'rack/cors'
 
 
 # model helpers

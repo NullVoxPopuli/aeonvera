@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   validate :last_name, presence: true
 
   before_destroy :not_attending_event?
-
+  before_save :ensure_authentication_token
 
   ransacker :full_name do |parent|
     Arel::Nodes::NamedFunction.new(
@@ -172,6 +172,12 @@ class User < ActiveRecord::Base
     )
   end
 
+  def ensure_authentication_token
+   if authentication_token.blank?
+     self.authentication_token = generate_authentication_token
+   end
+ end
+
   protected
 
   # ensure that the user is not signed up for an upcoming event
@@ -180,6 +186,14 @@ class User < ActiveRecord::Base
       event_names = self.upcoming_events.map(&:name).join(', ')
       self.errors[:base] << "You may not delete your account when you are attending an upcoming event. (#{event_names})"
       return false
+    end
+  end
+
+  def generate_authentication_token
+    # loop so that we ensure we never get a duplicate token
+    loop do
+      token = Devise.friendly_token
+      break token unless User.where(authentication_token: token).first
     end
   end
 

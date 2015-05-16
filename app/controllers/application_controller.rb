@@ -1,9 +1,14 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  # protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
+  # skip_before_filter :verify_authenticity_token
 
   before_filter :check_subdomain
+  # used by ember - over https in production, clear text otherwise
+  before_filter :authenticate_user_from_token!
+  # regular auth method
   before_filter :authenticate_user!, except: [:sign_in, :assume_control]
 
   before_action :set_time_zone
@@ -175,5 +180,16 @@ class ApplicationController < ActionController::Base
 
   def current_domain
     APPLICATION_CONFIG[:domain][Rails.env]
+  end
+
+  def authenticate_user_from_token!
+    authenticate_with_http_token do |token, options|
+      user_email = options[:email].presence
+      user = user_email && User.find_by_email(user_email)
+
+      if user && Devise.secure_compare(user.authentication_token, token)
+        sign_in user, store: false
+      end
+    end
   end
 end

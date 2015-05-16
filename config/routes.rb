@@ -108,7 +108,8 @@ AeonVera::Application.routes.draw do
 
   devise_for :users, controllers: {
     confirmations: "confirmations" ,
-    registrations: "users/registrations"
+    registrations: "users/registrations",
+    sessions: 'sessions'
   } do
   end
 
