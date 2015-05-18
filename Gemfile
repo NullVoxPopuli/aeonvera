@@ -7,6 +7,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails'
+gem 'rails-api'
 gem 'i18n'
 # Use Active Record to store sessions
 gem 'activerecord-session_store'

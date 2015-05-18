@@ -1,5 +1,12 @@
 AeonVera::Application.routes.draw do
 
+  namespace :api do
+    resources :attended_events
+    resources :events
+    
+  end
+
+
   resources :dances
 
   constraints(AdminSubdomain) do
