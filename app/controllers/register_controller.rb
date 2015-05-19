@@ -39,8 +39,7 @@ class RegisterController < ApplicationController
   # - let them review what they've signed up for before sending them off
   # to the payment service
   def create
-    @attendance = EventAttendance.new(registration_params)
-    @attendance.event = current_event
+    @attendance = current_event.attendances.build(registration_params)
     @attendance.attendee = current_user
     @attendance.pricing_tier_id = current_event.current_pricing_tier.id
 
@@ -49,15 +48,10 @@ class RegisterController < ApplicationController
     respond_to do |format|
       format.html {
         if @attendance.save
-          order = @attendance.create_order
-
-          if current_event.accept_only_electronic_payments?
-            order.update!(payment_method: Payable::Methods::STRIPE)
-          end
-
+          order = update_or_create_order
           AttendanceMailer.thankyou_email(order: order).deliver
-
         else
+          retrieve_competition_options
           return render action: "new"
         end
 
@@ -96,6 +90,7 @@ class RegisterController < ApplicationController
   end
 
   def edit
+    retrieve_competition_options
     if !@attendance.owes_money?
       flash[:notice] = "Please contact a #{current_event.name} organizer for help with editing your registration"
       redirect_to action: "show"
@@ -127,7 +122,8 @@ class RegisterController < ApplicationController
         custom_field: cf
       )
     end
-    # @attendance.build_address
+
+    retrieve_competition_options
   end
 
   def register
@@ -148,8 +144,11 @@ class RegisterController < ApplicationController
     apply_discounts
 
     respond_to do |format|
+
       if @attendance.update(registration_params)
-        update_order_line_items
+        # update_order_line_items
+        update_or_create_order
+
         format.html{
           redirect_to action: "show"
         }
@@ -208,6 +207,35 @@ class RegisterController < ApplicationController
   # PRIVATE
   ###################################
   private
+
+  def update_or_create_order
+    @attendance.orders.unpaid.destroy_all
+    order = @attendance.create_order
+
+    if current_event.accept_only_electronic_payments?
+      order.update!(payment_method: Payable::Methods::STRIPE)
+    end
+
+    order
+  end
+
+  def retrieve_competition_options
+    @available_competitions = []
+
+    # replace the list of all competitions with the participating ones
+    participating_competitions = @attendance.competition_responses.map(&:competition)
+    all_competitions = current_event.competitions
+
+    all_competitions.each do |c|
+      if !participating_competitions.include?(c)
+        @available_competitions << CompetitionResponse.new(
+          competition_id: c.id,
+          attendance_id: @attendance.id
+        )
+      end
+    end
+
+  end
 
   def apply_discounts
     # associate discounts
@@ -304,6 +332,7 @@ class RegisterController < ApplicationController
       :dance_orientation,
       discount_ids: [],
       custom_field_responses_attributes: [:custom_field_id, :value],
+      competition_responses_attributes: [:id, :competition_id, :dance_orientation, :partner_name, :_destroy],
       metadata: [
         :phone_number,
         :need_housing => [
@@ -338,7 +367,6 @@ class RegisterController < ApplicationController
           ]
         }
       ],
-      competition_ids: [],
       line_item_ids: []
     ).tap do |whitelisted|
       if shirts = params[:attendance].try(:[], :metadata).try(:[], :shirts)

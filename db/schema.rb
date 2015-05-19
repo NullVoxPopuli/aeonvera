@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515032046) do
+ActiveRecord::Schema.define(version: 20150516163254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,11 +56,6 @@ ActiveRecord::Schema.define(version: 20150515032046) do
   add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree
   add_index "attendances", ["host_id", "host_type"], name: "index_attendances_on_host_id_and_host_type", using: :btree
 
-  create_table "attendances_competitions", force: true do |t|
-    t.integer "attendance_id"
-    t.integer "competition_id"
-  end
-
   create_table "attendances_discounts", force: true do |t|
     t.integer "attendance_id"
     t.integer "discount_id"
@@ -93,6 +88,17 @@ ActiveRecord::Schema.define(version: 20150515032046) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "collaborated_type"
+  end
+
+  create_table "competition_responses", force: true do |t|
+    t.integer  "attendance_id"
+    t.integer  "competition_id"
+    t.string   "dance_orientation"
+    t.string   "partner_name"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "attendance_type",   default: "EventAttendance"
   end
 
   create_table "competitions", force: true do |t|
