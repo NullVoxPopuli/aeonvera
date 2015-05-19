@@ -19,10 +19,12 @@ class EventAttendance < Attendance
   # join_table: "attendances_competitions",
   # association_foreign_key: "competition_id", foreign_key: "attendance_id"
 
-  has_many :competition_responses, as: :attendance, class_name: CompetitionResponse.name
+  has_many :competition_responses,
+    as: :attendance, class_name: CompetitionResponse.name,
+    inverse_of: :attendance
   has_many :competitions, through: :competition_responses
 
-  accepts_nested_attributes_for :competition_responses
+  accepts_nested_attributes_for :competition_responses, allow_destroy: true
 
 
   has_and_belongs_to_many :discounts,

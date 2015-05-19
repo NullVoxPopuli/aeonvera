@@ -6,6 +6,6 @@ class CompetitionResponse < ActiveRecord::Base
 
   validates :attendance, presence: true
   validates :competition, presence: true
-  validates :partner, presence: true, if: ->(c){ c.competition.requires_partner? }
+  validates :partner_name, presence: true, if: ->(c){ c.competition.requires_partner? }
   validates :dance_orientation, presence: true, if: ->(c){ c.competition.requires_orientation? }
 end

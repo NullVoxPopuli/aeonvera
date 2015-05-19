@@ -48,15 +48,10 @@ class RegisterController < ApplicationController
     respond_to do |format|
       format.html {
         if @attendance.save
-          order = @attendance.create_order
-
-          if current_event.accept_only_electronic_payments?
-            order.update!(payment_method: Payable::Methods::STRIPE)
-          end
-
+          order = update_or_create_order
           AttendanceMailer.thankyou_email(order: order).deliver
-
         else
+          retrieve_competition_options
           return render action: "new"
         end
 
@@ -129,7 +124,6 @@ class RegisterController < ApplicationController
     end
 
     retrieve_competition_options
-    # @attendance.build_address
   end
 
   def register
@@ -152,7 +146,9 @@ class RegisterController < ApplicationController
     respond_to do |format|
 
       if @attendance.update(registration_params)
-        update_order_line_items
+        # update_order_line_items
+        update_or_create_order
+
         format.html{
           redirect_to action: "show"
         }
@@ -212,13 +208,33 @@ class RegisterController < ApplicationController
   ###################################
   private
 
-  def retrieve_competition_options
-    # throw in competition options
-    (current_event.competitions - @attendance.competitions).each do |c|
-      @attendance.competition_responses << CompetitionResponse.new(
-        competition: c
-      )
+  def update_or_create_order
+    @attendance.orders.unpaid.destroy_all
+    order = @attendance.create_order
+
+    if current_event.accept_only_electronic_payments?
+      order.update!(payment_method: Payable::Methods::STRIPE)
     end
+
+    order
+  end
+
+  def retrieve_competition_options
+    @available_competitions = []
+
+    # replace the list of all competitions with the participating ones
+    participating_competitions = @attendance.competition_responses.map(&:competition)
+    all_competitions = current_event.competitions
+
+    all_competitions.each do |c|
+      if !participating_competitions.include?(c)
+        @available_competitions << CompetitionResponse.new(
+          competition_id: c.id,
+          attendance_id: @attendance.id
+        )
+      end
+    end
+
   end
 
   def apply_discounts
@@ -316,7 +332,7 @@ class RegisterController < ApplicationController
       :dance_orientation,
       discount_ids: [],
       custom_field_responses_attributes: [:custom_field_id, :value],
-      competition_responses_attributes: [:competition_id, :dance_orientation, :partner_name],
+      competition_responses_attributes: [:id, :competition_id, :dance_orientation, :partner_name, :_destroy],
       metadata: [
         :phone_number,
         :need_housing => [
@@ -369,9 +385,6 @@ class RegisterController < ApplicationController
         # the shirts need to be added to the line item ids, so that
         # we can record the price
         whitelisted[:line_item_ids] = whitelisted[:line_item_ids] + shirts.keys if add_to_line_items
-      elsif competitions = params[:attendance].try(:[], :competition_responses_attributes)
-        selected = competitions.keep_if{|c| t[:dance_orientation].present? }
-        whitelisted[:competition_responses_attributes] = selected
       end
     end
   end

@@ -25,6 +25,8 @@ table width="100%"
               - competition_response = order.attendance.competition_responses.where(competition_id: item.id).first
               - if item.requires_orientation?
                 = "#{item.name}: #{competition_response.dance_orientation}"
+              - elsif item.requires_partner?
+                = "#{item.name} w/ #{competition_response.partner_name}"
               - else
                 = item.name
             - else

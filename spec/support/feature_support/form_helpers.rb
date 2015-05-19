@@ -71,6 +71,7 @@ module FormHelpers
     find(:css, id).set(false)
   end
 
+
   def is_volunteering
     check_box_with_id "#attendance_interested_in_volunteering"
   end

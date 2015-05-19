@@ -8,7 +8,7 @@ class Competition < ActiveRecord::Base
 
 	has_and_belongs_to_many :attendances,
 		-> { where(attending: true).order("attendances.created_at DESC") },
-		join_table: "attendances_competitions",
+		join_table: "competition_responses",
 		association_foreign_key: "attendance_id", foreign_key: "competition_id"
 
 	SOLO_JAZZ = 0
