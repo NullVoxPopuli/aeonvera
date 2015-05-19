@@ -1,9 +1,9 @@
 AeonVera::Application.routes.draw do
 
-  namespace :api do
+  namespace :api, defaults: {format: :json} do
     resources :attended_events
     resources :events
-    
+
   end
 
 
