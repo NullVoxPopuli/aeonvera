@@ -1,4 +1,4 @@
-class APIController < ActionController::API
+class APIController < ActionController::Base
   include CommonApplicationController
   protect_from_forgery with: :null_session
 

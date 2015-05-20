@@ -239,9 +239,6 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.11)
       sprockets-rails (~> 2.0)
-    rails-api (0.4.0)
-      actionpack (>= 3.2.11)
-      railties (>= 3.2.11)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -414,7 +411,6 @@ DEPENDENCIES
   quiet_assets
   rack-cors
   rails
-  rails-api
   rails_12factor
   ransack
   recurring_select
