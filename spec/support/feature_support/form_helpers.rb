@@ -16,6 +16,10 @@ module FormHelpers
     submit_form
   end
 
+  def visit_event
+    visit @event.url
+  end
+
   def registers_for_organization
     unless @organization
       @organization = create(:organization, owner: @user)
