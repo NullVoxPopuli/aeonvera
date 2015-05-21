@@ -33,11 +33,14 @@
 
   * Ruby Version >= 2.2
   * PostgreSQL >= 9.3
+   - [Setup Guide for Ubuntu](https://gorails.com/setup/ubuntu/15.04)
+  * PhantomJS >= 1.9
 
-     bundle install
-     rake db:create
-     rake db:migrate # to
-     rails s
+
+    bundle install
+    rake db:create
+    rake db:migrate
+    rails s
 
 ## Environment Variables
 
@@ -54,6 +57,12 @@
   * TRUSTED_IP
 
 ## Tests
+
+ Hosts file should contain the following entries
+
+    127.0.0.1 swing.vhost
+    127.0.0.1 testevent.test.local.vhost
+    217.0.0.1 my.test.local.vhost
 
  To run all the tests
 
