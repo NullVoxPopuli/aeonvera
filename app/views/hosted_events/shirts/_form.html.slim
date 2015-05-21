@@ -9,9 +9,17 @@
 = f.label :sizes
 = f.fields_for :metadata do |m|
   / = m.collection_check_boxes :sizes, LineItem::Shirt::ALL_SIZES, :to_s, :to_s
-  - LineItem::Shirt::ALL_SIZES.each do |size|
-    = m.check_box "sizes][", { checked: @shirt.sizes.include?(size)}, size, ""
-    = m.label size
+  ul.large-block-grid-4.medium-block-grid-3.small-block-grid-2
+    - LineItem::Shirt::ALL_SIZES.each do |size|
+      li
+        ul.small-block-grid-2.panel style="padding: 5px;"
+          li
+            = m.check_box "sizes][", { checked: @shirt.sizes.include?(size)}, size, ""
+            = m.label size
+          li
+            = m.label :price
+            = m.text_field "prices][#{size}", { value: @shirt.prices[size]}
 
-
+  | * Price fields left blank will inherit the main price for this shirt.
+  br
 = f.submit 'Save', :class => "button small"
