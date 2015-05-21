@@ -77,10 +77,7 @@ module Payable
 
 
     if already_exists?(object)
-      if [Discount, Competition, Package].include?(object.class)
-        return false
-      else
-        # line items have quantity
+      if is_an_item_with_quantity?(object)
         return increment_quantity_of_line_item_matching(object)
       end
     end
@@ -95,6 +92,14 @@ module Payable
     item.line_item_type = object.class.name
     item.save
     item
+  end
+
+  def is_an_item_with_quantity?(item)
+    if [Discount, Competition, Package].include?(object.class)
+      return false
+    else
+      return true
+    end
   end
 
   def allows_discounts?
@@ -156,6 +161,11 @@ module Payable
           # discounts will be applied after the amount is totaled
           remaining_discounts << object
         end
+      elsif (object = line_item.line_item).is_a?(LineItem::Shirt)
+        # shirts can have different prices per size.
+        # hopefully this will become easier to manage when
+        # an attendance has shirt option responses, rather than shirts
+        amount += self.attendance.total_cost_for_selected_shirt(object.id)
       else
         amount += (line_item.price * line_item.quantity)
       end

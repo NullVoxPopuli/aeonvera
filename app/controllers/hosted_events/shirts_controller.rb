@@ -79,12 +79,14 @@ class HostedEvents::ShirtsController < ApplicationController
         end
       end
     end
+
     params[:line_item_shirt].permit(
       :name,
       :price,
       :picture,
       metadata: {
-        sizes: []
+        sizes: [],
+        prices: LineItem::Shirt::ALL_SIZES
       }
     )
   end

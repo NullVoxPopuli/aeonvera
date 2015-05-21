@@ -32,8 +32,12 @@ table width="100%"
             - else
               = line_item.name
 
+          - if item.is_a?(LineItem::Shirt)
+            td = order.attendance.total_cost_for_selected_shirt(item.id)
+          - else
 
-          td = number_to_currency line_item.total
+            td = number_to_currency line_item.total
+
     - total = order.total
     - sub_total = order.sub_total
     - if total > sub_total

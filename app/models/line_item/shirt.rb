@@ -6,6 +6,14 @@ class LineItem::Shirt < LineItem
 		self.metadata["sizes"] || []
 	end
 
+  def prices
+    self.metadata["prices"] || {}
+  end
+
+  def price_for_size(size)
+    prices[size].presence || price
+  end
+
   # clean version of sizes
   # (no "")
   def offered_sizes
