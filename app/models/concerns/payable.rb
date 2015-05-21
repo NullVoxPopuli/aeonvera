@@ -95,7 +95,7 @@ module Payable
   end
 
   def is_an_item_with_quantity?(item)
-    if [Discount, Competition, Package].include?(object.class)
+    if [Discount, Competition, Package].include?(item.class)
       return false
     else
       return true
