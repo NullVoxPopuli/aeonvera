@@ -75,23 +75,24 @@ module Payable
 
     end
 
-
     if already_exists?(object)
       if is_an_item_with_quantity?(object)
         return increment_quantity_of_line_item_matching(object)
       end
+    else
+
+      price ||= (object.try(:current_price) || object.try(:value))
+      item = self.line_items.new(
+        quantity: quantity,
+        price: price
+      )
+
+      item.line_item_id = object.id
+      item.line_item_type = object.class.name
+      item.save
+      item
     end
 
-    price ||= (object.try(:current_price) || object.try(:value))
-    item = self.line_items.new(
-      quantity: quantity,
-      price: price
-    )
-
-    item.line_item_id = object.id
-    item.line_item_type = object.class.name
-    item.save
-    item
   end
 
   def is_an_item_with_quantity?(item)
