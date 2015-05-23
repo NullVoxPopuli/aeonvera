@@ -1,0 +1,8 @@
+- participating_competitions = @attendance.competition_responses.map(&:competition)
+- ids = participating_competitions.map(&:id)
+
+= form.fields_for :competition_responses do |c|
+  = render partial: 'competition_response_form', locals: { c: c, ids: ids}
+
+= form.fields_for :competition_responses, @available_competitions do |c|
+  = render partial: 'competition_response_form', locals: {c: c, ids: []}

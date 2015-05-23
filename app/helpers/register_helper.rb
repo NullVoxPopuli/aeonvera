@@ -24,16 +24,6 @@ module RegisterHelper
     }.join.html_safe
   end
 
-  def competitions
-    current_event.competitions.map { |competition|
-      id = "attendance_competition_ids_#{competition.id}"
-      label_tag(id){
-        check_box_tag("attendance[competition_ids][]", competition.id, @attendance.competitions.include?(competition), id: id) +
-        label_with_price(competition)
-      }
-    }.join.html_safe
-  end
-
   def line_items
     current_event.line_items.active.map{ |item|
       id = "attendance_line_item_ids_#{item.id}"
@@ -56,7 +46,7 @@ module RegisterHelper
         )
       end
 
-      label_with_price(item) + picture +
+      item.name + picture +
 
       content_tag(:div, :class => "row") do
         sizes = item.offered_sizes
@@ -68,7 +58,8 @@ module RegisterHelper
             quantity_for_size = shirt_data.try(:[], item.id.to_s).try(:[], size).try(:[], "quantity")
 
             content_tag(:div, :class => "small-#{number_of_columns} columns") do
-              label_tag(size) +
+              label = "#{size.upcase} - #{number_to_currency(item.price_for_size(size))}"
+              label_tag(label) +
                 label_tag("Quantity") +
                 number_field_tag("attendance[metadata][shirts][#{item.id}][#{size}][quantity]", quantity_for_size, min: 0, placeholder: 0)
             end.html_safe

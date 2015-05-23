@@ -112,6 +112,8 @@ FactoryGirl.define do
   factory :competition do
     name "Jack and Jill"
     kind Competition::JACK_AND_JILL
+    initial_price 10
+    at_the_door_price 10
   end
 
   factory :discount do

@@ -16,6 +16,10 @@ module FormHelpers
     submit_form
   end
 
+  def visit_event
+    visit @event.url
+  end
+
   def registers_for_organization
     unless @organization
       @organization = create(:organization, owner: @user)
@@ -70,6 +74,7 @@ module FormHelpers
   def uncheck_box_with_id(id)
     find(:css, id).set(false)
   end
+
 
   def is_volunteering
     check_box_with_id "#attendance_interested_in_volunteering"

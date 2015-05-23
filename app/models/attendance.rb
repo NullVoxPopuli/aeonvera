@@ -74,6 +74,7 @@ class Attendance < ActiveRecord::Base
 
   accepts_nested_attributes_for :custom_field_responses
 
+
   def add(object)
     send("#{object.class.name.demodulize.underscore.pluralize}") << object
   end
@@ -108,6 +109,8 @@ class Attendance < ActiveRecord::Base
           1
         end
       )
+
+      next if quantity == 0
 
       order.add(
         item,
@@ -216,6 +219,22 @@ class Attendance < ActiveRecord::Base
       shirt.each{|size, data|
         total += data['quantity'].to_i
       }
+      return total
+    end
+    0
+  end
+
+  def total_cost_for_selected_shirt(id)
+    shirt = shirt_data[id.to_s]
+
+    if shirt
+      total = 0
+      shirt.each{|size, data|
+        quantity = data['quantity'].to_i
+        current_shirt = event.shirts.select{|s| s.id == id}.first
+        total += (quantity * current_shirt.price_for_size(size).to_f)
+      }
+
       return total
     end
     0

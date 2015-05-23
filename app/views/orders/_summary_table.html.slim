@@ -21,11 +21,23 @@ table width="100%"
                 = shirt_with_size_and_quantity_summary(line_item, attendance: attendance)
             - elsif line_item.quantity > 1
               = "#{line_item.quantity} x #{line_item.name}"
+            - elsif item.is_a?(Competition)
+              - competition_response = order.attendance.competition_responses.where(competition_id: item.id).first
+              - if item.requires_orientation?
+                = "#{item.name}: #{competition_response.dance_orientation}"
+              - elsif item.requires_partner?
+                = "#{item.name} w/ #{competition_response.partner_name}"
+              - else
+                = item.name
             - else
               = line_item.name
 
+          - if item.is_a?(LineItem::Shirt)
+            td = order.attendance.total_cost_for_selected_shirt(item.id)
+          - else
 
-          td = number_to_currency line_item.total
+            td = number_to_currency line_item.total
+
     - total = order.total
     - sub_total = order.sub_total
     - if total > sub_total
