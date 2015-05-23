@@ -49,7 +49,7 @@ describe 'Registration Competitions' do
   end
 
   it 'decides to not compete' do
-    # pending('capybara appears to not be able to edit a form')
+    pending('capybara appears to not be able to uncheck things')
     # select competitions
     check_box_with_id("#attendance_competition_responses_attributes_0__destroy")
     submit_form
@@ -59,7 +59,8 @@ describe 'Registration Competitions' do
 
     visit @event.url + "/register/#{Attendance.last.id}/edit"
     # deselect
-    uncheck_box_with_id("#attendance_competition_responses_attributes_0__destroy")
+    uncheck("attendance_competition_responses_attributes_0__destroy")
+
     submit_form
 
     expect(page).to_not have_content(@c1.name)
