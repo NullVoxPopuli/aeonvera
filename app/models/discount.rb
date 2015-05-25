@@ -99,7 +99,11 @@ class Discount < ActiveRecord::Base
     end
   end
 
-  private
+
+  def has_restraints?
+    self.restraints.present?
+  end
+
 
   def amount_discount?
     self.kind == DOLLARS_OFF
@@ -108,6 +112,8 @@ class Discount < ActiveRecord::Base
   def percent_discount?
     self.kind == PERCENT_OFF
   end
+  
+  private
 
   # simple conversion to percent
   def value_as_percent
