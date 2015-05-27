@@ -121,6 +121,11 @@ FactoryGirl.define do
     value 5
   end
 
+  factory :restraint do
+    dependable Discount.new
+    restrictable Package.new
+  end
+
   factory :pricing_tier do
     event
     date Date.tomorrow
