@@ -18,11 +18,21 @@ class Discount < ActiveRecord::Base
     join_table: "attendances_discounts",
     association_foreign_key: "attendance_id", foreign_key: "discount_id"
 
+  # discounts depend on the restrainted item (such as a package)
   has_many :restraints, as: :dependable
   has_many :allowed_packages, through: :restraints,
     source: :restrictable, source_type: Package.name
 
   has_many :order_line_items, as: :line_item
+
+  accepts_nested_attributes_for :restraints, allow_destroy: true
+  # this in handled manually
+  # TODO: have ember create restraints without the discounts
+  # this association should never be used, this is specifically
+  # for form building
+  has_many :add_restraints, class_name: Restraint.name
+  accepts_nested_attributes_for :add_restraints, reject_if: ->{ true }
+
 
   DOLLARS_OFF = 0
   PERCENT_OFF = 1
@@ -41,6 +51,13 @@ class Discount < ActiveRecord::Base
 
   validates :code, presence: true
   validate :code_is_valid?
+
+  def restrained_to?(item)
+    self.restraints.select{|r|
+      r.dependable_id == item.id &&
+      r.dependable_type == item.class.name
+    }.present?
+  end
 
   def times_used
     order_line_items.count
@@ -112,7 +129,7 @@ class Discount < ActiveRecord::Base
   def percent_discount?
     self.kind == PERCENT_OFF
   end
-  
+
   private
 
   # simple conversion to percent

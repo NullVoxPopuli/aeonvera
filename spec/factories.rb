@@ -122,7 +122,8 @@ FactoryGirl.define do
   end
 
   factory :restraint do
-
+    dependable Discount.new
+    restrictable Package.new
   end
 
   factory :pricing_tier do
