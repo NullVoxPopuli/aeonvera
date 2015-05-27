@@ -13,10 +13,11 @@ before_srcipt:
 script:
   - cp config/database.travis.yml config/database.yml
   - RAILS_ENV=test rake db:drop
-  - RAILS_ENV=test rake db:create
-  - RAILS_ENV=test rake db:migrate
+  # - RAILS_ENV=test rake db:create
+  # - RAILS_ENV=test rake db:migrate
+  - psql -c 'create database travis_ci_test;' -U postgres
+  # rspec imports the schema
   - bundle exec rspec
-  #- psql -c 'create database travis_ci_test;' -U postgres
 
 bundler_args: "--local --without documentation"
 
