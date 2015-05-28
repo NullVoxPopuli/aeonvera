@@ -7,4 +7,7 @@ class Restraint < ActiveRecord::Base
   belongs_to :dependable, polymorphic: true
   belongs_to :restrictable, polymorphic: true
 
+
+  validates :dependable, presence: true
+  validates :restrictable, presence: true
 end

@@ -15,7 +15,50 @@
 
 	/ = f.label :affects
 	/ = f.select :affects, affects_options
-	= f.hidden_field :affects, value: "Final Price"
+	/ = f.hidden_field :affects, value: "Final Price"
+
+	- if @discount.restraints.present?
+		label This discount is currently restricted to
+		ul
+			= f.fields_for :restraints do |r|
+				li
+					- d = r.object.restrictable
+					label = "(#{d.class.name}) #{d.name}"
+					ul
+						li
+							= r.check_box :_destroy
+							label = "Remove"
+							= r.hidden_field :id, value: r.object.id
+							= r.hidden_field :restrictable_id, value: d.id
+							= r.hidden_field :restrictable_type, value: d.class.name
+
+	- if @discount.persisted?
+		hr
+		label Restrict this discount to:
+		ul.tabs data-tab='true' role="tablist"
+			li.tab-title.active role='presentational'
+				a href='#panel-packages' role='tab' aria-selected="true" controls="#panel-packages" Packages
+			li.tab-title role='presentational'
+				a href='#panel-competitions' role='tab'  controls="#panel-competitions" Competitions
+		.tabs-content
+			section#panel-packages.content.active role='tabpanel' aria-hidden="false"
+				= f.fields_for :add_restraints, @event.packages do |r|
+					- package = r.object
+					- already_restrained_to = @discount.restrained_to?(package)
+					- unless already_restrained_to
+						= r.check_box :_destroy, { checked: false  }, '0', '1'
+						label = package.name
+						= r.hidden_field :restrictable_id, value: package.id
+						= r.hidden_field :restrictable_type, value: package.class.name
+			section#panel-competitions.content role='tabpanel' aria-hidden="true"
+				= f.fields_for :add_restraints, @event.competitions do |r|
+					- competition = r.object
+					- already_restrained_to = @discount.restrained_to?(competition)
+					- unless already_restrained_to
+						= r.check_box :_destroy, { checked: false }, '0', '1'
+						label = competition.name
+						= r.hidden_field :restrictable_id, value: competition.id
+						= r.hidden_field :restrictable_type, value: competition.class.name
 
 .text-right
 	= back_button(hosted_event_discounts_path)

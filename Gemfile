@@ -70,6 +70,7 @@ gem 'paperclip'
 # Upload Storage on S3
 gem 'aws-sdk'
 
+
 ############
 # JS, CSS and Icons
 ############

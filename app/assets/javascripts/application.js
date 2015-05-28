@@ -30,80 +30,83 @@
 //= require recurring_select
 //= require select2
 //= require jquery-te-1.4.0.min
+//= cocoon
 
-$( function () {
-  AeonVera.initWindowObservers();
+$(function() {
+	AeonVera.initWindowObservers();
 
-  /*
+	/*
 		table filter
 	*/
-  // $( "form.table-filter input").unbind('paste keyup');
-  $( "form.table-filter input" ).bind( "paste keyup", function ( event ) {
-    var filterTarget = $( this ).data( "class" );
-    var table = $( "table." + filterTarget );
-    var filterText = $( this ).val().toLowerCase();
-    table.find( "tbody" ).find( "tr" ).filter( function () {
-      $( this ).show();
-      return $( this ).text().toLowerCase().indexOf( filterText ) == -1;
-    } ).hide();
-  } );
+	// $( "form.table-filter input").unbind('paste keyup');
+	$("form.table-filter input").bind("paste keyup", function(event) {
+		var filterTarget = $(this).data("class");
+		var table = $("table." + filterTarget);
+		var filterText = $(this).val().toLowerCase();
+		table.find("tbody").find("tr").filter(function() {
+			$(this).show();
+			return $(this).text().toLowerCase().indexOf(filterText) == -1;
+		}).hide();
+	});
 
-  // $( "form.table-filter").unbind("submit")
-  $( "form.table-filter" ).submit( function () {
-    return false;
-  } );
+	// $( "form.table-filter").unbind("submit")
+	$("form.table-filter").submit(function() {
+		return false;
+	});
 
-  $( 'button#collect-check-number' ).click( function ( e ) {
-    var target = $( e.target );
-    var checkNumberDialog = target.closest( 'li' ).find( '.check-number-form' );
-    var form = checkNumberDialog.find( 'form' );
-    var submitForm = function () {
-      form.submit();
-      checkNumberDialog.dialog( "close" );
-    }
-    checkNumberDialog.dialog( {
-      autoOpen: false,
-      modal: true,
-      buttons: {
-        "Mark as Paid by Check": submitForm
-      }
-    } );
-    checkNumberDialog.dialog( "open" );
-  } );
+	$('button#collect-check-number').click(function(e) {
+		var target = $(e.target);
+		var checkNumberDialog = target.closest('li').find('.check-number-form');
+		var form = checkNumberDialog.find('form');
+		var submitForm = function() {
+			form.submit();
+			checkNumberDialog.dialog("close");
+		}
+		checkNumberDialog.dialog({
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				"Mark as Paid by Check": submitForm
+			}
+		});
+		checkNumberDialog.dialog("open");
+	});
 
-  if ( $( '.alert-box' ).length >= 0 ) {
-    setTimeout( function () {
-      $( '.alert-box .close' ).click();
-    }, 5000 );
-  }
-} );
-$( function () {
-  Foundation.global.namespace = '';
-  $( document ).foundation();
-} );
-$(function(){ $(document).foundation(); });
+	if ($('.alert-box').length >= 0) {
+		setTimeout(function() {
+			$('.alert-box .close').click();
+		}, 5000);
+	}
+});
+$(function() {
+	Foundation.global.namespace = '';
+	$(document).foundation();
+});
+$(function() {
+	$(document).foundation();
+});
 
 
-function setEditorOn(id){
-  $(id).jqte({
-    b: true,
-    i: true,
-    u: true,
-    ol: true,
-    ul: true,
-    sub: true,
-    sub: true,
-    outdent: true,
-    indent: true,
-    left: true,
-    right: true,
-    center: true,
-    strike: true,
-    link: true,
-    remove: true,
-    color: true,
-    fsize: true,
-    source: false,
-    format: false
-  });
+function setEditorOn(id) {
+	$(id).jqte({
+		b: true,
+		i: true,
+		u: true,
+		ol: true,
+		ul: true,
+		sub: true,
+		sub: true,
+		outdent: true,
+		indent: true,
+		left: true,
+		right: true,
+		center: true,
+		strike: true,
+		link: true,
+		remove: true,
+		color: true,
+		fsize: true,
+		source: false,
+		format: false
+	});
 }

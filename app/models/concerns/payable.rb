@@ -51,48 +51,48 @@ module Payable
   end
 
   def add(object, quantity: 1, price: nil)
+
     if object.is_a?(Discount)
-      if !allows_discounts?
-        return false
-      end
-
-      if already_has_discount? &&
-          !allows_multiple_discounts?
-        return false
-      end
-
-      # check if the discount is allowed for this order
-      allowed = object.allowed_packages
-      if allowed.present?
-        # ensure just one of the allowed packages is present
-        # in this order
-        package_eligibility = allowed.map do |package|
-          already_exists?(package)
-        end
-
-        return false unless package_eligibility.any?
-      end
-
+      return false unless eligible_for_discount?
+      return false unless discount_is_eligible?(object)
     end
 
     if already_exists?(object)
       if is_an_item_with_quantity?(object)
-        return increment_quantity_of_line_item_matching(object)
+        increment_quantity_of_line_item_matching(object)
       end
     else
+      create_line_item(object, quantity: quantity, price: price)
+    end
+  end
 
-      price ||= (object.try(:current_price) || object.try(:value))
-      item = self.line_items.new(
-        quantity: quantity,
-        price: price
-      )
 
-      item.line_item_id = object.id
-      item.line_item_type = object.class.name
-      item.save
-      item
+  # check if the discount is allowed for this order
+  def discount_is_eligible?(object)
+    allowed = object.allowed_packages
+    if allowed.present?
+      # ensure just one of the allowed packages is present
+      # in this order
+      package_eligibility = allowed.map do |package|
+        item_exists = already_exists?(package)
+      end
+
+      return false unless package_eligibility.any?
     end
 
+    true
+  end
+
+  def eligible_for_discount?
+    if !allows_discounts?
+      return false
+    end
+
+    if already_has_discount? && !allows_multiple_discounts?
+      return false
+    end
+
+    return true
   end
 
   def is_an_item_with_quantity?(item)
@@ -148,20 +148,18 @@ module Payable
     return legacy_total if is_legacy?
     amount = 0
     remaining_discounts = []
-
+    discounts_to_apply_at_end = ->(discount){
+      remaining_discounts << discount
+    }
 
     self.line_items.each do |line_item|
       if (object = line_item.line_item).is_a?(Discount)
-        if object.kind == Discount::DOLLARS_OFF
-          if object.class.name == Discount.name
-            amount -= object.value
-          else
-            amount -= (object.value * line_item.quantity)
-          end
-        else
-          # discounts will be applied after the amount is totaled
-          remaining_discounts << object
-        end
+        amount = amount_after_discount(
+          amount,
+          object,
+          order_line_item: line_item,
+          discounts_to_apply_at_end: discounts_to_apply_at_end
+        )
       elsif (object = line_item.line_item).is_a?(LineItem::Shirt)
         # shirts can have different prices per size.
         # hopefully this will become easier to manage when
@@ -173,14 +171,7 @@ module Payable
 
     end
 
-    remaining_discounts.each do |discount|
-      # this will be expanded later for discounts on packages
-      if discount.kind == Discount::DOLLARS_OFF
-        amount -= discount.value
-      else discount.kind == Discount::PERCENT_OFF
-        amount -= (amount * discount.value / 100.0)
-      end
-    end
+    amount = amount_after_global_discounts(amount, remaining_discounts)
 
     amount > 0 ? amount : 0
   end
@@ -243,6 +234,85 @@ module Payable
       end
     }
     c
+  end
+
+  private
+
+  # this should only be called after validation has been
+  # performed on the object.
+  #
+  # @see #add
+  # @param [LineItem] object discount or payable item
+  # @param [Number] quantity number of items
+  # @param [Decimal] price monetary value
+  # @return [OrderLineItem] the created order line item
+  def create_line_item(object, quantity: 1, price: nil)
+    price ||= (object.try(:current_price) || object.try(:value))
+    item = self.line_items.new(
+      quantity: quantity,
+      price: price
+    )
+
+    item.line_item_id = object.id
+    item.line_item_type = object.class.name
+    item.save
+    item
+  end
+
+
+  def amount_after_discount(amount, discount, order_line_item: nil, discounts_to_apply_at_end: nil)
+    discount_from = amount
+    quantity = order_line_item.quantity
+
+    # check if the discount is to only apply to one item
+    allowed = discount.allowed_packages
+    apply_to = nil
+    if allowed.present?
+      package_eligibility = allowed.each do |package|
+        if already_exists?(package)
+          apply_to = package
+          break
+        end
+      end
+    end
+
+    if apply_to.present?
+      applicable_line_item = line_item_matching(apply_to)
+      quantity = applicable_line_item.quantity
+      discount_from = applicable_line_item.price
+    else
+      if discount.percent_discount?
+        # discounts will be applied after the amount is totaled
+        discounts_to_apply_at_end.call(discount)
+        return
+      end
+    end
+
+    if discount.amount_discount?
+      amount -= (discount.value * quantity)
+    elsif apply_to.present?
+      amount -= (discount_from * discount.value / 100.0)
+    else
+      discounts_to_apply_at_end.call(discount)
+    end
+
+    amount
+  end
+
+  # applies global discounts that are not tied to any particular item
+  # @param [Decimal] amount
+  # @param [Array] discounts list of discounts to apply
+  # @return [Number] the new amount
+  def amount_after_global_discounts(amount, discounts)
+    discounts.each do |discount|
+      if discount.amount_discount?
+        amount -= discount.value
+      else discount.percent_discount?
+        amount -= (amount * discount.value / 100.0)
+      end
+    end
+
+    amount
   end
 
 end
