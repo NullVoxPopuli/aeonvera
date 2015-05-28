@@ -2,8 +2,15 @@ AeonVera::Application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :attended_events
-    resources :events
+    resources :hosted_events
+    resources :registerable_events
+    resources :attendances
 
+    # manually define routes for the current user
+    get 'user', to: 'user#show'
+    patch 'user', to: 'user#update'
+    put 'user', to: 'user#update'
+    delete 'user', to: 'user#destroy'
   end
 
 

@@ -41,18 +41,6 @@ class HomeController < ApplicationController
   private
 
   def upcoming_events
-    table = Event.arel_table
-    ends_at = table[:ends_at]
-    event_id = table[:id]
-
-    opening_date = PricingTier.arel_table[:date]
-    now = Time.now
-
-    @upcoming_events = Event.where(show_on_public_calendar: true).
-      where(ends_at.gt(now)).
-      order(table[:ends_at].asc)
-      # includes(:opening_tier).
-      # order('pricing_tiers.date')#(opening_date.asc)
-      #where(opening_date.lt(now)).distinct
+    @upcoming_events = Event.upcoming
   end
 end

@@ -1,4 +1,4 @@
-class API::AttendedEventsController < APIController
+class Api::AttendedEventsController < APIController
 
   def index
     @attendances = current_user.event_attendances

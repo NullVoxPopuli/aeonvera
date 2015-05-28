@@ -2,6 +2,7 @@ class APIController < ActionController::Base
   include CommonApplicationController
   protect_from_forgery with: :null_session
 
+  # TODO: Check HTTPS. If not HTTPS, reject all API Requests
   skip_before_filter :verify_authenticity_token
 
   before_filter :check_subdomain
