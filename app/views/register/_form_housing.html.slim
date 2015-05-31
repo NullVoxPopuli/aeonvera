@@ -1,72 +1,25 @@
+- legacy = current_event.legacy_housing?
+
 fieldset.housing
-	legend  Housing
-	ul.small-block-grid-2
-		li
-			= f.label :needs_housing
-				= f.check_box :needs_housing, value: @attendance.needs_housing?
-				| I would like to request local housing
+  legend  Housing
+  ul.small-block-grid-2
+    li
+      = f.label :needs_housing
+        = f.check_box :needs_housing, value: @attendance.needs_housing?
+        | I would like to request local housing
 
-			.well.information style="display: none;"
-				= f.fields_for :metadata do |m|
-					= m.fields_for :need_housing do |h|
-						- housing = @attendance.metadata_safe["need_housing"] || {}
-						.form-group
-							= h.label :gender, "I prefer to stay with"
-							= h.select :gender, ["No Preference", "Guys", "Gals"], selected: housing["gender"], class: "form-control"
+      .well.information style="display: none;"
+        - if legacy
+          = render partial: 'register/housing/legacy_request', locals: { f: f }
+        - else
+          = render partial: 'register/housing/request', locals: { f: f }
+    li
+      = f.label :providing_housing
+        = f.check_box :providing_housing, value: @attendance.providing_housing?
+        | I can provide housing
 
-						.form-group.checkbox
-							= h.label :transportation do
-								= h.check_box :transportation, checked: housing["transportation"].to_b
-								| I am going to need transportation
-
-						.form-group
-							= h.label :allergies, "Do you have allergies?"
-							= h.text_field :allergies, placeholder: "example: 'cats'", value: housing["allergies"], class: "form-control"
-
-						.form-group
-							= h.label :smoking, "Smoking"
-							= h.select :smoking, ["Indifferent", "Smoking", "Non-Smoking"], selected: housing["smoking"], class: "form-control"
-
-						.form-group
-							= h.label :notes, "Notes"
-							= h.text_area :notes, placeholder: "Who you would like to be housed with, etc", value: housing["notes"], class: "form-control"
-
-		li
-			= f.label :providing_housing
-				= f.check_box :providing_housing, value: @attendance.providing_housing?
-				| I can provide housing
-
-			.well.information style="display: none;"
-				= f.fields_for :metadata do |m|
-					= m.fields_for :providing_housing do |h|
-						- housing = @attendance.metadata_safe["providing_housing"] || {}
-						.form-group
-							= h.label :gender, "I prefer to house"
-							= h.select :gender, ["No Preference", "Guys", "Gals"], selected: housing["gender"], class: "form-control"
-
-						.form-group.checkbox
-							= h.label :transportation do
-								= h.check_box :transportation, checked: housing["transportation"].to_b
-								| I can provide transportation
-
-						.form-group
-							= h.label :room_for
-							= h.number_field :room_for, min: 0, value: housing["room_for"]
-							| People
-
-						.form-group
-							= h.label :transportation_for
-							= h.number_field :transportation_for, min: 0, value: housing["transportation_for"]
-							| People
-
-						.form-group.checkbox
-							= h.label :smoking do
-								= h.check_box :smoking, checked: housing["smoking"].to_b
-								| I, or someone in my house, smokes
-
-						.form-group.checkbox
-							= h.label :have_pets do
-								= h.check_box :have_pets, checked:  housing["have_pets"].to_b
-								| I, or someone in my house, has pets
-
-				
+      .well.information style="display: none;"
+        / - if legacy
+        = render partial: 'register/housing/legacy_provision', locals: { f: f }
+        / - else
+        / = render partial: 'register/housing/provision', locals: { f: f }

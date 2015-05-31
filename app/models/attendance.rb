@@ -8,6 +8,8 @@ class Attendance < ActiveRecord::Base
   LEAD = "Lead"
   FOLLOW = "Follow"
 
+  has_one :housing_request
+
   belongs_to :attendee, class_name: "User"
 
   belongs_to :host, polymorphic: true
@@ -73,7 +75,7 @@ class Attendance < ActiveRecord::Base
   scope :follows, ->{ where(dance_orientation: FOLLOW) }
 
   accepts_nested_attributes_for :custom_field_responses
-
+  accepts_nested_attributes_for :housing_request
 
   def add(object)
     send("#{object.class.name.demodulize.underscore.pluralize}") << object
