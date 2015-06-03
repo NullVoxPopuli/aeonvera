@@ -68,7 +68,7 @@ gem 'stripe'
 # Uploads
 gem 'paperclip'
 # Upload Storage on S3
-gem 'aws-sdk'
+gem 'aws-sdk', '< 2.0'
 
 
 ############
