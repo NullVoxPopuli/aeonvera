@@ -21,6 +21,22 @@ describe 'Registration Discounts' do
       @order = @user.attendances.last.orders.last
     end
 
+    it 'is tied to a package other than what is selected' do
+      create(:restraint, restrictable: create(:package, event: @event), dependable: @discount)
+
+      fill_in "discount", with: @discount.name
+      click_anchor "#discount_for_#{@order.id}"
+      expect(page).to_not have_content(@discount.name)
+    end
+
+    it 'is tied to the selected package' do
+      create(:restraint, restrictable: @package, dependable: @discount)
+
+      fill_in "discount", with: @discount.name
+      click_anchor "#discount_for_#{@order.id}"
+      expect(page).to have_content(@discount.name)
+    end
+
     it 'discount is allowed to be used 0 times' do
       @discount.allowed_number_of_uses = 0
       @discount.save
