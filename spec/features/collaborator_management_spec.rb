@@ -6,11 +6,9 @@ describe "Collaboration Management", js: true  do
     login_as_confirmed_user
     @event = create(:event, hosted_by: @user)
     @organization = create(:organization, hosted_by: @user)
-
   end
 
   context 'an invite exists' do
-
 
     it 'only applies to the event' do
       visit hosted_event_collaborators_path(@event)
@@ -62,21 +60,39 @@ describe "Collaboration Management", js: true  do
       ActionMailer::Base.deliveries.clear
 
       # create an invite
+      @intended_email = "otheruser@something.com"
       visit hosted_event_collaborators_path(@event)
-      fill_in "email", with: "otheruser@something.com"
-      submit_form
+      fill_in "email", with: @intended_email
+
+      expect{
+        # annoying sanity validation triggers the timeout wait
+        # so that ACtiveMailer can be populated with the email that
+        # results from the form submission
+        submit_form
+        # have to call this so that capybara waits for a response
+        expect(page).to have_content("invited")
+      }.to change(ActionMailer::Base.deliveries, :count).by(1)
 
       @invite_email = ActionMailer::Base.deliveries.first
+
+      # pull the invite link out of the email
+      email_body = @invite_email.body.to_s
+      email_html = Nokogiri::HTML(email_body)
+      @invite_url = email_html.css("a").first.attr('href')
     end
 
     it 'displays a welcome message' do
-
+      # login as a different user
+      login_as_confirmed_user(create(:user, email: @intended_email))
+      visit @invite_url
+      expect(page).to have_content("You are now helping")
     end
 
 
     it 'displays a welcome message once logged in' do
 
     end
+
 
     it 'says that the user is not the intended recipient (email mismatch)' do
 

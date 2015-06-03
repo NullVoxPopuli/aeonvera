@@ -127,9 +127,9 @@ class Hosts::CollaboratorsController < ApplicationController
   end
 
   def set_host
-    if params[:controller].include?("events")
+    if event_id = params[:hosted_event_id]
       # event collaboration
-      @host = Event.find(params[:hosted_event_id])
+      @host = Event.find(event_id)
     else
       # organization collaboration
       @host = Organization.find(params[:organization_id])
