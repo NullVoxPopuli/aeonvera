@@ -35,6 +35,10 @@ describe 'Registration' do
 
     end
 
+    it 'requires a phone number' do
+
+    end
+
   end
 
 end

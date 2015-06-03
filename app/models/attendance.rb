@@ -9,6 +9,7 @@ class Attendance < ActiveRecord::Base
   FOLLOW = "Follow"
 
   has_one :housing_request
+  has_one :housing_provision
 
   belongs_to :attendee, class_name: "User"
 
@@ -76,6 +77,7 @@ class Attendance < ActiveRecord::Base
 
   accepts_nested_attributes_for :custom_field_responses
   accepts_nested_attributes_for :housing_request
+  accepts_nested_attributes_for :housing_provision
 
   def add(object)
     send("#{object.class.name.demodulize.underscore.pluralize}") << object
