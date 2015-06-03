@@ -19,7 +19,7 @@ fieldset.housing
         | I can provide housing
 
       .well.information style="display: none;"
-        / - if legacy
-        = render partial: 'register/housing/legacy_provision', locals: { f: f }
-        / - else
-        / = render partial: 'register/housing/provision', locals: { f: f }
+        - if legacy
+          = render partial: 'register/housing/legacy_provision', locals: { f: f }
+        - else
+          = render partial: 'register/housing/provision', locals: { f: f }

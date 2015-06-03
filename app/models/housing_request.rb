@@ -12,7 +12,7 @@ class HousingRequest < ActiveRecord::Base
     foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
   # TODO: Implement #177
-  # belongs_to :housing_provision
+  belongs_to :housing_provision
 
   # alias so that we can use proper english
   alias_attribute :needs_transportation, :need_transportation

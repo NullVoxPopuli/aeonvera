@@ -27,6 +27,8 @@ class CreateHousingRequests < ActiveRecord::Migration
       t.references :attendance, polymorphic: true
       t.references :host, polymorphic: true
       t.references :housing_provision
+
+      t.timestamps
     end
   end
 

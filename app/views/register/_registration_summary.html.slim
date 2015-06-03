@@ -86,26 +86,55 @@
     - if attendance.providing_housing?
       fieldset
         legend Housing Provision
-        - housing_provision = attendance.metadata_safe["providing_housing"] || {}
-        table  width="100%"
-          tr
-            th Prefer to house
-            td = housing_provision["gender"]
-          tr
-            th Can provide transportation
-            td = housing_provision["transportation"].to_b
-          tr
-            th Number of People to House
-            td = housing_provision["room_for"]
-          tr
-            th Number of People that can be Transported
-            td = housing_provision["transportation_for"]
-          tr
-            th Your house has smoke
-            td = housing_provision["smoking"].to_b
-          tr
-            th Your house has pets
-            td = housing_provision["have_pets"].to_b
+        - if current_event.legacy_housing?
+          - housing_provision = attendance.metadata_safe["providing_housing"] || {}
+          table width="100%"
+            tr
+              th Prefer to house
+              td = housing_provision["gender"]
+            tr
+              th Can provide transportation
+              td = housing_provision["transportation"].to_b
+            tr
+              th Number of People to House
+              td = housing_provision["room_for"]
+            tr
+              th Number of People that can be Transported
+              td = housing_provision["transportation_for"]
+            tr
+              th Your house has smoke
+              td = housing_provision["smoking"].to_b
+            tr
+              th Your house has pets
+              td = housing_provision["have_pets"].to_b
+        - else
+          - housing_provision = attendance.housing_provision
+          table width="100%"
+            tr
+              th Housing Capacity
+              td = housing_provision.housing_capacity
+            tr
+              th Number of Showers
+              td = housing_provision.number_of_showers
+            tr
+              th Can Provide Transportation
+              td = housing_provision.can_provide_transportation
+            tr
+              th Transportation Capacity
+              td = housing_provision.transportation_capacity
+            tr
+              th Preferred Gender To Host
+              td = housing_provision.preferred_gender_to_host
+            tr
+              th Has Pets
+              td = housing_provision.has_pets
+            tr
+              th Smoke
+              td = housing_provision.smokes
+            tr
+              th Notes
+              td = housing_provision.notes
+
     - if (address = attendance.metadata_safe["address"]).present?
       fieldset
         legend Address

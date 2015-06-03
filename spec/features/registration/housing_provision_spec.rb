@@ -34,6 +34,10 @@ describe 'Registration' do
       expect(page).to_not have_content("Housing Provision")
     end
 
+    it 'requires a phone number' do
+
+    end
+
   end
 
 end

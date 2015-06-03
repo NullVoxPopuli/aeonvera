@@ -91,6 +91,7 @@ class RegisterController < ApplicationController
 
   def edit
     @attendance.housing_request ||= HousingRequest.new
+    @attendance.housing_provision ||= HousingProvision.new
     retrieve_competition_options
     if !@attendance.owes_money?
       flash[:notice] = "Please contact a #{current_event.name} organizer for help with editing your registration"
@@ -117,6 +118,7 @@ class RegisterController < ApplicationController
   def new
     @attendance = EventAttendance.new
     @attendance.housing_request ||= HousingRequest.new
+    @attendance.housing_provision ||= HousingProvision.new
 
     # throw in the custom fields
     current_event.custom_fields.each do |cf|
@@ -346,6 +348,16 @@ class RegisterController < ApplicationController
         :notes,
         requested_roommates: [],
         unwanted_roommates: []
+      ],
+      housing_provision_attributes:[
+        :housing_capacity,
+        :number_of_showers,
+        :can_provide_transportation,
+        :transportation_capacity,
+        :preferred_gender_to_host,
+        :has_pets,
+        :smokes,
+        :notes
       ],
       metadata: [
         :phone_number,
