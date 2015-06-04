@@ -299,6 +299,7 @@ class HostedEventsController < ApplicationController
       :name, :short_description, :starts_at, :ends_at, :payment_email,
       :domain,
       :allow_discounts,
+      :registration_email_disclaimer,
       :accept_only_electronic_payments,
       :allow_combined_discounts,
       :registration_opens_at,
