@@ -14,8 +14,8 @@ class AdminController < ActionController::Base
 	# @see Admin::Sessions#authenticate
 	# @see Admin::Sessions#failure
 	def current_user
-		return true if Rails.env.test?
-    
+		return true if Rails.env.test? || Rails.env.development?
+
 		if cookies['_admin_token'].present?
 			uid = Base64.decode64(cookies['_admin_token'])
 			user = Admin::User.find_by_uid(uid)
