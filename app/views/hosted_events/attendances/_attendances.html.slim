@@ -36,10 +36,10 @@ table.responsive
 							= competition.name
 							br
 					td
-						- attendance.shirts.each do |shirt|
-							= shirt.name
-							| :
-							= shirt.size
+						- attendance.ordered_shirts.each do |shirt|
+							= "#{shirt.line_item.name} "
+							= shirt_with_size_and_quantity_summary(shirt, attendance: attendance)
+
 					td.payment-status
 						= number_to_currency(attendance.amount_owed)
 						- if attendance.owes_money?

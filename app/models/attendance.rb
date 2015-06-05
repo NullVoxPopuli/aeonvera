@@ -152,6 +152,16 @@ class Attendance < ActiveRecord::Base
     }
   end
 
+  def ordered_shirts
+    result = []
+    orders.each do |order|
+      result = order.line_items.select{|li|
+        li.line_item_type == LineItem::Shirt.name
+      }
+    end
+    result = result.flatten
+  end
+
   def attendee_name
     if self.attendee
       self.attendee.name.titleize
