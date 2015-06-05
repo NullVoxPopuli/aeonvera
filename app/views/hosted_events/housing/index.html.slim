@@ -1,52 +1,57 @@
 = link_to "Requesting CSV", hosted_event_housing_index_path(@event, format: 'csv')
 | &nbsp;|&nbsp;
 = link_to "Providing CSV", hosted_event_housing_index_path(@event, providing: true, format: 'csv')
-h1 Requesting Housing
+- if @event.legacy_housing?
+	= render partial: 'legacy'
+- else
 
-table.table.table-bordered.table-striped.table-condensed
-	tr
-		th Name
-		th Date Registered
-		th Roommate Gender Preference
-		th Requires Transportation
-		th Allergies
-		th Smoking Preference
-		th Notes
+	h2 Providing Housing
 
-	- if @needing_housing.present?
-		- @needing_housing.each do |attendance|
-			- housing = attendance.requested_housing_data
-			tr
-				td = attendance.attendee_name
-				td = attendance.created_at.to_date.to_s(:long)
-				td = housing["gender"]
-				td = housing["transportation"].to_b
-				td = housing["allergies"]
-				td = housing["smoking"]
-				td = housing["notes"]
+	table.table.table-bordered.table-striped.table-condensed
+		tr
+			th Name
+			th Housing Capacity
+			th Number of Showers
+			th Can provide transportation
+			th Transportation Capacity
+			th Preferred Gender to Host
+			th Pets?
+			th Smokes?
+			th Notes
+		- if @providing_housing.present?
+			- @providing_housing.each do |p|
+				tr
+					td = p.attendance.attendee_name
+					td = p.housing_capacity
+					td = p.number_of_showers
+					td = p.can_provide_transportation
+					td = p.transportation_capacity
+					td = p.preferred_gender_to_host
+					td = p.has_pets?
+					td = p.smokes?
+					td = p.notes
 
+	h2 Requesting Housing
+	table.table.table-bordered.table-striped.table-condensed
+		tr
+			th Name
+			th Can provide transportation
+			th Transportation Capacity
+			th Allergic to pets?
+			th Allergic to smoke?
+			th Other Allergies?
+			th requested roommates
+			th unwanted roommates
+			th preferred gender to house with
+			th notes
 
-h1 Providing Housing
-
-table.table.table-bordered.table-striped.table-condensed
-	tr
-		th Name
-		th Date Registered
-		th Housing Gender Preference
-		th Has Room for # People
-		th Offering Transportation
-		th Can Transport # People
-		th Smoking Present
-		th Has Pets
-	- if @providing_housing.present?
-		- @providing_housing.each do |attendance|
-			- housing = attendance.providing_housing_data
-			tr
-				td = attendance.attendee_name
-				td = attendance.created_at.to_date.to_s(:long)
-				td = housing["gender"]
-				td = housing["room_for"]
-				td = housing["transportation"].to_b
-				td = housing["transportation_for"]
-				td = housing["smoking"]
-				td = housing["have_pets"].to_b
+		- if @needing_housing.present?
+			- @needing_housing.each do |r|
+				td = p.attendance.attendee_name
+				td = p.allergic_to_pets?
+				td = p.allergic_to_smoke?
+				td = p.other_allergies
+				td = p.requested_roommates
+				td = p.unwanted_roommates
+				td = p.preferred_gender_to_house_with
+				td = p.notes

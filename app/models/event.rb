@@ -34,8 +34,8 @@ class Event < ActiveRecord::Base
   has_many :packages
   has_many :passes
   has_many :discounts, as: :host
-  has_many :housing_applicants
-  has_many :housing_providers
+  has_many :housing_provisions, as: :host
+  has_many :housing_requests, as: :host
   has_many :competitions
   has_many :levels
   has_many :raffles
