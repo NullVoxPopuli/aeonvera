@@ -1,23 +1,26 @@
 module CommonApplicationController
   extend ActiveSupport::Concern
 
+  module ClassMethods
 
-  # @return [Array] list of allowed controllers on the subdomains
-  def self.subdomain_controllers
-    unless @subdomain_controllers
-      allowed_controllers = subdomain_routes.map{ |route|
-        route.defaults[:controller]
-      }.uniq
-      allowed_controllers += [
-        "devise/sessions",
-        "devise/passwords",
-        "devise/unlocks",
-        "devise/registrations"
-      ]
+    # @return [Array] list of allowed controllers on the subdomains
+    def subdomain_controllers
+      unless @subdomain_controllers
+        allowed_controllers = subdomain_routes.map{ |route|
+          route.defaults[:controller]
+        }.uniq
+        allowed_controllers += [
+          "devise/sessions",
+          "devise/passwords",
+          "devise/unlocks",
+          "devise/registrations"
+        ]
 
-      @subdomain_controllers = allowed_controllers
+        @subdomain_controllers = allowed_controllers
+      end
+      @subdomain_controllers
     end
-    @subdomain_controllers
+
   end
 
   # subdomains are only allowed when registering for an event
