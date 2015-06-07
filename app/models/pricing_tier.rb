@@ -44,16 +44,16 @@ class PricingTier < ActiveRecord::Base
   # - this includes any price changes that previous tiers
   #   invoked
   def current_price(package)
-    # tier = event.current_tier
-    # (tier || self).price_of(package)
-    result = package.initial_price
-    previous_pricing_tiers.each do |pt|
-      result += pt.amount
-    end
-
-    result += amount if should_apply_amount?
-    result
-
+    tier = event.current_tier
+    (tier || self).price_of(package)
+    # result = package.initial_price
+    # previous_pricing_tiers.each do |pt|
+    #   result += pt.amount if pt.should_apply_amount?
+    # end
+    #
+    # result += amount if should_apply_amount?
+    # result
+    #
   end
 
   # disregards the constraints like the above method,
@@ -61,11 +61,16 @@ class PricingTier < ActiveRecord::Base
   def price_of(package)
     result = package.initial_price
 
-    if allowed_packages.empty? or allowed_packages.include?(package)
-      (event.pricing_tiers).each do |pt|
-        result += pt.amount if pt.should_apply_amount?
+    tiers = previous_pricing_tiers(include_self: true)
+
+    tiers.each do |pt|
+      restricted_to = pt.allowed_packages
+
+      if restricted_to.empty? or restricted_to.include?(package)
+        result += pt.amount
       end
     end
+
     result
   end
 
@@ -88,8 +93,15 @@ class PricingTier < ActiveRecord::Base
     increase_by_dollars || 0
   end
 
-  def previous_pricing_tiers
-    event.pricing_tiers.before(self)
+  def previous_pricing_tiers(include_self: false)
+    tiers = event.pricing_tiers_in_order
+    index = tiers.index(self) || 0
+    index -= 1 unless include_self
+    # return an empty array if the index is less than the starting index
+    # this means that the index of this pricing tier (self)
+    # is the opening tier, meaning that there are no previous tiers.
+    # otherwise, return the previous tiers
+    index < 0 ? [] : tiers[0..index]
   end
 
 end

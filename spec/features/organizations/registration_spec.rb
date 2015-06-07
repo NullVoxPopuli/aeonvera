@@ -51,7 +51,7 @@ describe 'Organization / Scene Registration' do
       it 'has discounted the price of lessons' do
         inputs_one_of_each_line_item
         submit_form
-
+        
         last_order = @organization.orders.last
         expected = @membership_option.price + @lesson.price - @membership_discount.value
         expect(last_order.total).to eq expected
@@ -79,7 +79,7 @@ describe 'Organization / Scene Registration' do
     it 'cancels the registration' do
       registers_for_organization
       click_link "Cancel"
-      # 
+      #
       # expect{
       #   click_button "I'm sure, cancel registration."
       # }.to change(Attendance.where(attending: true), :count).by(-1)

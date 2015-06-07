@@ -103,7 +103,16 @@ class Attendance < ActiveRecord::Base
     items = items.flatten
 
     items.each do |item|
-      price = (item.try(:current_price) || item.try(:value))
+      price = (
+        if self.respond_to?(:pricing_tier)
+          item.try(:price_at_tier, self.pricing_tier)
+        else
+          item.try(:current_price)
+        end
+      )
+      # TODO: alias value to current_price
+      price ||= item.try(:value)
+
       quantity = (
         if item.is_a?(LineItem::Shirt)
           self.total_quantity_for_shirt(item.id)

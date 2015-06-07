@@ -147,6 +147,7 @@ group :test do
   # The test runner
   gem "rspec"
   gem "rspec-rails"
+  gem 'fuubar'
 
   gem "factory_girl_rails", "~> 4.4"
   #gem "factory_girl", "~> 4.4.0"

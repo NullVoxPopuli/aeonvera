@@ -34,8 +34,7 @@ FactoryGirl.define do
     payment_email "test@test.com"
     location "Indianapolis, IN"
     show_on_public_calendar true
-    opening_tier
-    # association :opening_tier, factory: opening_tier, strategy: :build
+    association :opening_tier, factory: :opening_tier, increase_by_dollars: nil
   end
 
   factory :level do
@@ -134,6 +133,7 @@ FactoryGirl.define do
 
   factory :opening_tier, class: PricingTier do
     date Date.tomorrow
+    increase_by_dollars 0
   end
 
   factory :order do

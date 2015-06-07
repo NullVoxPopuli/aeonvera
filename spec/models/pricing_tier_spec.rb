@@ -16,6 +16,64 @@ describe PricingTier do
     expect(pt).to_not eq event.opening_tier
   end
 
+  describe '#price_of' do
+    let(:package){ create(:package, event: event, initial_price: 10) }
+
+    context 'event.current_tier == event.opening_tier' do
+      before(:each) do
+        @current_tier = event.current_tier
+        expect(@current_tier).to eq opening_tier
+        pt.date = 2.days.from_now
+        pt.increase_by_dollars = 5
+        pt.save
+        # reload because the event's memoization needs updating
+        pt.reload
+      end
+
+      it 'gets the price at the opening tier' do
+        actual = @current_tier.price_of(package)
+        expect(actual).to eq package.initial_price
+      end
+
+      it 'gets the price at a future tier' do
+        actual = pt.price_of(package)
+        expect(actual).to eq package.initial_price + pt.increase_by_dollars
+      end
+    end
+
+    context 'event.current_tier != event.opening_tier' do
+      before(:each) do
+        pt.date = 1.day.from_now
+        pt.increase_by_dollars = 3
+        pt.save
+        Delorean.jump 4.days
+
+        event.reload
+        expect(event.pricing_tiers.count).to eq 2
+        expect(event.current_tier).to_not eq event.opening_tier
+        expect(event.current_tier).to eq pt
+
+        @current_tier = event.current_tier
+        @opening_tier = opening_tier
+      end
+
+      after(:each) do
+        Delorean.back_to_the_present
+      end
+
+      it 'gets the price at the opening tier' do
+        actual = @opening_tier.price_of(package)
+        expect(actual).to eq package.initial_price
+      end
+
+      it 'gets the price at the current tier' do
+        actual = @current_tier.price_of(package)
+        expect(actual).to eq package.initial_price + pt.increase_by_dollars
+      end
+    end
+
+  end
+
   context "#date" do
 
     context "invalid" do
@@ -45,6 +103,7 @@ describe PricingTier do
 
     it "returns the previous pricing tiers" do
       pt.date = Date.tomorrow + 7.days
+      pt.save
       pt2 = create(:pricing_tier, event: event, date: pt.date - 1.day)
       pt.previous_pricing_tiers.should include(pt2)
     end
@@ -52,12 +111,14 @@ describe PricingTier do
     it "should return empty array if the current tier is the first tier" do
       pt = event.current_tier
       pt2 = create(:pricing_tier, event: event, date: pt.date + 1.day)
+
       expect(pt.previous_pricing_tiers).to_not include(pt)
       expect(pt.previous_pricing_tiers).to be_empty
     end
 
     it "returns multiple previous pricing tiers" do
       pt.date = Date.tomorrow + 7.days
+      pt.save
       pt2 = create(:pricing_tier, event: event, date: pt.date - 1.day)
       pt3 = create(:pricing_tier, event: event, date: pt.date - 2.days)
       pt.previous_pricing_tiers.should include(pt2)
@@ -75,6 +136,7 @@ describe PricingTier do
 
     it "calculates the current price of a package" do
       pt.date = Date.tomorrow - 10.days
+      pt.save
       expect(pt.current_price(package)).to eq package.initial_price + pt.increase_by_dollars
     end
 
@@ -120,6 +182,7 @@ describe PricingTier do
     context 'tier based on date' do
       before(:each) do
         pt.date = Date.tomorrow - 10.days
+        pt.save
       end
 
       it "calculates the price based on previous pricing tiers" do
@@ -146,7 +209,7 @@ describe PricingTier do
       it 'date comes first' do
         pt.registrants = 10
         pt.date = Date.tomorrow - 10.days
-
+        pt.save
         pt.current_price(package).should == (
           package.initial_price + pt.increase_by_dollars
         )
@@ -155,7 +218,11 @@ describe PricingTier do
       it 'total comes first' do
         pt.registrants = 10
         pt.date = Date.tomorrow + 10.days
-        allow(event).to receive(:attendances){ double(count: 30, where: Array.new(30, true)) }
+        pt.save
+
+        11.times do
+          create(:attendance, event: event)
+        end
 
         pt.current_price(package).should == (
           package.initial_price + pt.increase_by_dollars
@@ -167,9 +234,15 @@ describe PricingTier do
     context 'mixed tier scheme' do
       it 'starts with total registrants and later recognizes a date' do
         pt.registrants = 10
+        pt.save
         pt2 = create(:pricing_tier, event: event, date: Date.today - 30.days)
-        allow(event).to receive(:attendances){ double(count: 30, where: Array.new(30, true)) }
-
+        
+        11.times do
+          create(:attendance, event: event)
+        end
+        #
+        # # reload due to memoization
+        # pt.reload
         pt.current_price(package).should == (
           package.initial_price + pt.increase_by_dollars +
           pt2.increase_by_dollars
