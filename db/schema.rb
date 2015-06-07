@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601012743) do
+ActiveRecord::Schema.define(version: 20150606040128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,21 +224,23 @@ ActiveRecord::Schema.define(version: 20150601012743) do
   end
 
   create_table "housing_requests", force: true do |t|
-    t.boolean "need_transportation"
-    t.boolean "can_provide_transportation",     default: false, null: false
-    t.integer "transportation_capacity",        default: 0,     null: false
-    t.boolean "allergic_to_pets",               default: false, null: false
-    t.boolean "allergic_to_smoke",              default: false, null: false
-    t.string  "other_allergies"
-    t.text    "requested_roommates"
-    t.text    "unwanted_roommates"
-    t.string  "preferred_gender_to_house_with"
-    t.text    "notes"
-    t.integer "attendance_id"
-    t.string  "attendance_type"
-    t.integer "host_id"
-    t.string  "host_type"
-    t.integer "housing_provision_id"
+    t.boolean  "need_transportation"
+    t.boolean  "can_provide_transportation",     default: false, null: false
+    t.integer  "transportation_capacity",        default: 0,     null: false
+    t.boolean  "allergic_to_pets",               default: false, null: false
+    t.boolean  "allergic_to_smoke",              default: false, null: false
+    t.string   "other_allergies"
+    t.text     "requested_roommates"
+    t.text     "unwanted_roommates"
+    t.string   "preferred_gender_to_house_with"
+    t.text     "notes"
+    t.integer  "attendance_id"
+    t.string   "attendance_type"
+    t.integer  "host_id"
+    t.string   "host_type"
+    t.integer  "housing_provision_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "integrations", force: true do |t|
@@ -385,7 +387,7 @@ ActiveRecord::Schema.define(version: 20150601012743) do
   end
 
   create_table "pricing_tiers", force: true do |t|
-    t.decimal  "increase_by_dollars"
+    t.decimal  "increase_by_dollars", default: 0.0
     t.datetime "date"
     t.integer  "registrants"
     t.integer  "event_id"
@@ -453,7 +455,6 @@ ActiveRecord::Schema.define(version: 20150601012743) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.string   "time_zone"
-    t.string   "authentication_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

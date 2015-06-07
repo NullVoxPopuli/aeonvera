@@ -47,8 +47,11 @@ class Event < ActiveRecord::Base
     class_name: "LineItem",
     as: :host
 
+  # this way of sorting pricing ties does not put the opening tier in
+  # the correct spot. That is fixed with a method
+  # pricing_tiers_in_order
   has_many :pricing_tiers, -> { order("registrants ASC, date ASC") }
-  has_one :opening_tier, -> { order("date ASC") }, class_name: "PricingTier"
+  has_one :opening_tier, -> { order("id ASC") }, class_name: "PricingTier"
 
   validates :hosted_by, presence: true
   validates :name, presence: true
@@ -102,22 +105,45 @@ class Event < ActiveRecord::Base
   # an event can be in two modes
   # the tiers can be by date, or by registrants
   def current_tier
-    tier_table = PricingTier.arel_table
+    unless @current_tier
+      tiers = pricing_tiers_in_order
+      # should be the most recent active tier
+      @current_tier = active_tiers.last
 
-    (
-      pricing_tiers.where(
-        tier_table[:date].lteq(Date.today).or(
-          tier_table[:registrants].lteq(
-            self.attendances.count
-          )
-        )
-      ).last || opening_tier
-    )
+      # if the current_tier is still undefined, set to the
+      # opening tier
+      @current_tier ||= tiers.first
+    end
+
+    @current_tier
   end
+
   alias_method :current_pricing_tier, :current_tier
+
+  def active_tiers
+    @active_tiers ||= pricing_tiers_in_order.select{ |t|
+      t.should_apply_amount?
+    }
+  end
+
 
   def pricing_tier_at(date: Date.today)
     pricing_tiers.where("date <= ?", Date.today).last or opening_tier
+  end
+
+  def pricing_tiers_in_order
+    unless @pricing_tiers_in_order
+      # opening tier should be first
+      opening_tier = self.opening_tier
+      # pricing tiers should already be sorted by
+      # - registrants ASC
+      # - date ASC
+      tiers = self.pricing_tiers.to_a.keep_if{ |t| t.id != opening_tier.id }
+      tiers = [opening_tier] + tiers
+      @pricing_tiers_in_order = tiers
+    end
+
+    @pricing_tiers_in_order
   end
 
   def allows_multiple_discounts?

@@ -11,22 +11,19 @@ describe Restraint do
     }
 
     before(:each) do
-
       # make sure all the cached relationships are up to date
       event.reload
       package.reload
       discount.reload
-
 
       # assign discount to package
       create(:restraint, restrictable: package, dependable: discount)
 
       # build order
       @attendance = create(:attendance,
-        event: event
+        event: event,
+        pricing_tier: event.opening_tier
       )
-
-
     end
 
 
@@ -51,6 +48,12 @@ describe Restraint do
 
       # add discount to order
       @order.add(discount)
+
+      discounts = @order.line_items.select{ |l|
+        l.line_item_type == Discount.name
+      }
+
+      expect(discounts).to be_empty
 
       # verify
       actual = @order.total

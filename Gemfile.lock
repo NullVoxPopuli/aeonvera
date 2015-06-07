@@ -151,6 +151,9 @@ GEM
     foundation-rails (5.5.1.2)
       railties (>= 3.1.0)
       sass (>= 3.3.0, < 3.5)
+    fuubar (2.0.0)
+      rspec (~> 3.0)
+      ruby-progressbar (~> 1.4)
     hashie (3.4.1)
     hpricot (0.8.6)
     html2slim (0.2.0)
@@ -294,6 +297,7 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     ruby-openid (2.7.0)
+    ruby-progressbar (1.7.5)
     sass (3.3.14)
     sass-rails (5.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -382,6 +386,7 @@ DEPENDENCIES
   font-awesome-rails
   formatted_rails_logger
   foundation-rails
+  fuubar
   html2slim
   i18n
   jbuilder (~> 1.2)

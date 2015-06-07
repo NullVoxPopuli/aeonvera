@@ -25,15 +25,4 @@ class EventDecorator < Draper::Decorator
 		@unpaid ||= object.unpaid_total || 0
 	end
 
-	def pricing_tiers_in_order
-		# opening tier should be first
-		opening_tier = object.opening_tier
-		# pricing tiers should already be sorted by
-		# - registrants ASC
-		# - date ASC
-		tiers = object.pricing_tiers.to_a.keep_if{ |t| t.id != opening_tier.id }
-		tiers = [opening_tier] + tiers
-		tiers
-	end
-
 end

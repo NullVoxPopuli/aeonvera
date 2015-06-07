@@ -8,19 +8,29 @@ describe Package do
 
   context "#current_price" do
 
+    before(:each) do
+      # set openieng tier before any tiers created here
+      o = event.opening_tier
+      o.date = 1.week.ago
+      o.increase_by_dollars = 0
+      o.save
+    end
+
     it 'is the initial price' do
       expect(package.current_price).to eq package.initial_price
     end
 
     it "changes based on the date" do
-      tier = create(:pricing_tier, date: 1.day.ago, event: event)
+      tier = create(:pricing_tier, date: 2.day.ago, event: event)
       expected = package.initial_price + tier.increase_by_dollars
       expect(package.current_price).to eq expected
     end
 
     it "changes based on the number of registrants for this event" do
       tier = create(:pricing_tier, registrants: 10, event: event)
-      allow_any_instance_of(Event).to receive(:attendances){ double(count: 20)}
+      20.times do
+        create(:attendance, event: event)
+      end
 
       expected = package.initial_price + tier.increase_by_dollars
       expect(package.current_price).to eq expected
@@ -30,17 +40,23 @@ describe Package do
       event.attendances.destroy_all
       tier = create(:pricing_tier, date: 19.days.from_now, event: event)
       tier2 = create(:pricing_tier, registrants: 10, event: event)
+
+      expect(event.current_tier).to eq event.opening_tier
       expect(package.current_price).to eq package.initial_price
     end
 
     it 'changes base on two tiers' do
-      tier = create(:pricing_tier, date: 1.day.ago, event: event)
-      tier2 = create(:pricing_tier, registrants: 10, event: event)
-      allow_any_instance_of(Event).to receive(:attendances){ double(count: 20)}
+      tier = create(:pricing_tier, registrants: 10, event: event, date: nil)
+      tier2 = create(:pricing_tier, date: 2.day.ago, event: event)
+
+      11.times do
+        create(:attendance, event: event)
+      end
+
+      expect(event.current_tier).to eq tier2
 
       expected = package.initial_price + tier.increase_by_dollars + tier2.increase_by_dollars
       expect(package.current_price).to eq expected
-
     end
 
     context 'optionally does not change based on passing tiers' do
@@ -74,6 +90,33 @@ describe Package do
 
       expected = package.initial_price + tier.amount
       expect(package.price_at_tier(tier)).to eq expected
+    end
+
+    context 'a new tier is current' do
+      before(:each) do
+        @new_tier = create(:pricing_tier,
+          event: event,
+          date: 1.day.from_now,
+          increase_by_dollars: 3)
+
+
+        Delorean.jump 4.days
+
+        event.reload
+        expect(event.pricing_tiers.count).to eq 2
+        expect(event.current_tier).to_not eq event.opening_tier
+        expect(event.current_tier).to eq @new_tier
+      end
+
+      after(:each) do
+        Delorean.back_to_the_present
+      end
+
+      it 'reflects the price of a previous tier' do
+        expected = package.initial_price
+        expect(package.price_at_tier(event.opening_tier)).to eq expected
+      end
+
     end
   end
 end

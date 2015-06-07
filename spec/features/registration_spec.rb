@@ -144,8 +144,73 @@ describe 'Registration' do
     end
   end
 
-  context 'housing' do
+  context 'user has not yet paid, and wants to edit' do
+    before(:each) do
+      @package = create(:package, event: @event)
+      @package2 = create(:package, event: @event)
 
+      visit @event.url
+      selects_orientation
+      selects_package
+      provides_address
+      submit_form
+      # revisit the URL to get redirected to the path with the id
+      visit @event.url
+
+      @p2 = create(:pricing_tier,
+        event: @event,
+        date: 1.day.from_now,
+        increase_by_dollars: 3)
+      @c1 = create(:competition,
+        event: @event,
+        kind: Competition::SOLO_JAZZ,
+        name: 'solo')
+
+      @id = current_url.split('/').last
+    end
+
+    it 'is assigned the opening tier id' do
+      attendance = @event.attendances.find(@id)
+      actual = attendance.pricing_tier.id
+      expect(actual).to eq @event.opening_tier.id
+    end
+
+    context 'a new tier is active' do
+      before(:each) do
+        Delorean.jump 4.days
+        # sanity
+        @event.reload
+        expect(@event.current_tier).to_not eq @event.opening_tier
+        expect(@event.current_tier).to eq @p2
+      end
+
+      after(:each) do
+        Delorean.back_to_the_present
+      end
+
+      it 'keeps the originating tier after editing' do
+        edit_registration
+        selects_package(@package2)
+        submit_form
+        actual = @event.attendances.find(@id).pricing_tier.id
+        expect(actual).to eq @event.opening_tier.id
+      end
+
+      it 'does not change the price' do
+        old_total = @event.attendances.find(@id).amount_owed
+        edit_registration
+        check_box_with_id("#attendance_competition_responses_attributes_0__destroy")
+        selects_package(@package2)
+        submit_form
+
+        attendance = @event.attendances.find(@id)
+        new_total = attendance.amount_owed
+        actual = attendance.pricing_tier.id
+
+        expect(actual).to eq @event.opening_tier.id
+        expect(new_total).to eq old_total + @c1.current_price
+      end
+    end
   end
 
 end
