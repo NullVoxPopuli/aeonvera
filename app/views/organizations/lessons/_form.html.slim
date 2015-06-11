@@ -24,7 +24,8 @@
 = small_datetime_select(f, :registration_opens_at, "Registration Opens")
 = small_datetime_select(f, :registration_closes_at, "Registration Closes")
 
-= link_to "Duplicate", duplicate_organization_lesson_path(@organization, @lesson), method: :post, class: "button info"
+- if @lesson.persisted?
+  = link_to "Duplicate", duplicate_organization_lesson_path(@organization, @lesson), method: :post, class: "button info"
 = f.submit "Save", class: "button"
 = link_to "Back", organization_lessons_path, class: "button secondary"
 
