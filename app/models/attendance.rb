@@ -248,7 +248,7 @@ class Attendance < ActiveRecord::Base
   end
 
   def total_cost_for_selected_shirt(id)
-    shirt = shirt_data[id.to_s]
+    shirt = shirt_data.try(:[], id.to_s) 
 
     if shirt
       total = 0
