@@ -43,7 +43,10 @@ class RegisterController < ApplicationController
     @attendance.attendee = current_user
     @attendance.pricing_tier_id = current_event.current_pricing_tier.id
 
+    fix_housing_associations
+
     apply_discounts
+
 
     respond_to do |format|
       format.html {
@@ -52,6 +55,9 @@ class RegisterController < ApplicationController
           AttendanceMailer.thankyou_email(order: order).deliver
         else
           retrieve_competition_options
+          # I gotta get out of this nested attributes shenanigans
+          @attendance.housing_request ||= HousingRequest.new
+          @attendance.housing_provision ||= HousingProvision.new
           return render action: "new"
         end
 
@@ -318,6 +324,26 @@ class RegisterController < ApplicationController
       return false
     end
     @current_event
+  end
+
+  def fix_housing_associations
+    if @attendance.housing_request.present?
+      if @attendance.needs_housing? and registration_params[:housing_request_attributes].present?
+        @attendance.housing_request.host = @attendance.host
+        @attendance.housing_request.attendance_type = @attendance.class.name
+      else
+        @attendance.housing_request = nil
+      end
+    end
+
+    if @attendance.housing_provision.present?
+      if @attendance.providing_housing? and registration_params[:housing_provision_attributes].present?
+        @attendance.housing_provision.host = @attendance.host
+        @attendance.housing_provision.attendance_type = @attendance.class.name
+      else
+        @attendance.housing_provision = nil
+      end
+    end
   end
 
 

@@ -37,6 +37,27 @@ FactoryGirl.define do
     association :opening_tier, factory: :opening_tier, increase_by_dollars: nil
   end
 
+  factory :housing_request do
+    preferred_gender_to_house_with "Guys"
+    need_transportation false
+    can_provide_transportation true
+    transportation_capacity 3
+    allergic_to_pets true
+    allergic_to_smoke true
+    other_allergies "pollen"
+    notes "Some Notes"
+  end
+
+  factory :housing_provision do
+    housing_capacity 10
+    number_of_showers 2
+    can_provide_transportation true
+    preferred_gender_to_host "Eeither"
+    has_pets false
+    smokes false
+    notes "Some Notes"
+  end
+
   factory :level do
     name "Level Number something"
   end
