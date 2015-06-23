@@ -9,7 +9,7 @@ module AttendanceDownloadableData
         all.each do |attendance|
           row = [
             attendance.attendee_name,
-            attendance.attendee.email,
+            attendance.attendee.try(:email),
             attendance.created_at,
             attendance.address["city"],
             attendance.address["state"]
@@ -39,7 +39,7 @@ module AttendanceDownloadableData
           housing = attendance.requested_housing_data
           row = [
             attendance.attendee_name,
-            attendance.attendee.email,
+            attendance.attendee.try(:email),
             attendance.created_at.to_date.to_s(:long),
             housing["gender"],
             housing["transportation"].to_b,
@@ -69,7 +69,7 @@ module AttendanceDownloadableData
           housing = attendance.requested_housing_data
           row = [
             attendance.attendee_name,
-            attendance.attendee.email,
+            attendance.attendee.try(:email),
             attendance.created_at.to_date.to_s(:long),
             housing["gender"],
             housing["room_for"],

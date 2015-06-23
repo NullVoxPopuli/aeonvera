@@ -61,18 +61,5 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
-  # RSpec
-  config.include Devise::TestHelpers, type: :controller
-  # https://github.com/plataformatec/devise/wiki/How-To:-Test-with-Capybara
-  config.include Warden::Test::Helpers, type: :feature
   config.include FormHelpers, type: :feature
-  Warden.test_mode!
-
-  config.after(type: :feature) do |example|
-    Warden.test_reset!
-    # if example.metadata[:type] == :feature and example.exception.present?
-    #   save_and_open_page
-    # end
-  end
-
 end
