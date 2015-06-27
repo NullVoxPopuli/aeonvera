@@ -250,12 +250,15 @@ AeonVera::Application.routes.draw do
     end
   end
 
-  get "/features", to: "marketing#features"
-  get "/pricing", to: "marketing#pricing"
-  get "/faq", to: "marketing#faq"
   get "/back", to: "application#back"
   get "/users/:token/assume_control", to: "application#assume_control"
   get "/terms_of_service", to: "home#terms_of_service"
   get "/privacy", to: "home#privacy"
+  get "/calendar", to: "home#calendar"
+  get "/scenes", to: "home#scenes"
+  # ember routes :-(
+  # this can go away once all UI is done in ember
+  get "/welcome", to: "marketing#index"
+  get "/welcome/*path", to: "marketing#index"
   root :to => "marketing#index"
 end
