@@ -50,6 +50,14 @@ class Organization < ActiveRecord::Base
     available_items(:lessons, LineItem::Lesson)
   end
 
+  def location
+    "#{self.city.titleize}, #{self.state.titleize}"
+  end
+
+  def link
+    "//#{self.domain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
+  end
+
   private
 
   def available_items(association_name, klass)
