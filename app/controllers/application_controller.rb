@@ -132,7 +132,6 @@ class ApplicationController < ActionController::Base
   end
 
   private
-
   # if we end up on a subdomain URL that we aren't supposed to be on,
   # this drops the subdomain, and redirects to the root path of the
   # subdomainless path, maintaining all of the parameters

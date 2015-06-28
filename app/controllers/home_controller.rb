@@ -29,6 +29,11 @@ class HomeController < ApplicationController
     respond_with(upcoming_events)
   end
 
+  def scenes
+    @organizations = Organization.all
+    respond_with(@organizations)
+  end
+
   def terms_of_service
 
   end

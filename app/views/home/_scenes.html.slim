@@ -1,0 +1,15 @@
+.text-center
+  h2 Dancing Scenes
+  - if @organizations && @organizations.count > 0
+
+    table style='margin: 0 auto;'
+      thead
+        tr
+          th Name
+          th Location
+      tbody
+        - @organizations.each do |organization|
+          tr
+            td
+              = link_to organization.name, organization.link
+            td = organization.location
