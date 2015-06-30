@@ -687,6 +687,7 @@ define('aeonvera/locales/en', ['exports'], function (exports) {
     pricing: 'Pricing',
     faq: 'F.A.Q.',
     faqfull: 'Frequently Asked Questions',
+    opensource: 'OpenSource',
 
     featuresinfo: 'List of current and upcoming features and possible explanations of each.     ÆONVERA is written by, and is for Swing Dancers.',
     pricinginfo: 'Overview of pricing.     The most important thing to note is that if your event dosn\'t have a need     for collecting payments electronically, you can use ÆONVERA for free.     Every feature.',
@@ -815,6 +816,7 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
         this.route('non-organizers');
         this.route('updates');
       });
+      this.route('opensource');
       this.route('privacy');
       this.route('about');
     });
@@ -2163,6 +2165,47 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
         }
       };
     }());
+    var child4 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, inline = hooks.inline;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, null);
+          dom.insertBoundary(fragment, 0);
+          inline(env, morph0, context, "t", ["opensource"], {});
+          return fragment;
+        }
+      };
+    }());
     return {
       isHTMLBars: true,
       revision: "Ember@1.11.1",
@@ -2173,6 +2216,10 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("li");
         dom.setAttribute(el1,"class","show-for-small");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
@@ -2214,10 +2261,12 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
         var morph1 = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
         var morph2 = dom.createMorphAt(dom.childAt(fragment, [2]),0,0);
         var morph3 = dom.createMorphAt(dom.childAt(fragment, [3]),0,0);
+        var morph4 = dom.createMorphAt(dom.childAt(fragment, [4]),0,0);
         block(env, morph0, context, "link-to", ["application"], {}, child0, null);
         block(env, morph1, context, "link-to", ["welcome.features"], {}, child1, null);
         block(env, morph2, context, "link-to", ["welcome.pricing"], {}, child2, null);
         block(env, morph3, context, "link-to", ["welcome.faq"], {}, child3, null);
+        block(env, morph4, context, "link-to", ["welcome.opensource"], {}, child4, null);
         return fragment;
       }
     };
@@ -4692,6 +4741,222 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
         inline(env, morph15, context, "t", ["pricinginfo"], {});
         block(env, morph16, context, "link-to", ["welcome.faq"], {}, child2, null);
         inline(env, morph17, context, "t", ["faqinfo"], {});
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('aeonvera/templates/welcome/opensource', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      isHTMLBars: true,
+      revision: "Ember@1.11.1",
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","imageoverlay text-center panel callout extra-padding header");
+        var el2 = dom.createElement("h2");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h4");
+        dom.setAttribute(el2,"class","subheader");
+        var el3 = dom.createTextNode("projects used in ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","extra-padding text-center");
+        var el2 = dom.createElement("p");
+        var el3 = dom.createTextNode("Turns out that coding is very time consuming. ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode(" wouldn't be where it is today if it weren't for the hard work of all of the below projects. Being able to use open source projects has easily shaved years of off ");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createTextNode("'s development time. So, here is a list of some of the more notable projects used, and a special thanks to all of them! :-)");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h3");
+        var el3 = dom.createTextNode("Front-End / User-Interface");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://emberjs.com/");
+        var el4 = dom.createTextNode("ember");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://foundation.zurb.com/");
+        var el4 = dom.createTextNode("Foundation");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://fortawesome.github.io/Font-Awesome/");
+        var el4 = dom.createTextNode("Font Awesome");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://emblemjs.com/");
+        var el4 = dom.createTextNode("Emblem.js");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/NullVoxPopuli/aeonvera-ui/blob/master/bower.json");
+        var el4 = dom.createTextNode("and more!");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h3");
+        var el3 = dom.createTextNode("Back-End / Server");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://www.ruby-lang.org/en/");
+        var el4 = dom.createTextNode("Ruby");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://rubyonrails.org/");
+        var el4 = dom.createTextNode("Rails");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://www.postgresql.org/");
+        var el4 = dom.createTextNode("PostgreSQL");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/newrelic/rpm");
+        var el4 = dom.createTextNode("New Relic RPM");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","http://redis.io/");
+        var el4 = dom.createTextNode("Redis");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/plataformatec/devise");
+        var el4 = dom.createTextNode("Devise");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/stripe/stripe-ruby");
+        var el4 = dom.createTextNode("Stripe");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/NullVoxPopuli/aeonvera/blob/master/Gemfile");
+        var el4 = dom.createTextNode("and more!");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h3");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h4");
+        var el3 = dom.createTextNode("(this project)");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/NullVoxPopuli/aeonvera-ui");
+        var el4 = dom.createTextNode("Front-End");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"href","https://github.com/NullVoxPopuli/aeonvera");
+        var el4 = dom.createTextNode("Back-End");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, inline = hooks.inline;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        var element0 = dom.childAt(fragment, [0]);
+        var element1 = dom.childAt(fragment, [1]);
+        var element2 = dom.childAt(element1, [0]);
+        var morph0 = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+        var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),1,1);
+        var morph2 = dom.createMorphAt(element2,1,1);
+        var morph3 = dom.createMorphAt(element2,3,3);
+        var morph4 = dom.createMorphAt(dom.childAt(element1, [22]),0,0);
+        inline(env, morph0, context, "t", ["opensource"], {});
+        inline(env, morph1, context, "t", ["appname"], {});
+        inline(env, morph2, context, "t", ["appname"], {});
+        inline(env, morph3, context, "t", ["appname"], {});
+        inline(env, morph4, context, "t", ["appname"], {});
         return fragment;
       }
     };
@@ -7254,7 +7519,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_VIEW_LOOKUPS":true,"name":"aeonvera","version":"0.0.0.38bee3ea"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_VIEW_LOOKUPS":true,"name":"aeonvera","version":"0.0.0.77abe33a"});
 }
 
 /* jshint ignore:end */
