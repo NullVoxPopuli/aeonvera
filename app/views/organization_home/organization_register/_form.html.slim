@@ -5,5 +5,8 @@
 = f.fields_for :line_items do |l|
   - if not current_user.is_member_of?(current_organization)
     = register_available_items("membership_options", title: "Membership")
+    span Membership must be purchased before lessons.
+    br
+    br
   = register_available_items("dances", method_name: "available_dances")
   = register_available_items("lessons", method_name: "available_lessons")
