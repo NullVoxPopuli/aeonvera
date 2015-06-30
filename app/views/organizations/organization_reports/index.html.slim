@@ -1,14 +1,33 @@
 h2 Orders
 
-= link_to "Download CSV", organization_report_index_path(@organization, format: 'csv'), class: 'button'
+= search_form_for(@q, url: organization_report_index_path, html: {method: :get}) do |f|
+  
+  .row
+    .columns.medium-4
+      = f.label :user_first_name_or_user_last_name_cont
+      = f.search_field :user_first_name_or_user_last_name_cont
+    .columns.medium-4
+      = f.label :after
+      = f.date_field :created_at_gt
+    .columns.medium-4
+      = f.label :before
+      = f.date_field :created_at_lt
+  = f.check_box :paid_true
+  = f.label :paid
 
+  ul.button-group
+    li = f.submit "Search", class: 'button'
+    li = link_to "Download CSV", organization_report_index_path(params.merge(format: 'csv')), class: 'button'
+
+span Note: Date search fields may only work on Chrome
 table
   thead
     tr
-      th Name
+      th = sort_link(@q, :last_name, "Name")
       th Member
       th Ordered
       th Paid
+      th = sort_link(@q, :created_at, "When")
       th Owes
   tbody
     - @orders.each do |order|
@@ -20,4 +39,5 @@ table
             = "#{item.quantity} x #{item.name}"
             br
         td = order.paid?
+        td = l order.created_at, format: :with_zone
         td = number_to_currency order.owes

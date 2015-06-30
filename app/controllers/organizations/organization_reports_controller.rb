@@ -5,7 +5,9 @@ class Organizations::OrganizationReportsController < ApplicationController
   layout "edit_organization"
 
   def index
-    @orders = @organization.orders
+    params[:q].try(:delete, :paid_true) if params[:q].try(:[], :paid_true) == '0'
+    @q = @organization.orders.ransack(params[:q])
+    @orders = @q.result(distinct: true).includes(:user)
 
     respond_to do |format|
       format.html{}
