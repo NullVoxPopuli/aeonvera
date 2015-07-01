@@ -2,7 +2,7 @@
 .well-centered
 	h2
 		| Sign in
-
+	
 .well-centered
 	.panel
 		= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
@@ -17,4 +17,5 @@
 				= f.label :remember_me, style: "display: inline-block; margin-left: 5px;"
 			.text-right
 				= f.submit "Sign in", :class => "button small", style: "margin: 0"
+	
 	= render "devise/shared/links"

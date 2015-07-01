@@ -1,13 +1,13 @@
 .row style='margin: 0 auto;'
   .small-12.columns
-    h1 Register for Lessons and Dances
+    h1 Register
 
     = form_for(@attendance, url: register_index_path, as: :attendance) do |f|
       = render partial: "form", locals: { f: f }
 
       .register-footer
-        span style="line-height: 75px;"
+        div.text-center
           = render partial: "/organization_home/membership_status"
-        .register-buttons.right
+        .register-buttons
           = f.submit "Register", class: "button"
           = link_to "Cancel", register_index_path, class: "button secondary"
