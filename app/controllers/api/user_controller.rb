@@ -5,7 +5,7 @@ class Api::UserController < APIController
   end
 
   def update
-
+    
   end
 
   def destroy

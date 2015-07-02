@@ -105,7 +105,10 @@ module CommonApplicationController
 
       if user && Devise.secure_compare(user.authentication_token, token)
         sign_in user, store: false
+
+        current_user = user
       end
+
     end
   end
 
