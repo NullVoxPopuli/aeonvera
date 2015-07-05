@@ -81,6 +81,23 @@ class Event < ActiveRecord::Base
 
   alias_attribute :user_id, :hosted_by_id
 
+  # Finds all events that are allowed to be shown on the
+  # public calendar, and that have not ended
+  #
+  # @return [Array<Event>] list of events that have registration
+  #   available in the future
+  def self.upcoming
+    table = Event.arel_table
+    ends_at = table[:ends_at]
+    event_id = table[:id]
+
+    opening_date = PricingTier.arel_table[:date]
+    now = Time.now
+
+    Event.where(show_on_public_calendar: true).
+      where(ends_at.gt(now)).
+      order(table[:ends_at].asc)
+  end
 
   def registration_opens_at
     opening_tier.date

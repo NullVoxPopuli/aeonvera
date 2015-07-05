@@ -1,5 +1,20 @@
 AeonVera::Application.routes.draw do
 
+  namespace :api, defaults: {format: :json} do
+    resources :attended_events
+    resources :upcoming_events
+    resources :hosted_events
+    resources :registerable_events
+    resources :attendances
+
+    # manually define routes for the current user
+    get 'user', to: 'user#show'
+    patch 'user', to: 'user#update'
+    put 'user', to: 'user#update'
+    delete 'user', to: 'user#destroy'
+  end
+
+
   resources :dances
 
   constraints(AdminSubdomain) do
@@ -108,7 +123,8 @@ AeonVera::Application.routes.draw do
 
   devise_for :users, controllers: {
     confirmations: "confirmations" ,
-    registrations: "users/registrations"
+    registrations: "users/registrations",
+    sessions: 'sessions'
   } do
   end
 
