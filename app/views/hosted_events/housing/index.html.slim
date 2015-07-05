@@ -5,7 +5,7 @@
 	= render partial: 'legacy'
 - else
 
-	h2 Providing Housing
+	h2 = "#{@providing_housing.count} Providing Housing (#{(@providing_housing || []).map{ |h| h.try(:housing_capacity) || 0 }.inject(:+)} Spots)"
 
 	table.table.table-bordered.table-striped.table-condensed
 		tr
@@ -31,7 +31,7 @@
 					td = p.smokes?
 					td = p.notes
 
-	h2 Requesting Housing
+	h2 = "#{@needing_housing.count} Requesting Housing"
 	table.table.table-bordered.table-striped.table-condensed
 		tr
 			th Name
