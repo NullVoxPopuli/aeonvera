@@ -5,6 +5,9 @@ AeonVera::Application.routes.draw do
     resources :upcoming_events
     resources :hosted_events
     resources :registerable_events
+
+    resources :housing_requests
+
     resources :attendances
 
     # manually define routes for the current user

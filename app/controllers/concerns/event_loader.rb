@@ -1,6 +1,6 @@
 module EventLoader
   def set_event(id: nil)
-    id = (id or params[:hosted_event_id] or params[:id])
+    id = (id or params[:hosted_event_id] or params[:event_id] or params[:id])
     begin
       @event = current_user.hosted_events.find(id)
     rescue ActiveRecord::RecordNotFound => e
