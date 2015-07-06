@@ -13,7 +13,7 @@ gem 'activerecord-session_store'
 # for cross-origin resource sharing
 gem 'rack-cors', :require => 'rack/cors'
 # JSON serialization
-gem "active_model_serializers", github: "rails-api/active_model_serializers", branch: "0-8-stable"
+gem "active_model_serializers", github: "rails-api/active_model_serializers"#, branch: "0-8-stable"
 
 
 # model helpers
