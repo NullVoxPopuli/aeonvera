@@ -19,6 +19,6 @@ class Api::HousingRequestsController < APIController
   def index
     @housing_requests = @event.housing_requests
     # render json: @housing_requests
-    respond_with @housing_requests
+    respond_with @housing_requests, each_serializer: HousingRequestSerializer
   end
 end
