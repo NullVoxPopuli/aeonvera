@@ -17,7 +17,11 @@ describe HostedEventsController do
   context "#create" do
     let(:pricing_tier){ build(:pricing_tier) }
     let(:event){ build(:event) }
-    let(:valid_attributes){ event.attributes.merge(opening_tier_attributes: pricing_tier.attributes) }
+    let(:valid_attributes){
+      attrs = event.attributes.merge(opening_tier_attributes: pricing_tier.attributes)
+      attrs.delete(:hosted_by_id)
+      attrs
+    }
 
     it "creates an event" do
       expect {
@@ -43,7 +47,7 @@ describe HostedEventsController do
     before(:each) do
       @event = create(:event, hosted_by: @user)
 
-      @attendance = create(:attendance, event: @event)
+      @attendance = create(:attendance, host: @event)
       @order = create(:order, attendance: @attendance, event: @event, paid: true)
       allow_any_instance_of(Order).to receive(:net_received){ 10 }
     end

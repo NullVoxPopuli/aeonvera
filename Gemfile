@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 ##########
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '= 4.2.0'
 gem 'i18n'
 # Use Active Record to store sessions
 gem 'activerecord-session_store'
@@ -21,6 +21,8 @@ gem 'date_time_attribute'
 gem 'recurring_select'
 # controller helpers
 gem 'lazy_crud'
+# request response helpers
+gem 'responders'
 
 # Permissions / Authorization
 gem "authorizable", github: "NullVoxPopuli/authorizable"
@@ -153,8 +155,8 @@ group :test do
   gem "rspec-rails"
   gem 'fuubar'
 
-  gem "factory_girl_rails", "~> 4.4"
-  #gem "factory_girl", "~> 4.4.0"
+  gem "factory_girl_rails"
+  gem "factory_girl", github: "thoughtbot/factory_girl"
 
   gem 'database_cleaner'
 

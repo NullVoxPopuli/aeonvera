@@ -2,7 +2,9 @@ class Package < ActiveRecord::Base
   include SoftDeletable
 
   has_many :levels
-  has_many :attendances, -> { where(attending: true).order("attendances.created_at DESC") }
+  has_many :attendances, -> {
+    where(attending: true).order("attendances.created_at DESC")
+  }
   belongs_to :event
 
   has_and_belongs_to_many :pricing_tiers,
@@ -13,9 +15,11 @@ class Package < ActiveRecord::Base
   has_many :available_discounts, through: :restraints,
     source: :dependable, source_type: Discount.name
 
-  scope :with_attendances, joins(:attendances).group("package_id")
+  scope :with_attendances, -> {
+    joins(:attendances).group("package_id")
+  }
 
-  validate :event, presence: true
+  validates :event, presence: true
 
   # @return [String] Name of this package and the current tier, if applicable
   def name_at_tier

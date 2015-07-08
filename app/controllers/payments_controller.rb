@@ -69,7 +69,7 @@ class PaymentsController < ApplicationController
 
   def payment_successful
     flash[:notice] = "Payment Recieved"
-    AttendanceMailer.payment_received_email(order: @order).deliver
+    AttendanceMailer.payment_received_email(order: @order).deliver_now
   end
 
   def load_integration

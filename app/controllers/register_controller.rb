@@ -52,7 +52,7 @@ class RegisterController < ApplicationController
       format.html {
         if @attendance.save
           order = update_or_create_order
-          AttendanceMailer.thankyou_email(order: order).deliver
+          AttendanceMailer.thankyou_email(order: order).deliver_now
         else
           retrieve_competition_options
           # I gotta get out of this nested attributes shenanigans

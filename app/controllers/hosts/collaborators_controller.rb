@@ -113,7 +113,7 @@ class Hosts::CollaboratorsController < ApplicationController
     CollaboratorsMailer.invitation(
       from: current_user, email_to: params[:email],
       host: @host, link: path
-    ).deliver!
+    ).deliver_now!
   end
 
   private

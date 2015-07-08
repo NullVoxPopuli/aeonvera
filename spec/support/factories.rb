@@ -22,6 +22,21 @@ FactoryGirl.define do
     password_confirmation "12345678"
   end
 
+  factory :hosted_by, class: User do
+    first_name "Hosted"
+    last_name "User Test"
+    email
+    password "12345678"
+    password_confirmation "12345678"
+  end
+
+
+  factory :opening_tier, class: PricingTier do
+    date Date.tomorrow
+    increase_by_dollars 0
+    event
+  end
+
   factory :event do
     name "Test Event"
     domain
@@ -30,11 +45,16 @@ FactoryGirl.define do
     ends_at { 6.months.from_now + 3.days }
     housing_status Event::HOUSING_ENABLED
     has_volunteers true
-    association :hosted_by, factory: :user
     payment_email "test@test.com"
     location "Indianapolis, IN"
     show_on_public_calendar true
-    association :opening_tier, factory: :opening_tier, increase_by_dollars: nil
+    hosted_by
+
+    # opening_tier
+    after(:build) do |e|
+      # e.hosted_by = create(:hosted_by) unless e.hosted_by
+      e.opening_tier = create(:opening_tier, event: e) unless e.opening_tier.present?
+    end
   end
 
   factory :housing_request do
@@ -78,11 +98,14 @@ FactoryGirl.define do
   factory :custom_field do
     label "A field "
     kind CustomField::KIND_TEXT
+    host factory: :event
+    user
   end
 
   factory :custom_field_response do
     value nil
     custom_field
+    writer factory: :user
   end
 
   factory :dance, class: LineItem::Dance do
@@ -152,13 +175,9 @@ FactoryGirl.define do
     increase_by_dollars 10
   end
 
-  factory :opening_tier, class: PricingTier do
-    date Date.tomorrow
-    increase_by_dollars 0
-  end
-
   factory :order do
     metadata { {} }
+    event
   end
 
   factory :order_line_item do
@@ -166,7 +185,7 @@ FactoryGirl.define do
   end
 
   factory :attendance, class: EventAttendance do
-    association :host, factory: :event
+    host factory: :event
     attendee
     pricing_tier
     package
@@ -182,6 +201,7 @@ FactoryGirl.define do
     }
 
     after(:build) do |attendance, evaluator|
+      # attendance.host = create(:event, hosted_by: attendance.attendee) unless attendance.host.present?
       attendance.dance_orientation = 0
     end
   end

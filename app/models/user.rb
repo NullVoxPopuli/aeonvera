@@ -38,8 +38,8 @@ class User < ActiveRecord::Base
 
   has_many :orders
 
-  validate :first_name, presence: true
-  validate :last_name, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
   before_destroy :not_attending_event?
   before_save :ensure_authentication_token

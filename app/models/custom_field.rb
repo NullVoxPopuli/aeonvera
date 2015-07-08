@@ -6,10 +6,10 @@ class CustomField < ActiveRecord::Base
 
   has_many :custom_field_responses
 
-  validate :label, presence: true
-  validate :kind, presence: true
-  validate :host, presence: true
-  validate :user, presence: true
+  validates :label, presence: true
+  validates :kind, presence: true
+  validates :host, presence: true
+  validates :user, presence: true
 
   KIND_TEXT = 0
   KIND_FORMATTED_TEXT = 1

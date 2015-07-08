@@ -16,7 +16,7 @@ describe AttendanceMailer do
       @event.registration_email_disclaimer = "disclaimer!"
       @event.save
       @order.reload
-      AttendanceMailer.thankyou_email(order: @order).deliver
+      AttendanceMailer.thankyou_email(order: @order).deliver_now
       emails = ActionMailer::Base.deliveries
 
       expect(emails.count).to eq 1
@@ -36,7 +36,7 @@ describe AttendanceMailer do
 
       ActionMailer::Base.deliveries.clear
       expect{
-        AttendanceMailer.thankyou_email(order: @order).deliver
+        AttendanceMailer.thankyou_email(order: @order).deliver_now
       }.to_not raise_error
 
       emails = ActionMailer::Base.deliveries

@@ -15,7 +15,7 @@ class OrdersController < ApplicationController
   #       payment_method: Payable::Methods::PAYPAL
   #     )
   #     flash[:notice] = "Thank you for your payment."
-  #     AttendanceMailer.thankyou_email(order: order).deliver
+  #     AttendanceMailer.thankyou_email(order: order).deliver_now
   #   else
   #     flash[:error] = "An error occured with your payment."
   #   end
