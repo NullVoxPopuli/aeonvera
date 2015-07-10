@@ -6,6 +6,8 @@ AeonVera::Application.routes.draw do
     resources :hosted_events
     resources :registerable_events
 
+    resources :communities
+
     resources :housing_requests
 
     resources :attendances
