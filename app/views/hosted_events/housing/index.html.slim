@@ -21,7 +21,7 @@
 		- if @providing_housing.present?
 			- @providing_housing.each do |p|
 				tr
-					td = p.attendance.attendee_name
+					td = p.attendance ? p.attendance.attendee_name : "Attendee Not Found or Not Associated"
 					td = p.housing_capacity
 					td = p.number_of_showers
 					td = p.can_provide_transportation
@@ -48,7 +48,7 @@
 		- if @needing_housing.present?
 			- @needing_housing.each do |r|
 				tr
-					td = r.attendance.attendee_name
+					td = r.attendance ? r.attendance.attendee_name : "Attendee Not  Found or Not Associated"
 					td = r.can_provide_transportation?
 					td = r.transportation_capacity
 					td = r.allergic_to_pets?

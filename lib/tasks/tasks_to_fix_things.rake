@@ -35,4 +35,33 @@ namespace :fix do
     end
   end
 
+  task :rebuild_housing_attendances => :environment do
+    HousingRequest.where(
+      attendance_id: nil,
+      attendance_type: EventAttendance.name
+    ).each do |h|
+      created_at = Attendance.arel_table[:created_at]
+      updated_at = Attendance.arel_table[:updated_at]
+
+      attendance_results = Attendance.where(
+        created_at.gt(h.created_at - 1.second).and(created_at.lt(h.created_at + 1.second)))
+
+      if attendance_results.count == 1
+        h.attendance = attendance_results.first
+        h.save_without_timestamping
+      else
+        # expand search
+        attendance_results = Attendance.where(
+          created_at.gt(h.created_at - 10.second).and(created_at.lt(h.created_at + 10.second)))
+
+        if attendance_results.count == 1
+          h.attendance = attendance_results.first
+          h.save_without_timestamping
+        end
+      end
+
+
+    end
+  end
+
 end
