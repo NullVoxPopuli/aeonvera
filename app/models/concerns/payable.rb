@@ -284,7 +284,7 @@ module Payable
       if discount.percent_discount?
         # discounts will be applied after the amount is totaled
         discounts_to_apply_at_end.call(discount)
-        return
+        return amount
       end
     end
 
