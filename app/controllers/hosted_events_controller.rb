@@ -49,11 +49,12 @@ class HostedEventsController < ApplicationController
   def create
     @event = Event.new(event_params)
     @event.hosted_by = current_user
+    @event.opening_tier.event = @event
 
     respond_to do |format|
       if @event.save
         format.html { redirect_to hosted_events_path(@event), notice: 'Event was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @event }
+        format.json { render json: @event, status: :created }
       else
         format.html { render action: 'new', layout: "application" }
         format.json { render json: @event.errors, status: :unprocessable_entity }

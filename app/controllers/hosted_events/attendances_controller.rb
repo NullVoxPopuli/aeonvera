@@ -33,7 +33,7 @@ class HostedEvents::AttendancesController < ApplicationController
     @order = @attendance.orders.find(params[:order_id])
 
     if @order
-      AttendanceMailer.payment_received_email(order: @order).deliver
+      AttendanceMailer.payment_received_email(order: @order).deliver_now
     end
 
     flash[:notice] = "Receipt Sent"

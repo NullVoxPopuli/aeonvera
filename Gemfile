@@ -10,6 +10,10 @@ gem 'rails'
 gem 'i18n'
 # Use Active Record to store sessions
 gem 'activerecord-session_store'
+# for cross-origin resource sharing
+gem 'rack-cors', :require => 'rack/cors'
+# JSON serialization
+gem "active_model_serializers", github: "rails-api/active_model_serializers"#, branch: "0-8-stable"
 
 
 # model helpers
@@ -17,6 +21,8 @@ gem 'date_time_attribute'
 gem 'recurring_select'
 # controller helpers
 gem 'lazy_crud'
+# request response helpers
+gem 'responders'
 
 # Permissions / Authorization
 gem "authorizable", github: "NullVoxPopuli/authorizable"
@@ -149,8 +155,8 @@ group :test do
   gem "rspec-rails"
   gem 'fuubar'
 
-  gem "factory_girl_rails", "~> 4.4"
-  #gem "factory_girl", "~> 4.4.0"
+  gem "factory_girl_rails"
+  gem "factory_girl", github: "thoughtbot/factory_girl"
 
   gem 'database_cleaner'
 

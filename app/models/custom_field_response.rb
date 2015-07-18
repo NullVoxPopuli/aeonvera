@@ -4,8 +4,9 @@ class CustomFieldResponse < ActiveRecord::Base
   belongs_to :writer, polymorphic: true
   belongs_to :custom_field, -> { with_deleted }
 
-  validate :writer, presence: true
-  validate :custom_field, presence: true
+  # TODO: re-enable when moving to ember
+  # validates :writer, presence: true
+  validates :custom_field, presence: true
 
   scope :with_values, -> {
     column = CustomFieldResponse.arel_table[:value]

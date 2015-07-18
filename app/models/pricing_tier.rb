@@ -14,7 +14,7 @@ class PricingTier < ActiveRecord::Base
   has_many :allowed_packages, through: :restraints,
     source: :restrictable, source_type: Package.name
 
-  validate :event, presence: true
+  validates :event, presence: true
   validates :date,
     allow_blank: true,
   date: {

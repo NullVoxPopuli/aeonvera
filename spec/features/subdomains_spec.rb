@@ -27,15 +27,21 @@ describe 'Subdomains' do
       end
 
       it 'after an event is over, the subdomain should be available' do
-        @event = create(:event, hosted_by: @user, ends_at: 2.days.ago, name: "not here")
+        (tier = build(:pricing_tier, date: 1.week.ago)).save(validate: false)
+        @event = build(:event, hosted_by: @user, ends_at: 2.days.ago, name: "not here", opening_tier: tier)
+        tier.event = @event
+        @event.save
 
         visit @event.url
         expect(page).to_not have_content(@event.name)
       end
 
       it 'navigates to a more recent event when the previous event with the same domain is over' do
-        event = create(:event, domain: 'my', name: "hidden", hosted_by: @user, starts_at: 4.days.ago, ends_at: 2.days.ago)
+        (tier = build(:pricing_tier, date: 1.week.ago)).save(validate: false)
+        event = build(:event, domain: 'my', name: "hidden", hosted_by: @user, starts_at: 4.days.ago, ends_at: 2.days.ago, opening_tier: tier)
         @event = create(:event, domain: 'my', name: "newer!", hosted_by: @user)
+        tier.event = @event
+        @event.save
 
         expect(event.url).to eq @event.url
 

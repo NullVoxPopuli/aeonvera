@@ -12,6 +12,9 @@ class Attendance < ActiveRecord::Base
   has_one :housing_provision
 
   belongs_to :attendee, class_name: "User"
+  # for an attendance, we don't care if any of our
+  # references are deleted, we want to know what they were
+  def attendee; User.unscoped{ super }; end
 
   belongs_to :host, polymorphic: true
 

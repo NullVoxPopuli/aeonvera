@@ -95,7 +95,7 @@ Devise.setup do |config|
   # config.pepper = "generate something obnoxiously hard to remember"
   config.secret_key = ENV['DEVISE_SECRET_KEY'] || '1234'
 
-  config.allow_insecure_token_lookup = true
+  # config.allow_insecure_token_lookup = true
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without

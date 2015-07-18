@@ -16,12 +16,22 @@ module AeonVera
       extension = file_name.split(".").last
       if extension == "yml"
         name = file_name.split(".").first
+        next if name.upcase == "DATABASE"
         config_name = "#{name.upcase}_CONFIG"
         config = YAML.load_file(file)
         config = HashWithIndifferentAccess.new.merge(config)
         Kernel.const_set("#{config_name}", config)
       end
     end
+
+    # Upgrading from rails 4.1.x to 4.2.x
+    # Currently, Active Record suppresses errors raised within
+    # `after_rollback`/`after_commit` callbacks and only print them to the logs.
+    # In the next version, these errors will no longer be suppressed.
+    # Instead, the errors will propagate normally just like in other
+    # Active Record callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
+
 
 
     config.action_view.field_error_proc = Proc.new { |html_tag, instance|
@@ -61,10 +71,22 @@ module AeonVera
     }
 
     config.middleware.use ExceptionNotification::Rack,
-    email: {
-      email_prefix: "[#{Rails.env}] AeonVera: ",
-      sender_address: 'support@aeonvera.com',
-      exception_recipients: ['preston@aeonvera.com']
-    }
+      email: {
+        email_prefix: "[#{Rails.env}] AeonVera: ",
+        sender_address: 'support@aeonvera.com',
+        exception_recipients: ['preston@aeonvera.com']
+      }
+
+    # if Rails.env.devoplement?
+      config.middleware.insert_before 0, "Rack::Cors" do
+        allow do
+          origins "*"
+          resource "*",
+            :headers => :any,
+            :methods => [:get, :post, :delete, :put, :options, :head],
+            :credentials => true
+        end
+      # end
+    end
   end
 end

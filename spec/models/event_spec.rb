@@ -49,7 +49,10 @@ describe Event do
     end
 
     it 'can have the same domain as a previously ended event' do
-      create(:event, ends_at: 1.week.ago, starts_at: 2.weeks.ago, domain: "my")
+      tier = build(:pricing_tier)
+      event = build(:event, ends_at: 1.week.ago, starts_at: 2.weeks.ago, domain: "my", opening_tier: tier)
+      event.save
+
       event2.domain = 'my'
 
       expect(event2).to be_valid

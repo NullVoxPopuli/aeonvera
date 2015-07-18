@@ -20,7 +20,7 @@ class HostedEvents::Sales::RegisterController < ApplicationController
               order.update!(payment_method: Payable::Methods::STRIPE)
             end
 
-            AttendanceMailer.thankyou_email(order: order).deliver
+            AttendanceMailer.thankyou_email(order: order).deliver_now
 
           else
             return render action: "new"

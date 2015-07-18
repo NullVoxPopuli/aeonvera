@@ -20,10 +20,10 @@ end
 def create_event
   event = create(:event)
   # opening pricing tier
-  pricing_tier = create(:opening_tier)
-  event.opening_tier = pricing_tier
-  pricing_tier.event = event
-  pricing_tier.save
+  # pricing_tier = create(:opening_tier)
+  # event.opening_tier = pricing_tier
+  # pricing_tier.event = event
+  # pricing_tier.save
 
   # must have at least one package
   package = create(:package)

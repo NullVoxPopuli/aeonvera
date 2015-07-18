@@ -29,6 +29,9 @@ table
       th Paid
       th = sort_link(@q, :created_at, "When")
       th Owes
+      th Total Paid
+      th Fee
+      th Net Received
   tbody
     - @orders.each do |order|
       tr
@@ -41,3 +44,7 @@ table
         td = order.paid?
         td = l order.created_at, format: :with_zone
         td = number_to_currency order.owes
+        td = number_to_currency order.paid_amount
+        td = number_to_currency order.total_fee_amount
+        td = number_to_currency order.net_amount_received
+        
