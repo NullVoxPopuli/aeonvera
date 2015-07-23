@@ -5785,6 +5785,10 @@ th.hide-for-touch {
     background-color: #333333; }
     body .shell {
       background-color: white; }
+      body .shell .page-title {
+        padding-top: 20px; }
+      body .shell .inner-shell {
+        padding-bottom: 20px; }
     body .panel.bg-header {
       height: 200px;
       padding-top: 50px; }
@@ -5828,14 +5832,7 @@ th.hide-for-touch {
     .alert-box .close {
       top: 25%;
       color: black;
-      opacity: 0.8; }
-  #nprogress .spinner {
-    top: 10px !important;
-    right: 9px !important; }
-  #nprogress .spinner-icon {
-    background: #333333;
-    width: 22px !important;
-    height: 22px !important; } }
+      opacity: 0.8; } }
 
 footer {
   text-align: center;
@@ -5902,25 +5899,40 @@ a.tooltip.callout-left:hover:after {
 .top-bar .top-bar-section ul li a:hover {
   background: #555 !important; }
 
+li.has-dropdown a.cog {
+  font-size: 20px; }
+
 section.left-small, section.right-small {
   z-index: 1; }
 
-.top-bar, .top-bar li, .top-bar .name h1, .top-bar .title-area li h1, .top-bar section .pages li a {
-  height: 40px !important;
-  line-height: 40px !important;
+/* style for small and medium screens */
+.top-bar, .top-bar .name h1, .top-bar .title-area li h1, .top-bar section .pages li a {
+  height: 40px;
+  line-height: 40px;
   text-transform: uppercase; }
 
+/* remove the drop down caret */
+.top-bar-section .has-dropdown > a:after {
+  display: none; }
+
+/* now that the drop down caret is removed, fix the padding of the gear */
+.top-bar-section .has-dropdown > a {
+  padding: 0 5px !important; }
+
 @media only screen and (min-width:56.94444em) {
-  .top-bar, .top-bar li, .top-bar .name h1, .top-bar .title-area li h1, .top-bar section .pages li a {
-    height: 60px !important;
-    line-height: 60px !important;
-    text-transform: uppercase !important; }
+  .top-bar, .top-bar .name h1, .top-bar .title-area li h1, .top-bar section li.page a {
+    height: 60px;
+    line-height: 60px;
+    text-transform: uppercase; }
+  .top-bar section > ul > li > a:not(.button), .top-bar-section > ul > div > li:not(.has-form) > a:not(.button) {
+    line-height: 60px;
+    height: 60px; }
   .alert-box {
     top: 60px; }
   .top-bar .top-bar-section .button {
     margin-top: 10px;
     margin-bottom: 6px; }
-  .top-bar .top-bar-section .auth li {
+  .top-bar .top-bar-section .auth li.auth-link {
     padding-left: 6px;
     padding-right: 6px; } }
 
@@ -5979,9 +5991,56 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
     padding: 26px;
     margin-bottom: 0px; }
 
+.percent-width-10 {
+  width: 10%;
+  display: block; }
+
+.percent-width-20 {
+  width: 20%;
+  display: block; }
+
+.percent-width-30 {
+  width: 30%;
+  display: block; }
+
+.percent-width-40 {
+  width: 40%;
+  display: block; }
+
+.percent-width-50 {
+  width: 50%;
+  display: block; }
+
+.percent-width-60 {
+  width: 60%;
+  display: block; }
+
+.percent-width-70 {
+  width: 70%;
+  display: block; }
+
+.percent-width-80 {
+  width: 80%;
+  display: block; }
+
+.percent-width-90 {
+  width: 90%;
+  display: block; }
+
+.percent-width-100 {
+  width: 100%;
+  display: block; }
+
 .extra-padding {
   padding-top: 30px !important;
   padding-bottom: 30px !important; }
+
+.icon-thumbnail {
+  font-size: 96px;
+  line-height: 96px;
+  width: 128px;
+  text-align: center;
+  text-indent: -21px; }
 
 .no-lineheight {
   line-height: 1em; }

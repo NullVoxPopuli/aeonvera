@@ -320,7 +320,7 @@ class RegisterController < ApplicationController
 
     if !@current_event
       flash[:notice] = "Event was not found. Perhaps it was misspelled?"
-      redirect_to calendar_home_index_url(subdomain: '')
+      redirect_to '/upcoming-events'
       return false
     end
     @current_event

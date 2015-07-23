@@ -9,8 +9,11 @@ class ApplicationController < ActionController::Base
 
   before_filter :check_subdomain
 
+  # optional
+  before_action :authenticate_user_from_token!, except: [:sign_in, :sign_up, :assum_control]
+
   # regular auth method
-  before_filter :authenticate_user!, except: [:sign_in, :assume_control]
+  before_filter :authenticate_user!, except: [:sign_in, :sign_up, :assume_control]
 
   before_action :set_time_zone
 

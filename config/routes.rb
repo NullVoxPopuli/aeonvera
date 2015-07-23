@@ -116,13 +116,13 @@ AeonVera::Application.routes.draw do
       get "/", to: "register#index"
     end
 
-    get '/', to: 'home#calendar', subdomain_failure: true
+    get '/', to: redirect('welcome/calendar'), subdomain_failure: true
 
   end
 
-  authenticated :user do
-    root to: "home#welcome", as: "authenticated_root"
-  end
+  # authenticated :user do
+  #   root to: "home#welcome", as: "authenticated_root"
+  # end
 
   get 'users' => redirect("/")
 
@@ -263,23 +263,19 @@ AeonVera::Application.routes.draw do
   end
 
 
-  resources :home do
-    collection do
-      get :about
-      get :terms_of_service
-      get :calendar
-    end
-  end
-
   get "/back", to: "application#back"
   get "/users/:token/assume_control", to: "application#assume_control"
-  get "/terms_of_service", to: "home#terms_of_service"
-  get "/privacy", to: "home#privacy"
-  get "/calendar", to: "home#calendar"
-  get "/scenes", to: "home#scenes"
+
+  # legacy routes
+  get "/terms_of_service", to: redirect("welcome/tos")
+  get "/privacy", to: redirect("/welcome/privacy")
+  get "/calendar", to: redirect("/upcoming-events")
+  get "/scenes", to: redirect("/communities")
   # ember routes :-(
   # this can go away once all UI is done in ember
   get "/welcome", to: "marketing#index"
   get "/welcome/*path", to: "marketing#index"
+  get "/upcoming-events", to: "marketing#index"
+  get "/communities", to: "marketing#index"
   root :to => "marketing#index"
 end
