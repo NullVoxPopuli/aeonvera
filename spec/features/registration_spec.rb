@@ -79,7 +79,8 @@ describe 'Registration' do
       @event.save
 
       visit old_url
-      expect(page).to have_content('Domain not found')
+      #expect(page).to have_content('Domain not found')
+      expect(current_url).to_not include(@event.subdomain)
     end
 
   end

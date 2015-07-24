@@ -2931,7 +2931,11 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
         var el3 = dom.createElement("li");
         var el4 = dom.createElement("a");
         dom.setAttribute(el4,"href","/user/edit");
-        var el5 = dom.createTextNode("Edit Profile");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("Edit Profile");
+        dom.appendChild(el5, el6);
         dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
@@ -2977,15 +2981,17 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
         var morph2 = dom.createMorphAt(dom.childAt(fragment, [5]),0,0);
         var morph3 = dom.createMorphAt(dom.childAt(fragment, [6]),0,0);
         var morph4 = dom.createMorphAt(dom.childAt(element2, [0]),1,1);
-        var morph5 = dom.createMorphAt(dom.childAt(element3, [1]),0,0);
-        var morph6 = dom.createMorphAt(dom.childAt(element3, [3]),0,0);
+        var morph5 = dom.createMorphAt(dom.childAt(element3, [0, 0]),0,0);
+        var morph6 = dom.createMorphAt(dom.childAt(element3, [1]),0,0);
+        var morph7 = dom.createMorphAt(dom.childAt(element3, [3]),0,0);
         block(env, morph0, context, "link-to", ["upcoming-events"], {}, child0, null);
         block(env, morph1, context, "link-to", ["communities"], {}, child1, null);
         block(env, morph2, context, "if", [get(env, context, "session.isAuthenticated")], {}, child2, null);
         block(env, morph3, context, "link-to", ["welcome.about"], {}, child3, null);
         inline(env, morph4, context, "fa-icon", ["cog"], {});
-        block(env, morph5, context, "if", [get(env, context, "session.isAuthenticated")], {}, child4, null);
-        block(env, morph6, context, "link-to", ["welcome.about"], {}, child5, null);
+        inline(env, morph5, context, "fa-icon", ["pencil"], {});
+        block(env, morph6, context, "if", [get(env, context, "session.isAuthenticated")], {}, child4, null);
+        block(env, morph7, context, "link-to", ["welcome.about"], {}, child5, null);
         return fragment;
       }
     };
@@ -3377,13 +3383,18 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
           var el1 = dom.createElement("a");
           dom.setAttribute(el1,"href","user/edit");
           dom.setAttribute(el1,"class","button");
-          var el2 = dom.createTextNode("Edit Profile");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Edit Profile");
+          dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
         },
         render: function render(context, env, contextualElement) {
           var dom = env.dom;
+          var hooks = env.hooks, inline = hooks.inline;
           dom.detectNamespace(contextualElement);
           var fragment;
           if (env.useFragmentCache && dom.canClone) {
@@ -3401,6 +3412,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
           } else {
             fragment = this.build(dom);
           }
+          var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+          inline(env, morph0, context, "fa-icon", ["pencil"], {});
           return fragment;
         }
       };
@@ -9320,7 +9333,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.9c071261"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.bb68bdd3"});
 }
 
 /* jshint ignore:end */

@@ -1,6 +1,7 @@
 AeonVera::Application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
+    resources :registrations
     resources :attended_events
     resources :upcoming_events
     resources :hosted_events
@@ -29,7 +30,7 @@ AeonVera::Application.routes.draw do
 
       resources :users do
         member do
-          get :assume_control
+          # get :assume_control
         end
       end
 
@@ -116,7 +117,7 @@ AeonVera::Application.routes.draw do
       get "/", to: "register#index"
     end
 
-    get '/', to: redirect('welcome/calendar'), subdomain_failure: true
+    get '/', to: redirect('/upcoming-events?error=subdomain not found'), subdomain_failure: true
 
   end
 
@@ -264,7 +265,7 @@ AeonVera::Application.routes.draw do
 
 
   get "/back", to: "application#back"
-  get "/users/:token/assume_control", to: "application#assume_control"
+  # get "/users/:token/assume_control", to: "application#assume_control"
 
   # legacy routes
   get "/terms_of_service", to: redirect("welcome/tos")

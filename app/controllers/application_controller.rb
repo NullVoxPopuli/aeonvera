@@ -21,28 +21,28 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_domain
 
-  # Receives the redirect request from the admin Assume Control link.
-  def assume_control
-    user_id = Cache.get(params[:token])
-
-    if user_id.blank?
-      flash[:alert] = "User not found or token expired."
-      return redirect_to(root_url)
-    end
-
-    begin
-      user = User.find(user_id)
-    rescue => e
-      flash[:alert] = "User not found."
-      return redirect_to(root_url)
-    end
-
-    sign_in(user, :bypass => true)
-
-    flash[:notice] = "You are now #{user.name}."
-
-    return redirect_to(root_url)
-  end
+  # # Receives the redirect request from the admin Assume Control link.
+  # def assume_control
+  #   user_id = Cache.get(params[:token])
+  #
+  #   if user_id.blank?
+  #     flash[:alert] = "User not found or token expired."
+  #     return redirect_to(root_url)
+  #   end
+  #
+  #   begin
+  #     user = User.find(user_id)
+  #   rescue => e
+  #     flash[:alert] = "User not found."
+  #     return redirect_to(root_url)
+  #   end
+  #
+  #   sign_in(user, :bypass => true)
+  #
+  #   flash[:notice] = "You are now #{user.name}."
+  #
+  #   return redirect_to(root_url)
+  # end
 
   def back
     url = request.referer
