@@ -13,6 +13,9 @@ AeonVera::Application.routes.draw do
 
     resources :attendances
 
+    # for new user creation / registration / signing up
+    resources :users, only: [:create]
+
     # manually define routes for the current user
     get 'user', to: 'user#show'
     patch 'user', to: 'user#update'
