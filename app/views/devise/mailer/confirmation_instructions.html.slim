@@ -6,7 +6,7 @@
   p
     | You can confirm your account email through the link below:
   p
-    = link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)
+		a href="#{confirmation_url(@resource, :confirmation_token => @resource.confirmation_token).html_safe}" Confirm my account
 
   p
 
