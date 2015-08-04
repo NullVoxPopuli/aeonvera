@@ -1161,6 +1161,10 @@ define('aeonvera/routes/attended-events', ['exports', 'ember'], function (export
 
     model: function model() {
       return this.store.findAll('attended-event');
+    },
+
+    eventsPresent: function eventsPresent() {
+      return this.get('model').length > 0;
     }
   });
 
@@ -1464,6 +1468,80 @@ define('aeonvera/templates/attended-events', ['exports'], function (exports) {
 
   exports['default'] = Ember.HTMLBars.template((function() {
     var child0 = (function() {
+      var child0 = (function() {
+        return {
+          isHTMLBars: true,
+          revision: "Ember@1.11.1",
+          blockParams: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          build: function build(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("tr");
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          render: function render(context, env, contextualElement) {
+            var dom = env.dom;
+            var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
+            dom.detectNamespace(contextualElement);
+            var fragment;
+            if (env.useFragmentCache && dom.canClone) {
+              if (this.cachedFragment === null) {
+                fragment = this.build(dom);
+                if (this.hasRendered) {
+                  this.cachedFragment = fragment;
+                } else {
+                  this.hasRendered = true;
+                }
+              }
+              if (this.cachedFragment) {
+                fragment = dom.cloneNode(this.cachedFragment, true);
+              }
+            } else {
+              fragment = this.build(dom);
+            }
+            var element0 = dom.childAt(fragment, [0]);
+            var morph0 = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+            var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+            var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
+            var morph3 = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
+            var morph4 = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
+            var morph5 = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
+            content(env, morph0, context, "event.name");
+            inline(env, morph1, context, "date-with-format", [get(env, context, "event.registeredAt"), "LLL"], {});
+            content(env, morph2, context, "event.amount_owed");
+            content(env, morph3, context, "event.amount_paid");
+            inline(env, morph4, context, "date-with-format", [get(env, context, "event.eventBeginsAt"), "LLL"], {});
+            content(env, morph5, context, "event.registrationStatus");
+            return fragment;
+          }
+        };
+      }());
       return {
         isHTMLBars: true,
         revision: "Ember@1.11.1",
@@ -1472,37 +1550,13 @@ define('aeonvera/templates/attended-events', ['exports'], function (exports) {
         hasRendered: false,
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("tr");
-          var el2 = dom.createElement("td");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("td");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("td");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("td");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("td");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("td");
-          var el3 = dom.createComment("");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
+          var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
           return el0;
         },
         render: function render(context, env, contextualElement) {
           var dom = env.dom;
-          var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
+          var hooks = env.hooks, get = hooks.get, block = hooks.block;
           dom.detectNamespace(contextualElement);
           var fragment;
           if (env.useFragmentCache && dom.canClone) {
@@ -1520,19 +1574,53 @@ define('aeonvera/templates/attended-events', ['exports'], function (exports) {
           } else {
             fragment = this.build(dom);
           }
-          var element0 = dom.childAt(fragment, [0]);
-          var morph0 = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
-          var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
-          var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
-          var morph3 = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
-          var morph4 = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
-          var morph5 = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
-          content(env, morph0, context, "event.name");
-          inline(env, morph1, context, "date-with-format", [get(env, context, "event.registeredAt"), "LLL"], {});
-          content(env, morph2, context, "event.amount_owed");
-          content(env, morph3, context, "event.amount_paid");
-          inline(env, morph4, context, "date-with-format", [get(env, context, "event.eventBeginsAt"), "LLL"], {});
-          content(env, morph5, context, "event.registrationStatus");
+          var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, null);
+          dom.insertBoundary(fragment, 0);
+          block(env, morph0, context, "each", [get(env, context, "model")], {"keyword": "event"}, child0, null);
+          return fragment;
+        }
+      };
+    }());
+    var child1 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("tr");
+          var el2 = dom.createElement("td");
+          dom.setAttribute(el2,"colspan","6");
+          var el3 = dom.createElement("span");
+          var el4 = dom.createTextNode("You have not yet attended any events. Please view the upcoming events list to see if there is anything of interest.");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
           return fragment;
         }
       };
@@ -1605,7 +1693,7 @@ define('aeonvera/templates/attended-events', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),1,1);
-        block(env, morph0, context, "each", [get(env, context, "model")], {"keyword": "event"}, child0, null);
+        block(env, morph0, context, "if", [get(env, context, "eventsPresent")], {}, child0, child1);
         return fragment;
       }
     };
@@ -10160,7 +10248,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.70ca367f"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.e98422ff"});
 }
 
 /* jshint ignore:end */
