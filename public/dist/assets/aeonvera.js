@@ -718,6 +718,41 @@ define('aeonvera/initializers/link-to-with-action', ['exports', 'ember'], functi
   };
 
 });
+define('aeonvera/initializers/simple-auth-devise-override', ['exports', 'ember', 'simple-auth-devise/authenticators/devise'], function (exports, Ember, Devise) {
+
+  'use strict';
+
+  var alreadyRun = false;
+
+  exports['default'] = {
+    name: 'simple-auth-devise-override',
+
+    initialize: function initialize() {
+      if (alreadyRun) {
+        return;
+      } else {
+        alreadyRun = true;
+      }
+
+      Devise['default'].reopen({
+        invalidate: function invalidate() {
+          var self = this;
+
+          /*
+            this is required until server-side sessions are disabled
+          */
+          return Ember['default'].$.ajax({
+            url: '/users/sign_out',
+            type: 'DELETE'
+          }).then(function () {
+            return self._super();
+          });
+        }
+      });
+    }
+  };
+
+});
 define('aeonvera/initializers/simple-auth-devise', ['exports', 'simple-auth-devise/configuration', 'simple-auth-devise/authenticators/devise', 'simple-auth-devise/authorizers/devise', 'aeonvera/config/environment'], function (exports, Configuration, Authenticator, Authorizer, ENV) {
 
   'use strict';
@@ -8871,6 +8906,16 @@ define('aeonvera/tests/initializers/link-to-with-action.jshint', function () {
   module('JSHint - initializers');
   test('initializers/link-to-with-action.js should pass jshint', function() { 
     ok(true, 'initializers/link-to-with-action.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/initializers/simple-auth-devise-override.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - initializers');
+  test('initializers/simple-auth-devise-override.js should pass jshint', function() { 
+    ok(true, 'initializers/simple-auth-devise-override.js should pass jshint.'); 
   });
 
 });

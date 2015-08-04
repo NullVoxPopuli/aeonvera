@@ -103,10 +103,16 @@ module CommonApplicationController
       user_email = options[:email].presence
       user = user_email && User.find_by_email(user_email)
 
-      if user && Devise.secure_compare(user.authentication_token, token)
-        sign_in user, store: false
+      # binding.pry
 
-        current_user = user
+      if user
+        if !user.confirmed?
+          user.errors.add(:base, I18n.t('devise.failure.unconfirmed'))
+        elsif Devise.secure_compare(user.authentication_token, token)
+          sign_in user, store: false
+
+          current_user = user
+        end
       end
 
     end
