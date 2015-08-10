@@ -17,4 +17,7 @@ class APIController < ActionController::Base
 
   helper_method :current_domain
 
+
+  respond_to :json
+
 end

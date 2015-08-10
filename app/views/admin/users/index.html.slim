@@ -13,7 +13,8 @@ table
 	tbody
 		- @users.each do |user|
 			tr
-				td = link_to "Assume Control", assume_control_admin_user_path(user)
+				td 
+					/= link_to "Assume Control", assume_control_admin_user_path(user)
 				td = user.name
 				td = user.email
 				td 

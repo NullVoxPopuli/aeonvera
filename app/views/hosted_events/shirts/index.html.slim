@@ -16,7 +16,7 @@ table.table.table-striped.table-bordered.table-condensed
 			td
 				= link_to line_item.name, hosted_event_shirt_path(@event, line_item)
 				= shirt_menu_options(line_item)
-			td = line_item.attendances.count
+			td = line_item.order_line_items.count
 			td = number_to_currency(line_item.price)
 			td = line_item.offered_sizes.join(", ")
 			td = image_tag(line_item.picture.url(:thumb)) if line_item.picture.present?

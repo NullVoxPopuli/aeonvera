@@ -15,11 +15,11 @@ module CurrentOrganization
 
     if !@current_organization
       flash[:notice] = "Organization was not found. Perhaps it was misspelled?"
-      redirect_to calendar_home_index_url(subdomain: '')
+      redirect_to '/communities'
       return false
     end
 
     @current_organization
   end
-  
+
 end

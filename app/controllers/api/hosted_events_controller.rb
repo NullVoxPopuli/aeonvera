@@ -2,7 +2,7 @@ class Api::HostedEventsController < APIController
 
   def index
     @events = current_user.hosted_events
-    render json: @attendances
+    render json: @events
   end
 
   def show
