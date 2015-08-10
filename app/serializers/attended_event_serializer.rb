@@ -14,7 +14,8 @@ class AttendedEventSerializer < ActiveModel::Serializer
   end
 
   def amount_paid
-    object.orders.where(paid: true).map(&:paid_amount).sum
+    binding.pry
+    object.orders.where(paid: true).map(&:paid_amount).compact.sum
   end
 
   def amount_owed
