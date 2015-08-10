@@ -1165,10 +1165,6 @@ define('aeonvera/routes/attended-events', ['exports', 'ember'], function (export
 
     model: function model() {
       return this.store.findAll('attended-event');
-    },
-
-    eventsPresent: function eventsPresent() {
-      return this.get('model').length > 0;
     }
   });
 
@@ -1697,7 +1693,7 @@ define('aeonvera/templates/attended-events', ['exports'], function (exports) {
           fragment = this.build(dom);
         }
         var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),1,1);
-        block(env, morph0, context, "if", [get(env, context, "eventsPresent")], {}, child0, child1);
+        block(env, morph0, context, "if", [get(env, context, "model")], {}, child0, child1);
         return fragment;
       }
     };
@@ -10439,7 +10435,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.507f3b26"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.864185f4"});
 }
 
 /* jshint ignore:end */
