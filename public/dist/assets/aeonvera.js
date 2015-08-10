@@ -3793,6 +3793,92 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
 
   exports['default'] = Ember.HTMLBars.template((function() {
     var child0 = (function() {
+      var child0 = (function() {
+        return {
+          isHTMLBars: true,
+          revision: "Ember@1.11.1",
+          blockParams: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          build: function build(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            var el1 = dom.createElement("span");
+            var el2 = dom.createTextNode("Dashboard");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          render: function render(context, env, contextualElement) {
+            var dom = env.dom;
+            var hooks = env.hooks, inline = hooks.inline;
+            dom.detectNamespace(contextualElement);
+            var fragment;
+            if (env.useFragmentCache && dom.canClone) {
+              if (this.cachedFragment === null) {
+                fragment = this.build(dom);
+                if (this.hasRendered) {
+                  this.cachedFragment = fragment;
+                } else {
+                  this.hasRendered = true;
+                }
+              }
+              if (this.cachedFragment) {
+                fragment = dom.cloneNode(this.cachedFragment, true);
+              }
+            } else {
+              fragment = this.build(dom);
+            }
+            var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+            dom.insertBoundary(fragment, 0);
+            inline(env, morph0, context, "fa-icon", ["tachometer"], {});
+            return fragment;
+          }
+        };
+      }());
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("li");
+          dom.setAttribute(el1,"class","auth-link");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, block = hooks.block;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+          block(env, morph0, context, "link-to", ["application"], {"classNames": "button success"}, child0, null);
+          return fragment;
+        }
+      };
+    }());
+    var child1 = (function() {
       return {
         isHTMLBars: true,
         revision: "Ember@1.11.1",
@@ -3839,7 +3925,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
         }
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       return {
         isHTMLBars: true,
         revision: "Ember@1.11.1",
@@ -3885,7 +3971,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
         }
       };
     }());
-    var child2 = (function() {
+    var child3 = (function() {
       return {
         isHTMLBars: true,
         revision: "Ember@1.11.1",
@@ -3932,7 +4018,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
         }
       };
     }());
-    var child3 = (function() {
+    var child4 = (function() {
       return {
         isHTMLBars: true,
         revision: "Ember@1.11.1",
@@ -3984,6 +4070,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
       hasRendered: false,
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createElement("li");
         dom.setAttribute(el1,"class","auth-link");
         var el2 = dom.createComment("");
@@ -4016,10 +4104,13 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
         } else {
           fragment = this.build(dom);
         }
-        var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+        var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
         var morph1 = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
-        block(env, morph0, context, "if", [get(env, context, "session.isAuthenticated")], {}, child0, child1);
-        block(env, morph1, context, "if", [get(env, context, "session.isAuthenticated")], {}, child2, child3);
+        var morph2 = dom.createMorphAt(dom.childAt(fragment, [2]),0,0);
+        dom.insertBoundary(fragment, 0);
+        block(env, morph0, context, "if", [get(env, context, "session.isAuthenticated")], {}, child0, null);
+        block(env, morph1, context, "if", [get(env, context, "session.isAuthenticated")], {}, child1, child2);
+        block(env, morph2, context, "if", [get(env, context, "session.isAuthenticated")], {}, child3, child4);
         return fragment;
       }
     };
@@ -4669,6 +4760,44 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         }
       };
     }());
+    var child1 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("View Communities");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
     return {
       isHTMLBars: true,
       revision: "Ember@1.11.1",
@@ -4688,6 +4817,61 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","text-center");
         var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("span");
+        var el3 = dom.createTextNode("    ");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","row center-margin");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","columns medium-6 text-center");
+        var el3 = dom.createElement("h3");
+        var el4 = dom.createTextNode("Now what?");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("hr");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("Now that you are logged in, you can register for events, host your own event, start your own community or dance scene, have weekly lessons, memberships, and register for lessons or dances.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","columns medium-6 text-center");
+        var el3 = dom.createElement("h3");
+        var el4 = dom.createTextNode("Need help?");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("hr");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("Never be afraid to ask! if you have a question about anything, just send email to ");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("the support email linked to at the bottom of the page");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("  and you should receive a response in one business day.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("  There is also the facebook page linked to at the bottom of the screen, in case you want to discuss aeonvera with other people.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
@@ -4712,10 +4896,13 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         } else {
           fragment = this.build(dom);
         }
+        var element0 = dom.childAt(fragment, [1]);
         var morph0 = dom.createMorphAt(dom.childAt(fragment, [0, 0]),0,0);
-        var morph1 = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
+        var morph1 = dom.createMorphAt(element0,0,0);
+        var morph2 = dom.createMorphAt(element0,2,2);
         inline(env, morph0, context, "partial", ["attended_events"], {});
         block(env, morph1, context, "link-to", ["upcoming-events"], {"classNames": "button"}, child0, null);
+        block(env, morph2, context, "link-to", ["communities"], {"classNames": "button"}, child1, null);
         return fragment;
       }
     };
@@ -10248,7 +10435,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.e98422ff"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.507f3b26"});
 }
 
 /* jshint ignore:end */
