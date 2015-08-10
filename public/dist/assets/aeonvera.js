@@ -9,6 +9,7 @@ define('aeonvera/adapters/application', ['exports', 'ember-data'], function (exp
   exports['default'] = DS['default'].ActiveModelAdapter.extend({
     namespace: 'api',
     host: 'https://aeonvera.com'
+    // host: 'http://swing.vhost:3000'
   });
 
 });
