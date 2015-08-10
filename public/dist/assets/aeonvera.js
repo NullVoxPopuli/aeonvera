@@ -449,7 +449,6 @@ define('aeonvera/helpers/date-with-format', ['exports', 'ember'], function (expo
 
   exports.dateWithFormat = dateWithFormat;
 
-  // for date, see http://momentjs.com/
   function dateWithFormat(params) {
     return moment(params[0]).format(params[1]);
   }
@@ -805,7 +804,9 @@ define('aeonvera/initializers/subdomain', ['exports', 'ember', 'aeonvera/config/
       return ENV['default'].subdomainMapping[subdomain] || subdomain;
     },
 
-    customURI: '' });
+    customURI: ''
+
+  });
 
   exports['default'] = {
     name: 'subdomain',
@@ -1141,7 +1142,9 @@ define('aeonvera/routes/application', ['exports', 'ember', 'simple-auth/mixins/a
 				Ember['default'].get(this, 'flashMessages').warning(error.error || error);
 			},
 
-			signup: function signup() {} }
+			signup: function signup() {}
+
+		}
 	});
 
 });
