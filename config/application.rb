@@ -70,12 +70,13 @@ module AeonVera
       url: ":s3_domain_url"
     }
 
-    config.middleware.use ExceptionNotification::Rack,
-      email: {
-        email_prefix: "[#{Rails.env}] AeonVera: ",
-        sender_address: 'support@aeonvera.com',
-        exception_recipients: ['preston@aeonvera.com']
-      }
+
+    # config.middleware.use ExceptionNotification::Rack,
+    #   email: {
+    #     email_prefix: "[#{Rails.env}] AeonVera: ",
+    #     sender_address: 'support@aeonvera.com',
+    #     exception_recipients: ['preston@aeonvera.com']
+    #   }
 
     # if Rails.env.devoplement?
       config.middleware.insert_before 0, "Rack::Cors" do
