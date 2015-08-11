@@ -4,14 +4,6 @@ describe Order do
 
   describe "#before_create" do
 
-    it "payer_id is set" do
-      o = Order.new(event: create(:event), payment_method: Payable::Methods::CASH)
-      o.save
-      o.reload
-      o.paid?.should == true
-      o.payer_id.should == "0"
-    end
-
     it "payer_id is not set" do
       Order.any_instance.stub(:total).and_return(1.00)
       o = create(:order)
@@ -28,9 +20,10 @@ describe Order do
     end
 
     context "total is 0" do
-      let(:order){Order.any_instance.stub(:total).and_return(0.0); create(:order)}
-
       it "is paid afetr creation" do
+        order = build(:order)
+        allow(order).to receive(:total){ 0.0 }
+        order.save
         order.paid?.should == true
       end
 
@@ -66,7 +59,7 @@ describe Order do
   describe '#check_stripe_validity' do
     it 'is invalid (somehow)' do
       o = Order.new
-      allow(o).to receive(:total){ 0 }
+      allow(o).to receive(:total){ 10 }
       o.payment_method = Payable::Methods::STRIPE
       o.paid = true
       paid_amount = nil

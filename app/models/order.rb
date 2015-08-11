@@ -21,21 +21,18 @@ class Order < ActiveRecord::Base
   scope :created_after, ->(time){ where("orders.created_at > ?", time) }
   scope :created_before, ->(time){ where("orders.created_at < ?", time) }
 
-
-  before_create do |obj|
-    if self.total == 0.0
-      self.payer_id = "0"
-      self.paid = true
-    end
-  end
-
   after_save do |instance|
     instance.process_membership
     instance.apply_membership_discount
+    true
   end
 
   before_save do |instance|
-    instance.check_stripe_validity
+    instance.check_paid_status
+    true
+    # before filter must return true to continue saving.
+    # the above two checks do not halt saving, nor do they
+    # create a bad state
   end
 
   def set_payment_token(token)
@@ -124,9 +121,28 @@ class Order < ActiveRecord::Base
     existing_membership_discounts.map(&:destroy)
   end
 
-  def check_stripe_validity
-    if payment_method == Payable::Methods::STRIPE &&
-      self.paid == true && paid_amount == nil
+  def check_paid_status
+    # if we don't owe anything
+    # - can happen on new record
+    # - can happen if paid
+    if self.total == 0.0
+      # set to paid
+      self.payer_id = "0"
+      self.paid = true
+
+      # if the paid amount is /still/ nil
+      if self.paid_amount == nil
+        # set the paid amount to 0.0, since the total is 0.0
+        self.paid_amount = 0.0
+      end
+
+    else
+      # money is owed, the order has not been paid
+      self.paid = false
+    end
+
+
+    if self.paid == true && paid_amount == nil && self.total == 0.0
       self.paid = false
     end
   end

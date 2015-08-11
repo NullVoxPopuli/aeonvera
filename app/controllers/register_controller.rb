@@ -221,9 +221,10 @@ class RegisterController < ApplicationController
   def update_or_create_order
     @attendance.orders.unpaid.destroy_all
     order = @attendance.create_order
-
+    # binding.pry
     if current_event.accept_only_electronic_payments?
-      order.update!(payment_method: Payable::Methods::STRIPE)
+      # binding.pry
+      order.update(payment_method: Payable::Methods::STRIPE)
     end
 
     order
