@@ -100,7 +100,7 @@ class Attendance < ActiveRecord::Base
     items = []
     items << self.package if self.respond_to?(:package)
     items << self.competitions if self.respond_to?(:competitions)
-    items << line_items
+    items << self.line_items
     items << self.discounts if self.respond_to?(:discounts)
 
     items = items.flatten
