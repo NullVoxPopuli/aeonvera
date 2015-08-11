@@ -127,7 +127,7 @@ class Order < ActiveRecord::Base
   def check_stripe_validity
     if payment_method == Payable::Methods::STRIPE &&
       self.paid == true && paid_amount == nil
-      # self.paid = false
+      self.paid = false
     end
   end
 
