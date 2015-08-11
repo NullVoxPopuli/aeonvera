@@ -63,6 +63,19 @@ describe Order do
 
   end
 
+  describe '#check_stripe_validity' do
+    it 'is invalid (somehow)' do
+      o = Order.new
+      allow(o).to receive(:total){ 0 }
+      o.payment_method = Payable::Methods::STRIPE
+      o.paid = true
+      paid_amount = nil
+      o.save
+
+      expect(o.paid).to eq false
+    end
+  end
+
 
   describe 'package + discount' do
     let(:event){ create(:event) }

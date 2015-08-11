@@ -34,6 +34,10 @@ class Order < ActiveRecord::Base
     instance.apply_membership_discount
   end
 
+  before_save do |instance|
+    instance.check_stripe_validity
+  end
+
   def set_payment_token(token)
     self.payment_token = token
     self.save
@@ -118,6 +122,13 @@ class Order < ActiveRecord::Base
 
   def clear_existing_membership_discounts
     existing_membership_discounts.map(&:destroy)
+  end
+
+  def check_stripe_validity
+    if payment_method == Payable::Methods::STRIPE &&
+      self.paid == true && paid_amount == nil
+      # self.paid = false
+    end
   end
 
   def apply_membership_discount
