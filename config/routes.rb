@@ -22,6 +22,11 @@ AeonVera::Application.routes.draw do
     patch 'user', to: 'user#update'
     put 'user', to: 'user#update'
     delete 'user', to: 'user#destroy'
+
+    # when errors happen on the ember side of things
+    # they are posted here so that rails can send the
+    # error off to github for review as an issue
+    post '/front_end_error', to: 'errors#from_ember'
   end
 
 
