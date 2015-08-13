@@ -6,7 +6,6 @@ class HousingRequest < ActiveRecord::Base
   serialize :requested_roommates, JSON
   serialize :unwanted_roommates, JSON
 
-
   belongs_to :host, polymorphic: true
   belongs_to :attendance, -> { with_deleted }, polymorphic: true
 
@@ -19,7 +18,29 @@ class HousingRequest < ActiveRecord::Base
   # alias so that we can use proper english
   alias_attribute :needs_transportation, :need_transportation
 
-  #
+
+  # for CSV output
+  csv_with_columns [
+    :attendee_name,
+    :attendee_email,
+    :requested_roommate_name_list,
+    :unwanted_roommate_name_list] +
+    column_names,
+    exclude: [
+      :updated_at, :created_at,
+      :attendance_id, :attendance_type,
+      :id,
+      :requested_roommates, :unwanted_roommates,
+      :host_id, :host_type]
+
+  def attendee_name
+    attendance.try(:attendee_name) || "Attendee Not Found or Not Associated"
+  end
+
+  def attendee_email
+    attendance.try(:attendee).try(:email) || ""
+  end
+
   def requested_roommate_names
     requested_roommates || []
   end

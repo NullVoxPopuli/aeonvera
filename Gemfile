@@ -29,7 +29,9 @@ gem "authorizable", github: "NullVoxPopuli/authorizable"
 
 
 # error capturing
-gem "exception_notification"
+# gem "exception_notification" # email notifications
+gem 'party_foul'
+
 # app performance monitoring
 gem "newrelic_rpm"
 
