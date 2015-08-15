@@ -13,12 +13,19 @@ class Api::ErrorsController < APIController
       params: error_params[:params]
     }
 
-    PartyFoul::RacklessExceptionHandler.handle(
-      error,
-      data
-    )
+    if Rails.env.production?
+      PartyFoul::RacklessExceptionHandler.handle(
+        error,
+        data
+      )
 
-    render json:  { error: error_params.to_json }
+      render json:  { error: error_params.to_json }
+    else
+      # just in case, make sure
+      # awesome_print is loaded
+      ap data if defined? ap
+      render nothing: true, status: 500
+    end
   end
 
   private
