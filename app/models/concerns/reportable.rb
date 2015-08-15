@@ -1,4 +1,4 @@
-module Order::Reportable
+module Reportable
   extend ActiveSupport::Concern
 
   # ideally, this is ran upon successful payment
