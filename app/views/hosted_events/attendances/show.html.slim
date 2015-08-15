@@ -152,3 +152,6 @@
     = link_to "Not Attending", hosted_event_attendance_path(@event, attendance), method: :delete, class: "button alert small"
   - else
     = link_to "Attending", hosted_event_cancelled_attendance_path(@event, attendance), method: :delete, class: "button success small"
+  
+  
+  = render partial: 'transfer_modal'
