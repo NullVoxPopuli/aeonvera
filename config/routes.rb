@@ -15,13 +15,7 @@ AeonVera::Application.routes.draw do
 
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
-    resources :users, only: [:create]
-
-    # manually define routes for the current user
-    get 'user', to: 'user#show'
-    patch 'user', to: 'user#update'
-    put 'user', to: 'user#update'
-    delete 'user', to: 'user#destroy'
+    resources :users
 
     # when errors happen on the ember side of things
     # they are posted here so that rails can send the

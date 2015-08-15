@@ -1,7 +1,8 @@
 class Order < ActiveRecord::Base
   include HasMetadata
+  include Order::StripePaymentHandler
   include Payable
-  include Reportable
+  include Order::Reportable
 
   belongs_to :host, polymorphic: true
 
@@ -35,14 +36,15 @@ class Order < ActiveRecord::Base
     # create a bad state
   end
 
+  # DEPRECATED: Was for use with PayPal's API
   def set_payment_token(token)
     self.payment_token = token
     self.save
   end
 
+  # short hand for setting a field on the metadata
   def set_payment_details(details)
     self.metadata[:details] = details
-    self.save
   end
 
   def force_paid!
@@ -136,7 +138,7 @@ class Order < ActiveRecord::Base
         self.paid_amount = 0.0
       end
 
-    else
+    elsif self.paid_amount.nil?
       # money is owed, the order has not been paid
       self.paid = false
     end

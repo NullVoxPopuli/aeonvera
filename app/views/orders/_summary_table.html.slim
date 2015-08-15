@@ -40,12 +40,11 @@ table width="100%"
 
     - total = order.total
     - sub_total = order.sub_total
-    - if total > sub_total
-      - if event.make_attendees_pay_fees?
-        tr
-          td
-          td Processing Fee
-          td = number_to_currency(total - sub_total)
+    - if order.should_apply_fee?
+      tr
+        td
+        td Processing Fee
+        td = number_to_currency(total - sub_total)
     tr
       td
       td Total

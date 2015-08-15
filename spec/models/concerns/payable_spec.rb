@@ -148,6 +148,18 @@ describe Payable do
   end
 
   context "total" do
+    it 'is zero when the subtotal is zero' do
+      package = create(:package, event: @event)
+      discount = create(:discount, event: @event, value: 100, kind: Discount::PERCENT_OFF)
+      order = create(:order, event: @event, attendance: @attendance)
+
+      order.add(package)
+
+      expect(@payment.sub_total).to eq 0
+      expect(@payment.total).to eq 0
+      expect(@payment.fee).to eq 0
+    end
+
     it "totals everything" do
       item1 = order_line_item
       item2 = order_line_item
@@ -225,6 +237,7 @@ describe Payable do
   end
 
   context "fee" do
+
     it "is the most expensive teir" do
       @payment.stub(:total).and_return(150)
       @payment.fee.should == 150 * 0.0075
