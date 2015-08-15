@@ -1,8 +1,8 @@
 class Order < ActiveRecord::Base
   include HasMetadata
-  include Order::StripePaymentHandler
+  include StripePaymentHandler
   include Payable
-  include Order::Reportable
+  include Reportable
 
   belongs_to :host, polymorphic: true
 

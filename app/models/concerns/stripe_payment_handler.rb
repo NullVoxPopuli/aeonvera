@@ -1,4 +1,4 @@
-module Order::StripePaymentHandler
+module StripePaymentHandler
   extend ActiveSupport::Concern
 
   # handles the successful charge for an order from stripe
