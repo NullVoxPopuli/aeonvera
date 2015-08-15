@@ -1,0 +1,22 @@
+a.button.small.primary href='#' data-reveal-id='transfer-modal' Transfer
+#transfer-modal.reveal-modal data-reveal='' aria-labelledby='transferModalTitle' aria-hidden='true' role='dialog'
+  h2#transferModalTitle Transfer This Registration To
+  p To transfer this registration to a different person, just type their name in below. This won't associate the registration with the person's aeonvera account (even if they had one), but is primarily for helping the event organizers keep track of who is coming to the event.
+  p.lead
+    = form_for(@attendance, url: transfer_hosted_event_attendance_path(hosted_event_id: @event), as: :attendance) do |f|
+      = f.label :transferred_to_name, 'Name of person inheriting this registration'
+      = f.text_field :transferred_to_name
+      
+      = f.label :transfer_reason
+      = f.text_field :transfer_reason, placeholder: 'Optional'
+      
+      = f.label :dance_orientation, "Re-assign dance orientation"
+      = f.radio_button :dance_orientation, Attendance::LEAD
+      = f.label :lead
+      = f.radio_button :dance_orientation, Attendance::FOLLOW
+      = f.label :follow
+      
+      
+      .text-center
+        = f.submit 'Transfer', class: 'button primary'
+  a.close-reveal-modal aria-label='Close' &#215;

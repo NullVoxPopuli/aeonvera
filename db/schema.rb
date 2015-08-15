@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150606040128) do
+ActiveRecord::Schema.define(version: 20150815171811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,10 @@ ActiveRecord::Schema.define(version: 20150606040128) do
     t.string   "dance_orientation",          limit: 255
     t.string   "host_type",                  limit: 255
     t.string   "attendance_type",            limit: 255
+    t.string   "transferred_to_name"
+    t.integer  "transferred_to_user_id"
+    t.datetime "transferred_at"
+    t.string   "transfer_reason"
   end
 
   add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree

@@ -235,6 +235,9 @@ AeonVera::Application.routes.draw do
         get :print_checkin
       end
       member do
+        patch :transfer
+        post :transfer
+        put :transfer
         post :resend_receipt
         put :mark_paid
       end

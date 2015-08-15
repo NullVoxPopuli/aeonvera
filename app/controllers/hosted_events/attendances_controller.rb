@@ -2,8 +2,8 @@ class HostedEvents::AttendancesController < ApplicationController
 
   include SetsEvent
   include MarkPaid
-  
-  before_action :set_attendance, only: [:mark_paid, :edit, :update, :destroy, :resend_receipt]
+
+  before_action :set_attendance, only: [:mark_paid, :edit, :update, :destroy, :resend_receipt, :transfer]
 
   layout "hosted_events"
 
@@ -15,6 +15,21 @@ class HostedEvents::AttendancesController < ApplicationController
       format.csv{
         send_data @attendances.to_csv
       }
+    end
+  end
+
+  def transfer
+    @attendance.assign_attributes(transfer_params)
+    @attendance.transferred_at = Time.now
+
+    respond_to do |format|
+      if @attendance.save
+        format.html { redirect_to hosted_event_attendance_path(@event, @attendance), notice: 'Transfer successful!.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: 'show', notice: 'Transfer failed' }
+        format.json { render json: @attendance.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -139,6 +154,14 @@ class HostedEvents::AttendancesController < ApplicationController
       :first_name,
       :last_name,
       :email
+    )
+  end
+
+  def transfer_params
+    params[:attendance].permit(
+      :transferred_to_name,
+      :transfer_reason,
+      :dance_orientation
     )
   end
 

@@ -175,9 +175,20 @@ class Attendance < ActiveRecord::Base
   end
 
   def attendee_name
+    # for transfers
+    if transferred_to_name.present?
+      return transferred_to_name
+    end
+
     if self.attendee
+      # normal
+
+      # have to titleize, cause some people aren't OCD enough
+      # to type their name with proper capitalization....
       self.attendee.name.titleize
     elsif (first = self.metadata["first_name"]) &&
+      # User-less Registration
+      
       (last = self.metadata["last_name"])
       "#{first} #{last}"
     else
