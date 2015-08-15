@@ -176,14 +176,19 @@ module Payable
     amount > 0 ? amount : 0
   end
 
+  def should_apply_fee?
+    sub_total > 0 &&
+    host.make_attendees_pay_fees? &&
+    (self.payment_method == Payable::Methods::STRIPE ||
+     self.payment_method == Payable::Methods::PAYPAL)
+  end
+
   def total
     sub = sub_total
     total = sub
 
     # optionally make the registrant pay more
-    if host.make_attendees_pay_fees? &&
-        (self.payment_method == Payable::Methods::STRIPE ||
-         self.payment_method == Payable::Methods::PAYPAL)
+    if should_apply_fee?
         total_fee_percentage = 0.029 # Stripe
         total_fee_percentage += 0.0075 unless host.beta?
 
@@ -212,10 +217,8 @@ module Payable
 
   def calculate_paid_amount
     if self.paid?
-      if self.payment_method == Payable::Methods::STRIPE &&
-          self.metadata["details"]
-        # stripe stores money as cents
-        self.metadata["details"]["amount"] / 100.0
+      if self.payment_method == Payable::Methods::STRIPE
+        paid_amount_from_stripe_charge_data
       else
         total
       end

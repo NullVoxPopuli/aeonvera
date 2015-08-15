@@ -6,8 +6,15 @@ class PaymentsController < ApplicationController
   before_action :load_attendance
 
   def create
-    if charge_card!
-      payment_successful
+    if @order.sub_total > 0
+      if charge_card!
+        payment_successful
+      end
+    else
+      # sub total is zero, set to paid
+      @order.paid = true
+      @order.payment_method = Payable::Methods::Cash
+      @order.save
     end
 
     redirect_to register_index_path
@@ -49,16 +56,8 @@ class PaymentsController < ApplicationController
         secret_key
       )
 
-      @order.set_payment_details(JSON.parse(charge.to_json))
+      @order.handle_stripe_charge(charge)
 
-      if charge.paid
-        @order.paid = true
-        @order.payment_method = Payable::Methods::STRIPE
-        @order.paid_amount = @order.calculate_paid_amount
-        @order.set_net_amount_received_and_fees
-      end
-
-      @order.save
       return true
     rescue Stripe::CardError => e
       # The card has been declined
