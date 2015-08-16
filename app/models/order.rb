@@ -2,7 +2,6 @@ class Order < ActiveRecord::Base
   include HasMetadata
   include StripePaymentHandler
   include Payable
-  include Reportable
 
   belongs_to :host, polymorphic: true
 
@@ -65,6 +64,15 @@ class Order < ActiveRecord::Base
     (orders.count * (0.3)) + orders.map{|o|
       o.total * 0.029
     }.inject(:+).to_f
+  end
+
+
+  # ideally, this is ran upon successful payment
+  def set_net_amount_received_and_fees
+
+    if self.payment_method == Payable::Methods::STRIPE
+      set_net_amount_received_and_fees_from_stripe
+    end
   end
 
   def process_membership

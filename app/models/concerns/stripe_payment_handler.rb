@@ -1,3 +1,5 @@
+# TODO: make the payment handlers polymorphic,
+# separate classes, but not models
 module StripePaymentHandler
   extend ActiveSupport::Concern
 
@@ -12,7 +14,7 @@ module StripePaymentHandler
     self.paid = charge.paid
     self.payment_method = Payable::Methods::STRIPE
     self.paid_amount = self.calculate_paid_amount
-    self.set_net_amount_received_and_fees
+    self.set_net_amount_received_and_fees_from_stripe
 
     self.save
   end
