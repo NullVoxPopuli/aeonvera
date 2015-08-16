@@ -1,12 +1,26 @@
 = content_for :stylesheets do
   = stylesheet_link_tag "register/form_submit"
 
+- if not current_user
+  / collect name and email
+  .row
+    .medium-4.columns
+      = label_tag :first_name
+      = text_field_tag :first_name
+    .medium-4.columns
+      = label_tag :last_name
+      = text_field_tag :last_name
+    .medium-4.columns
+      = label_tag :email
+      = text_field_tag :email
+
 
 = f.fields_for :line_items do |l|
-  - if not current_user.is_member_of?(current_organization)
-    = register_available_items("membership_options", title: "Membership")
-    span Membership must be purchased before lessons.
-    br
-    br
+  - if current_user
+    - if not current_user.is_member_of?(current_organization)
+      = register_available_items("membership_options", title: "Membership")
+      span Membership must be purchased before lessons.
+      br
+      br  
   = register_available_items("dances", method_name: "available_dances")
   = register_available_items("lessons", method_name: "available_lessons")

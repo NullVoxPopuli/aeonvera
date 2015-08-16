@@ -35,7 +35,7 @@ table
   tbody
     - @orders.each do |order|
       tr
-        td = order.user.name
+        td = order.try(:user).try(:name) || order.attendance.attendee_name
         td = user_is_a_member?(order.user, @organization)
         td
           - order.line_items.each do |item|

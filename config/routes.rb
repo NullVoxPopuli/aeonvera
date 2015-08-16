@@ -80,8 +80,11 @@ AeonVera::Application.routes.draw do
       resources :register, controller: "organization_home/organization_register"
       resources :payments, controller: "payments"
 
+      authenticated :user do
+        get "/", to: 'organization_home#index'
+      end
 
-      get "/", to: 'organization_home#index'
+      get '/', to: 'organization_home/organization_register#new'
     end
 
     constraints(SubdomainBelongsToEvent) do

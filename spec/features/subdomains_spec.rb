@@ -11,7 +11,7 @@ describe 'Subdomains' do
   context 'dynamically defined subdomains' do
 
     before(:each) do
-      @user = create(:user)
+      @user = create(:user, confirmed_at: 2.days.ago)
     end
 
     context 'events' do
@@ -51,10 +51,22 @@ describe 'Subdomains' do
 
     end
 
-    it 'attempts to access organization domain' do
+    it 'attempts to access organization domain without being logged in' do
       Organization.destroy_all
       @organization = create(:organization, owner: @user, domain: 'testevent')
       visit @organization.url
+      # because not logged in
+      expect(page).to have_content("Register")
+    end
+
+    it 'attempts to access organization domain' do
+      Organization.destroy_all
+      @organization = create(:organization, owner: @user, domain: 'testevent')
+
+      login_as(@user, scope: :user)
+
+      visit @organization.url
+
       expect(page).to have_content(@organization.name)
     end
   end

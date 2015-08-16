@@ -54,7 +54,7 @@ module StripeHelper
     )
   end
 
-  def stripe_checkout_script(description, total)
+  def stripe_checkout_script(description, total, email: current_user.email)
     payable = payable_object
     key = payable.integrations[Integration::STRIPE].config[:stripe_publishable_key]
 
@@ -64,7 +64,7 @@ module StripeHelper
       "data-key" => key,
       "data-name" => APPLICATION_CONFIG['app_name'],
       "data-description" => "#{description}",
-      "data-email" => current_user.email,
+      "data-email" => email,
       "data-amount" => (total * 100).to_i, # in cents
       "data-allow-remember-me" => false
     }
