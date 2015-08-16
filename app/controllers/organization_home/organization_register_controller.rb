@@ -4,6 +4,9 @@ class OrganizationHome::OrganizationRegisterController < ApplicationController
 
   layout 'organization_home'
 
+  # allow non-members to buy things without logging in.
+  skip_before_filter :authenticate_user!, only: [:new, :create, :show]
+
   before_filter :current_organization
   helper_method :current_organization
 
@@ -29,7 +32,13 @@ class OrganizationHome::OrganizationRegisterController < ApplicationController
 
   def create
     @attendance = current_organization.attendances.new(attendance_params)
-    @attendance.attendee = current_user
+    if current_user
+      @attendance.attendee = current_user
+    else
+      @attendance.metadata["first_name"] = params[:first_name]
+      @attendance.metadata["last_name"] = params[:last_name]
+      @attendance.metadata["email"] = params[:email]
+    end
 
     respond_to do |format|
       format.html {

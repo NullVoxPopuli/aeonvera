@@ -25,9 +25,15 @@ class AttendanceMailer < ActionMailer::Base
     @attendance = Attendance.with_deleted.find(order.attendance_id)
     @preposition = @event.is_a?(Event) ? "for" : "with"
 
-    mail(
-      to: @attendance.attendee.email,
-      subject: subject.call
-      )
+    attendee = @attendance.attendee
+
+    email = attendee.present? ? attendee.email : @attendance.metadata["email"]
+
+    if email.present?
+      mail(
+        to: email,
+        subject: subject.call
+        )
+      end
   end
 end

@@ -174,6 +174,15 @@ class Attendance < ActiveRecord::Base
     result = result.flatten
   end
 
+  def attendee_email
+    # TODO: add the email of the transfer person?
+    if self.attendee
+      attendee.email
+    else
+      self.metadata['email']
+    end
+  end
+
   def attendee_name
     # for transfers
     if transferred_to_name.present?
@@ -188,11 +197,11 @@ class Attendance < ActiveRecord::Base
       self.attendee.name.titleize
     elsif (first = self.metadata["first_name"]) &&
       # User-less Registration
-      
+
       (last = self.metadata["last_name"])
       "#{first} #{last}"
     else
-      "At the Door"
+      "Name not given"
     end
   end
 
