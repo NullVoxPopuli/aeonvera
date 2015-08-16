@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
   ransacker :full_name do |parent|
     Arel::Nodes::NamedFunction.new(
       'concat_ws',
-      [' ', parent.table[:first_name], parent.table[:last_name]])
+      [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]])
   end
 
   # @return [Attendance] the attendance record for this user for the specified event
