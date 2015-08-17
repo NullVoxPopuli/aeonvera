@@ -5824,12 +5824,12 @@ th.hide-for-touch {
     background: #ffaaaa; }
     table tr td.order-payment-status[data-paid='true'] {
       background: #aaddaa; }
-  .alert-box {
+  .flash-message.alert-box {
     position: fixed;
     top: 45px;
     width: 100%;
     z-index: 10; }
-    .alert-box .close {
+    .flash-message.alert-box .close {
       top: 25%;
       color: black;
       opacity: 0.8; } }
@@ -5927,7 +5927,7 @@ section.left-small, section.right-small {
   .top-bar section > ul > li > a:not(.button), .top-bar-section > ul > div > li:not(.has-form) > a:not(.button) {
     line-height: 60px;
     height: 60px; }
-  .alert-box {
+  .flash-message.alert-box {
     top: 60px; }
   .top-bar .top-bar-section .button {
     margin-top: 10px;
@@ -5990,6 +5990,9 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
   .reveal-modal p {
     padding: 26px;
     margin-bottom: 0px; }
+  .reveal-modal .modal-top-message {
+    /* always hide initially */
+    display: none; }
 
 .padding-left-5 {
   padding-left: 5px; }
