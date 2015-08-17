@@ -2,7 +2,7 @@ class Api::HostedEventsController < APIController
 
   def index
     @events = current_user.hosted_events
-    render json: @events
+    render json: @events, each_serializer: HostedEventSerializer, root: :hosted_events
   end
 
   def show

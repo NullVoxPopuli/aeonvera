@@ -68236,7 +68236,7 @@ window.Modernizr = (function( window, document, undefined ) {
     Ember = require('ember');
   }
 
-Ember.libraries.register('Ember Simple Auth', '0.8.0-beta.2');
+Ember.libraries.register('Ember Simple Auth', '0.8.0');
 
 define("simple-auth/authenticators/base", 
   ["exports"],
@@ -68528,7 +68528,7 @@ define("simple-auth/configuration",
         see
         [Ember's API docs](http://emberjs.com/api/classes/Ember.Application.html#method_register);
         when the application does not interact with a server that requires
-        authorized requests, no auzthorizer is needed.
+        authorized requests, no authorizer is needed.
 
         @property authorizer
         @readOnly
@@ -68566,7 +68566,7 @@ define("simple-auth/configuration",
       /**
         The key the store stores the data in.
 
-        @property key
+        @property localStorageKey
         @type String
         @default 'ember_simple_auth:session'
       */
@@ -68639,8 +68639,6 @@ define("simple-auth/mixins/application-route-mixin",
     "use strict";
     var Configuration = __dependency1__["default"];
 
-    var routeEntryComplete = false;
-
     /**
       The mixin for the application route; defines actions that are triggered
       when authentication is required, when the session has successfully been
@@ -68682,7 +68680,12 @@ define("simple-auth/mixins/application-route-mixin",
         @private
       */
       activate: function () {
-        routeEntryComplete = true;
+        /*
+          Used to detect the first time the application route is entered so that
+          the transition can be used as the target of send before entering the
+          application route and the route can be used once it has been entered.
+        */
+        this.set('_authRouteEntryComplete', true);
         this._super();
       },
 
@@ -68704,7 +68707,7 @@ define("simple-auth/mixins/application-route-mixin",
           ]).forEach(function(event) {
             _this.get(Configuration.sessionPropertyName).on(event, function(error) {
               Array.prototype.unshift.call(arguments, event);
-              var target = routeEntryComplete ? _this : transition;
+              var target = _this.get('_authRouteEntryComplete') ? _this : transition;
               target.send.apply(target, arguments);
             });
           });
@@ -68717,7 +68720,7 @@ define("simple-auth/mixins/application-route-mixin",
           [`Configuration.authenticationRoute`](#SimpleAuth-Configuration-authenticationRoute).
           It is triggered automatically by the
           [`AuthenticatedRouteMixin`](#SimpleAuth-AuthenticatedRouteMixin) whenever
-          a route that requries authentication is accessed but the session is not
+          a route that requires authentication is accessed but the session is not
           currently authenticated.
 
           __For an application that works without an authentication route (e.g.
@@ -69238,14 +69241,26 @@ define("simple-auth/session",
         @property content
         @private
       */
-      content: { secure: {} },
+      content: null,
+
+      /**
+        Initializes the content object so references aren't shared across
+        instances.
+
+        @method initializeContent
+        @private
+      */
+      initializeContent: Ember.on('init', function() {
+        this.set('content', { secure: {} });
+      }),
 
       /**
         Authenticates the session with an `authenticator` and appropriate
         `options`. __This delegates the actual authentication work to the
         `authenticator`__ and handles the returned promise accordingly (see
         [`Authenticators.Base#authenticate`](#SimpleAuth-Authenticators-Base-authenticate)).
-        All data the authenticator resolves with will be saved in the session.
+        All data the authenticator resolves with will be saved in the session's
+        `secure` property.
 
         __This method returns a promise itself. A resolving promise indicates that
         the session was successfully authenticated__ while a rejecting promise
@@ -69322,6 +69337,7 @@ define("simple-auth/session",
           if (!!authenticator) {
             delete restoredContent.secure.authenticator;
             _this.container.lookup(authenticator).restore(restoredContent.secure).then(function(content) {
+              _this.set('content', restoredContent);
               _this.setup(authenticator, content);
               resolve();
             }, function() {
@@ -69527,7 +69543,7 @@ define("simple-auth/setup",
 
       var store   = container.lookup(Configuration.store);
       var session = container.lookup(Configuration.session);
-      session.setProperties({ store: store, container: container });
+      session.set('store', store);
       Ember.A(['controller', 'route', 'component']).forEach(function(component) {
         application.inject(component, Configuration.sessionPropertyName, Configuration.session);
       });
@@ -69884,7 +69900,7 @@ define("simple-auth/utils/objects-are-equal",
     Ember = require('ember');
   }
 
-Ember.libraries.register('Ember Simple Auth Devise', '0.8.0-beta.2');
+Ember.libraries.register('Ember Simple Auth Devise', '0.8.0');
 
 define("simple-auth-devise/authenticators/devise", 
   ["simple-auth/authenticators/base","./../configuration","exports"],
@@ -86496,25 +86512,40 @@ define("simple-auth-devise/initializer",
     return _moment;
 
 }));
-;define("ember-cli-app-version", ["ember-cli-app-version/index", "ember", "exports"], function(__index__, __Ember__, __exports__) {
-  "use strict";
-  __Ember__["default"].keys(__index__).forEach(function(key){
+;define('ember-cli-app-version', ['ember-cli-app-version/index', 'ember', 'exports'], function(__index__, __Ember__, __exports__) {
+  'use strict';
+  var keys = Object.keys || __Ember__['default'].keys;
+  var forEach = Array.prototype.forEach && function(array, cb) {
+    array.forEach(cb);
+  } || __Ember__['default'].EnumerableUtils.forEach;
+
+  forEach(keys(__index__), (function(key) {
     __exports__[key] = __index__[key];
-  });
+  }));
 });
 
-define("ember-cli-content-security-policy", ["ember-cli-content-security-policy/index", "ember", "exports"], function(__index__, __Ember__, __exports__) {
-  "use strict";
-  __Ember__["default"].keys(__index__).forEach(function(key){
+define('ember-cli-content-security-policy', ['ember-cli-content-security-policy/index', 'ember', 'exports'], function(__index__, __Ember__, __exports__) {
+  'use strict';
+  var keys = Object.keys || __Ember__['default'].keys;
+  var forEach = Array.prototype.forEach && function(array, cb) {
+    array.forEach(cb);
+  } || __Ember__['default'].EnumerableUtils.forEach;
+
+  forEach(keys(__index__), (function(key) {
     __exports__[key] = __index__[key];
-  });
+  }));
 });
 
-define("ember-cli-flash", ["ember-cli-flash/index", "ember", "exports"], function(__index__, __Ember__, __exports__) {
-  "use strict";
-  __Ember__["default"].keys(__index__).forEach(function(key){
+define('ember-cli-flash', ['ember-cli-flash/index', 'ember', 'exports'], function(__index__, __Ember__, __exports__) {
+  'use strict';
+  var keys = Object.keys || __Ember__['default'].keys;
+  var forEach = Array.prototype.forEach && function(array, cb) {
+    array.forEach(cb);
+  } || __Ember__['default'].EnumerableUtils.forEach;
+
+  forEach(keys(__index__), (function(key) {
     __exports__[key] = __index__[key];
-  });
+  }));
 });
 
 define('ember-cli-flash/components/flash-message', ['exports', 'ember'], function (exports, Ember) {
@@ -86790,11 +86821,16 @@ define('ember-cli-flash/services/flash-messages-service', ['exports', 'ember', '
   });
 
 });
-define("ember-cli-i18n", ["ember-cli-i18n/index", "ember", "exports"], function(__index__, __Ember__, __exports__) {
-  "use strict";
-  __Ember__["default"].keys(__index__).forEach(function(key){
+define('ember-cli-i18n', ['ember-cli-i18n/index', 'ember', 'exports'], function(__index__, __Ember__, __exports__) {
+  'use strict';
+  var keys = Object.keys || __Ember__['default'].keys;
+  var forEach = Array.prototype.forEach && function(array, cb) {
+    array.forEach(cb);
+  } || __Ember__['default'].EnumerableUtils.forEach;
+
+  forEach(keys(__index__), (function(key) {
     __exports__[key] = __index__[key];
-  });
+  }));
 });
 
 define('ember-cli-i18n/rules/ar', ['exports', 'ember-cli-i18n/rules/base'], function (exports, base) {
@@ -87159,11 +87195,16 @@ define('ember-cli-i18n/utils/t', ['exports', 'ember', 'ember-cli-i18n/services/i
   exports['default'] = T;
 
 });
-define("ember-cli-subdomain", ["ember-cli-subdomain/index", "ember", "exports"], function(__index__, __Ember__, __exports__) {
-  "use strict";
-  __Ember__["default"].keys(__index__).forEach(function(key){
+define('ember-cli-subdomain', ['ember-cli-subdomain/index', 'ember', 'exports'], function(__index__, __Ember__, __exports__) {
+  'use strict';
+  var keys = Object.keys || __Ember__['default'].keys;
+  var forEach = Array.prototype.forEach && function(array, cb) {
+    array.forEach(cb);
+  } || __Ember__['default'].EnumerableUtils.forEach;
+
+  forEach(keys(__index__), (function(key) {
     __exports__[key] = __index__[key];
-  });
+  }));
 });
 
 ;/* jshint ignore:start */
