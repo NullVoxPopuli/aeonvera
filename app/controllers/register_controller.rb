@@ -21,7 +21,7 @@ class RegisterController < ApplicationController
       else
         flash[:notice] = "You cannot cancel a registration you've paid for. Please contact the organizers if you wish to have a refund issued to you."
       end
-    rescue ActiveRecord::NotFound => e
+    rescue ActiveRecord::RecordNotFound => e
       # it's probably already deleted
     end
 
