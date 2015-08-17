@@ -10,7 +10,7 @@ class Api::ErrorsController < APIController
       class: error_params[:class],
       method: error_params[:method],
       message: error_params[:message],
-      params: error_params[:params]
+      params: params.merge(from_js: error_params[:params])
     }
 
     if Rails.env.production?
