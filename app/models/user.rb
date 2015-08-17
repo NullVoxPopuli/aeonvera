@@ -157,6 +157,14 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  # unique union of the two sets of events
+  def hosted_and_collaborated_events
+    hosted = hosted_events
+    collaborated = collaborated_events
+
+    hosted | collaborated
+  end
+
   def upcoming_events
     @upcoming_events ||= self.attended_events.where("starts_at > '#{Time.now.to_s(:db)}'")
   end
