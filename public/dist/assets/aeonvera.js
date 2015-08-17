@@ -2075,7 +2075,7 @@ define('aeonvera/templates/components/dashboard/attended-events', ['exports'], f
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("h2");
         dom.setAttribute(el1,"class","page-title");
-        var el2 = dom.createTextNode("Registerd Events");
+        var el2 = dom.createTextNode("Registered Events");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("table");
