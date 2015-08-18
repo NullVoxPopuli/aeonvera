@@ -33,7 +33,7 @@ module StripePaymentHandler
     end
   end
 
-  def set_net_amount_received_and_fees_from_stripe
+  def get_stripe_transaction_id
     transaction = {}
     details = self.metadata["details"]
 
@@ -47,8 +47,13 @@ module StripePaymentHandler
       key = integration.config["access_token"]
 
       transaction = Stripe::BalanceTransaction.retrieve(transaction_id, key)
-
     end
+
+    transaction
+  end
+
+  def set_net_amount_received_and_fees_from_stripe
+    transaction = get_stripe_transaction_id
 
     # Stripe stores all of its money in cents
     # also verify that we actually got the data, it's possible that the payment

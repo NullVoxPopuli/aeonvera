@@ -149,6 +149,10 @@ end
 
 
 group :test do
+  # Mimicking objects
+  gem "metahash-rb", require: "metahash"
+
+
   # In memory database for speed
   gem "sqlite3"
 
