@@ -1,5 +1,26 @@
 namespace :fix do
 
+  task :refetch_stripe_data => :environment do
+
+    orders = Order.where(
+      paid: true,
+      payment_method: Payable::Methods::STRIPE,
+      paid_amount: 0.0
+    )
+
+    orders.each do |order|
+      event = order.host
+      token = event.integrations.first.config["stripe_user_id"]
+
+      charge_id = order.metadata["details"]["id"]
+      charge = Stripe::Charge.retrieve(charge_id, stripe_account: token)
+
+      order.handle_stripe_charge(charge)
+    end
+
+  end
+
+
   task :rebuild_housing_associations => :environment do
 
     def fix_housing(h, attendance)

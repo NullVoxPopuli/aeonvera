@@ -44,7 +44,7 @@ class Order < ActiveRecord::Base
 
   # short hand for setting a field on the metadata
   def set_payment_details(details)
-    self.metadata[:details] = details
+    self.metadata["details"] = details
   end
 
   def force_paid!

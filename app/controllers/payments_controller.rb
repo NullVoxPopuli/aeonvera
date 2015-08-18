@@ -36,7 +36,7 @@ class PaymentsController < ApplicationController
     amount = @order.total
 
     begin
-      changeData =  {
+      chargeData =  {
         amount: to_cents(amount),
         currency: "usd",
         source: token,
@@ -46,12 +46,12 @@ class PaymentsController < ApplicationController
       }
 
       unless @host.beta?
-        changeData[:application_fee] = to_cents(@order.fee)
+        chargeData[:application_fee] = to_cents(@order.fee)
       end
 
 
       charge = Stripe::Charge.create(
-        changeData,
+        chargeData,
         # the account to charge to
         secret_key
       )

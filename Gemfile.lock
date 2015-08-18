@@ -206,6 +206,10 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    meta_instance (1.0.2)
+    metahash-rb (1.2.0)
+      activerecord (>= 3.0.0)
+      meta_instance
     method_source (0.8.2)
     mime-types (2.6.1)
     mimemagic (0.3.0)
@@ -441,6 +445,7 @@ DEPENDENCIES
   launchy
   lazy_crud
   mail
+  metahash-rb
   newrelic_rpm
   nprogress-rails
   omniauth
