@@ -19,7 +19,7 @@ namespace :fix do
 
         if charge_id
           charge = Stripe::Charge.retrieve(charge_id, stripe_account: token)
-
+          order.paid = false
           order.handle_stripe_charge(charge)
         end
       end
