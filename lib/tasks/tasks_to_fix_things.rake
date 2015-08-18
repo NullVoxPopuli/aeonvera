@@ -12,10 +12,17 @@ namespace :fix do
       event = order.host
       token = event.integrations.first.config["stripe_user_id"]
 
-      charge_id = order.metadata["details"]["id"]
-      charge = Stripe::Charge.retrieve(charge_id, stripe_account: token)
+      details = order.metadata["details"]
 
-      order.handle_stripe_charge(charge)
+      if details
+        charge_id = details["id"]
+
+        if charge_id
+          charge = Stripe::Charge.retrieve(charge_id, stripe_account: token)
+
+          order.handle_stripe_charge(charge)
+        end
+      end
     end
 
   end
