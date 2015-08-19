@@ -2,7 +2,7 @@ AeonVera::Application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :registrations
-    resources :attended_events
+    resources :registered_events
     resources :upcoming_events
     resources :hosted_events
     resources :registerable_events
@@ -12,6 +12,7 @@ AeonVera::Application.routes.draw do
     resources :housing_requests
 
     resources :attendances
+    resources :orders
 
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
