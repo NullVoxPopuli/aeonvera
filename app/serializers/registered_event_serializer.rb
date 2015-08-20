@@ -1,9 +1,10 @@
 # object is actually an Attendance in this serializer
-class AttendedEventSerializer < ActiveModel::Serializer
+class RegisteredEventSerializer < ActiveModel::Serializer
 
   attributes :id, :name, :registered_at,
     :amount_owed, :amount_paid,
-    :event_begins_at, :is_attending
+    :event_begins_at, :is_attending,
+    :url
 
   def is_attending
     object.attending?
@@ -27,6 +28,10 @@ class AttendedEventSerializer < ActiveModel::Serializer
 
   def name
     object.event.name
+  end
+
+  def url
+    object.host.url
   end
 
 end

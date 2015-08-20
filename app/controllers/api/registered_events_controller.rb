@@ -1,4 +1,4 @@
-class Api::AttendedEventsController < APIController
+class Api::RegisteredEventsController < APIController
 
   before_filter :authenticate_user_from_token!
   before_filter :authenticate_user!
@@ -7,7 +7,7 @@ class Api::AttendedEventsController < APIController
     @attendances = current_user.event_attendances
     if @attendances.present?
       render json: @attendances,
-        each_serializer: AttendedEventSerializer, root: :attended_events
+        each_serializer: RegisteredEventSerializer, root: :registered_events
     else
       # the serializer doesn't catch an empty association when the serializer
       # name is different from the class name.
@@ -17,7 +17,7 @@ class Api::AttendedEventsController < APIController
 
   def show
     @attendance = current_user.attendances.find(params[:id])
-    render json: @attendance, serializer: AttendedEventSerializer
+    render json: @attendance, serializer: RegisteredEventSerializer
   end
 
 end

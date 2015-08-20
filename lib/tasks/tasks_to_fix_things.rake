@@ -22,6 +22,11 @@ namespace :fix do
           order.paid = false
           order.handle_stripe_charge(charge)
         end
+      else
+        # alternatively, look up transactions, and match by email
+        # we'd probably want to cache this api call
+        # charges = Stripe::Charge.all(limit: 200)
+        # charges.select{|c| c.description == order.attendance.attendee_email }
       end
     end
 

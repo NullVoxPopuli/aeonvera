@@ -33,20 +33,6 @@ define('aeonvera/app', ['exports', 'ember', 'ember/resolver', 'ember/load-initia
 	exports['default'] = App;
 
 });
-define('aeonvera/components/dashboard/attended-events', ['exports', 'ember'], function (exports, Ember) {
-
-	'use strict';
-
-	exports['default'] = Ember['default'].Component.extend({});
-
-});
-define('aeonvera/components/dashboard/hosted-events', ['exports', 'ember'], function (exports, Ember) {
-
-	'use strict';
-
-	exports['default'] = Ember['default'].Component.extend({});
-
-});
 define('aeonvera/components/error-field-wrapper', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -411,6 +397,35 @@ define('aeonvera/controllers/application', ['exports', 'ember'], function (expor
     error
     - show error messages
   */
+
+});
+define('aeonvera/controllers/dashboard/hosted-events', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    showMyEvents: false,
+
+    /*
+      TODO: make the checkbox call an action and then
+      move this logic to the route
+    */
+    filteredModel: (function () {
+      var store = this.store;
+      var onlyMe = this.get('showMyEvents');
+
+      if (onlyMe) {
+        var promise = store.filter('hosted-event', function (e) {
+          return e.get('myEvent');
+        });
+
+        return promise;
+      } else {
+        return store.all('hosted-event');
+      }
+    }).property('model.[]', 'showMyEvents')
+
+  });
 
 });
 define('aeonvera/controllers/login', ['exports', 'ember', 'simple-auth/mixins/login-controller-mixin'], function (exports, Ember, LoginControllerMixin) {
@@ -1076,29 +1091,6 @@ define('aeonvera/mixins/authenticated-ui', ['exports', 'ember'], function (expor
   });
 
 });
-define('aeonvera/models/attended-event', ['exports', 'ember-data'], function (exports, DS) {
-
-	'use strict';
-
-	exports['default'] = DS['default'].Model.extend({
-		name: DS['default'].attr('string'),
-		registeredAt: DS['default'].attr('date'),
-		amountOwed: DS['default'].attr('number'),
-		amountPaid: DS['default'].attr('number'),
-		eventBeginsAt: DS['default'].attr('date'),
-		isAttending: DS['default'].attr('boolean'),
-
-		registrationStatus: (function () {
-			if (this.get('isAttending')) {
-				return 'Attending';
-			} else {
-				return 'Not Attending';
-			}
-		}).property('isAttending')
-
-	});
-
-});
 define('aeonvera/models/community', ['exports', 'ember-data'], function (exports, DS) {
 
   'use strict';
@@ -1166,6 +1158,7 @@ define('aeonvera/models/hosted-event', ['exports', 'ember-data'], function (expo
     numberOfLeads: DS['default'].attr('number'),
     numberOfFollows: DS['default'].attr('number'),
     numberOfShirtsSold: DS['default'].attr('number'),
+    myEvent: DS['default'].attr('boolean'),
     startsAt: DS['default'].attr('date'),
     endsAt: DS['default'].attr('date'),
 
@@ -1204,11 +1197,73 @@ define('aeonvera/models/level', ['exports', 'ember-data'], function (exports, DS
 	exports['default'] = DS['default'].Model.extend({});
 
 });
+define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS) {
+
+  'use strict';
+
+  exports['default'] = DS['default'].Model.extend({
+    hostName: DS['default'].attr('string'),
+    hostUrl: DS['default'].attr('string'),
+    createdAt: DS['default'].attr('date'),
+    paidAmount: DS['default'].attr('number'),
+    netAmountReceived: DS['default'].attr('number'),
+    totalFeeAmount: DS['default'].attr('number')
+
+  });
+
+});
 define('aeonvera/models/package', ['exports', 'ember-data'], function (exports, DS) {
 
 	'use strict';
 
 	exports['default'] = DS['default'].Model.extend({});
+
+});
+define('aeonvera/models/registered-event', ['exports', 'ember-data'], function (exports, DS) {
+
+	'use strict';
+
+	exports['default'] = DS['default'].Model.extend({
+		name: DS['default'].attr('string'),
+		registeredAt: DS['default'].attr('date'),
+		amountOwed: DS['default'].attr('number'),
+		amountPaid: DS['default'].attr('number'),
+		eventBeginsAt: DS['default'].attr('date'),
+		isAttending: DS['default'].attr('boolean'),
+		url: DS['default'].attr('string'),
+
+		registrationStatus: (function () {
+			if (this.get('isAttending')) {
+				return 'Attending';
+			} else {
+				return 'Not Attending';
+			}
+		}).property('isAttending'),
+
+		paymentStatus: (function () {
+			var paid = this.get('amountPaid');
+			var owe = this.get('amountOwed');
+			var hasPaid = paid > 0;
+			var doesOwe = owe > 0;
+
+			var status = '';
+
+			if (hasPaid) {
+				status = 'Paid: $' + paid;
+			}
+
+			if (hasPaid && doesOwe) {
+				status = status + '; ';
+			}
+
+			if (doesOwe) {
+				status = status + 'Owe: $' + owe;
+			}
+
+			return status;
+		}).property('amountOwed', 'amountPaid')
+
+	});
 
 });
 define('aeonvera/models/upcoming-event', ['exports', 'ember-data'], function (exports, DS) {
@@ -1281,8 +1336,9 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
     this.route('dashboard', {
       path: '/'
     }, function () {
-      this.route('attended-events');
       this.route('hosted-events');
+      this.route('registered-events');
+      this.route('orders');
     });
 
     this.route('register', {
@@ -1392,18 +1448,43 @@ define('aeonvera/routes/dashboard', ['exports', 'ember', 'aeonvera/mixins/authen
     activate: function activate() {
       this.set('title', this.t('dashboard'));
       this._super();
-    },
-
-    model: function model() {
-      var attended = this.store.findAll('attended-event');
-      var hosted = this.store.findAll('hosted-event');
-
-      return {
-        attended: attended,
-        hosted: hosted
-      };
     }
 
+  });
+
+});
+define('aeonvera/routes/dashboard/hosted-events', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    showMyEvents: false,
+
+    model: function model() {
+      return this.store.findAll('hosted-event');
+    }
+  });
+
+});
+define('aeonvera/routes/dashboard/orders', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    model: function model() {
+      return this.store.findAll('order');
+    }
+  });
+
+});
+define('aeonvera/routes/dashboard/registered-events', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    model: function model() {
+      return this.store.findAll('registered-event');
+    }
   });
 
 });
@@ -1896,666 +1977,6 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
         var morph1 = dom.createMorphAt(dom.childAt(fragment, [2]),0,0);
         inline(env, morph0, context, "t", ["communities"], {});
         block(env, morph1, context, "each", [get(env, context, "model")], {"keyword": "community"}, child0, null);
-        return fragment;
-      }
-    };
-  }()));
-
-});
-define('aeonvera/templates/components/dashboard/attended-events', ['exports'], function (exports) {
-
-  'use strict';
-
-  exports['default'] = Ember.HTMLBars.template((function() {
-    var child0 = (function() {
-      var child0 = (function() {
-        return {
-          isHTMLBars: true,
-          revision: "Ember@1.11.1",
-          blockParams: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          build: function build(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createElement("tr");
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          render: function render(context, env, contextualElement) {
-            var dom = env.dom;
-            var hooks = env.hooks, content = hooks.content, get = hooks.get, inline = hooks.inline;
-            dom.detectNamespace(contextualElement);
-            var fragment;
-            if (env.useFragmentCache && dom.canClone) {
-              if (this.cachedFragment === null) {
-                fragment = this.build(dom);
-                if (this.hasRendered) {
-                  this.cachedFragment = fragment;
-                } else {
-                  this.hasRendered = true;
-                }
-              }
-              if (this.cachedFragment) {
-                fragment = dom.cloneNode(this.cachedFragment, true);
-              }
-            } else {
-              fragment = this.build(dom);
-            }
-            var element0 = dom.childAt(fragment, [0]);
-            var morph0 = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
-            var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
-            var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
-            var morph3 = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
-            var morph4 = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
-            var morph5 = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
-            content(env, morph0, context, "event.name");
-            inline(env, morph1, context, "date-with-format", [get(env, context, "event.registeredAt"), "LLL"], {});
-            content(env, morph2, context, "event.amount_owed");
-            content(env, morph3, context, "event.amount_paid");
-            inline(env, morph4, context, "date-with-format", [get(env, context, "event.eventBeginsAt"), "LLL"], {});
-            content(env, morph5, context, "event.registrationStatus");
-            return fragment;
-          }
-        };
-      }());
-      return {
-        isHTMLBars: true,
-        revision: "Ember@1.11.1",
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, get = hooks.get, block = hooks.block;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
-          dom.insertBoundary(fragment, null);
-          dom.insertBoundary(fragment, 0);
-          block(env, morph0, context, "each", [get(env, context, "model")], {"keyword": "event"}, child0, null);
-          return fragment;
-        }
-      };
-    }());
-    var child1 = (function() {
-      return {
-        isHTMLBars: true,
-        revision: "Ember@1.11.1",
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("tr");
-          var el2 = dom.createElement("td");
-          dom.setAttribute(el2,"colspan","6");
-          var el3 = dom.createElement("span");
-          var el4 = dom.createTextNode("You have not yet attended any events. Please view the upcoming events list to see if there is anything of interest.");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          return fragment;
-        }
-      };
-    }());
-    return {
-      isHTMLBars: true,
-      revision: "Ember@1.11.1",
-      blockParams: 0,
-      cachedFragment: null,
-      hasRendered: false,
-      build: function build(dom) {
-        var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("h2");
-        dom.setAttribute(el1,"class","page-title");
-        var el2 = dom.createTextNode("Registered Events");
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("table");
-        dom.setAttribute(el1,"class","responsive");
-        var el2 = dom.createElement("thead");
-        var el3 = dom.createElement("tr");
-        var el4 = dom.createElement("th");
-        var el5 = dom.createTextNode("Name");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("th");
-        var el5 = dom.createTextNode("Date Registered");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("th");
-        var el5 = dom.createTextNode("Owed");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("th");
-        var el5 = dom.createTextNode("Paid");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("th");
-        var el5 = dom.createTextNode("Event Begins");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        var el4 = dom.createElement("th");
-        var el5 = dom.createTextNode("Registration Status");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createComment("");
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        return el0;
-      },
-      render: function render(context, env, contextualElement) {
-        var dom = env.dom;
-        var hooks = env.hooks, get = hooks.get, block = hooks.block;
-        dom.detectNamespace(contextualElement);
-        var fragment;
-        if (env.useFragmentCache && dom.canClone) {
-          if (this.cachedFragment === null) {
-            fragment = this.build(dom);
-            if (this.hasRendered) {
-              this.cachedFragment = fragment;
-            } else {
-              this.hasRendered = true;
-            }
-          }
-          if (this.cachedFragment) {
-            fragment = dom.cloneNode(this.cachedFragment, true);
-          }
-        } else {
-          fragment = this.build(dom);
-        }
-        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),1,1);
-        block(env, morph0, context, "if", [get(env, context, "model")], {}, child0, child1);
-        return fragment;
-      }
-    };
-  }()));
-
-});
-define('aeonvera/templates/components/dashboard/hosted-events', ['exports'], function (exports) {
-
-  'use strict';
-
-  exports['default'] = Ember.HTMLBars.template((function() {
-    var child0 = (function() {
-      var child0 = (function() {
-        var child0 = (function() {
-          return {
-            isHTMLBars: true,
-            revision: "Ember@1.11.1",
-            blockParams: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            build: function build(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createElement("span");
-              var el2 = dom.createTextNode("Open");
-              dom.appendChild(el1, el2);
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            render: function render(context, env, contextualElement) {
-              var dom = env.dom;
-              dom.detectNamespace(contextualElement);
-              var fragment;
-              if (env.useFragmentCache && dom.canClone) {
-                if (this.cachedFragment === null) {
-                  fragment = this.build(dom);
-                  if (this.hasRendered) {
-                    this.cachedFragment = fragment;
-                  } else {
-                    this.hasRendered = true;
-                  }
-                }
-                if (this.cachedFragment) {
-                  fragment = dom.cloneNode(this.cachedFragment, true);
-                }
-              } else {
-                fragment = this.build(dom);
-              }
-              return fragment;
-            }
-          };
-        }());
-        var child1 = (function() {
-          var child0 = (function() {
-            return {
-              isHTMLBars: true,
-              revision: "Ember@1.11.1",
-              blockParams: 0,
-              cachedFragment: null,
-              hasRendered: false,
-              build: function build(dom) {
-                var el0 = dom.createDocumentFragment();
-                var el1 = dom.createElement("span");
-                var el2 = dom.createTextNode("Closed");
-                dom.appendChild(el1, el2);
-                dom.appendChild(el0, el1);
-                return el0;
-              },
-              render: function render(context, env, contextualElement) {
-                var dom = env.dom;
-                dom.detectNamespace(contextualElement);
-                var fragment;
-                if (env.useFragmentCache && dom.canClone) {
-                  if (this.cachedFragment === null) {
-                    fragment = this.build(dom);
-                    if (this.hasRendered) {
-                      this.cachedFragment = fragment;
-                    } else {
-                      this.hasRendered = true;
-                    }
-                  }
-                  if (this.cachedFragment) {
-                    fragment = dom.cloneNode(this.cachedFragment, true);
-                  }
-                } else {
-                  fragment = this.build(dom);
-                }
-                return fragment;
-              }
-            };
-          }());
-          var child1 = (function() {
-            return {
-              isHTMLBars: true,
-              revision: "Ember@1.11.1",
-              blockParams: 0,
-              cachedFragment: null,
-              hasRendered: false,
-              build: function build(dom) {
-                var el0 = dom.createDocumentFragment();
-                var el1 = dom.createComment("");
-                dom.appendChild(el0, el1);
-                return el0;
-              },
-              render: function render(context, env, contextualElement) {
-                var dom = env.dom;
-                var hooks = env.hooks, get = hooks.get, inline = hooks.inline;
-                dom.detectNamespace(contextualElement);
-                var fragment;
-                if (env.useFragmentCache && dom.canClone) {
-                  if (this.cachedFragment === null) {
-                    fragment = this.build(dom);
-                    if (this.hasRendered) {
-                      this.cachedFragment = fragment;
-                    } else {
-                      this.hasRendered = true;
-                    }
-                  }
-                  if (this.cachedFragment) {
-                    fragment = dom.cloneNode(this.cachedFragment, true);
-                  }
-                } else {
-                  fragment = this.build(dom);
-                }
-                var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
-                dom.insertBoundary(fragment, null);
-                dom.insertBoundary(fragment, 0);
-                inline(env, morph0, context, "date-with-format", [get(env, context, "event.registrationOpensAt"), "llll"], {});
-                return fragment;
-              }
-            };
-          }());
-          return {
-            isHTMLBars: true,
-            revision: "Ember@1.11.1",
-            blockParams: 0,
-            cachedFragment: null,
-            hasRendered: false,
-            build: function build(dom) {
-              var el0 = dom.createDocumentFragment();
-              var el1 = dom.createComment("");
-              dom.appendChild(el0, el1);
-              return el0;
-            },
-            render: function render(context, env, contextualElement) {
-              var dom = env.dom;
-              var hooks = env.hooks, get = hooks.get, block = hooks.block;
-              dom.detectNamespace(contextualElement);
-              var fragment;
-              if (env.useFragmentCache && dom.canClone) {
-                if (this.cachedFragment === null) {
-                  fragment = this.build(dom);
-                  if (this.hasRendered) {
-                    this.cachedFragment = fragment;
-                  } else {
-                    this.hasRendered = true;
-                  }
-                }
-                if (this.cachedFragment) {
-                  fragment = dom.cloneNode(this.cachedFragment, true);
-                }
-              } else {
-                fragment = this.build(dom);
-              }
-              var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
-              dom.insertBoundary(fragment, null);
-              dom.insertBoundary(fragment, 0);
-              block(env, morph0, context, "if", [get(env, context, "event.hasEnded")], {}, child0, child1);
-              return fragment;
-            }
-          };
-        }());
-        return {
-          isHTMLBars: true,
-          revision: "Ember@1.11.1",
-          blockParams: 0,
-          cachedFragment: null,
-          hasRendered: false,
-          build: function build(dom) {
-            var el0 = dom.createDocumentFragment();
-            var el1 = dom.createElement("tr");
-            var el2 = dom.createElement("td");
-            var el3 = dom.createElement("a");
-            var el4 = dom.createComment("");
-            dom.appendChild(el3, el4);
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            var el2 = dom.createElement("td");
-            var el3 = dom.createComment("");
-            dom.appendChild(el2, el3);
-            dom.appendChild(el1, el2);
-            dom.appendChild(el0, el1);
-            return el0;
-          },
-          render: function render(context, env, contextualElement) {
-            var dom = env.dom;
-            var hooks = env.hooks, get = hooks.get, concat = hooks.concat, attribute = hooks.attribute, content = hooks.content, block = hooks.block, inline = hooks.inline;
-            dom.detectNamespace(contextualElement);
-            var fragment;
-            if (env.useFragmentCache && dom.canClone) {
-              if (this.cachedFragment === null) {
-                fragment = this.build(dom);
-                if (this.hasRendered) {
-                  this.cachedFragment = fragment;
-                } else {
-                  this.hasRendered = true;
-                }
-              }
-              if (this.cachedFragment) {
-                fragment = dom.cloneNode(this.cachedFragment, true);
-              }
-            } else {
-              fragment = this.build(dom);
-            }
-            var element0 = dom.childAt(fragment, [0]);
-            var element1 = dom.childAt(element0, [0, 0]);
-            var morph0 = dom.createMorphAt(element1,0,0);
-            var attrMorph0 = dom.createAttrMorph(element1, 'href');
-            var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
-            var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
-            var morph3 = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
-            var morph4 = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
-            var morph5 = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
-            var morph6 = dom.createMorphAt(dom.childAt(element0, [6]),0,0);
-            attribute(env, attrMorph0, element1, "href", concat(env, ["hosted_events/", get(env, context, "event.id")]));
-            content(env, morph0, context, "event.name");
-            content(env, morph1, context, "event.totalAttendees");
-            content(env, morph2, context, "event.numberOfLeads");
-            content(env, morph3, context, "event.numberOfFollows");
-            content(env, morph4, context, "event.numberOfShirtsSold");
-            block(env, morph5, context, "if", [get(env, context, "event.isRegistrationOpen")], {}, child0, child1);
-            inline(env, morph6, context, "date-range", [get(env, context, "event.startsAt"), get(env, context, "event.endsAt")], {});
-            return fragment;
-          }
-        };
-      }());
-      return {
-        isHTMLBars: true,
-        revision: "Ember@1.11.1",
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("table");
-          dom.setAttribute(el1,"class","responsive");
-          var el2 = dom.createElement("tr");
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Name");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          dom.setAttribute(el3,"colspan","3");
-          dom.setAttribute(el3,"class","text-center");
-          var el4 = dom.createTextNode("Attendees");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Shirts Sold");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Registration Opens");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Date");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createElement("tr");
-          var el3 = dom.createElement("th");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Total");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Leads");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Follows");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          var el4 = dom.createTextNode("Total");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("th");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createComment("");
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          var hooks = env.hooks, get = hooks.get, block = hooks.block;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),2,2);
-          block(env, morph0, context, "each", [get(env, context, "model")], {"keyword": "event"}, child0, null);
-          return fragment;
-        }
-      };
-    }());
-    var child1 = (function() {
-      return {
-        isHTMLBars: true,
-        revision: "Ember@1.11.1",
-        blockParams: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        build: function build(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("p");
-          var el2 = dom.createTextNode("You have not yet hosted an event. Hosting an event is free! Click the 'Host an Event' button below to get get started.");
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        render: function render(context, env, contextualElement) {
-          var dom = env.dom;
-          dom.detectNamespace(contextualElement);
-          var fragment;
-          if (env.useFragmentCache && dom.canClone) {
-            if (this.cachedFragment === null) {
-              fragment = this.build(dom);
-              if (this.hasRendered) {
-                this.cachedFragment = fragment;
-              } else {
-                this.hasRendered = true;
-              }
-            }
-            if (this.cachedFragment) {
-              fragment = dom.cloneNode(this.cachedFragment, true);
-            }
-          } else {
-            fragment = this.build(dom);
-          }
-          return fragment;
-        }
-      };
-    }());
-    return {
-      isHTMLBars: true,
-      revision: "Ember@1.11.1",
-      blockParams: 0,
-      cachedFragment: null,
-      hasRendered: false,
-      build: function build(dom) {
-        var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("h2");
-        var el2 = dom.createTextNode("Hosted Events");
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createComment("");
-        dom.appendChild(el0, el1);
-        return el0;
-      },
-      render: function render(context, env, contextualElement) {
-        var dom = env.dom;
-        var hooks = env.hooks, get = hooks.get, block = hooks.block;
-        dom.detectNamespace(contextualElement);
-        var fragment;
-        if (env.useFragmentCache && dom.canClone) {
-          if (this.cachedFragment === null) {
-            fragment = this.build(dom);
-            if (this.hasRendered) {
-              this.cachedFragment = fragment;
-            } else {
-              this.hasRendered = true;
-            }
-          }
-          if (this.cachedFragment) {
-            fragment = dom.cloneNode(this.cachedFragment, true);
-          }
-        } else {
-          fragment = this.build(dom);
-        }
-        var morph0 = dom.createMorphAt(fragment,1,1,contextualElement);
-        dom.insertBoundary(fragment, null);
-        block(env, morph0, context, "if", [get(env, context, "model")], {}, child0, child1);
         return fragment;
       }
     };
@@ -5394,7 +4815,7 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("View Upcoming Events");
+          var el2 = dom.createTextNode("Edit Profile");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -5432,7 +4853,83 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         build: function build(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("View Communities");
+          var el2 = dom.createTextNode("Registered Events");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    var child2 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Hosted Events");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    var child3 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Orders");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -5469,89 +4966,568 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
       build: function build(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","row center-margin");
+        dom.setAttribute(el1,"class","row");
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","small-12 columns");
-        var el3 = dom.createComment("");
+        dom.setAttribute(el2,"class","large-3 medium-4 columns");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","sidebar");
+        var el4 = dom.createElement("nav");
+        var el5 = dom.createElement("ul");
+        dom.setAttribute(el5,"class","side-nav");
+        var el6 = dom.createElement("li");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        dom.setAttribute(el6,"class","divider");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createTextNode("Manage");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createComment("");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        dom.setAttribute(el6,"class","divider");
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createTextNode(" ");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createElement("a");
+        dom.setAttribute(el7,"href","/hosted_events/new");
+        dom.setAttribute(el7,"class","button success expand");
+        var el8 = dom.createTextNode("Create an Event");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","text-center");
-        var el2 = dom.createComment("");
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("span");
-        var el3 = dom.createTextNode("    ");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createComment("");
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","row center-margin");
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","small-12 columns");
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","text-center");
-        var el2 = dom.createElement("a");
-        dom.setAttribute(el2,"href","/hosted_events/new");
-        dom.setAttribute(el2,"class","button success");
-        var el3 = dom.createTextNode("Create an Event");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("br");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("br");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("br");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("br");
-        dom.appendChild(el0, el1);
-        var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","row center-margin");
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","columns medium-6 text-center");
+        dom.setAttribute(el2,"class","large-9 medium-8 columns");
         var el3 = dom.createElement("h3");
-        var el4 = dom.createTextNode("Now what?");
+        var el4 = dom.createTextNode("Welcome, ");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createComment("");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createTextNode("!");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("hr");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("span");
-        var el4 = dom.createTextNode("Now that you are logged in, you can register for events, host your own event, start your own community or dance scene, have weekly lessons, memberships, and register for lessons or dances.");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("br");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("br");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("br");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("br");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","row center-margin");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","columns medium-6 text-center");
+        var el5 = dom.createElement("h3");
+        var el6 = dom.createTextNode("Now what?");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("hr");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("Now that you are logged in, you can register for events, host your own event, start your own community or dance scene, have weekly lessons, memberships, and register for lessons or dances.");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","columns medium-6 text-center");
+        var el5 = dom.createElement("h3");
+        var el6 = dom.createTextNode("Need help?");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("hr");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("Never be afraid to ask! if you have a question about anything, just send email to ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("the support email linked to at the bottom of the page");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("  and you should receive a response in one business day.");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("  There is also the facebook page linked to at the bottom of the screen, in case you want to discuss aeonvera with other people.");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, content = hooks.content, block = hooks.block;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        var element0 = dom.childAt(fragment, [0]);
+        var element1 = dom.childAt(element0, [0, 0, 0, 0]);
+        var element2 = dom.childAt(element0, [1]);
+        var morph0 = dom.createMorphAt(dom.childAt(element1, [0]),0,0);
+        var morph1 = dom.createMorphAt(dom.childAt(element1, [1]),0,0);
+        var morph2 = dom.createMorphAt(dom.childAt(element1, [4]),0,0);
+        var morph3 = dom.createMorphAt(dom.childAt(element1, [5]),0,0);
+        var morph4 = dom.createMorphAt(dom.childAt(element1, [6]),0,0);
+        var morph5 = dom.createMorphAt(dom.childAt(element2, [0]),1,1);
+        var morph6 = dom.createMorphAt(element2,2,2);
+        content(env, morph0, context, "session.currentUser.name");
+        block(env, morph1, context, "link-to", ["user.edit"], {}, child0, null);
+        block(env, morph2, context, "link-to", ["dashboard.registered-events"], {}, child1, null);
+        block(env, morph3, context, "link-to", ["dashboard.hosted-events"], {}, child2, null);
+        block(env, morph4, context, "link-to", ["dashboard.orders"], {}, child3, null);
+        content(env, morph5, context, "session.currentUser.name");
+        content(env, morph6, context, "outlet");
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      var child0 = (function() {
+        var child0 = (function() {
+          return {
+            isHTMLBars: true,
+            revision: "Ember@1.11.1",
+            blockParams: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            build: function build(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createElement("span");
+              var el2 = dom.createTextNode("Open");
+              dom.appendChild(el1, el2);
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            render: function render(context, env, contextualElement) {
+              var dom = env.dom;
+              dom.detectNamespace(contextualElement);
+              var fragment;
+              if (env.useFragmentCache && dom.canClone) {
+                if (this.cachedFragment === null) {
+                  fragment = this.build(dom);
+                  if (this.hasRendered) {
+                    this.cachedFragment = fragment;
+                  } else {
+                    this.hasRendered = true;
+                  }
+                }
+                if (this.cachedFragment) {
+                  fragment = dom.cloneNode(this.cachedFragment, true);
+                }
+              } else {
+                fragment = this.build(dom);
+              }
+              return fragment;
+            }
+          };
+        }());
+        var child1 = (function() {
+          var child0 = (function() {
+            return {
+              isHTMLBars: true,
+              revision: "Ember@1.11.1",
+              blockParams: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              build: function build(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createElement("span");
+                var el2 = dom.createTextNode("Closed");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              render: function render(context, env, contextualElement) {
+                var dom = env.dom;
+                dom.detectNamespace(contextualElement);
+                var fragment;
+                if (env.useFragmentCache && dom.canClone) {
+                  if (this.cachedFragment === null) {
+                    fragment = this.build(dom);
+                    if (this.hasRendered) {
+                      this.cachedFragment = fragment;
+                    } else {
+                      this.hasRendered = true;
+                    }
+                  }
+                  if (this.cachedFragment) {
+                    fragment = dom.cloneNode(this.cachedFragment, true);
+                  }
+                } else {
+                  fragment = this.build(dom);
+                }
+                return fragment;
+              }
+            };
+          }());
+          var child1 = (function() {
+            return {
+              isHTMLBars: true,
+              revision: "Ember@1.11.1",
+              blockParams: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              build: function build(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createComment("");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              render: function render(context, env, contextualElement) {
+                var dom = env.dom;
+                var hooks = env.hooks, get = hooks.get, inline = hooks.inline;
+                dom.detectNamespace(contextualElement);
+                var fragment;
+                if (env.useFragmentCache && dom.canClone) {
+                  if (this.cachedFragment === null) {
+                    fragment = this.build(dom);
+                    if (this.hasRendered) {
+                      this.cachedFragment = fragment;
+                    } else {
+                      this.hasRendered = true;
+                    }
+                  }
+                  if (this.cachedFragment) {
+                    fragment = dom.cloneNode(this.cachedFragment, true);
+                  }
+                } else {
+                  fragment = this.build(dom);
+                }
+                var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+                dom.insertBoundary(fragment, null);
+                dom.insertBoundary(fragment, 0);
+                inline(env, morph0, context, "date-with-format", [get(env, context, "event.registrationOpensAt"), "llll"], {});
+                return fragment;
+              }
+            };
+          }());
+          return {
+            isHTMLBars: true,
+            revision: "Ember@1.11.1",
+            blockParams: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            build: function build(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            render: function render(context, env, contextualElement) {
+              var dom = env.dom;
+              var hooks = env.hooks, get = hooks.get, block = hooks.block;
+              dom.detectNamespace(contextualElement);
+              var fragment;
+              if (env.useFragmentCache && dom.canClone) {
+                if (this.cachedFragment === null) {
+                  fragment = this.build(dom);
+                  if (this.hasRendered) {
+                    this.cachedFragment = fragment;
+                  } else {
+                    this.hasRendered = true;
+                  }
+                }
+                if (this.cachedFragment) {
+                  fragment = dom.cloneNode(this.cachedFragment, true);
+                }
+              } else {
+                fragment = this.build(dom);
+              }
+              var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+              dom.insertBoundary(fragment, null);
+              dom.insertBoundary(fragment, 0);
+              block(env, morph0, context, "if", [get(env, context, "event.hasEnded")], {}, child0, child1);
+              return fragment;
+            }
+          };
+        }());
+        return {
+          isHTMLBars: true,
+          revision: "Ember@1.11.1",
+          blockParams: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          build: function build(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("tr");
+            var el2 = dom.createElement("td");
+            var el3 = dom.createElement("a");
+            var el4 = dom.createComment("");
+            dom.appendChild(el3, el4);
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          render: function render(context, env, contextualElement) {
+            var dom = env.dom;
+            var hooks = env.hooks, get = hooks.get, concat = hooks.concat, attribute = hooks.attribute, content = hooks.content, block = hooks.block, inline = hooks.inline;
+            dom.detectNamespace(contextualElement);
+            var fragment;
+            if (env.useFragmentCache && dom.canClone) {
+              if (this.cachedFragment === null) {
+                fragment = this.build(dom);
+                if (this.hasRendered) {
+                  this.cachedFragment = fragment;
+                } else {
+                  this.hasRendered = true;
+                }
+              }
+              if (this.cachedFragment) {
+                fragment = dom.cloneNode(this.cachedFragment, true);
+              }
+            } else {
+              fragment = this.build(dom);
+            }
+            var element0 = dom.childAt(fragment, [0]);
+            var element1 = dom.childAt(element0, [0, 0]);
+            var morph0 = dom.createMorphAt(element1,0,0);
+            var attrMorph0 = dom.createAttrMorph(element1, 'href');
+            var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+            var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
+            var morph3 = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
+            var morph4 = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
+            var morph5 = dom.createMorphAt(dom.childAt(element0, [5]),0,0);
+            var morph6 = dom.createMorphAt(dom.childAt(element0, [6]),0,0);
+            attribute(env, attrMorph0, element1, "href", concat(env, ["hosted_events/", get(env, context, "event.id")]));
+            content(env, morph0, context, "event.name");
+            content(env, morph1, context, "event.totalAttendees");
+            content(env, morph2, context, "event.numberOfLeads");
+            content(env, morph3, context, "event.numberOfFollows");
+            content(env, morph4, context, "event.numberOfShirtsSold");
+            block(env, morph5, context, "if", [get(env, context, "event.isRegistrationOpen")], {}, child0, child1);
+            inline(env, morph6, context, "date-range", [get(env, context, "event.startsAt"), get(env, context, "event.endsAt")], {});
+            return fragment;
+          }
+        };
+      }());
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("table");
+          dom.setAttribute(el1,"class","responsive");
+          var el2 = dom.createElement("tr");
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Name");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          dom.setAttribute(el3,"colspan","3");
+          dom.setAttribute(el3,"class","text-center");
+          var el4 = dom.createTextNode("Attendees");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Shirts Sold");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Registration Opens");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Date");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("tr");
+          var el3 = dom.createElement("th");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Total");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Leads");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Follows");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Total");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, get = hooks.get, block = hooks.block;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),2,2);
+          block(env, morph0, context, "each", [get(env, context, "filteredModel")], {"keyword": "event"}, child0, null);
+          return fragment;
+        }
+      };
+    }());
+    var child1 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("p");
+          var el2 = dom.createTextNode("You have not yet hosted an event. Hosting an event is free! Click the 'Host an Event' button below to get get started.");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    return {
+      isHTMLBars: true,
+      revision: "Ember@1.11.1",
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Hosted Events");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","columns medium-6 text-center");
-        var el3 = dom.createElement("h3");
-        var el4 = dom.createTextNode("Need help?");
-        dom.appendChild(el3, el4);
+        dom.setAttribute(el2,"class","right");
+        var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
-        var el3 = dom.createElement("hr");
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("span");
-        var el4 = dom.createTextNode("Never be afraid to ask! if you have a question about anything, just send email to ");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("span");
-        var el4 = dom.createTextNode("the support email linked to at the bottom of the page");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("span");
-        var el4 = dom.createTextNode("  and you should receive a response in one business day.");
-        dom.appendChild(el3, el4);
-        dom.appendChild(el2, el3);
-        var el3 = dom.createElement("span");
-        var el4 = dom.createTextNode("  There is also the facebook page linked to at the bottom of the screen, in case you want to discuss aeonvera with other people.");
+        var el3 = dom.createElement("label");
+        var el4 = dom.createTextNode("Show Only My Events");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         return el0;
       },
@@ -5575,15 +5551,454 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         } else {
           fragment = this.build(dom);
         }
-        var element0 = dom.childAt(fragment, [1]);
-        var morph0 = dom.createMorphAt(dom.childAt(fragment, [0, 0]),0,0);
-        var morph1 = dom.createMorphAt(element0,0,0);
-        var morph2 = dom.createMorphAt(element0,2,2);
-        var morph3 = dom.createMorphAt(dom.childAt(fragment, [2, 0]),0,0);
-        inline(env, morph0, context, "component", ["dashboard/attended-events"], {"model": get(env, context, "model.attended")});
-        block(env, morph1, context, "link-to", ["upcoming-events"], {"classNames": "button"}, child0, null);
-        block(env, morph2, context, "link-to", ["communities"], {"classNames": "button"}, child1, null);
-        inline(env, morph3, context, "component", ["dashboard/hosted-events"], {"model": get(env, context, "model.hosted")});
+        var morph0 = dom.createMorphAt(dom.childAt(fragment, [0, 1]),0,0);
+        var morph1 = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, null);
+        inline(env, morph0, context, "input", [], {"type": "checkbox", "checked": get(env, context, "showMyEvents")});
+        block(env, morph1, context, "if", [get(env, context, "model")], {}, child0, child1);
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      var child0 = (function() {
+        return {
+          isHTMLBars: true,
+          revision: "Ember@1.11.1",
+          blockParams: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          build: function build(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("tr");
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createElement("a");
+            var el4 = dom.createComment("");
+            dom.appendChild(el3, el4);
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          render: function render(context, env, contextualElement) {
+            var dom = env.dom;
+            var hooks = env.hooks, get = hooks.get, inline = hooks.inline, element = hooks.element, content = hooks.content;
+            dom.detectNamespace(contextualElement);
+            var fragment;
+            if (env.useFragmentCache && dom.canClone) {
+              if (this.cachedFragment === null) {
+                fragment = this.build(dom);
+                if (this.hasRendered) {
+                  this.cachedFragment = fragment;
+                } else {
+                  this.hasRendered = true;
+                }
+              }
+              if (this.cachedFragment) {
+                fragment = dom.cloneNode(this.cachedFragment, true);
+              }
+            } else {
+              fragment = this.build(dom);
+            }
+            var element0 = dom.childAt(fragment, [0]);
+            var element1 = dom.childAt(element0, [1, 0]);
+            var morph0 = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+            var morph1 = dom.createMorphAt(element1,0,0);
+            var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
+            inline(env, morph0, context, "date-with-format", [get(env, context, "order.created_at"), "LLL"], {});
+            element(env, element1, context, "bind-attr", [], {"href": get(env, context, "order.hostUrl")});
+            content(env, morph1, context, "order.hostName");
+            content(env, morph2, context, "order.paidAmount");
+            return fragment;
+          }
+        };
+      }());
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("table");
+          dom.setAttribute(el1,"class","responsive");
+          var el2 = dom.createElement("tr");
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Date");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Event Name");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("th");
+          var el4 = dom.createTextNode("Paid");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, get = hooks.get, block = hooks.block;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var morph0 = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
+          block(env, morph0, context, "each", [get(env, context, "model")], {"keyword": "order"}, child0, null);
+          return fragment;
+        }
+      };
+    }());
+    return {
+      isHTMLBars: true,
+      revision: "Ember@1.11.1",
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Payments");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, get = hooks.get, block = hooks.block;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        var morph0 = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, null);
+        block(env, morph0, context, "if", [get(env, context, "model")], {}, child0, null);
+        return fragment;
+      }
+    };
+  }()));
+
+});
+define('aeonvera/templates/dashboard/registered-events', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      var child0 = (function() {
+        return {
+          isHTMLBars: true,
+          revision: "Ember@1.11.1",
+          blockParams: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          build: function build(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("tr");
+            var el2 = dom.createElement("td");
+            var el3 = dom.createElement("a");
+            var el4 = dom.createComment("");
+            dom.appendChild(el3, el4);
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          render: function render(context, env, contextualElement) {
+            var dom = env.dom;
+            var hooks = env.hooks, get = hooks.get, element = hooks.element, content = hooks.content, inline = hooks.inline;
+            dom.detectNamespace(contextualElement);
+            var fragment;
+            if (env.useFragmentCache && dom.canClone) {
+              if (this.cachedFragment === null) {
+                fragment = this.build(dom);
+                if (this.hasRendered) {
+                  this.cachedFragment = fragment;
+                } else {
+                  this.hasRendered = true;
+                }
+              }
+              if (this.cachedFragment) {
+                fragment = dom.cloneNode(this.cachedFragment, true);
+              }
+            } else {
+              fragment = this.build(dom);
+            }
+            var element0 = dom.childAt(fragment, [0]);
+            var element1 = dom.childAt(element0, [0, 0]);
+            var morph0 = dom.createMorphAt(element1,0,0);
+            var morph1 = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+            var morph2 = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
+            var morph3 = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
+            var morph4 = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
+            element(env, element1, context, "bind-attr", [], {"href": get(env, context, "event.url")});
+            content(env, morph0, context, "event.name");
+            inline(env, morph1, context, "date-with-format", [get(env, context, "event.registeredAt"), "LLL"], {});
+            content(env, morph2, context, "event.paymentStatus");
+            inline(env, morph3, context, "date-with-format", [get(env, context, "event.eventBeginsAt"), "LLL"], {});
+            content(env, morph4, context, "event.registrationStatus");
+            return fragment;
+          }
+        };
+      }());
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          var hooks = env.hooks, get = hooks.get, block = hooks.block;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          var morph0 = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, null);
+          dom.insertBoundary(fragment, 0);
+          block(env, morph0, context, "each", [get(env, context, "model")], {"keyword": "event"}, child0, null);
+          return fragment;
+        }
+      };
+    }());
+    var child1 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("tr");
+          var el2 = dom.createElement("td");
+          dom.setAttribute(el2,"colspan","6");
+          var el3 = dom.createElement("span");
+          var el4 = dom.createTextNode("You have not yet attended any events. Please view the upcoming events list to see if there is anything of interest.");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    var child2 = (function() {
+      return {
+        isHTMLBars: true,
+        revision: "Ember@1.11.1",
+        blockParams: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        build: function build(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("View Upcoming Events");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        render: function render(context, env, contextualElement) {
+          var dom = env.dom;
+          dom.detectNamespace(contextualElement);
+          var fragment;
+          if (env.useFragmentCache && dom.canClone) {
+            if (this.cachedFragment === null) {
+              fragment = this.build(dom);
+              if (this.hasRendered) {
+                this.cachedFragment = fragment;
+              } else {
+                this.hasRendered = true;
+              }
+            }
+            if (this.cachedFragment) {
+              fragment = dom.cloneNode(this.cachedFragment, true);
+            }
+          } else {
+            fragment = this.build(dom);
+          }
+          return fragment;
+        }
+      };
+    }());
+    return {
+      isHTMLBars: true,
+      revision: "Ember@1.11.1",
+      blockParams: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      build: function build(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Registered Events");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        dom.setAttribute(el1,"class","responsive");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Name");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Date Registered");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Payment");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Event Begins");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Status");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","text-center");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      render: function render(context, env, contextualElement) {
+        var dom = env.dom;
+        var hooks = env.hooks, get = hooks.get, block = hooks.block;
+        dom.detectNamespace(contextualElement);
+        var fragment;
+        if (env.useFragmentCache && dom.canClone) {
+          if (this.cachedFragment === null) {
+            fragment = this.build(dom);
+            if (this.hasRendered) {
+              this.cachedFragment = fragment;
+            } else {
+              this.hasRendered = true;
+            }
+          }
+          if (this.cachedFragment) {
+            fragment = dom.cloneNode(this.cachedFragment, true);
+          }
+        } else {
+          fragment = this.build(dom);
+        }
+        var morph0 = dom.createMorphAt(dom.childAt(fragment, [1]),1,1);
+        var morph1 = dom.createMorphAt(dom.childAt(fragment, [2]),0,0);
+        block(env, morph0, context, "if", [get(env, context, "model")], {}, child0, child1);
+        block(env, morph1, context, "link-to", ["upcoming-events"], {"classNames": "button"}, child2, null);
         return fragment;
       }
     };
@@ -9626,26 +10041,6 @@ define('aeonvera/tests/app.jshint', function () {
   });
 
 });
-define('aeonvera/tests/components/dashboard/attended-events.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - components/dashboard');
-  test('components/dashboard/attended-events.js should pass jshint', function() { 
-    ok(true, 'components/dashboard/attended-events.js should pass jshint.'); 
-  });
-
-});
-define('aeonvera/tests/components/dashboard/hosted-events.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - components/dashboard');
-  test('components/dashboard/hosted-events.js should pass jshint', function() { 
-    ok(true, 'components/dashboard/hosted-events.js should pass jshint.'); 
-  });
-
-});
 define('aeonvera/tests/components/error-field-wrapper.jshint', function () {
 
   'use strict';
@@ -9843,6 +10238,16 @@ define('aeonvera/tests/controllers/application.jshint', function () {
   module('JSHint - controllers');
   test('controllers/application.js should pass jshint', function() { 
     ok(true, 'controllers/application.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/controllers/dashboard/hosted-events.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - controllers/dashboard');
+  test('controllers/dashboard/hosted-events.js should pass jshint', function() { 
+    ok(true, 'controllers/dashboard/hosted-events.js should pass jshint.'); 
   });
 
 });
@@ -10153,16 +10558,6 @@ define('aeonvera/tests/mixins/authenticated-ui.jshint', function () {
   });
 
 });
-define('aeonvera/tests/models/attended-event.jshint', function () {
-
-  'use strict';
-
-  module('JSHint - models');
-  test('models/attended-event.js should pass jshint', function() { 
-    ok(true, 'models/attended-event.js should pass jshint.'); 
-  });
-
-});
 define('aeonvera/tests/models/community.jshint', function () {
 
   'use strict';
@@ -10213,6 +10608,16 @@ define('aeonvera/tests/models/level.jshint', function () {
   });
 
 });
+define('aeonvera/tests/models/order.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - models');
+  test('models/order.js should pass jshint', function() { 
+    ok(true, 'models/order.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/models/package.jshint', function () {
 
   'use strict';
@@ -10220,6 +10625,16 @@ define('aeonvera/tests/models/package.jshint', function () {
   module('JSHint - models');
   test('models/package.js should pass jshint', function() { 
     ok(true, 'models/package.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/models/registered-event.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - models');
+  test('models/registered-event.js should pass jshint', function() { 
+    ok(true, 'models/registered-event.js should pass jshint.'); 
   });
 
 });
@@ -10280,6 +10695,36 @@ define('aeonvera/tests/routes/dashboard.jshint', function () {
   module('JSHint - routes');
   test('routes/dashboard.js should pass jshint', function() { 
     ok(true, 'routes/dashboard.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/dashboard/hosted-events.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/dashboard');
+  test('routes/dashboard/hosted-events.js should pass jshint', function() { 
+    ok(true, 'routes/dashboard/hosted-events.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/dashboard/orders.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/dashboard');
+  test('routes/dashboard/orders.js should pass jshint', function() { 
+    ok(true, 'routes/dashboard/orders.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/dashboard/registered-events.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/dashboard');
+  test('routes/dashboard/registered-events.js should pass jshint', function() { 
+    ok(true, 'routes/dashboard/registered-events.js should pass jshint.'); 
   });
 
 });
@@ -11181,6 +11626,31 @@ define('aeonvera/tests/unit/routes/events-test.jshint', function () {
   });
 
 });
+define('aeonvera/tests/unit/routes/hosted-events-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('route:hosted-events', 'Unit | Route | hosted events', {});
+
+  ember_qunit.test('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('aeonvera/tests/unit/routes/hosted-events-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes');
+  test('unit/routes/hosted-events-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/hosted-events-test.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/unit/routes/login-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -11206,6 +11676,31 @@ define('aeonvera/tests/unit/routes/login-test.jshint', function () {
   });
 
 });
+define('aeonvera/tests/unit/routes/orders-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('route:orders', 'Unit | Route | orders', {});
+
+  ember_qunit.test('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('aeonvera/tests/unit/routes/orders-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes');
+  test('unit/routes/orders-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/orders-test.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/unit/routes/register-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -11228,6 +11723,31 @@ define('aeonvera/tests/unit/routes/register-test.jshint', function () {
   module('JSHint - unit/routes');
   test('unit/routes/register-test.js should pass jshint', function() { 
     ok(true, 'unit/routes/register-test.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/unit/routes/registered-events-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleFor('route:registered-events', 'Unit | Route | registered events', {});
+
+  ember_qunit.test('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+
+  // Specify the other units that are required for this test.
+  // needs: ['controller:foo']
+
+});
+define('aeonvera/tests/unit/routes/registered-events-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - unit/routes');
+  test('unit/routes/registered-events-test.js should pass jshint', function() { 
+    ok(true, 'unit/routes/registered-events-test.js should pass jshint.'); 
   });
 
 });
@@ -11384,7 +11904,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.4fabf55a"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.9666527e"});
 }
 
 /* jshint ignore:end */
