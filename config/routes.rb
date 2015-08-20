@@ -2,10 +2,12 @@ AeonVera::Application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :registrations
+
     resources :registered_events
     resources :upcoming_events
     resources :hosted_events
     resources :registerable_events
+    resources :events
 
     resources :communities
 
