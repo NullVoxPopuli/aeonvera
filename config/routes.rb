@@ -2,10 +2,12 @@ AeonVera::Application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :registrations
+
     resources :registered_events
     resources :upcoming_events
     resources :hosted_events
     resources :registerable_events
+    resources :events
 
     resources :communities
 
@@ -287,6 +289,8 @@ AeonVera::Application.routes.draw do
   get "/welcome", to: "marketing#index"
   get "/welcome/*path", to: "marketing#index"
   get "/upcoming-events", to: "marketing#index"
+  get "/registered-events", to: "marketing#index"
+  get "/hosted-events", to: "marketing#index"
   get "/communities", to: "marketing#index"
   root :to => "marketing#index"
 end

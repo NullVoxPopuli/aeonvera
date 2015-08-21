@@ -92,7 +92,7 @@ describe 'Registration' do
 
     it 'tells the user they need to login' do
       visit @event.url
-      expect(page).to have_content("Sign Up or Login to register for this event")
+      expect(page).to have_content("login")
     end
 
     it 'displays the event title' do
