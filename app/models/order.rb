@@ -77,6 +77,12 @@ class Order < ActiveRecord::Base
   end
 
 
+  # TODO: this logic sucks, find a better way
+  # Scenarios:
+  # Total is 0
+  #  - automatically mark paid
+  # Total is not 0
+  #  - should not be paid, unless paid amount matches total
   def check_paid_status
     # if we don't owe anything
     # - can happen on new record
@@ -91,10 +97,16 @@ class Order < ActiveRecord::Base
         # set the paid amount to 0.0, since the total is 0.0
         self.paid_amount = 0.0
       end
-
+    elsif self.total > 0 && self.paid_amount == 0.0
+      # this happens when total amount has changed
+      # (adding a line item when a package of 0 cost has been
+      # previously added)
+      self.paid = false
+      self.paid_amount = nil
     elsif self.paid_amount.nil?
       # money is owed, the order has not been paid
       self.paid = false
+
     end
 
 

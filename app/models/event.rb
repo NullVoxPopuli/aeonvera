@@ -99,6 +99,10 @@ class Event < ActiveRecord::Base
       order(table[:ends_at].asc)
   end
 
+  def recent_registrations
+    self.attendances.limit(5).order("created_at DESC")
+  end
+
   def registration_opens_at
     opening_tier.date
   end

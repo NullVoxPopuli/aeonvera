@@ -20,6 +20,6 @@ class HostedEventSerializer < ActiveModel::Serializer
     end
 
     def my_event
-      object.hosted_by_id == current_user.id
+      object.hosted_by_id == (scope || current_user).id
     end
 end
