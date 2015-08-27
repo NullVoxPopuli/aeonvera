@@ -81,7 +81,11 @@ module FormHelpers
   end
 
   def selects_package(package = @package)
-    check_box_with_id "#attendance_package_id_#{@package.id}"
+    check_box_with_id "#attendance_package_id_#{package.id}"
+  end
+
+  def selects_line_item(item = @line_item)
+    check_box_with_id "#attendance_line_item_ids_#{item.id}"
   end
 
   def selects_orientation(orientation = :leader)

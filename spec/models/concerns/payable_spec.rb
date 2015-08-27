@@ -154,10 +154,26 @@ describe Payable do
       order = create(:order, event: @event, attendance: @attendance)
 
       order.add(package)
+      order.add(discount)
 
-      expect(@payment.sub_total).to eq 0
-      expect(@payment.total).to eq 0
-      expect(@payment.fee).to eq 0
+      expect(order.sub_total).to eq 0
+      expect(order.total).to eq 0
+      expect(order.fee).to eq 0
+    end
+
+    it 'totals when the package has a value of 0' do
+      package = create(:package, event: @event, initial_price: 0, at_the_door_price: 0)
+      friday_dance = create(:line_item, event: @event, price: 25)
+      order = create(:order, event: @event, attendance: @attendance)
+
+      order.add(package)
+      order.add(friday_dance)
+
+      order.sub_total
+      expect(order.payment_method).to eq "Cash"
+      expect(order.sub_total).to eq 25
+      expect(order.fee.round(2)).to eq 0.19 # not applied
+      expect(order.total).to eq 25
     end
 
     it "totals everything" do

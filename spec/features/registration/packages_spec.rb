@@ -40,6 +40,27 @@ describe 'Registration Package Configuration' do
     end
   end
 
+  context 'package price is 0' do
+    before(:each) do
+      @package = create(:package, event: @event, initial_price: 0, at_the_door_price: 0)
+      @friday_dance = create(:line_item, event: @event, price: 25)
+    end
+
+    it 'totals the line item - package has no effect' do
+      visit @event.url
+      selects_package
+      selects_orientation
+      provides_address
+
+      selects_line_item(@friday_dance)
+
+      submit_form
+
+      expect(page).to_not have_content("Paid")
+      expect(page).to_not have_content("Paid $0.00")
+    end
+  end
+
 
 
 end
