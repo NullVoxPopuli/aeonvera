@@ -9,6 +9,7 @@ AeonVera::Application.routes.draw do
     resources :registerable_events
     resources :events
     resources :event_summaries, only: [:show]
+
     resources :communities
 
     resources :housing_requests

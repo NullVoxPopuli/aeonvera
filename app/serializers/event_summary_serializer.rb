@@ -6,17 +6,15 @@ class EventSummarySerializer < HostedEventSerializer
     :number_of_leads, :number_of_follows, :number_of_shirts_sold,
     :revenue, :unpaid
 
-    has_many :recent_attendees
 
-    def revenue
-      object.revenue || 0
-    end
 
-    def unpaid
-      object.unpaid_total || 0
-    end
+  has_many :recent_registrations, embed: :ids
 
-    def recent_attendees
-      object.attendances.limit(5).order("created_at DESC")
-    end
+  def revenue
+    object.revenue || 0
+  end
+
+  def unpaid
+    object.unpaid_total || 0
+  end
 end

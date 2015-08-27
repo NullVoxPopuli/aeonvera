@@ -1,14 +1,10 @@
 class Api::EventSummariesController < APIController
 
+  include SetsEvent
+
   def show
-    @event = current_user.hosted_events.find(id)
-    render json: @event, serializer: EventSummarySerializer
+    render json: @event, serializer: EventSummarySerializer, root: :event_summaries
   end
 
-  private
-
-  def id
-    params[:event_id] || params[:id]
-  end
 
 end
