@@ -9,8 +9,8 @@ define('aeonvera/adapters/application', ['exports', 'ember-data'], function (exp
 
   exports['default'] = DS['default'].ActiveModelAdapter.extend({
     namespace: 'api',
-    // host: 'https://aeonvera.com'
-    host: 'http://swing.vhost:3000'
+    host: 'https://aeonvera.com'
+    // host: 'http://swing.vhost:3000'
   });
 
 });
@@ -942,8 +942,8 @@ define('aeonvera/initializers/simple-auth-devise-override', ['exports', 'ember',
             this is required until server-side sessions are disabled
           */
           return Ember['default'].$.ajax({
-            url: 'http://swing.vhost:3000/users/sign_out',
-            // url: '/users/sign_out',
+            // url: 'http://swing.vhost:3000/users/sign_out',
+            url: '/users/sign_out',
             type: 'DELETE'
           }).then(function () {
             return self._super();
@@ -12847,7 +12847,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.b8998b15"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","name":"aeonvera","version":"0.0.0.fa3d6218"});
 }
 
 /* jshint ignore:end */
