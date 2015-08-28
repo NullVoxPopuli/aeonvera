@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/NullVoxPopuli/active_model_serializers.git
-  revision: d0477a103c3ad73ed65bb0a393877139a05eab4d
+  revision: 5eb5c2e7007683a0a8dacc9bc3195ad377714092
   branch: sideload
   specs:
     active_model_serializers (0.10.0.rc2)
