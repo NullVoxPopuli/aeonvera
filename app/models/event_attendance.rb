@@ -30,8 +30,8 @@ class EventAttendance < Attendance
 
 
   has_and_belongs_to_many :discounts,
-  join_table: "attendances_discounts",
-  association_foreign_key: "discount_id", foreign_key: "attendance_id"
+    join_table: "attendances_discounts",
+    association_foreign_key: "discount_id", foreign_key: "attendance_id"
 
 
   scope :with_competitions, ->{

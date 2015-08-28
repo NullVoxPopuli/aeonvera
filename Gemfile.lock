@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/NullVoxPopuli/active_model_serializers.git
+  revision: d0477a103c3ad73ed65bb0a393877139a05eab4d
+  branch: sideload
+  specs:
+    active_model_serializers (0.10.0.rc2)
+      activemodel (>= 4.0)
+
+GIT
   remote: git://github.com/NullVoxPopuli/api_cache.git
   revision: 4a26abe74da2e77d41d02b8d031ed1e8c260dc16
   specs:
@@ -28,13 +36,6 @@ GIT
       multi_json (~> 1.0)
       uuidtools (~> 2.1)
       xml-simple
-
-GIT
-  remote: git://github.com/rails-api/active_model_serializers.git
-  revision: 39d6dab218777defe8df251651d03517c7ddf35f
-  specs:
-    active_model_serializers (0.10.0.rc2)
-      activemodel (>= 4.0)
 
 GIT
   remote: git://github.com/thoughtbot/factory_girl.git

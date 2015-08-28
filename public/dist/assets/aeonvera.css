@@ -6170,4 +6170,7 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
   display: none;
   visibility: hidden; }
 
+.full-width {
+  max-width: inherit; }
+
 /*# sourceMappingURL=aeonvera.css.map */

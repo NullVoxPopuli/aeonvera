@@ -2,7 +2,8 @@
 
 # if using > v0.10
 ActiveModel::Serializer.config.adapter = :json
-ActiveModel::Serializer.config.use_sideloading = true
+# in NullVoxPopuli's branch of AMS
+ActiveModel::Serializer.config.sideload_associations = true
 
 # if using v0.9
 # ActiveModel::Serializer.setup do |config|
