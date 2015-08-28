@@ -6,9 +6,7 @@ class EventSummarySerializer < HostedEventSerializer
     :number_of_leads, :number_of_follows, :number_of_shirts_sold,
     :revenue, :unpaid
 
-
-
-  has_many :recent_registrations, embed: :ids
+  has_many :recent_registrations
 
   def revenue
     object.revenue || 0
