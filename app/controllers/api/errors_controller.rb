@@ -2,7 +2,7 @@ class Api::ErrorsController < APIController
 
   def from_ember
     error = Exceptions::FrontEndError.new(
-      message: error_params[:message],
+      message: "Ember",
       backtrace: backtrace_as_array
     )
 
@@ -10,7 +10,7 @@ class Api::ErrorsController < APIController
       class: error_params[:class],
       method: error_params[:method],
       message: error_params[:message],
-      params: params.merge(from_js: error_params[:params])
+      params: params
     }
 
     if Rails.env.production?
