@@ -219,7 +219,7 @@ class Attendance < ActiveRecord::Base
   alias_method :remaining_balance, :amount_owed
 
   def paid_amount
-    orders.present? ? orders.map{|o| o.try(:paid_amount)}.inject(&:+) : 0
+    orders.present? ? orders.map{|o| o.try(:paid_amount) || 0}.inject(&:+) : 0
   end
 
   def owes_money?

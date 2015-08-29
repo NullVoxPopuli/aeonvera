@@ -3,6 +3,7 @@ class AttendanceSerializer < ActiveModel::Serializer
   attributes :id,
     :attendee_name, :dance_orientation,
     :amount_owed, :amount_paid, :registered_at,
+    :checked_in_at, :is_checked_in,
     :package_name, :level_name,
     :event_id
 
@@ -20,6 +21,10 @@ class AttendanceSerializer < ActiveModel::Serializer
 
   def level_name
     object.try(:level).try(:name)
+  end
+
+  def is_checked_in
+    !!object.checked_in_at
   end
 
   def event_id
