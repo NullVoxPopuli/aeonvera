@@ -1,9 +1,14 @@
+# Rules about an Attendance
+# - Only one unpaid order at a time
+#   - if the attendance owes money, there will be an unpaid order
+# - Must belong to a host (Event, Organization, etc)
 class Attendance < ActiveRecord::Base
   self.inheritance_column = "attendance_type"
 
   include SoftDeletable
   include HasMetadata
   include HasAddress
+  include CSVOutput
 
   LEAD = "Lead"
   FOLLOW = "Follow"
@@ -86,6 +91,16 @@ class Attendance < ActiveRecord::Base
     send("#{object.class.name.demodulize.underscore.pluralize}") << object
   end
 
+  def unpaid_order
+    self.orders.unpaid.last
+  end
+
+  def is_using_discount?(discount_id)
+    self.orders.map{|o|
+      o.line_items.where(line_item_type: Discount.name, line_item_id: discount_id)
+    }.flatten.compact.any?
+  end
+
   # look at existing orders,
   # look at the attendance associations
   # calculate difference, and return order object
@@ -146,6 +161,7 @@ class Attendance < ActiveRecord::Base
 
   def mark_orders_as_paid!(data)
     check_number = data[:check_number]
+    payment_method = data[:payment_method]
 
     orders = self.orders.unpaid
     if orders.empty?
@@ -158,8 +174,11 @@ class Attendance < ActiveRecord::Base
     end
 
     orders.map{ |o|
-      o.paid = true;
-      o.paid_amount = o.calculate_paid_amount
+      o.payment_method = payment_method
+      o.paid = true
+      o.paid_amount = o.total
+      o.net_amount_received = o.paid_amount
+      o.total_fee_amount = 0
       o.save
     }
   end
@@ -205,6 +224,18 @@ class Attendance < ActiveRecord::Base
     end
   end
 
+  def package_name
+    self.package.try(:name)
+  end
+
+  def level_name
+    self.level.try(:name)
+  end
+
+  def registered_at
+    self.created_at
+  end
+
 
 
   def amount_owed
@@ -219,7 +250,7 @@ class Attendance < ActiveRecord::Base
   alias_method :remaining_balance, :amount_owed
 
   def paid_amount
-    orders.present? ? orders.map{|o| o.try(:paid_amount)}.inject(&:+) : 0
+    orders.present? ? orders.map{|o| o.try(:paid_amount) || 0}.inject(&:+) : 0
   end
 
   def owes_money?

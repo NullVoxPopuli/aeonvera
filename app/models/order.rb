@@ -71,7 +71,7 @@ class Order < ActiveRecord::Base
   # ideally, this is ran upon successful payment
   def set_net_amount_received_and_fees
 
-    if self.payment_method == Payable::Methods::STRIPE
+    if self.payment_method == Payable::Methods::STRIPE || self.payment_method == Payable::Methods::CREDIT
       set_net_amount_received_and_fees_from_stripe
     end
   end

@@ -54,7 +54,7 @@ module StripeHelper
     )
   end
 
-  def stripe_checkout_script(description, total, email: current_user.email)
+  def stripe_checkout_script(description, total, email: current_user.email, label: nil)
     payable = payable_object
     key = payable.integrations[Integration::STRIPE].config[:stripe_publishable_key]
 
@@ -71,6 +71,10 @@ module StripeHelper
 
     if payable.logo.present?
       options["data-image"] = payable.logo.url(:medium)
+    end
+
+    if label
+      options["data-label"] = label
     end
 
     content_tag(:script, "", options)

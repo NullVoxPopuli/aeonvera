@@ -1,5 +1,6 @@
 class PaymentsController < ApplicationController
   include SetsHost
+  include MarkPaid
 
   before_action :load_integration, only: [ :create ]
   before_action :load_order
@@ -17,7 +18,20 @@ class PaymentsController < ApplicationController
       @order.save
     end
 
-    redirect_to register_index_path
+    respond_to do |format|
+      format.js{
+        mark_paid(skip: true)
+      }
+
+      format.html{
+        if params[:return_path].present?
+          redirect_to params[:return_path]
+        else
+          redirect_to register_index_path
+        end
+
+      }
+    end
   end
 
   def index
@@ -33,6 +47,16 @@ class PaymentsController < ApplicationController
     # what account the charge gets sent to
     secret_key = @integration.config[:access_token]
 
+    # used to remove fees for at the door
+    # Stripe == fees (paid by customer)
+    # Credit == no fees (paid by event)
+    # This is to not confuse people.
+    #
+    # at least for now, this is handled here until the checkin screen
+    # can be done in ember, where changing payment method on screen makes
+    # more sense.
+    @order.payment_method = params[:payment_method] if params[:payment_method]
+
     amount = @order.total
 
     begin
@@ -46,7 +70,7 @@ class PaymentsController < ApplicationController
       }
 
       unless @host.beta?
-        chargeData[:application_fee] = to_cents(@order.fee)
+        # chargeData[:application_fee] = to_cents(@order.fee)
       end
 
 
@@ -82,6 +106,7 @@ class PaymentsController < ApplicationController
 
   def load_order
     @order = current_user.orders.find_by_id(params[:order_id])
+    @order = @event.orders.find_by_id(params[:order_id]) unless @order
   end
 
   # @param [Integer] from amount to be charged

@@ -3,22 +3,6 @@ module AttendanceDownloadableData
 
   module ClassMethods
 
-    def to_csv(options = {})
-      CSV.generate(options) do |csv|
-        csv << ["Name", "Email", "Registered At", "City", "State"]
-        all.each do |attendance|
-          row = [
-            attendance.attendee_name,
-            attendance.attendee.try(:email),
-            attendance.created_at,
-            attendance.address["city"],
-            attendance.address["state"]
-          ]
-          csv << row
-        end
-      end
-    end
-
     def to_volunteer_csv(options = {})
       to_csv(options)
     end

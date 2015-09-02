@@ -44,5 +44,5 @@ table.responsive
 						= number_to_currency(attendance.amount_owed)
 						- if attendance.owes_money?
 							- event = (@event || attendance.event)
-							= render partial: '/shared/mark_paid', locals: { event: event, attendance: attendance, path: 'mark_paid_hosted_event_attendance'}
+							= render partial: '/shared/mark_paid', locals: { event: event, attendance: attendance, path: 'mark_paid_hosted_event_attendance', return_path: ''}
 					td = attendance.created_at.to_s(:long)
