@@ -7,6 +7,9 @@ class AttendanceSerializer < ActiveModel::Serializer
     :package_name, :level_name,
     :event_id
 
+  # TODO: it would be great to have the unpaid order sideloaded here
+  # but AMS struggles with nested serialization
+
   def amount_paid
     object.paid_amount
   end

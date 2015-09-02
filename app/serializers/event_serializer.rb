@@ -20,6 +20,8 @@ class EventSerializer < ActiveModel::Serializer
     :logo_url_thumb, :logo_url_medium, :logo_url,
     :url
 
+    has_many :integrations
+
     def url
       object.url
     end
@@ -35,7 +37,6 @@ class EventSerializer < ActiveModel::Serializer
     def logo_url
       object.logo.url(:original)
     end
-
 
   # TODO: has_one permission_set?
 

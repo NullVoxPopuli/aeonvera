@@ -67,6 +67,22 @@ class EventAttendance < Attendance
   validate :has_phone_number, if: Proc.new { |a| a.interested_in_volunteering? }
   validate :has_name, if: Proc.new { |a| a.attendee_id.blank? && a.attendee.blank? }
 
+
+  # for CSV output
+  csv_with_columns [
+    :attendee_name,
+    :attendee_email,
+    :package_name,
+    :level_name,
+    :amount_owed,
+    :registered_at] +
+    column_names,
+    exclude: [
+      :updated_at, :created_at,
+      :attendance_id, :attendance_type,
+      :id,
+      :host_id, :host_type]
+
   def crossover_orientation=(o)
     self.metadata["crossover_orientation"] = o
   end

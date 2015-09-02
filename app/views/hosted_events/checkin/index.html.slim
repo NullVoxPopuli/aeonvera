@@ -1,3 +1,11 @@
+p 
+  span Note that after taking a credit card, you'll have to refresh the page to see if it went through. If it did, the registrant will show owing no money.
+  br
+  span Hopefully, upon refreshing, there will be a message at the top that says payment received.
+  br
+  br
+  span Use the search box to find people
+
 br
 javascript:
   $(function(){
@@ -46,42 +54,30 @@ span = "Not Checked In: #{@not_checked_in}"
     tbody
       - @event.attendances.each do |attendance|
         tr data-id="#{attendance.id}"
-          td = attendance.attendee_name
+          td 
+            = attendance.attendee_name
+            - if @event.id == 16
+              - if attendance.is_using_discount?(75)
+                br
+                small Check for student id
           td = render partial: "/shared/address", locals: { address: attendance.address }
           td = attendance.package.name if attendance.package
           td = attendance.level.name if attendance.level
           td = render partial: "/shared/list", locals: { collection: attendance.competitions }
           td.payment-status
-            - payment = attendance.payment_status
-            = payment.is_a?(String) ? payment : number_to_currency(payment)
+            - order = attendance.unpaid_order
+            - if order
+              - order.payment_method = Payable::Methods::CREDIT
+              = number_to_currency order.total
+            /= payment.is_a?(String) ? payment : number_to_currency(payment)
             - if attendance.owes_money?
-              = render partial: '/shared/mark_paid', locals: { event: @event, attendance: attendance, path: 'hosted_event_checkin' }
+              = render partial: '/shared/mark_paid', locals: { event: @event, attendance: attendance, path: 'hosted_event_checkin', return_path: "hosted_events/#{@event.id}/checkin" }
           td = attendance.created_at.to_s(:long)
           td.checked-in-at = attendance.checked_in_at.try(:to_s, :long)
           td
             - if !attendance.checked_in_at
               span.checkin
-                / hard coded - very bad - kittens die. shame on you
-                - if attendance.competitions.map(&:id).include?(5)
-                  / freaking time constraints
-                  / we need to ask if competition orientiation
-                  button.crossover.success CheckIN
-                  .competition-info-collect style="display: none;" title="Crossover Info"
-                    = form_for(:competition, url: hosted_event_checkin_path(@event, attendance, checkin: true), method: :put, remote: true) do |f|
-                      div style="display: table;"
-                        div style="display: table-cell;" = f.radio_button :orientation, "Intermediate Lead"
-                        div style="display: table-cell;" = f.label "Intermediate Lead", "Intermediate Lead"
-                      div style="display: table;"
-                        div style="display: table-cell;" = f.radio_button :orientation, "Intermediate Follow"
-                        div style="display: table-cell;" = f.label "Intermediate Follow", "Intermediate Follow"
-                      div style="display: table;"
-                        div style="display: table-cell;" = f.radio_button :orientation, "Advanced Lead"
-                        div style="display: table-cell;" = f.label "Advanced Lead", "Advanced Lead"
-                      div style="display: table;"
-                        div style="display: table-cell;" = f.radio_button :orientation, "Advanced Follow"
-                        div style="display: table-cell;" = f.label "Advanced Follow", "Advanced Follow"
-                - else
-                  = link_to "CheckIN", hosted_event_checkin_path(@event, attendance, checkin: true), class: "button success", method: "put", remote: true
+                = link_to "CheckIN", hosted_event_checkin_path(@event, attendance, checkin: true), class: "button success", method: "put", remote: true
               span.uncheckin style="display: none;"
                 = link_to "Undo", hosted_event_checkin_path(@event, attendance, checkin: false), class: "button", method: "put", remote: true
 - else

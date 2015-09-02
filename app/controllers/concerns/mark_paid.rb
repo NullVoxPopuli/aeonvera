@@ -2,11 +2,13 @@ module MarkPaid
   extend ActiveSupport::Concern
 
 
-  def mark_paid
+  def mark_paid(skip: false)
     payment_method = params[:payment_method]
     if Payable::Methods::ALL.include?(payment_method)
 
-      @attendance.mark_orders_as_paid!(check_number: params[:check_number])
+      unless skip
+        @attendance.mark_orders_as_paid!(check_number: params[:check_number], payment_method: payment_method)
+      end
 
       if @attendance.owes_nothing?
         return render file: '/hosted_events/checkin/mark_paid'
