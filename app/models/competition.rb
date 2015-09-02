@@ -5,6 +5,7 @@ class Competition < ActiveRecord::Base
 	belongs_to :user
 	belongs_to :event
 
+	has_many :competition_responses
 
 	has_and_belongs_to_many :attendances,
 		-> { where(attending: true).order("attendances.created_at DESC") },
