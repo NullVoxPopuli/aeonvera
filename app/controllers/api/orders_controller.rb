@@ -11,4 +11,16 @@ class Api::OrdersController < APIController
     render json: @order
   end
 
+  def create
+
+  end
+
+  private
+
+  def order_params
+    params[:order].permit(
+
+    )
+  end
+
 end

@@ -44,12 +44,18 @@ class Competition < ActiveRecord::Base
 
 	def to_competitor_csv(options = {})
 		CSV.generate(options) do |csv|
-			csv << ["Competition Number", "Name", "Dance Orientation"]#, "City", "State"]
+			csv << ["Competition Number", "Name", "Dance Orientation", "Partner Name"]#, "City", "State"]
 			attendances.reorder(created_at: :asc).each do |attendance|
+
+				competition_response = attendance.competition_responses.where(competition_id: self.id).first
+				orientation = competition_response.dance_orientation
+				partner_name = competition_response.partner_name
+
 				row = [
 					"",
 					attendance.attendee_name,
-					attendance.dance_orientation
+					orientation || attendance.dance_orientation,
+					partner_name
 					# attendance.address["city"],
 					# attendance.address["state"]
 				]

@@ -480,6 +480,3 @@ DEPENDENCIES
   stripe
   turbolinks
   uglifier
-
-BUNDLED WITH
-   1.10.6
