@@ -9,4 +9,4 @@ span>
 span>
 	= link_to "Download Competition Sheet", hosted_event_competition_path(@event, @competition, format: 'csv'), :class => "button small success"
 
-= render partial: "/hosted_events/attendances/attendances", locals: { subject: @competition }
+= render partial: "/hosted_events/attendances/attendances", locals: { subject: @competition, competitions: true }

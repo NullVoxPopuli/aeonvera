@@ -1,8 +1,11 @@
 AeonVera::Application.routes.draw do
 
-  namespace :api, defaults: {format: :json} do
-    resources :registrations
+  # for our frontend ui.
+  # this should also enable the creation of
+  # native mobile apps for android / iphone / whatever
+  namespace :api, defaults: { format: :json } do
 
+    # Various Event information / summaries
     resources :registered_events
     resources :upcoming_events
     resources :hosted_events
@@ -10,12 +13,21 @@ AeonVera::Application.routes.draw do
     resources :events
     resources :event_summaries, only: [:show]
 
+    # organizations / communties
+    # TODO: finalize a name for these
     resources :communities
 
+    # per event
+    # ideally this stuff would be nested under events/
     resources :housing_requests
-
     resources :event_attendances
+    resources :competitions
+    resources :competition_responses
+    resources :line_items
+
+    # user specific info
     resources :orders
+    resources :registrations
 
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'

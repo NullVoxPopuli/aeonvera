@@ -16,11 +16,19 @@ class OrderSerializer < ActiveModel::Serializer
 
     def user_email
       # will also check meta data in case of non-user-bount attendance
-      object.attendance.attendee_email
+      object.user.try(:email) || object.attendance.try(:attendee_email)
     end
 
     def host_name
       object.host.name
+    end
+
+    def host_type
+      if object.host_type == 'Organization'
+        'Community'
+      else
+        object.host_type
+      end
     end
 
     def host_url

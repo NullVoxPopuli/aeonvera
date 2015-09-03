@@ -1,5 +1,6 @@
 - show_title = defined?(title) ? title : true
 - show_total_owed = defined?(show_owed) ? show_owed : false
+- show_competition_details = defined?(competitions) ? competitions : false
 - attendances_list ||= defined?(attendances) ? attendances : subject.attendances
 - title ||= "Attendees with this #{subject.class.name}"
 
@@ -34,6 +35,9 @@ table.responsive
 					td
 						- attendance.competitions.each do |competition|
 							= competition.name
+							- if show_competition_details && competition.kind == Competition::STRICTLY
+								span<> with
+								= attendance.competition_responses.where(competition_id: competition.id).first.partner_name
 							br
 					td
 						- attendance.ordered_shirts.each do |shirt|

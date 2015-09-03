@@ -1,8 +1,5 @@
 class Api::OrdersController < APIController
 
-  before_filter :authenticate_user_from_token!
-  before_filter :authenticate_user!
-
   def index
     @orders = current_user.orders
     render json: @orders,
@@ -12,6 +9,18 @@ class Api::OrdersController < APIController
   def show
     @order = current_user.orders.find(params[:id])
     render json: @order
+  end
+
+  def create
+
+  end
+
+  private
+
+  def order_params
+    params[:order].permit(
+
+    )
   end
 
 end
