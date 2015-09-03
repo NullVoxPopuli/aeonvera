@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/NullVoxPopuli/active_model_serializers.git
-  revision: 5eb5c2e7007683a0a8dacc9bc3195ad377714092
+  revision: 281dc0ed78b0dac54214bcc6abd6b59e76357c18
   branch: sideload
   specs:
     active_model_serializers (0.10.0.rc2)
@@ -480,3 +480,6 @@ DEPENDENCIES
   stripe
   turbolinks
   uglifier
+
+BUNDLED WITH
+   1.10.6

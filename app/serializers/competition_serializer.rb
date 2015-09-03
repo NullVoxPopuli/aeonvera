@@ -4,8 +4,9 @@ class CompetitionSerializer < ActiveModel::Serializer
     :initial_price, :at_the_door_price, :current_price,
     :kind, :kind_name,
     :requires_orientation, :requires_partner,
-    :event_id,
-    :competition_response_ids
+    :event_id
+
+    has_many :competition_responses
 
 
 

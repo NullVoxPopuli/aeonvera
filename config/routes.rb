@@ -18,10 +18,12 @@ AeonVera::Application.routes.draw do
     resources :communities
 
     # per event
+    # ideally this stuff would be nested under events/
     resources :housing_requests
     resources :event_attendances
     resources :competitions
     resources :competition_responses
+    resources :line_items
 
     # user specific info
     resources :orders
