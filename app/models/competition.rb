@@ -48,8 +48,8 @@ class Competition < ActiveRecord::Base
 			attendances.reorder(created_at: :asc).each do |attendance|
 
 				competition_response = attendance.competition_responses.where(competition_id: self.id).first
-				orientation = competition_response.dance_orientation
-				partner_name = competition_response.partner_name
+				orientation = competition_response.try(:dance_orientation)
+				partner_name = competition_response.try(:partner_name)
 
 				row = [
 					"",
