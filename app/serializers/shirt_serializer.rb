@@ -2,9 +2,25 @@ class ShirtSerializer < ActiveModel::Serializer
 
   attributes :id, :name,
     :current_price, :price,
+    :sizes,
     :expires_at,
     :host_id, :host_type, :event_id,
     :xs_price, :s_price, :sm_price, :m_price, :l_price, :xl_price, :xxl_price, :xxxl_price
+
+    def sizes
+      available = object.metadata["sizes"].reject {|s| s.blank? }
+      result = []
+
+      available.each_with_index do |s, i|
+        result << {
+          id: s,
+          size: s,
+          price:  object.price_for_size(s)
+        }
+      end
+
+      result
+    end
 
     def event_id
       object.host_id
