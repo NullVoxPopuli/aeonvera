@@ -3,14 +3,13 @@
 
 /* jshint ignore:end */
 
-define('aeonvera/adapters/application', ['exports', 'ember-data'], function (exports, DS) {
+define('aeonvera/adapters/application', ['exports', 'ember-data', 'aeonvera/config/environment'], function (exports, DS, ENV) {
 
   'use strict';
 
   exports['default'] = DS['default'].ActiveModelAdapter.extend({
     namespace: 'api',
-    host: 'https://aeonvera.com'
-    // host: 'http://swing.vhost:3000'
+    host: ENV['default'].host
   });
 
 });
@@ -1064,7 +1063,7 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
         if (order.get('isNew')) {
           order.save().then(function (o) {
             o.get('lineItems').invoke('save');
-            o.save().then(function (o) {
+            o.save().then(function () {
               self.send('finishedOrder');
             }, function (errors) {
               alert(errors);
@@ -1097,8 +1096,12 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
         order.save().then(function (o) {
           /* then line items */
           o.get('lineItems').invoke('save');
-          o.save();
+          o.save().then(function () {}, function (error) {
+            alert(error);
+          });
           self.send('finishedOrder');
+        }, function (error) {
+          alert(error);
         });
       }
     }
@@ -2115,6 +2118,14 @@ define('aeonvera/models/order-line-item', ['exports', 'ember-data'], function (e
     */
     partnerName: DS['default'].attr('string'),
     danceOrientation: DS['default'].attr('string'),
+    size: DS['default'].attr('string'),
+
+    priceNeedsChanging: (function () {
+      var lineItem = this.get('lineItem');
+      var size = this.get('size');
+      var sizePrice = lineItem.priceForSize(size);
+      this.set('price', sizePrice);
+    }).observes('size'),
 
     name: (function () {
       return this.get('lineItem').get('name');
@@ -2129,6 +2140,10 @@ define('aeonvera/models/order-line-item', ['exports', 'ember-data'], function (e
 
     isCompetition: (function () {
       return this.get('lineItem').get('constructor.typeKey') === 'competition';
+    }).property('lineItem', 'lineItemType'),
+
+    isShirt: (function () {
+      return this.get('lineItem').get('constructor.typeKey') === 'shirt';
     }).property('lineItem', 'lineItemType')
 
   });
@@ -2185,7 +2200,7 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
       });
 
       return subTotal;
-    }).property('lineItems.@each'),
+    }).property('lineItems.@each.price'),
 
     /*
       takes the line item, and makes an order line item out of it
@@ -2310,14 +2325,19 @@ define('aeonvera/models/shirt', ['exports', 'ember-data', 'aeonvera/models/line-
   'use strict';
 
   exports['default'] = LineItem['default'].extend({
-    xsPrice: DS['default'].attr('number'),
-    sPrice: DS['default'].attr('number'),
-    smPrice: DS['default'].attr('number'),
-    mPrice: DS['default'].attr('number'),
-    lPrice: DS['default'].attr('number'),
-    xlPrice: DS['default'].attr('number'),
-    xxlPrice: DS['default'].attr('number'),
-    xxxlPrice: DS['default'].attr('number')
+    sizes: DS['default'].attr(),
+
+    priceForSize: function priceForSize(size) {
+      var sizes = this.get('sizes');
+      var price = this.get('price');
+      sizes.forEach(function (sizeData) {
+        if (sizeData.size === size) {
+          price = sizeData.price;
+        }
+      });
+      return price;
+    }
+
   });
 
 });
@@ -9306,6 +9326,46 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             templates: [child0, child1]
           };
         }());
+        var child1 = (function() {
+          return {
+            meta: {
+              "revision": "Ember@1.13.7",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 1,
+                  "column": 1850
+                },
+                "end": {
+                  "line": 1,
+                  "column": 2025
+                }
+              }
+            },
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createElement("br");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+              dom.insertBoundary(fragment, 0);
+              return morphs;
+            },
+            statements: [
+              ["inline","select-2",[],["content",["subexpr","@mut",[["get","item.lineItem.sizes",["loc",[null,[1,1889],[1,1908]]]]],[],[]],"value",["subexpr","@mut",[["get","item.size",["loc",[null,[1,1915],[1,1924]]]]],[],[]],"placeholder","Select Shirt Size","optionLabelPath","size","allowClear",false,"optionValuePath","size"],["loc",[null,[1,1870],[1,2021]]]]
+            ],
+            locals: [],
+            templates: []
+          };
+        }());
         return {
           meta: {
             "revision": "Ember@1.13.7",
@@ -9317,7 +9377,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
               },
               "end": {
                 "line": 1,
-                "column": 1928
+                "column": 2110
               }
             }
           },
@@ -9338,6 +9398,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             dom.appendChild(el2, el3);
             var el3 = dom.createComment("");
             dom.appendChild(el2, el3);
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
             var el3 = dom.createElement("small");
             var el4 = dom.createElement("a");
             var el5 = dom.createTextNode("Remove");
@@ -9351,22 +9413,24 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
             var element0 = dom.childAt(fragment, [0]);
             var element1 = dom.childAt(element0, [1]);
-            var element2 = dom.childAt(element1, [3, 0]);
-            var morphs = new Array(4);
+            var element2 = dom.childAt(element1, [4, 0]);
+            var morphs = new Array(5);
             morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
             morphs[1] = dom.createMorphAt(element1,0,0);
             morphs[2] = dom.createMorphAt(element1,2,2);
-            morphs[3] = dom.createElementMorph(element2);
+            morphs[3] = dom.createMorphAt(element1,3,3);
+            morphs[4] = dom.createElementMorph(element2);
             return morphs;
           },
           statements: [
             ["inline","to-usd",[["get","item.total",["loc",[null,[1,1446],[1,1456]]]]],[],["loc",[null,[1,1437],[1,1458]]]],
             ["content","item.name",["loc",[null,[1,1467],[1,1480]]]],
             ["block","if",[["get","item.isCompetition",["loc",[null,[1,1490],[1,1508]]]]],[],0,null,["loc",[null,[1,1484],[1,1850]]]],
-            ["element","action",["removeItem",["get","item",["loc",[null,[1,1882],[1,1886]]]]],["on","click"],["loc",[null,[1,1860],[1,1899]]]]
+            ["block","if",[["get","item.isShirt",["loc",[null,[1,1856],[1,1868]]]]],[],1,null,["loc",[null,[1,1850],[1,2032]]]],
+            ["element","action",["removeItem",["get","item",["loc",[null,[1,2064],[1,2068]]]]],["on","click"],["loc",[null,[1,2042],[1,2081]]]]
           ],
           locals: ["item"],
-          templates: [child0]
+          templates: [child0, child1]
         };
       }());
       var child1 = (function() {
@@ -9377,11 +9441,11 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
               "source": null,
               "start": {
                 "line": 1,
-                "column": 2239
+                "column": 2421
               },
               "end": {
                 "line": 1,
-                "column": 2360
+                "column": 2542
               }
             }
           },
@@ -9402,7 +9466,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             return morphs;
           },
           statements: [
-            ["inline","handle-payment",[],["action",["subexpr","@mut",[["get","process",["loc",[null,[1,2332],[1,2339]]]]],[],[]],"model",["subexpr","@mut",[["get","currentOrder",["loc",[null,[1,2346],[1,2358]]]]],[],[]]],["loc",[null,[1,2308],[1,2360]]]]
+            ["inline","handle-payment",[],["action",["subexpr","@mut",[["get","process",["loc",[null,[1,2514],[1,2521]]]]],[],[]],"model",["subexpr","@mut",[["get","currentOrder",["loc",[null,[1,2528],[1,2540]]]]],[],[]]],["loc",[null,[1,2490],[1,2542]]]]
           ],
           locals: [],
           templates: []
@@ -9419,7 +9483,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             },
             "end": {
               "line": 1,
-              "column": 2381
+              "column": 2563
             }
           }
         },
@@ -9499,10 +9563,10 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         statements: [
           ["attribute","class",["concat",[["subexpr","-bind-attr-class",[["get","orderContainerClasses",[]],"order-container-classes"],[],[]]]]],
           ["inline","select-2",[],["content",["subexpr","@mut",[["get","model.attendances",["loc",[null,[1,1217],[1,1234]]]]],[],[]],"value",["subexpr","@mut",[["get","currentOrder.attendance",["loc",[null,[1,1241],[1,1264]]]]],[],[]],"placeholder","Assign this order to a registrant","allowClear",true,"optionLabelPath","attendeeName"],["loc",[null,[1,1198],[1,1361]]]],
-          ["block","each",[["get","currentItems",["loc",[null,[1,1415],[1,1427]]]]],[],0,null,["loc",[null,[1,1399],[1,1937]]]],
-          ["inline","to-usd",[["get","currentOrder.subTotal",["loc",[null,[1,1961],[1,1982]]]]],[],["loc",[null,[1,1952],[1,1984]]]],
-          ["element","action",["cancelOrder"],["on","click"],["loc",[null,[1,2067],[1,2102]]]],
-          ["block","foundation-modal",[],["title","At la Carte Order","name","a-la-carte-pay"],1,null,["loc",[null,[1,2239],[1,2381]]]]
+          ["block","each",[["get","currentItems",["loc",[null,[1,1415],[1,1427]]]]],[],0,null,["loc",[null,[1,1399],[1,2119]]]],
+          ["inline","to-usd",[["get","currentOrder.subTotal",["loc",[null,[1,2143],[1,2164]]]]],[],["loc",[null,[1,2134],[1,2166]]]],
+          ["element","action",["cancelOrder"],["on","click"],["loc",[null,[1,2249],[1,2284]]]],
+          ["block","foundation-modal",[],["title","At la Carte Order","name","a-la-carte-pay"],1,null,["loc",[null,[1,2421],[1,2563]]]]
         ],
         locals: [],
         templates: [child0, child1]
@@ -9519,7 +9583,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           },
           "end": {
             "line": 1,
-            "column": 2394
+            "column": 2576
           }
         }
       },
@@ -9593,7 +9657,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         ["block","each",[["get","model.lineItems",["loc",[null,[1,324],[1,339]]]]],[],1,null,["loc",[null,[1,308],[1,493]]]],
         ["block","each",[["get","model.shirts",["loc",[null,[1,596],[1,608]]]]],[],2,null,["loc",[null,[1,580],[1,762]]]],
         ["block","each",[["get","model.competitions",["loc",[null,[1,871],[1,889]]]]],[],3,null,["loc",[null,[1,855],[1,1043]]]],
-        ["block","if",[["get","buildingAnOrder",["loc",[null,[1,1060],[1,1075]]]]],[],4,null,["loc",[null,[1,1054],[1,2388]]]]
+        ["block","if",[["get","buildingAnOrder",["loc",[null,[1,1060],[1,1075]]]]],[],4,null,["loc",[null,[1,1054],[1,2570]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3, child4]
@@ -14530,7 +14594,7 @@ define('aeonvera/tests/controllers/event-at-the-door/a-la-carte.jshint', functio
 
   module('JSHint - controllers/event-at-the-door');
   test('controllers/event-at-the-door/a-la-carte.js should pass jshint', function() { 
-    ok(false, 'controllers/event-at-the-door/a-la-carte.js should pass jshint.\ncontrollers/event-at-the-door/a-la-carte.js: line 105, col 37, \'o\' is defined but never used.\n\n1 error'); 
+    ok(true, 'controllers/event-at-the-door/a-la-carte.js should pass jshint.'); 
   });
 
 });
@@ -16377,7 +16441,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.0eaacfd9"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.57cfbad3"});
 }
 
 /* jshint ignore:end */
