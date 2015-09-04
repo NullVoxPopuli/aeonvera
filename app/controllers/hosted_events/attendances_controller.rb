@@ -67,6 +67,8 @@ class HostedEvents::AttendancesController < ApplicationController
   def new
     @attendance = EventAttendance.new
     @user = User.new
+    retrieve_competition_options
+
   end
 
   def edit
@@ -105,6 +107,9 @@ class HostedEvents::AttendancesController < ApplicationController
     if valid
       @user.save if not userless
       @attendance.save
+
+      order = update_or_create_order
+      AttendanceMailer.thankyou_email(order: order).deliver_now
     end
 
     respond_to do |format|
@@ -143,6 +148,32 @@ class HostedEvents::AttendancesController < ApplicationController
   end
 
   private
+
+  def update_or_create_order
+    @attendance.orders.unpaid.destroy_all
+    order = @attendance.create_order
+
+    order
+  end
+
+  def retrieve_competition_options
+    @available_competitions = []
+
+    # replace the list of all competitions with the participating ones
+    participating_competitions = @attendance.competition_responses.map(&:competition)
+    all_competitions = current_event.competitions
+
+    all_competitions.each do |c|
+      if !participating_competitions.include?(c)
+        @available_competitions << CompetitionResponse.new(
+          competition_id: c.id,
+          attendance_id: @attendance.id
+        )
+      end
+    end
+
+  end
+
   # Use callbacks to share common setup or constraints between actions.
 
   def set_attendance
@@ -171,6 +202,10 @@ class HostedEvents::AttendancesController < ApplicationController
       :package_id, :level_id,
       :pricing_tier_id,
       :dance_orientation,
+      custom_field_responses_attributes: [:custom_field_id, :value],
+
+      competition_responses_attributes: [:id, :competition_id, :dance_orientation, :partner_name, :_destroy],
+
       # attendee: [
       #   :first_name,
       #   :last_name,

@@ -144,6 +144,14 @@ module Payable
     self.checks = check_data
   end
 
+  def check_number=(number)
+    add_check_number(number)
+  end
+
+  def check_number
+    checks.first
+  end
+
   def sub_total
     return legacy_total if is_legacy?
     amount = 0

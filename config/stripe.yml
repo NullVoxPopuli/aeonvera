@@ -5,3 +5,12 @@ publishable_key: pk_test_tRYRr2ep1galbJf13I2N23vd
 
 access_token_url: https://connect.stripe.com/oauth/token
 authorize_url: https://connect.stripe.com/oauth/authorize
+
+# quick script to set these on an event, locally
+# e = Event.find id
+# i = e.integrations[:stripe]
+# c = i.config
+# c['access_token'] = STRIPE_CONFIG['secret_key']
+# c['stripe_publishable_key'] = STRIPE_CONFIG['publishable_key']
+# i.config = c
+# i.save
