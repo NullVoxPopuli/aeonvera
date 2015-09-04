@@ -60,12 +60,12 @@ class Api::OrdersController < APIController
   end
 
   def order_params
-    params[:order].permit(:paid_amount, :payment_method)
+    params[:order].permit(:paid_amount, :payment_method, :attendance_id)
   end
 
   def all_order_params
     params[:order].permit(
-      :paid_amount, :payment_method, :check_number, :stripe_data
+      :paid_amount, :payment_method, :check_number, :stripe_data, :attendance_id
     )
   end
 

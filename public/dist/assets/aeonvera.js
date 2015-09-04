@@ -284,6 +284,13 @@ define('aeonvera/components/how-to-pronounce-ae', ['exports', 'aeonvera/componen
 	});
 
 });
+define('aeonvera/components/labeled-radio-button', ['exports', 'ember-radio-button/components/labeled-radio-button'], function (exports, LabeledRadioButton) {
+
+	'use strict';
+
+	exports['default'] = LabeledRadioButton['default'];
+
+});
 define('aeonvera/components/links/aeon-wikipedia-link', ['exports', 'aeonvera/components/links/external-link'], function (exports, ExternalLink) {
 
 	'use strict';
@@ -505,6 +512,31 @@ define('aeonvera/components/pricing-preview', ['exports', 'ember'], function (ex
 		}
 
 	});
+
+});
+define('aeonvera/components/radio-button-input', ['exports', 'ember-radio-button/components/radio-button-input'], function (exports, RadioButtonInput) {
+
+	'use strict';
+
+	exports['default'] = RadioButtonInput['default'];
+
+});
+define('aeonvera/components/radio-button', ['exports', 'ember-radio-button/components/radio-button'], function (exports, RadioButton) {
+
+	'use strict';
+
+	exports['default'] = RadioButton['default'];
+
+});
+define('aeonvera/components/select-2', ['exports', 'ember-select-2/components/select-2'], function (exports, Select2Component) {
+
+	'use strict';
+
+	/*
+		This is just a proxy file requiring the component from the /addon folder and
+		making it available to the dummy application!
+	 */
+	exports['default'] = Select2Component['default'];
 
 });
 define('aeonvera/components/sidebar-container', ['exports', 'ember'], function (exports, Ember) {
@@ -1000,8 +1032,10 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
 
         this.get('currentOrder.lineItems').toArray().forEach(function (item) {
           item.destroyRecord();
+          item.save();
         });
         this.get('currentOrder').destroyRecord();
+        this.get('currentOrder').save();
         this.set('currentOrder', null);
       },
 
@@ -1030,8 +1064,11 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
         if (order.get('isNew')) {
           order.save().then(function (o) {
             o.get('lineItems').invoke('save');
-            o.save();
-            self.send('finishedOrder');
+            o.save().then(function (o) {
+              self.send('finishedOrder');
+            }, function (errors) {
+              alert(errors);
+            });
           });
         } else {
           order.setProperties({
@@ -1043,7 +1080,7 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
             /* what happens if the card is declined? */
             self.send('finishedOrder');
           }, function (order) {
-            console.error('watwatwat');
+            alert(order);
           });
         }
       },
@@ -1861,7 +1898,16 @@ define('aeonvera/models/competition', ['exports', 'ember-data', 'aeonvera/models
         return 'Crossover Jack & Jill';
       }
     }).property('kind')
+
   });
+  // requiresPartner: function(){
+  //   return this.get('kind') === 2;
+  // }.property('kind'),
+  //
+  // requiresOrientation: function(){
+  //   let kind = this.get('kind');
+  //   return (kind === 1 || kind === 4)
+  // }.property('kind')
 
 });
 define('aeonvera/models/event-attendance', ['exports', 'ember-data', 'aeonvera/models/attendance'], function (exports, DS, Attendance) {
@@ -2059,6 +2105,17 @@ define('aeonvera/models/order-line-item', ['exports', 'ember-data'], function (e
     quantity: DS['default'].attr('number'),
     price: DS['default'].attr('number'),
 
+    /*
+      these properties are for additional objects that need to be created on the
+      server, and are not actually stored with the order-line-item
+      TODO: maybe the order-line-item could have an additional polymorphic
+      associations that could point to stuff like the competition-response
+      - This would make rendering of the order summaries MUCH easier...
+       TODO: there should also be shirt responses (and there aren't. boo).
+    */
+    partnerName: DS['default'].attr('string'),
+    danceOrientation: DS['default'].attr('string'),
+
     name: (function () {
       return this.get('lineItem').get('name');
     }).property('lineItem'),
@@ -2068,7 +2125,12 @@ define('aeonvera/models/order-line-item', ['exports', 'ember-data'], function (e
           quantity = this.get('quantity');
 
       return price * quantity;
-    }).property('price', 'quantity')
+    }).property('price', 'quantity'),
+
+    isCompetition: (function () {
+      return this.get('lineItem').get('constructor.typeKey') === 'competition';
+    }).property('lineItem', 'lineItemType')
+
   });
 
 });
@@ -2092,6 +2154,7 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
 
     host: DS['default'].belongsTo('host', { polymorphic: true }),
     lineItems: DS['default'].hasMany('orderLineItem'),
+    attendance: DS['default'].belongsTo('attendance'),
 
     /*
       stripe specific things
@@ -2577,6 +2640,7 @@ define('aeonvera/routes/event-at-the-door/a-la-carte', ['exports', 'ember'], fun
       var fromRoute = this.modelFor('event-at-the-door');
       this.set('event', fromRoute);
       return Ember['default'].RSVP.hash({
+        attendances: this.store.query('event-attendance', { event_id: fromRoute.get('id') }),
         lineItems: this.store.query('line-item', { event_id: fromRoute.get('id'), active: true }),
         competitions: this.store.query('competition', { event_id: fromRoute.get('id') }),
         shirts: this.store.query('shirt', { event_id: fromRoute.get('id') })
@@ -4674,6 +4738,58 @@ define('aeonvera/templates/components/handle-payment', ['exports'], function (ex
   }()));
 
 });
+define('aeonvera/templates/components/labeled-radio-button', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.7",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 12,
+            "column": 0
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n\n");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createTextNode("\n");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,2,2,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [
+        ["inline","radio-button",[],["radioClass",["subexpr","@mut",[["get","radioClass",["loc",[null,[2,15],[2,25]]]]],[],[]],"radioId",["subexpr","@mut",[["get","radioId",["loc",[null,[3,12],[3,19]]]]],[],[]],"changed","innerRadioChanged","disabled",["subexpr","@mut",[["get","disabled",["loc",[null,[5,13],[5,21]]]]],[],[]],"groupValue",["subexpr","@mut",[["get","groupValue",["loc",[null,[6,15],[6,25]]]]],[],[]],"name",["subexpr","@mut",[["get","name",["loc",[null,[7,9],[7,13]]]]],[],[]],"required",["subexpr","@mut",[["get","required",["loc",[null,[8,13],[8,21]]]]],[],[]],"value",["subexpr","@mut",[["get","value",["loc",[null,[9,10],[9,15]]]]],[],[]]],["loc",[null,[1,0],[9,17]]]],
+        ["content","yield",["loc",[null,[11,0],[11,9]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/links/external-link', ['exports'], function (exports) {
 
   'use strict';
@@ -6379,6 +6495,150 @@ define('aeonvera/templates/components/pricing-preview', ['exports'], function (e
       ],
       locals: [],
       templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/components/radio-button', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.7",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 15,
+              "column": 0
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("\n    ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n\n    ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode("\n  ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [1]);
+          var morphs = new Array(4);
+          morphs[0] = dom.createAttrMorph(element0, 'class');
+          morphs[1] = dom.createAttrMorph(element0, 'for');
+          morphs[2] = dom.createMorphAt(element0,1,1);
+          morphs[3] = dom.createMorphAt(element0,3,3);
+          return morphs;
+        },
+        statements: [
+          ["attribute","class",["concat",["ember-radio-button ",["subexpr","if",[["get","checked",["loc",[null,[2,40],[2,47]]]],"checked"],[],["loc",[null,[2,35],[2,59]]]]," ",["get","joinedClassNames",["loc",[null,[2,62],[2,78]]]]]]],
+          ["attribute","for",["get","radioId",["loc",[null,[2,88],[2,95]]]]],
+          ["inline","radio-button-input",[],["class",["subexpr","@mut",[["get","radioClass",["loc",[null,[4,14],[4,24]]]]],[],[]],"id",["subexpr","@mut",[["get","radioId",["loc",[null,[5,11],[5,18]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disabled",["loc",[null,[6,17],[6,25]]]]],[],[]],"name",["subexpr","@mut",[["get","name",["loc",[null,[7,13],[7,17]]]]],[],[]],"required",["subexpr","@mut",[["get","required",["loc",[null,[8,17],[8,25]]]]],[],[]],"groupValue",["subexpr","@mut",[["get","groupValue",["loc",[null,[9,19],[9,29]]]]],[],[]],"value",["subexpr","@mut",[["get","value",["loc",[null,[10,14],[10,19]]]]],[],[]],"changed","changed"],["loc",[null,[3,4],[11,27]]]],
+          ["content","yield",["loc",[null,[13,4],[13,13]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.7",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 15,
+              "column": 0
+            },
+            "end": {
+              "line": 25,
+              "column": 0
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode("  ");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode("\n");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          return morphs;
+        },
+        statements: [
+          ["inline","radio-button-input",[],["class",["subexpr","@mut",[["get","radioClass",["loc",[null,[17,12],[17,22]]]]],[],[]],"id",["subexpr","@mut",[["get","radioId",["loc",[null,[18,9],[18,16]]]]],[],[]],"disabled",["subexpr","@mut",[["get","disabled",["loc",[null,[19,15],[19,23]]]]],[],[]],"name",["subexpr","@mut",[["get","name",["loc",[null,[20,11],[20,15]]]]],[],[]],"required",["subexpr","@mut",[["get","required",["loc",[null,[21,15],[21,23]]]]],[],[]],"groupValue",["subexpr","@mut",[["get","groupValue",["loc",[null,[22,17],[22,27]]]]],[],[]],"value",["subexpr","@mut",[["get","value",["loc",[null,[23,12],[23,17]]]]],[],[]],"changed","changed"],["loc",[null,[16,2],[24,25]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "revision": "Ember@1.13.7",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 26,
+            "column": 0
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["block","if",[["get","hasBlock",["loc",[null,[1,6],[1,14]]]]],[],0,1,["loc",[null,[1,0],[25,7]]]]
+      ],
+      locals: [],
+      templates: [child0, child1]
     };
   }()));
 
@@ -8912,6 +9172,140 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     }());
     var child4 = (function() {
       var child0 = (function() {
+        var child0 = (function() {
+          var child0 = (function() {
+            return {
+              meta: {
+                "revision": "Ember@1.13.7",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 1,
+                    "column": 1510
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 1618
+                  }
+                }
+              },
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createComment("");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var morphs = new Array(1);
+                morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+                dom.insertBoundary(fragment, 0);
+                dom.insertBoundary(fragment, null);
+                return morphs;
+              },
+              statements: [
+                ["inline","input",[],["type","text","value",["subexpr","@mut",[["get","item.partnerName",["loc",[null,[1,1573],[1,1589]]]]],[],[]],"placeholder","Partner Name"],["loc",[null,[1,1547],[1,1618]]]]
+              ],
+              locals: [],
+              templates: []
+            };
+          }());
+          var child1 = (function() {
+            return {
+              meta: {
+                "revision": "Ember@1.13.7",
+                "loc": {
+                  "source": null,
+                  "start": {
+                    "line": 1,
+                    "column": 1625
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 1836
+                  }
+                }
+              },
+              arity: 0,
+              cachedFragment: null,
+              hasRendered: false,
+              buildFragment: function buildFragment(dom) {
+                var el0 = dom.createDocumentFragment();
+                var el1 = dom.createComment("");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("label");
+                var el2 = dom.createTextNode("Lead");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createComment("");
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("label");
+                var el2 = dom.createTextNode("Follow");
+                dom.appendChild(el1, el2);
+                dom.appendChild(el0, el1);
+                var el1 = dom.createElement("br");
+                dom.appendChild(el0, el1);
+                return el0;
+              },
+              buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+                var morphs = new Array(2);
+                morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+                morphs[1] = dom.createMorphAt(fragment,2,2,contextualElement);
+                dom.insertBoundary(fragment, 0);
+                return morphs;
+              },
+              statements: [
+                ["inline","radio-button",[],["value","Lead","groupValue",["subexpr","@mut",[["get","item.danceOrientation",["loc",[null,[1,1705],[1,1726]]]]],[],[]]],["loc",[null,[1,1666],[1,1728]]]],
+                ["inline","radio-button",[],["value","Follow","groupValue",["subexpr","@mut",[["get","item.danceOrientation",["loc",[null,[1,1788],[1,1809]]]]],[],[]]],["loc",[null,[1,1747],[1,1811]]]]
+              ],
+              locals: [],
+              templates: []
+            };
+          }());
+          return {
+            meta: {
+              "revision": "Ember@1.13.7",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 1,
+                  "column": 1484
+                },
+                "end": {
+                  "line": 1,
+                  "column": 1843
+                }
+              }
+            },
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(2);
+              morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+              morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+              dom.insertBoundary(fragment, 0);
+              dom.insertBoundary(fragment, null);
+              return morphs;
+            },
+            statements: [
+              ["block","if",[["get","item.lineItem.requiresPartner",["loc",[null,[1,1516],[1,1545]]]]],[],0,null,["loc",[null,[1,1510],[1,1625]]]],
+              ["block","if",[["get","item.lineItem.requiresOrientation",["loc",[null,[1,1631],[1,1664]]]]],[],1,null,["loc",[null,[1,1625],[1,1843]]]]
+            ],
+            locals: [],
+            templates: [child0, child1]
+          };
+        }());
         return {
           meta: {
             "revision": "Ember@1.13.7",
@@ -8919,11 +9313,11 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
               "source": null,
               "start": {
                 "line": 1,
-                "column": 1186
+                "column": 1399
               },
               "end": {
                 "line": 1,
-                "column": 1349
+                "column": 1928
               }
             }
           },
@@ -8942,6 +9336,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             dom.appendChild(el2, el3);
             var el3 = dom.createElement("br");
             dom.appendChild(el2, el3);
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
             var el3 = dom.createElement("small");
             var el4 = dom.createElement("a");
             var el5 = dom.createTextNode("Remove");
@@ -8955,20 +9351,22 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
             var element0 = dom.childAt(fragment, [0]);
             var element1 = dom.childAt(element0, [1]);
-            var element2 = dom.childAt(element1, [2, 0]);
-            var morphs = new Array(3);
+            var element2 = dom.childAt(element1, [3, 0]);
+            var morphs = new Array(4);
             morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
             morphs[1] = dom.createMorphAt(element1,0,0);
-            morphs[2] = dom.createElementMorph(element2);
+            morphs[2] = dom.createMorphAt(element1,2,2);
+            morphs[3] = dom.createElementMorph(element2);
             return morphs;
           },
           statements: [
-            ["inline","to-usd",[["get","item.total",["loc",[null,[1,1233],[1,1243]]]]],[],["loc",[null,[1,1224],[1,1245]]]],
-            ["content","item.name",["loc",[null,[1,1254],[1,1267]]]],
-            ["element","action",["removeItem",["get","item",["loc",[null,[1,1303],[1,1307]]]]],["on","click"],["loc",[null,[1,1281],[1,1320]]]]
+            ["inline","to-usd",[["get","item.total",["loc",[null,[1,1446],[1,1456]]]]],[],["loc",[null,[1,1437],[1,1458]]]],
+            ["content","item.name",["loc",[null,[1,1467],[1,1480]]]],
+            ["block","if",[["get","item.isCompetition",["loc",[null,[1,1490],[1,1508]]]]],[],0,null,["loc",[null,[1,1484],[1,1850]]]],
+            ["element","action",["removeItem",["get","item",["loc",[null,[1,1882],[1,1886]]]]],["on","click"],["loc",[null,[1,1860],[1,1899]]]]
           ],
           locals: ["item"],
-          templates: []
+          templates: [child0]
         };
       }());
       var child1 = (function() {
@@ -8979,11 +9377,11 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
               "source": null,
               "start": {
                 "line": 1,
-                "column": 1660
+                "column": 2239
               },
               "end": {
                 "line": 1,
-                "column": 1781
+                "column": 2360
               }
             }
           },
@@ -9004,7 +9402,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             return morphs;
           },
           statements: [
-            ["inline","handle-payment",[],["action",["subexpr","@mut",[["get","process",["loc",[null,[1,1753],[1,1760]]]]],[],[]],"model",["subexpr","@mut",[["get","currentOrder",["loc",[null,[1,1767],[1,1779]]]]],[],[]]],["loc",[null,[1,1729],[1,1781]]]]
+            ["inline","handle-payment",[],["action",["subexpr","@mut",[["get","process",["loc",[null,[1,2332],[1,2339]]]]],[],[]],"model",["subexpr","@mut",[["get","currentOrder",["loc",[null,[1,2346],[1,2358]]]]],[],[]]],["loc",[null,[1,2308],[1,2360]]]]
           ],
           locals: [],
           templates: []
@@ -9021,7 +9419,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
             },
             "end": {
               "line": 1,
-              "column": 1802
+              "column": 2381
             }
           }
         },
@@ -9034,6 +9432,12 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           var el2 = dom.createElement("h3");
           var el3 = dom.createTextNode("Current Order");
           dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("label");
+          var el3 = dom.createTextNode("Optional (except for competitions):");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           var el2 = dom.createElement("table");
           dom.setAttribute(el2,"class","width-of-100 no-border");
@@ -9080,23 +9484,25 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
           var element3 = dom.childAt(fragment, [0]);
-          var element4 = dom.childAt(element3, [1]);
-          var element5 = dom.childAt(element3, [3, 0, 0]);
-          var morphs = new Array(5);
+          var element4 = dom.childAt(element3, [3]);
+          var element5 = dom.childAt(element3, [5, 0, 0]);
+          var morphs = new Array(6);
           morphs[0] = dom.createAttrMorph(element3, 'class');
-          morphs[1] = dom.createMorphAt(element4,0,0);
-          morphs[2] = dom.createMorphAt(dom.childAt(element4, [1, 0, 0]),0,0);
-          morphs[3] = dom.createElementMorph(element5);
-          morphs[4] = dom.createMorphAt(fragment,1,1,contextualElement);
+          morphs[1] = dom.createMorphAt(element3,2,2);
+          morphs[2] = dom.createMorphAt(element4,0,0);
+          morphs[3] = dom.createMorphAt(dom.childAt(element4, [1, 0, 0]),0,0);
+          morphs[4] = dom.createElementMorph(element5);
+          morphs[5] = dom.createMorphAt(fragment,1,1,contextualElement);
           dom.insertBoundary(fragment, null);
           return morphs;
         },
         statements: [
           ["attribute","class",["concat",[["subexpr","-bind-attr-class",[["get","orderContainerClasses",[]],"order-container-classes"],[],[]]]]],
-          ["block","each",[["get","currentItems",["loc",[null,[1,1202],[1,1214]]]]],[],0,null,["loc",[null,[1,1186],[1,1358]]]],
-          ["inline","to-usd",[["get","currentOrder.subTotal",["loc",[null,[1,1382],[1,1403]]]]],[],["loc",[null,[1,1373],[1,1405]]]],
-          ["element","action",["cancelOrder"],["on","click"],["loc",[null,[1,1488],[1,1523]]]],
-          ["block","foundation-modal",[],["title","At la Carte Order","name","a-la-carte-pay"],1,null,["loc",[null,[1,1660],[1,1802]]]]
+          ["inline","select-2",[],["content",["subexpr","@mut",[["get","model.attendances",["loc",[null,[1,1217],[1,1234]]]]],[],[]],"value",["subexpr","@mut",[["get","currentOrder.attendance",["loc",[null,[1,1241],[1,1264]]]]],[],[]],"placeholder","Assign this order to a registrant","allowClear",true,"optionLabelPath","attendeeName"],["loc",[null,[1,1198],[1,1361]]]],
+          ["block","each",[["get","currentItems",["loc",[null,[1,1415],[1,1427]]]]],[],0,null,["loc",[null,[1,1399],[1,1937]]]],
+          ["inline","to-usd",[["get","currentOrder.subTotal",["loc",[null,[1,1961],[1,1982]]]]],[],["loc",[null,[1,1952],[1,1984]]]],
+          ["element","action",["cancelOrder"],["on","click"],["loc",[null,[1,2067],[1,2102]]]],
+          ["block","foundation-modal",[],["title","At la Carte Order","name","a-la-carte-pay"],1,null,["loc",[null,[1,2239],[1,2381]]]]
         ],
         locals: [],
         templates: [child0, child1]
@@ -9113,7 +9519,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           },
           "end": {
             "line": 1,
-            "column": 1815
+            "column": 2394
           }
         }
       },
@@ -9187,7 +9593,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         ["block","each",[["get","model.lineItems",["loc",[null,[1,324],[1,339]]]]],[],1,null,["loc",[null,[1,308],[1,493]]]],
         ["block","each",[["get","model.shirts",["loc",[null,[1,596],[1,608]]]]],[],2,null,["loc",[null,[1,580],[1,762]]]],
         ["block","each",[["get","model.competitions",["loc",[null,[1,871],[1,889]]]]],[],3,null,["loc",[null,[1,855],[1,1043]]]],
-        ["block","if",[["get","buildingAnOrder",["loc",[null,[1,1060],[1,1075]]]]],[],4,null,["loc",[null,[1,1054],[1,1809]]]]
+        ["block","if",[["get","buildingAnOrder",["loc",[null,[1,1060],[1,1075]]]]],[],4,null,["loc",[null,[1,1054],[1,2388]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3, child4]
@@ -14124,7 +14530,7 @@ define('aeonvera/tests/controllers/event-at-the-door/a-la-carte.jshint', functio
 
   module('JSHint - controllers/event-at-the-door');
   test('controllers/event-at-the-door/a-la-carte.js should pass jshint', function() { 
-    ok(false, 'controllers/event-at-the-door/a-la-carte.js should pass jshint.\ncontrollers/event-at-the-door/a-la-carte.js: line 115, col 24, \'order\' is defined but never used.\n\n1 error'); 
+    ok(false, 'controllers/event-at-the-door/a-la-carte.js should pass jshint.\ncontrollers/event-at-the-door/a-la-carte.js: line 105, col 37, \'o\' is defined but never used.\n\n1 error'); 
   });
 
 });
@@ -15971,7 +16377,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.a7fb6c50"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.0eaacfd9"});
 }
 
 /* jshint ignore:end */
