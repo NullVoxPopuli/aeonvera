@@ -14,7 +14,7 @@ class HostedEvents::IndividualItemsController < ApplicationController
 		payment_method = params[:items][:payment_method]
 		check_number = params[:items][:check_number]
 
-		order = Order.new(event_id: @event.id, attendance_id: @attendance.id)
+		order = Order.new(host_id: @event.id, host_type: @event.class.name, attendance_id: @attendance.id)
 		order.add_check_number(check_number)
 		items.each do |item|
 			object = @event.send("#{item[:klass].underscore.pluralize}").find(item[:id])
@@ -23,6 +23,8 @@ class HostedEvents::IndividualItemsController < ApplicationController
 		end
 		order.paid = true
 		order.payment_method = payment_method
+		order.net_amount_received = order.paid_amount = params[:items][:amount_paid]
+
 		order.save
 
 		flash[:notice] = "#{items.size} items added to #{@attendance.attendee_name}'s registration."

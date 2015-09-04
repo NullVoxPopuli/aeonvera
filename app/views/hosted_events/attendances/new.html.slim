@@ -14,7 +14,7 @@ h1 New Registration
 		= u.label :last_name
 		= u.text_field :last_name, value: last_name
 		= u.label :email
-		= u.email_field :email, value: (@user ? @user.email.presence : "")
+		= u.email_field :email, value: (@user.try(:email).try(:presence) || "")
 
 	ul.small-block-grid-2
 		- if @event.has_packages?
@@ -46,7 +46,7 @@ h1 New Registration
 	- if @event.has_competitions?
 		fieldset
 			legend Competitions
-			= competitions
+			= render partial: "/register/competition_responses", locals: { form: f }
 
 	- if @event.has_line_items?
 		fieldset

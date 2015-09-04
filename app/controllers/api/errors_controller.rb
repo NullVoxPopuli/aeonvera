@@ -35,12 +35,12 @@ class Api::ErrorsController < APIController
   end
 
   def error_params
-    params[:error].permit(
+    params[:error].try(:permit, [
       :message, :stack,
       :class, :method,
       :cause,
       :params
-    )
+    ])
   end
 
 end

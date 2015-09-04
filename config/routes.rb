@@ -10,7 +10,6 @@ AeonVera::Application.routes.draw do
     resources :upcoming_events
     resources :hosted_events
     resources :registerable_events
-    resources :events
     resources :event_summaries, only: [:show]
 
     # organizations / communties
@@ -18,12 +17,21 @@ AeonVera::Application.routes.draw do
     resources :communities
 
     # per event
-    # ideally this stuff would be nested under events/
+    # ideally this stuff would be nested under events
     resources :housing_requests
     resources :event_attendances
     resources :competitions
     resources :competition_responses
     resources :line_items
+    resources :order_line_items
+    resources :shirts
+    # TODO: make the above under events
+    resources :events do
+      # ember doesn't know how to get here quite yet,
+      # but it needs to differentiate between an event's orders
+      # and a user's orders
+      resources :orders
+    end
 
     # user specific info
     resources :orders

@@ -75,8 +75,7 @@ class EventAttendance < Attendance
     :package_name,
     :level_name,
     :amount_owed,
-    :registered_at] +
-    column_names,
+    :registered_at],
     exclude: [
       :updated_at, :created_at,
       :attendance_id, :attendance_type,

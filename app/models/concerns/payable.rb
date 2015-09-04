@@ -144,6 +144,14 @@ module Payable
     self.checks = check_data
   end
 
+  def check_number=(number)
+    add_check_number(number)
+  end
+
+  def check_number
+    checks.first
+  end
+
   def sub_total
     return legacy_total if is_legacy?
     amount = 0
@@ -183,12 +191,16 @@ module Payable
      self.payment_method == Payable::Methods::PAYPAL)
   end
 
-  def total
+  # when absorb_fees is false, it defaults to should_apply_fee
+  # this kind of a hacky way to get around the varying prices at the door.
+  # everything is just easier when organizers don't do 'convinience fees'.
+  # it'ls also better for morale to not charge extra fees.
+  def total(absorb_fees: false)
     sub = sub_total
     total = sub
 
     # optionally make the registrant pay more
-    if should_apply_fee?
+    if !absorb_fees && should_apply_fee?
         total_fee_percentage = 0.029 # Stripe
         total_fee_percentage += 0.0075 unless host.beta?
 
