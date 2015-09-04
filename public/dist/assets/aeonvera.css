@@ -6094,6 +6094,18 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
 .margin-top-20 {
   margin-top: 20px; }
 
+.max-width-65rem {
+  max-width: 65rem; }
+
+.max-width-70rem {
+  max-width: 70rem; }
+
+.max-width-75rem {
+  max-width: 75rem; }
+
+.max-width-85rem {
+  max-width: 85rem; }
+
 .percent-width-10 {
   width: 10%;
   display: block; }
@@ -6134,6 +6146,36 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
   width: 100%;
   display: block; }
 
+.width-of-10 {
+  width: 10%; }
+
+.width-of-20 {
+  width: 20%; }
+
+.width-of-30 {
+  width: 30%; }
+
+.width-of-40 {
+  width: 40%; }
+
+.width-of-50 {
+  width: 50%; }
+
+.width-of-60 {
+  width: 60%; }
+
+.width-of-70 {
+  width: 70%; }
+
+.width-of-80 {
+  width: 80%; }
+
+.width-of-90 {
+  width: 90%; }
+
+.width-of-100 {
+  width: 100%; }
+
 .extra-padding {
   padding-top: 30px !important;
   padding-bottom: 30px !important; }
@@ -6144,6 +6186,9 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
   width: 128px;
   text-align: center;
   text-indent: -21px; }
+
+.no-border {
+  border: none; }
 
 .no-lineheight {
   line-height: 1em; }
