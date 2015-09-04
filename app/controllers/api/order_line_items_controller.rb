@@ -17,16 +17,47 @@ class Api::OrderLineItemsController < APIController
     @order_line_item.line_item_type = "LineItem::Shirt" if order_line_item_params[:line_item_type] == "Shirt"
     @order_line_item.save
 
+    handle_competition
+
     render json: @order_line_item
     # respond_with @order_line_item
   end
 
   private
 
+  def handle_competition
+    competition_response_params = {}
+
+    if competition_params[:partner_name].present?
+      competition_response_params.merge!({
+        competition_id: @order_line_item.line_item_id,
+        attendance: @order_line_item.order.attendance,
+        partner_name: competition_params[:partner_name]
+      })
+    elsif competition_params[:dance_orientation].present?
+      competition_response_params.merge!({
+        competition_id: @order_line_item.line_item_id,
+        attendance: @order_line_item.order.attendance,
+        dance_orientation: competition_params[:dance_orientation]
+      })
+    end
+
+    if competition_response_params.present?
+      CompetitionResponse.new(competition_response_params).save
+    end
+
+  end
+
   def order_line_item_params
     # TODO: verify that the order is on the event that the user has access to
     params[:order_line_item].permit(
       :line_item_id, :line_item_type, :order_id, :price, :quantity
+    )
+  end
+
+  def competition_params
+    params[:order_line_item].permit(
+      :partner_name, :dance_orientation
     )
   end
 

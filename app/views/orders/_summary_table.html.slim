@@ -26,7 +26,7 @@ table width="100%"
               - if item.requires_orientation?
                 = "#{item.name}: #{competition_response.try(:dance_orientation)}"
               - elsif item.requires_partner?
-                = "#{item.name} w/ #{competition_response.partner_name}"
+                = "#{item.name} w/ #{competition_response.try(:partner_name)}"
               - else
                 = item.name
             - else
