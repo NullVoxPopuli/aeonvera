@@ -11,7 +11,10 @@ class Api::OrderLineItemsController < APIController
 
   def create
     @order_line_item = OrderLineItem.new(order_line_item_params)
-
+    # TODO find a way to do this better. :-\
+    # maybe don't nest the polymorphic?
+    # or find a way to nest in ember?
+    @order_line_item.line_item_type = "LineItem::Shirt" if order_line_item_params[:line_item_type] == "Shirt"
     @order_line_item.save
 
     render json: @order_line_item

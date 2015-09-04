@@ -307,8 +307,8 @@ AeonVera::Application.routes.draw do
   get "/scenes", to: redirect("/communities")
   # ember routes :-(
   # this can go away once all UI is done in ember
-  get "/events/*", to: "marketing#index"
-  get "/event-at-the-door/*", to: "marketing#index"
+  get "/events/*path", to: "marketing#index"
+  get "/event-at-the-door/*path", to: "marketing#index"
   get "/welcome", to: "marketing#index"
   get "/welcome/*path", to: "marketing#index"
   get "/upcoming-events", to: "marketing#index"
