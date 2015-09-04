@@ -51,7 +51,7 @@ class Api::OrderLineItemsController < APIController
 
   def handle_shirt
     if shirt_params[:size].present?
-      AttendanceLineItem.new(
+      ShirtSelection.new(
         line_item: @order_line_item.line_item,
         attendance: @order_line_item.order.attendance,
         size: shirt_params[:size],
