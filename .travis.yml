@@ -34,7 +34,9 @@ services:
   - redis-server
 
 branches:
-  only: master
+  only:
+    - master
+    - production
 
 notifications:
   webhooks:

@@ -3,7 +3,7 @@ module StripeCharge
   # requires that a host (event, org) exists
   # also integration
   # also order
-  def charge_card!(token = params[:stripeToken], email = email[:stripeEmail], absorb_fees: false)
+  def charge_card!(token = params[:stripeToken], email = params[:stripeEmail], absorb_fees: false)
 
     # the access token here is what determines
     # what account the charge gets sent to
