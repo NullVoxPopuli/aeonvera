@@ -3,7 +3,7 @@
 
 - content_for :side_nav do
 
-  li = link_to "At the Door", hosted_event_sales_path(@event)
+  li: a href="/event-at-the-door/16" At the Door
   li.show-for-small = link_to "Public Registration", public_registration_hosted_event_path(@event)
   li.divider
   li.show-for-small: label
