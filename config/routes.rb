@@ -271,7 +271,6 @@ AeonVera::Application.routes.draw do
     end
 
     resources :levels, controller: "hosted_events/levels"
-    resources :dance_only, controller: "hosted_events/dance_only"
     resources :competition_sign_ups, controller: "hosted_events/competition_sign_ups" do
       member do
         get :add_competitions
@@ -289,7 +288,6 @@ AeonVera::Application.routes.draw do
     resources :discounts, controller: "hosted_events/discounts"
     resources :shirts, controller: "hosted_events/shirts"
     resources :packages, controller: "hosted_events/packages"
-    resources :sales, controller: "hosted_events/sales"
   end
 
   namespace :auth do
