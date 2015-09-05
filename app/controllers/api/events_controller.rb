@@ -1,8 +1,9 @@
 class Api::EventsController < APIController
+  include EventLoader
+  before_action :set_event, only: [:show, :index]
 
   def index; show; end
   def show
-    @event = current_user.hosted_events.find(id)
     render json: @event, each_serializer: EventSerializer
   end
 
