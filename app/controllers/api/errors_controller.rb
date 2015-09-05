@@ -31,7 +31,7 @@ class Api::ErrorsController < APIController
   private
 
   def backtrace_as_array
-    error_params[:stack].try(:split, "\n") || []
+    error_params.try(:[], :stack).try(:split, "\n") || []
   end
 
   def error_params
