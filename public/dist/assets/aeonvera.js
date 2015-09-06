@@ -132,7 +132,7 @@ define('aeonvera/components/event-at-the-door/checkin-list', ['exports', 'ember'
     percentCheckedIn: (function () {
       var checkedIn = this.get('numberCheckedIn');
       /* var checkedOut = this.get('numberCheckedOut'); */
-      var total = this.get('model').get('length');
+      var total = this.get('model').get("length");
       var percent = checkedIn / total * 100;
 
       return Math.round(percent, 2);
@@ -470,12 +470,12 @@ define('aeonvera/components/pricing-preview', ['exports', 'ember'], function (ex
 
 		actions: {
 			reCalculate: function reCalculate(enteredValue) {
-				var serviceFee = this.$('#serviceFee');
-				var cardFee = this.$('#cardFee');
-				var buyerPays = this.$('#buyerPays');
-				var youGet = this.$('#youGet');
-				var ticketPrice = this.$('#ticketPrice');
-				var absorbFees = this.$('#absorbFees');
+				var serviceFee = this.$("#serviceFee");
+				var cardFee = this.$("#cardFee");
+				var buyerPays = this.$("#buyerPays");
+				var youGet = this.$("#youGet");
+				var ticketPrice = this.$("#ticketPrice");
+				var absorbFees = this.$("#absorbFees");
 
 				var value = typeof enteredValue !== 'undefined' ? enteredValue : parseFloat(ticketPrice.val());
 
@@ -629,12 +629,12 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
     /**
      * The name of your company or website.
      */
-    name: 'Demo Site',
+    name: "Demo Site",
 
     /**
      * A description of the product or service being purchased.
      */
-    description: '2 widgets ($20.00)',
+    description: "2 widgets ($20.00)",
 
     /**
      * The amount (in cents) that's shown to the user. Note that you
@@ -655,7 +655,7 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
     /**
      * The currency of the amount (3-letter ISO code). The default is USD.
      */
-    currency: 'USD',
+    currency: "USD",
 
     /**
      * The label of the payment button in the Checkout form (e.g. “Subscribe”,
@@ -686,7 +686,7 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
     /**
      * The text to be shown on the default blue button.
      */
-    label: 'Pay with card',
+    label: "Pay with card",
 
     /**
      * Specify whether to include the option to "Remember Me" for future
@@ -775,7 +775,7 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
       var self = this;
 
       if (Ember['default'].isNone(this.get('key'))) {
-        throw ['Your Stripe key must be set to use the stripe-checkout component. ', 'Set the key in your environment.js file (ENV.stripe.key) or set the ', 'key property on the component when instantiating it in your hbs template. ', 'Find your Stripe publishable key at https://dashboard.stripe.com/account/apikeys'].join('\n');
+        throw ["Your Stripe key must be set to use the stripe-checkout component. ", "Set the key in your environment.js file (ENV.stripe.key) or set the ", "key property on the component when instantiating it in your hbs template. ", "Find your Stripe publishable key at https://dashboard.stripe.com/account/apikeys"].join('\n');
       }
 
       var handler = StripeCheckout.configure({
@@ -866,14 +866,14 @@ define('aeonvera/components/tool-tip', ['exports', 'ember'], function (exports, 
 
   exports['default'] = Ember['default'].Component.extend({
     attributeBindings: ["data-tooltip", "data-width", "title"],
-    tagName: "span",
-    classNames: ["has-tip"],
+    tagName: 'span',
+    classNames: ['has-tip'],
     "data-tooltip": true,
-    title: Ember['default'].computed.alias("message"),
+    title: Ember['default'].computed.alias('message'),
 
     "data-width": (function () {
-      return this.get("width") || 200;
-    }).property("width")
+      return this.get('width') || 200;
+    }).property('width')
 
   });
 
@@ -908,16 +908,16 @@ define('aeonvera/controllers/application', ['exports', 'ember'], function (expor
           */
           self.get('flashMessages').success('You will receive an email with instructions about how to confirm your account in a few minutes.');
           jQuery('#signup-modal a.close-reveal-modal').trigger('click');
-        }, function () {});
+        }, function () {
+          /*
+            error
+            - show error messages
+          */
+        });
       }
     }
 
   });
-
-  /*
-    error
-    - show error messages
-  */
 
 });
 define('aeonvera/controllers/dashboard', ['exports', 'ember'], function (exports, Ember) {
@@ -1054,7 +1054,7 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
           send the token to the server to actually create the charge
          */
         order.setProperties({
-          paymentMethod: 'Stripe',
+          paymentMethod: "Stripe",
           checkoutToken: args.id,
           checkoutEmail: args.email
         });
@@ -1152,7 +1152,7 @@ define('aeonvera/helpers/date-range', ['exports', 'ember'], function (exports, E
     var formattedStartDate = moment(startDate).format('ll');
     var formattedEndDate = moment(endDate).format('ll');
 
-    var range = formattedStartDate + ' - ' + formattedEndDate;
+    var range = formattedStartDate + " - " + formattedEndDate;
 
     return range;
   });
@@ -1185,58 +1185,58 @@ define('aeonvera/helpers/fa-icon', ['exports', 'ember'], function (exports, Embe
    */
   var faIcon = function faIcon(name, options) {
     if (Ember['default'].typeOf(name) !== 'string') {
-      var message = 'fa-icon: no icon specified';
+      var message = "fa-icon: no icon specified";
       warn(message);
       return Ember['default'].String.htmlSafe(message);
     }
 
     var params = options.hash,
         classNames = [],
-        html = '';
+        html = "";
 
-    classNames.push('fa');
+    classNames.push("fa");
     if (!name.match(FA_PREFIX)) {
-      name = 'fa-' + name;
+      name = "fa-" + name;
     }
     classNames.push(name);
     if (params.spin) {
-      classNames.push('fa-spin');
+      classNames.push("fa-spin");
     }
     if (params.flip) {
-      classNames.push('fa-flip-' + params.flip);
+      classNames.push("fa-flip-" + params.flip);
     }
     if (params.rotate) {
-      classNames.push('fa-rotate-' + params.rotate);
+      classNames.push("fa-rotate-" + params.rotate);
     }
     if (params.lg) {
-      warn('fa-icon: the \'lg\' parameter is deprecated. Use \'size\' instead. I.e. {{fa-icon size="lg"}}');
-      classNames.push('fa-lg');
+      warn("fa-icon: the 'lg' parameter is deprecated. Use 'size' instead. I.e. {{fa-icon size=\"lg\"}}");
+      classNames.push("fa-lg");
     }
     if (params.x) {
-      warn('fa-icon: the \'x\' parameter is deprecated. Use \'size\' instead. I.e. {{fa-icon size="' + params.x + '"}}');
-      classNames.push('fa-' + params.x + 'x');
+      warn("fa-icon: the 'x' parameter is deprecated. Use 'size' instead. I.e. {{fa-icon size=\"" + params.x + "\"}}");
+      classNames.push("fa-" + params.x + "x");
     }
     if (params.size) {
-      if (Ember['default'].typeOf(params.size) === 'string' && params.size.match(/\d+/)) {
+      if (Ember['default'].typeOf(params.size) === "string" && params.size.match(/\d+/)) {
         params.size = Number(params.size);
       }
-      if (Ember['default'].typeOf(params.size) === 'number') {
-        classNames.push('fa-' + params.size + 'x');
+      if (Ember['default'].typeOf(params.size) === "number") {
+        classNames.push("fa-" + params.size + "x");
       } else {
-        classNames.push('fa-' + params.size);
+        classNames.push("fa-" + params.size);
       }
     }
     if (params.fixedWidth) {
-      classNames.push('fa-fw');
+      classNames.push("fa-fw");
     }
     if (params.listItem) {
-      classNames.push('fa-li');
+      classNames.push("fa-li");
     }
     if (params.pull) {
-      classNames.push('pull-' + params.pull);
+      classNames.push("pull-" + params.pull);
     }
     if (params.border) {
-      classNames.push('fa-border');
+      classNames.push("fa-border");
     }
     if (params.classNames && !Ember['default'].isArray(params.classNames)) {
       params.classNames = [params.classNames];
@@ -1245,17 +1245,17 @@ define('aeonvera/helpers/fa-icon', ['exports', 'ember'], function (exports, Embe
       Array.prototype.push.apply(classNames, params.classNames);
     }
 
-    html += '<';
+    html += "<";
     var tagName = params.tagName || 'i';
     html += tagName;
-    html += ' class=\'' + classNames.join(' ') + '\'';
+    html += " class='" + classNames.join(" ") + "'";
     if (params.title) {
-      html += ' title=\'' + params.title + '\'';
+      html += " title='" + params.title + "'";
     }
     if (params.ariaHidden === undefined || params.ariaHidden) {
-      html += ' aria-hidden="true"';
+      html += " aria-hidden=\"true\"";
     }
-    html += '></' + tagName + '>';
+    html += "></" + tagName + ">";
     return Ember['default'].String.htmlSafe(html);
   };
 
@@ -1285,7 +1285,7 @@ define('aeonvera/helpers/to-usd', ['exports', 'ember'], function (exports, Ember
     }
 
     var amount = (value || 0).toFixed(2),
-        sign = "$";
+        sign = '$';
 
     return "" + sign + amount;
   });
@@ -1333,7 +1333,7 @@ define('aeonvera/initializers/current-user', ['exports', 'ember', 'simple-auth/s
 
       Session['default'].reopen({
         setCurrentUser: (function () {
-          var accessToken = this.get("secure.token");
+          var accessToken = this.get('secure.token');
 
           /*
             not sure if this will be needed, but token and email are
@@ -1351,17 +1351,17 @@ define('aeonvera/initializers/current-user', ['exports', 'ember', 'simple-auth/s
               make a call to the server that only returns the current user
               see UserController#show
             */
-            return container.lookup("service:store")
+            return container.lookup('service:store')
             /*
               the id of 0 here doesn't actually matter,
               the server alwasy returns the current user.
               This is just to route to the show action on the controller.
             */
-            .find("user", 0).then(function (user) {
-              self.set("content.currentUser", user);
+            .find('user', 0).then(function (user) {
+              self.set('content.currentUser', user);
             });
           }
-        }).observes("secure.token")
+        }).observes('secure.token')
       });
     }
   };
@@ -1396,8 +1396,14 @@ define('aeonvera/initializers/error-handler', ['exports', 'ember', 'aeonvera/con
       method: 'POST',
       dataType: 'json',
       data: { error: errorData },
-      success: function success() {},
-      error: function error() {}
+      success: function success() /*data, textStatus, jqXHR*/{
+        // notify the user what happened, give link
+        // similar to atom.io's editor
+
+      },
+      error: function error() /*jqXHR, textStatus, errorThrown*/{
+        // not sure what to do if this fails... we can't report it
+      }
     });
   };
 
@@ -1427,12 +1433,6 @@ define('aeonvera/initializers/error-handler', ['exports', 'ember', 'aeonvera/con
       }
     }
   };
-  /*data, textStatus, jqXHR*/
-  // notify the user what happened, give link
-  // similar to atom.io's editor
-
-  /*jqXHR, textStatus, errorThrown*/
-  // not sure what to do if this fails... we can't report it
 
 });
 define('aeonvera/initializers/export-application-global', ['exports', 'ember', 'aeonvera/config/environment'], function (exports, Ember, config) {
@@ -1441,11 +1441,28 @@ define('aeonvera/initializers/export-application-global', ['exports', 'ember', '
 
   exports.initialize = initialize;
 
-  function initialize(container, application) {
-    var classifiedName = Ember['default'].String.classify(config['default'].modulePrefix);
+  function initialize() {
+    var application = arguments[1] || arguments[0];
+    if (config['default'].exportApplicationGlobal !== false) {
+      var value = config['default'].exportApplicationGlobal;
+      var globalName;
 
-    if (config['default'].exportApplicationGlobal && !window[classifiedName]) {
-      window[classifiedName] = application;
+      if (typeof value === 'string') {
+        globalName = value;
+      } else {
+        globalName = Ember['default'].String.classify(config['default'].modulePrefix);
+      }
+
+      if (!window[globalName]) {
+        window[globalName] = application;
+
+        application.reopen({
+          willDestroy: function willDestroy() {
+            this._super.apply(this, arguments);
+            delete window[globalName];
+          }
+        });
+      }
     }
   }
 
@@ -1595,7 +1612,7 @@ define('aeonvera/initializers/subdomain', ['exports', 'ember', 'aeonvera/config/
   var urlChecker = Ember['default'].Object.extend({
 
     subdomain: (function () {
-      var regexParse = new RegExp('[a-z-0-9]{2,63}.[a-z.]{2,5}$');
+      var regexParse = new RegExp('[a-z\-0-9]{2,63}\.[a-z\.]{2,5}$');
       var urlParts = regexParse.exec(this.get('hostname'));
       if (urlParts) return this.normalize(this.get('hostname').replace(urlParts[0], '').slice(0, -1));else return this.normalize('');
     }).property('hostname'),
@@ -1632,18 +1649,18 @@ define('aeonvera/instance-initializers/ember-i18n', ['exports', 'ember', 'ember-
   'use strict';
 
   exports['default'] = {
-    name: "ember-i18n",
+    name: 'ember-i18n',
 
     initialize: function initialize(instance) {
       var defaultLocale = (ENV['default'].i18n || {}).defaultLocale;
       if (defaultLocale === undefined) {
-        Ember['default'].warn("ember-i18n did not find a default locale; falling back to \"en\".");
-        defaultLocale = "en";
+        Ember['default'].warn('ember-i18n did not find a default locale; falling back to "en".');
+        defaultLocale = 'en';
       }
-      instance.container.lookup("service:i18n").set("locale", defaultLocale);
+      instance.container.lookup('service:i18n').set('locale', defaultLocale);
 
       if (legacyHelper['default'] != null) {
-        Ember['default'].HTMLBars._registerHelper("t", legacyHelper['default']);
+        Ember['default'].HTMLBars._registerHelper('t', legacyHelper['default']);
       }
     }
   };
@@ -1664,7 +1681,11 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
     createyourevent: 'Create Your Event',
     lookingforscene: 'Looking for a scene?',
     whatisheader: 'What is ÆONVERA?',
-    whatis: 'It is a system that helps event and scene organizers manage their events, lessons, and dances.     It helps scenes manage memberships and benefits.     It helps event organizers more easily manage their event both before and during the event.     It is constantly growing and responding to the community and doing everything it can to make the lives of organizers easier.     For more information on "how", checkout the features page.',
+    whatis: 'It is a system that helps event and scene organizers manage their events, lessons, and dances. \
+      It helps scenes manage memberships and benefits. \
+      It helps event organizers more easily manage their event both before and during the event. \
+      It is constantly growing and responding to the community and doing everything it can to make the lives of organizers easier. \
+      For more information on "how", checkout the features page.',
 
     features: 'Features',
     pricing: 'Pricing',
@@ -1679,9 +1700,14 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
 
     atdPaymentCollectionAgree: 'You agree that by clicking the pay button below, that you have collected {{amount}} from the customer.',
 
-    featuresinfo: 'List of current and upcoming features and possible explanations of each.     ÆONVERA is written by, and is for Swing Dancers.',
-    pricinginfo: 'Overview of pricing.     The most important thing to note is that if your event dosn\'t have a need     for collecting payments electronically, you can use ÆONVERA for free.     Every feature.',
-    faqinfo: 'Questions that are frequently asked as well as ones that might be     thought, but not spoken.',
+    featuresinfo: 'List of current and upcoming features and possible explanations of each. \
+      ÆONVERA is written by, and is for Swing Dancers.',
+    pricinginfo: 'Overview of pricing. \
+      The most important thing to note is that if your event dosn\'t have a need \
+      for collecting payments electronically, you can use ÆONVERA for free. \
+      Every feature.',
+    faqinfo: 'Questions that are frequently asked as well as ones that might be \
+      thought, but not spoken.',
 
     tos: 'Terms of Service',
     privacy: 'Privacy',
@@ -1709,13 +1735,31 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
         idea: 'I have an idea, will you please implement it?'
       },
       answers: {
-        howhelp: 'If you have general question about ÆONVERA, you can contact Preston         by clicking the email / envelope icon at the bottom of every page. If you         have a question about a particular event, it would be more efficient to         contact the event organizers.',
-        idea: 'Possibly. At the bottom of every page, you\'ll see a "Submit Ideas"         link. Feel free to click that and submit an "issue" on GitHub. If your         idea can meet the needs of the many, it\'ll get done. Exact timeline         cannot be known unless it\'s really urgent - like a bug or something.',
+        howhelp: 'If you have general question about ÆONVERA, you can contact Preston \
+          by clicking the email / envelope icon at the bottom of every page. If you \
+          have a question about a particular event, it would be more efficient to \
+          contact the event organizers.',
+        idea: 'Possibly. At the bottom of every page, you\'ll see a "Submit Ideas" \
+          link. Feel free to click that and submit an "issue" on GitHub. If your \
+          idea can meet the needs of the many, it\'ll get done. Exact timeline \
+          cannot be known unless it\'s really urgent - like a bug or something.',
         butthis: 'That\'s fine. Free will and such.',
         whystripe: '',
         pricecompare: '',
-        name: 'Names can mean a lot - they can also mean nothing. The owner of ÆONVERA         spent numerous days looking up various prefixes and suffixes to stitch together.         Eventually he decided to use a sort of exotic, yet ancient word ÆON - meaning "life".         ÆON is a good word just by itself and has a nice ring to it, especially when pronounced         with a long "a" sound instead of a typical "e" sound. But the owner felt that there         needed to be a suffix. Eventually VERA, meaning "true", was chosen so mean that ÆONVERA         is true to life, true to its promises, and true to its mission to help guide organizers         and attempt to relieve the stress that comes from organizing and mananging attendees.',
-        pronounce: 'The "Æ" letter, in Modern English does not have an agreed         upon pronunciation. Some people pronounce it as "ee", like in "eon",        some pronounce it as "eh", as in "esophagus".          The creator of ÆONVERA pronounces it as a long "a" sound like in "ape".        "Vera" is pronounced like in         Aloe Vera. No tricks on that one.'
+        name: 'Names can mean a lot - they can also mean nothing. The owner of ÆONVERA \
+          spent numerous days looking up various prefixes and suffixes to stitch together. \
+          Eventually he decided to use a sort of exotic, yet ancient word ÆON - meaning "life". \
+          ÆON is a good word just by itself and has a nice ring to it, especially when pronounced \
+          with a long "a" sound instead of a typical "e" sound. But the owner felt that there \
+          needed to be a suffix. Eventually VERA, meaning "true", was chosen so mean that ÆONVERA \
+          is true to life, true to its promises, and true to its mission to help guide organizers \
+          and attempt to relieve the stress that comes from organizing and mananging attendees.',
+        pronounce: 'The "Æ" letter, in Modern English does not have an agreed \
+          upon pronunciation. Some people pronounce it as "ee", like in "eon",\
+          some pronounce it as "eh", as in "esophagus".  \
+          The creator of ÆONVERA pronounces it as a long "a" sound like in "ape".\
+          "Vera" is pronounced like in \
+          Aloe Vera. No tricks on that one.'
       }
     }
   };
@@ -1801,18 +1845,18 @@ define('aeonvera/models/attendance', ['exports', 'ember', 'ember-data'], functio
       var paid = this.get('amountPaid');
       var doesOwe = owed > 0;
       var hasPaid = paid > 0;
-      var status = '';
+      var status = "";
 
       if (doesOwe) {
-        status += 'Owe: $' + owed;
+        status += "Owe: $" + owed;
       }
 
       if (doesOwe && hasPaid) {
-        status += ', ';
+        status += ", ";
       }
 
       if (hasPaid) {
-        status += 'Paid: $' + paid;
+        status += "Paid: $" + paid;
       }
 
       return status;
@@ -1846,11 +1890,11 @@ define('aeonvera/models/community', ['exports', 'ember-data'], function (exports
     owner: DS['default'].belongsTo('user'),
 
     location: (function () {
-      return this.get('city') + ', ' + this.get('state');
+      return this.get('city') + ", " + this.get('state');
     }).property('city', 'state'),
 
     logo_is_missing: (function () {
-      return this.get('logo_url').indexOf('missing') !== -1;
+      return this.get('logo_url').indexOf("missing") !== -1;
     }).property('logo_url')
   });
 
@@ -1890,15 +1934,15 @@ define('aeonvera/models/competition', ['exports', 'ember-data', 'aeonvera/models
       var kind = this.get('kind');
 
       if (kind === 0) {
-        return 'Solo Jazz';
+        return "Solo Jazz";
       } else if (kind === 1) {
-        return 'Jack & Jill';
+        return "Jack & Jill";
       } else if (kind === 2) {
-        return 'Strictly';
+        return "Strictly";
       } else if (kind === 3) {
-        return 'Team';
+        return "Team";
       } else if (kind === 4) {
-        return 'Crossover Jack & Jill';
+        return "Crossover Jack & Jill";
       }
     }).property('kind')
 
@@ -1981,7 +2025,7 @@ define('aeonvera/models/event', ['exports', 'ember-data', 'aeonvera/models/host'
 	  	TODO: find a way to make the 'stripe' key not a string somehow
 	  	so typing it over and over doesn't lead to silent errors
 	  */
-			var integrations = this.get('integrations').filterBy('name', 'stripe');
+			var integrations = this.get('integrations').filterBy('name', "stripe");
 			var stripeIntegration = null;
 
 			if (integrations.length > 0) {
@@ -2206,8 +2250,8 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
       takes the line item, and makes an order line item out of it
     */
     addLineItem: function addLineItem(lineItem) {
-      var quantity = arguments[1] === undefined ? 1 : arguments[1];
-      var price = arguments[2] === undefined ? lineItem.get('currentPrice') : arguments[2];
+      var quantity = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+      var price = arguments.length <= 2 || arguments[2] === undefined ? lineItem.get('currentPrice') : arguments[2];
       return (function () {
         var orderLineItem = this.get('lineItems').createRecord({
           lineItem: lineItem,
@@ -2231,8 +2275,8 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
         but I don't know how that's going to work yet
     */
     markPaid: function markPaid(paymentMethod) {
-      var checkNumber = arguments[1] === undefined ? null : arguments[1];
-      var stripeData = arguments[2] === undefined ? null : arguments[2];
+      var checkNumber = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+      var stripeData = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
       /*
         orders can't be changed once paid.
@@ -2287,10 +2331,10 @@ define('aeonvera/models/registered-event', ['exports', 'ember-data'], function (
 		url: DS['default'].attr('string'),
 
 		registrationStatus: (function () {
-			if (this.get('isAttending')) {
-				return 'Attending';
+			if (this.get("isAttending")) {
+				return "Attending";
 			} else {
-				return 'Not Attending';
+				return "Not Attending";
 			}
 		}).property('isAttending'),
 
@@ -2441,7 +2485,9 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
       this.resource('events', function () {
         this.route('show', {
           path: ':event_id'
-        }, function () {});
+        }, function () {
+          /* attendees, volunteers, etc */
+        });
         this.route('housing-requests', function () {
           this.route('new');
         });
@@ -2462,15 +2508,18 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
       this.route('packages');
     });
 
-    this.route('upcoming-events');
+    this.route("upcoming-events");
     this.route('communities');
 
     this.resource('user', function () {
       this.route('edit');
     });
-  });
 
-  /* attendees, volunteers, etc */
+    /*
+      404ish
+    */
+    this.route('not-found', { path: '/*path' });
+  });
 
 });
 define('aeonvera/routes/application', ['exports', 'ember', 'simple-auth/mixins/application-route-mixin'], function (exports, Ember, ApplicationRouteMixin) {
@@ -2784,6 +2833,31 @@ define('aeonvera/routes/login', ['exports', 'ember'], function (exports, Ember) 
       return this.get('session').authenticate('simple-auth-authenticator:devise', data);
     }
   });
+
+});
+define('aeonvera/routes/not-found', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    renderTemplate: function renderTemplate() {
+      this.render('not-found', {
+        into: 'application'
+      });
+    },
+
+    activate: function activate() {
+      Ember['default'].run.later(function () {
+        Ember['default'].$('#tetris-game').blockrain({
+          autoplay: false,
+          autoplayRestart: true,
+          theme: 'modern'
+        });
+      });
+    }
+
+  });
+  // playText: 'How about tetris isntead?'
 
 });
 define('aeonvera/routes/register', ['exports', 'ember'], function (exports, Ember) {
@@ -6958,11 +7032,11 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
             "source": null,
             "start": {
               "line": 1,
-              "column": 223
+              "column": 224
             },
             "end": {
               "line": 1,
-              "column": 339
+              "column": 340
             }
           }
         },
@@ -6993,11 +7067,11 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
             "source": null,
             "start": {
               "line": 1,
-              "column": 360
+              "column": 361
             },
             "end": {
               "line": 1,
-              "column": 464
+              "column": 465
             }
           }
         },
@@ -7031,7 +7105,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
           },
           "end": {
             "line": 1,
-            "column": 481
+            "column": 482
           }
         }
       },
@@ -7078,9 +7152,9 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
       },
       statements: [
         ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,30],[1,38]]]],"/checkin"]]],
-        ["attribute","href",["concat",["hosted_events/",["get","model.id",["loc",[null,[1,128],[1,136]]]],"/attendances/new"]]],
-        ["block","link-to",["event-at-the-door.competition-list"],["classNames","button percent-width-100"],0,null,["loc",[null,[1,223],[1,351]]]],
-        ["block","link-to",["event-at-the-door.a-la-carte"],["classNames","button percent-width-100"],1,null,["loc",[null,[1,360],[1,476]]]]
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,129],[1,137]]]],"/attendances/new"]]],
+        ["block","link-to",["event-at-the-door.competition-list"],["classNames","button percent-width-100"],0,null,["loc",[null,[1,224],[1,352]]]],
+        ["block","link-to",["event-at-the-door.a-la-carte"],["classNames","button percent-width-100"],1,null,["loc",[null,[1,361],[1,477]]]]
       ],
       locals: [],
       templates: [child0, child1]
@@ -10358,6 +10432,62 @@ define('aeonvera/templates/events/show/index', ['exports'], function (exports) {
         ["inline","to-usd",[["get","model.revenue",["loc",[null,[1,539],[1,552]]]]],[],["loc",[null,[1,530],[1,554]]]],
         ["inline","to-usd",[["get","model.unpaid",["loc",[null,[1,664],[1,676]]]]],[],["loc",[null,[1,655],[1,678]]]],
         ["inline","attendance-list",[],["model",["subexpr","@mut",[["get","model.recentRegistrations",["loc",[null,[1,795],[1,820]]]]],[],[]]],["loc",[null,[1,771],[1,822]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/not-found', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.7",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 120
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("h1");
+        dom.setAttribute(el1,"class","text-center");
+        var el2 = dom.createTextNode("Oops. Page not found!");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"id","tetris-game");
+        dom.setAttribute(el1,"class","center-margin");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes() { return []; },
+      statements: [
+
       ],
       locals: [],
       templates: []
@@ -14676,7 +14806,7 @@ define('aeonvera/tests/helpers/ember-i18n/test-helpers', ['ember'], function (Em
       };
     } else {
       return function () {
-        throw new Error('ember-i18n could not find a compatible test framework');
+        throw new Error("ember-i18n could not find a compatible test framework");
       };
     }
   })();
@@ -14810,6 +14940,9 @@ define('aeonvera/tests/integration/components/dashboard/attended-events-test', [
 
   'use strict';
 
+  var _templateObject = _taggedTemplateLiteral(['{{dashboard/attended-events}}'], ['{{dashboard/attended-events}}']),
+      _templateObject2 = _taggedTemplateLiteral(['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  '], ['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  ']);
+
   function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
   ember_qunit.moduleForComponent('dashboard/attended-events', 'Integration | Component | dashboard/attended events', {
@@ -14822,12 +14955,12 @@ define('aeonvera/tests/integration/components/dashboard/attended-events-test', [
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    this.render(hbs['default'](_taggedTemplateLiteral(['{{dashboard/attended-events}}'], ['{{dashboard/attended-events}}'])));
+    this.render(hbs['default'](_templateObject));
 
     assert.equal(this.$().text().trim(), '');
 
     // Template block usage:
-    this.render(hbs['default'](_taggedTemplateLiteral(['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  '], ['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  '])));
+    this.render(hbs['default'](_templateObject2));
 
     assert.equal(this.$().text().trim(), 'template block text');
   });
@@ -14847,6 +14980,9 @@ define('aeonvera/tests/integration/components/dashboard/hosted-events-test', ['e
 
   'use strict';
 
+  var _templateObject = _taggedTemplateLiteral(['{{dashboard/hosted-events}}'], ['{{dashboard/hosted-events}}']),
+      _templateObject2 = _taggedTemplateLiteral(['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  '], ['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  ']);
+
   function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
   ember_qunit.moduleForComponent('dashboard/hosted-events', 'Integration | Component | dashboard/hosted events', {
@@ -14859,12 +14995,12 @@ define('aeonvera/tests/integration/components/dashboard/hosted-events-test', ['e
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    this.render(hbs['default'](_taggedTemplateLiteral(['{{dashboard/hosted-events}}'], ['{{dashboard/hosted-events}}'])));
+    this.render(hbs['default'](_templateObject));
 
     assert.equal(this.$().text().trim(), '');
 
     // Template block usage:
-    this.render(hbs['default'](_taggedTemplateLiteral(['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  '], ['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  '])));
+    this.render(hbs['default'](_templateObject2));
 
     assert.equal(this.$().text().trim(), 'template block text');
   });
@@ -15290,6 +15426,16 @@ define('aeonvera/tests/routes/login.jshint', function () {
   });
 
 });
+define('aeonvera/tests/routes/not-found.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes');
+  test('routes/not-found.js should pass jshint', function() { 
+    ok(true, 'routes/not-found.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/routes/register.jshint', function () {
 
   'use strict';
@@ -15394,7 +15540,10 @@ define('aeonvera/tests/unit/components/external-link-test', ['ember-qunit'], fun
 
   'use strict';
 
-  ember_qunit.moduleForComponent('external-link', {});
+  ember_qunit.moduleForComponent('external-link', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15407,9 +15556,6 @@ define('aeonvera/tests/unit/components/external-link-test', ['ember-qunit'], fun
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/external-link-test.jshint', function () {
@@ -15426,7 +15572,10 @@ define('aeonvera/tests/unit/components/login-help-modal-test', ['ember-qunit'], 
 
   'use strict';
 
-  ember_qunit.moduleForComponent('login-help-modal', 'Unit | Component | login help modal', {});
+  ember_qunit.moduleForComponent('login-help-modal', 'Unit | Component | login help modal', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15439,9 +15588,6 @@ define('aeonvera/tests/unit/components/login-help-modal-test', ['ember-qunit'], 
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/login-help-modal-test.jshint', function () {
@@ -15458,7 +15604,10 @@ define('aeonvera/tests/unit/components/login-modal-test', ['ember-qunit'], funct
 
   'use strict';
 
-  ember_qunit.moduleForComponent('login-modal', 'Unit | Component | login modal', {});
+  ember_qunit.moduleForComponent('login-modal', 'Unit | Component | login modal', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15471,9 +15620,6 @@ define('aeonvera/tests/unit/components/login-modal-test', ['ember-qunit'], funct
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/login-modal-test.jshint', function () {
@@ -15490,7 +15636,10 @@ define('aeonvera/tests/unit/components/nav/left-off-canvas-menu-test', ['ember-q
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/left-off-canvas-menu', {});
+  ember_qunit.moduleForComponent('nav/left-off-canvas-menu', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15503,9 +15652,6 @@ define('aeonvera/tests/unit/components/nav/left-off-canvas-menu-test', ['ember-q
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/left-off-canvas-menu-test.jshint', function () {
@@ -15522,7 +15668,10 @@ define('aeonvera/tests/unit/components/nav/right-off-canvas-menu-test', ['ember-
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/right-off-canvas-menu', {});
+  ember_qunit.moduleForComponent('nav/right-off-canvas-menu', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15535,9 +15684,6 @@ define('aeonvera/tests/unit/components/nav/right-off-canvas-menu-test', ['ember-
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/right-off-canvas-menu-test.jshint', function () {
@@ -15554,7 +15700,10 @@ define('aeonvera/tests/unit/components/nav/welcome/left-items-test', ['ember-qun
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/welcome/left-items', {});
+  ember_qunit.moduleForComponent('nav/welcome/left-items', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15567,9 +15716,6 @@ define('aeonvera/tests/unit/components/nav/welcome/left-items-test', ['ember-qun
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/welcome/left-items-test.jshint', function () {
@@ -15586,7 +15732,10 @@ define('aeonvera/tests/unit/components/nav/welcome/right-items-test', ['ember-qu
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/welcome/right-items', {});
+  ember_qunit.moduleForComponent('nav/welcome/right-items', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15599,9 +15748,6 @@ define('aeonvera/tests/unit/components/nav/welcome/right-items-test', ['ember-qu
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/welcome/right-items-test.jshint', function () {
@@ -15618,7 +15764,10 @@ define('aeonvera/tests/unit/components/nav/welcome/top-menu-test', ['ember-qunit
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/welcome/top-menu', {});
+  ember_qunit.moduleForComponent('nav/welcome/top-menu', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15631,9 +15780,6 @@ define('aeonvera/tests/unit/components/nav/welcome/top-menu-test', ['ember-qunit
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/welcome/top-menu-test.jshint', function () {
@@ -15650,7 +15796,10 @@ define('aeonvera/tests/unit/components/pricing-preview-test', ['ember-qunit'], f
 
   'use strict';
 
-  ember_qunit.moduleForComponent('pricing-preview', {});
+  ember_qunit.moduleForComponent('pricing-preview', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -15663,9 +15812,6 @@ define('aeonvera/tests/unit/components/pricing-preview-test', ['ember-qunit'], f
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/pricing-preview-test.jshint', function () {
@@ -15715,16 +15861,16 @@ define('aeonvera/tests/unit/controllers/application-test', ['ember-qunit'], func
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:application', {});
+  ember_qunit.moduleFor('controller:application', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/controllers/application-test.jshint', function () {
@@ -15741,16 +15887,16 @@ define('aeonvera/tests/unit/controllers/login-test', ['ember-qunit'], function (
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:login', {});
+  ember_qunit.moduleFor('controller:login', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/controllers/login-test.jshint', function () {
@@ -15767,16 +15913,16 @@ define('aeonvera/tests/unit/controllers/welcome-test', ['ember-qunit'], function
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:welcome', {});
+  ember_qunit.moduleFor('controller:welcome', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/controllers/welcome-test.jshint', function () {
@@ -16047,15 +16193,15 @@ define('aeonvera/tests/unit/routes/application-test', ['ember-qunit'], function 
 
   'use strict';
 
-  ember_qunit.moduleFor('route:application', {});
+  ember_qunit.moduleFor('route:application', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/application-test.jshint', function () {
@@ -16072,15 +16218,15 @@ define('aeonvera/tests/unit/routes/attended-events-test', ['ember-qunit'], funct
 
   'use strict';
 
-  ember_qunit.moduleFor('route:attended-events', 'Unit | Route | attended events', {});
+  ember_qunit.moduleFor('route:attended-events', 'Unit | Route | attended events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/attended-events-test.jshint', function () {
@@ -16097,15 +16243,15 @@ define('aeonvera/tests/unit/routes/communities-test', ['ember-qunit'], function 
 
   'use strict';
 
-  ember_qunit.moduleFor('route:communities', 'Unit | Route | communities', {});
+  ember_qunit.moduleFor('route:communities', 'Unit | Route | communities', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/communities-test.jshint', function () {
@@ -16122,15 +16268,15 @@ define('aeonvera/tests/unit/routes/dashboard-test', ['ember-qunit'], function (e
 
   'use strict';
 
-  ember_qunit.moduleFor('route:dashboard', 'Unit | Route | dashboard', {});
+  ember_qunit.moduleFor('route:dashboard', 'Unit | Route | dashboard', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/dashboard-test.jshint', function () {
@@ -16147,15 +16293,15 @@ define('aeonvera/tests/unit/routes/events-test', ['ember-qunit'], function (embe
 
   'use strict';
 
-  ember_qunit.moduleFor('route:events', {});
+  ember_qunit.moduleFor('route:events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/events-test.jshint', function () {
@@ -16172,15 +16318,15 @@ define('aeonvera/tests/unit/routes/hosted-events-test', ['ember-qunit'], functio
 
   'use strict';
 
-  ember_qunit.moduleFor('route:hosted-events', 'Unit | Route | hosted events', {});
+  ember_qunit.moduleFor('route:hosted-events', 'Unit | Route | hosted events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/hosted-events-test.jshint', function () {
@@ -16197,15 +16343,15 @@ define('aeonvera/tests/unit/routes/login-test', ['ember-qunit'], function (ember
 
   'use strict';
 
-  ember_qunit.moduleFor('route:login', {});
+  ember_qunit.moduleFor('route:login', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/login-test.jshint', function () {
@@ -16222,15 +16368,15 @@ define('aeonvera/tests/unit/routes/orders-test', ['ember-qunit'], function (embe
 
   'use strict';
 
-  ember_qunit.moduleFor('route:orders', 'Unit | Route | orders', {});
+  ember_qunit.moduleFor('route:orders', 'Unit | Route | orders', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/orders-test.jshint', function () {
@@ -16247,15 +16393,15 @@ define('aeonvera/tests/unit/routes/register-test', ['ember-qunit'], function (em
 
   'use strict';
 
-  ember_qunit.moduleFor('route:register', 'Unit | Route | register', {});
+  ember_qunit.moduleFor('route:register', 'Unit | Route | register', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/register-test.jshint', function () {
@@ -16272,15 +16418,15 @@ define('aeonvera/tests/unit/routes/registered-events-test', ['ember-qunit'], fun
 
   'use strict';
 
-  ember_qunit.moduleFor('route:registered-events', 'Unit | Route | registered events', {});
+  ember_qunit.moduleFor('route:registered-events', 'Unit | Route | registered events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/registered-events-test.jshint', function () {
@@ -16297,15 +16443,15 @@ define('aeonvera/tests/unit/routes/upcoming-events-test', ['ember-qunit'], funct
 
   'use strict';
 
-  ember_qunit.moduleFor('route:upcoming-events', 'Unit | Route | upcoming events', {});
+  ember_qunit.moduleFor('route:upcoming-events', 'Unit | Route | upcoming events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/upcoming-events-test.jshint', function () {
@@ -16322,15 +16468,15 @@ define('aeonvera/tests/unit/routes/welcome-test', ['ember-qunit'], function (emb
 
   'use strict';
 
-  ember_qunit.moduleFor('route:welcome', {});
+  ember_qunit.moduleFor('route:welcome', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/welcome-test.jshint', function () {
@@ -16347,16 +16493,16 @@ define('aeonvera/tests/unit/services/current-registering-object-test', ['ember-q
 
   'use strict';
 
-  ember_qunit.moduleFor('service:current-registering-object', 'Unit | Service | current registering object', {});
+  ember_qunit.moduleFor('service:current-registering-object', 'Unit | Service | current registering object', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var service = this.subject();
     assert.ok(service);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
 
 });
 define('aeonvera/tests/unit/services/current-registering-object-test.jshint', function () {
@@ -16373,16 +16519,16 @@ define('aeonvera/tests/unit/services/current-user-test', ['ember-qunit'], functi
 
   'use strict';
 
-  ember_qunit.moduleFor('service:current-user', 'Unit | Service | current user', {});
+  ember_qunit.moduleFor('service:current-user', 'Unit | Service | current user', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var service = this.subject();
     assert.ok(service);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
 
 });
 define('aeonvera/tests/unit/services/current-user-test.jshint', function () {
@@ -16441,7 +16587,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.57cfbad3"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.0.0.4866de3f"});
 }
 
 /* jshint ignore:end */
