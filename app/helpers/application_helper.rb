@@ -55,7 +55,7 @@ module ApplicationHelper
   def hosted_event_links(event = @event)
     [
       {
-        "At the Door" => hosted_event_sales_path(event),
+        "At the Door" => "/event-at-the-door/16",
         "Edit" => edit_hosted_event_path(event)
       },
       {

@@ -67,7 +67,9 @@ describe "At the door registration" do
         expect(page).to_not have_content("errors prohibited this event from being saved")
 
         emails = ActionMailer::Base.deliveries
-        expect(emails.length).to eq 1
+
+        # confirmation email and receipt
+        expect(emails.length).to eq 2
         expect(emails.first.subject).to include("Confirm")
         expect(emails.first.to).to include(@email)
       end
