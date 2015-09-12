@@ -5787,8 +5787,6 @@ th.hide-for-touch {
       background-color: white; }
       body .shell .page-title {
         padding-top: 20px; }
-      body .shell .inner-shell {
-        padding-bottom: 20px; }
     body .panel.bg-header {
       height: 200px;
       padding-top: 50px; }
@@ -5998,6 +5996,19 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
     /* always hide initially */
     display: none; }
 
+.date-picker-holder {
+  /* minimal version of the actual holder from the plugin... positioning was wierd */
+  font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 19.2px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 0px;
+  text-align: left; }
+
 .padding-left-5 {
   padding-left: 5px; }
 
@@ -6176,6 +6187,96 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
 .width-of-100 {
   width: 100%; }
 
+.width-of-10px {
+  width: 10px; }
+
+.width-of-20px {
+  width: 20px; }
+
+.width-of-30px {
+  width: 30px; }
+
+.width-of-40px {
+  width: 40px; }
+
+.width-of-50px {
+  width: 50px; }
+
+.width-of-60px {
+  width: 60px; }
+
+.width-of-70px {
+  width: 70px; }
+
+.width-of-80px {
+  width: 80px; }
+
+.width-of-90px {
+  width: 90px; }
+
+.width-of-100px {
+  width: 100px; }
+
+.width-of-110px {
+  width: 110px; }
+
+.width-of-120px {
+  width: 120px; }
+
+.width-of-130px {
+  width: 130px; }
+
+.width-of-140px {
+  width: 140px; }
+
+.width-of-150px {
+  width: 150px; }
+
+.width-of-160px {
+  width: 160px; }
+
+.width-of-170px {
+  width: 170px; }
+
+.width-of-180px {
+  width: 180px; }
+
+.width-of-190px {
+  width: 190px; }
+
+.width-of-200px {
+  width: 200px; }
+
+.width-of-210px {
+  width: 210px; }
+
+.width-of-220px {
+  width: 220px; }
+
+.width-of-230px {
+  width: 230px; }
+
+.width-of-240px {
+  width: 240px; }
+
+.width-of-250px {
+  width: 250px; }
+
+.width-of-260px {
+  width: 260px; }
+
+.width-of-270px {
+  width: 270px; }
+
+.width-of-280px {
+  width: 280px; }
+
+.width-of-290px {
+  width: 290px; }
+
+.width-of-300px {
+  width: 300px; }
+
 .extra-padding {
   padding-top: 30px !important;
   padding-bottom: 30px !important; }
@@ -6222,5 +6323,131 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
   z-index: 10000;
   width: 400px;
   height: 700px; }
+
+.center-parent {
+  position: relative;
+  width: 50%;
+  height: 200px;
+  margin: 20px auto; }
+  .center-parent .center-child {
+    padding: 20px; }
+    .center-parent .center-child.both {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
+    .center-parent .center-child.horizontal {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 0); }
+    .center-parent .center-child.vertical {
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%); }
+
+.sp {
+  width: 32px;
+  height: 32px;
+  clear: both;
+  margin: 20px auto; }
+
+/* Spinner 3Balls Scale */
+.sp-3balls, .sp-3balls:before, .sp-3balls:after {
+  border-radius: 50%;
+  background-color: #000;
+  width: 18px;
+  height: 18px;
+  transform-origin: center center;
+  display: inline-block; }
+
+.sp-3balls {
+  position: relative;
+  background-color: black;
+  opacity: 1;
+  -webkit-animation: spScaleAlpha 1s infinite linear;
+  animation: spScaleAlpha 1s infinite linear; }
+
+.sp-3balls:before, .sp-3balls:after {
+  content: '';
+  position: relative;
+  opacity: 0.25; }
+
+.sp-3balls:before {
+  left: 30px;
+  top: 0px;
+  -webkit-animation: spScaleAlphaBefore 1s infinite linear;
+  animation: spScaleAlphaBefore 1s infinite linear; }
+
+.sp-3balls:after {
+  left: -30px;
+  top: -23px;
+  -webkit-animation: spScaleAlphaAfter 1s infinite linear;
+  animation: spScaleAlphaAfter 1s infinite linear; }
+
+@-webkit-keyframes spScaleAlpha {
+  0% {
+    opacity: 1; }
+
+  33% {
+    opacity: 0.25; }
+
+  66% {
+    opacity: 0.25; }
+
+  100% {
+    opacity: 1; } }
+
+@keyframes spScaleAlpha {
+  0% {
+    opacity: 1; }
+
+  33% {
+    opacity: 0.25; }
+
+  66% {
+    opacity: 0.25; }
+
+  100% {
+    opacity: 1; } }
+
+@-webkit-keyframes spScaleAlphaBefore {
+  0% {
+    opacity: 0.25; }
+
+  33% {
+    opacity: 1; }
+
+  66% {
+    opacity: 0.25; } }
+
+@keyframes spScaleAlphaBefore {
+  0% {
+    opacity: 0.25; }
+
+  33% {
+    opacity: 1; }
+
+  66% {
+    opacity: 0.25; } }
+
+@-webkit-keyframes spScaleAlphaAfter {
+  33% {
+    opacity: 0.25; }
+
+  66% {
+    opacity: 1; }
+
+  100% {
+    opacity: 0.25; } }
+
+@keyframes spScaleAlphaAfter {
+  33% {
+    opacity: 0.25; }
+
+  66% {
+    opacity: 1; }
+
+  100% {
+    opacity: 0.25; } }
 
 /*# sourceMappingURL=aeonvera.css.map */
