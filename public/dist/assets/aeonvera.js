@@ -474,6 +474,15 @@ define('aeonvera/components/nav/welcome/top-menu', ['exports', 'ember'], functio
   });
 
 });
+define('aeonvera/components/page-header', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    text: ''
+  });
+
+});
 define('aeonvera/components/pick-a-date', ['exports', 'ember-cli-pickadate/components/pick-a-date'], function (exports, pick_a_date) {
 
 	'use strict';
@@ -2660,6 +2669,7 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
         }, function () {
           /* attendees, volunteers, etc */
           this.route('revenue');
+          this.route('manage');
         });
         this.route('housing-requests', function () {
           this.route('new');
@@ -3008,6 +3018,17 @@ define('aeonvera/routes/events/show/index', ['exports', 'ember'], function (expo
 	'use strict';
 
 	exports['default'] = Ember['default'].Route.extend({});
+
+});
+define('aeonvera/routes/events/show/manage', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    model: function model() {
+      return this.modelFor('events.show');
+    }
+  });
 
 });
 define('aeonvera/routes/events/show/revenue', ['exports', 'ember'], function (exports, Ember) {
@@ -6631,6 +6652,51 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
   }()));
 
 });
+define('aeonvera/templates/components/page-header', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.7",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 17
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h2");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["content","text",["loc",[null,[1,4],[1,12]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/pricing-preview', ['exports'], function (exports) {
 
   'use strict';
@@ -7264,46 +7330,11 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
             "source": null,
             "start": {
               "line": 1,
-              "column": 4
+              "column": 224
             },
             "end": {
               "line": 1,
-              "column": 102
-            }
-          }
-        },
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("CheckIN");
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes() { return []; },
-        statements: [
-
-        ],
-        locals: [],
-        templates: []
-      };
-    }());
-    var child1 = (function() {
-      return {
-        meta: {
-          "revision": "Ember@1.13.7",
-          "loc": {
-            "source": null,
-            "start": {
-              "line": 1,
-              "column": 244
-            },
-            "end": {
-              "line": 1,
-              "column": 360
+              "column": 340
             }
           }
         },
@@ -7326,7 +7357,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
         templates: []
       };
     }());
-    var child2 = (function() {
+    var child1 = (function() {
       return {
         meta: {
           "revision": "Ember@1.13.7",
@@ -7334,11 +7365,11 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
             "source": null,
             "start": {
               "line": 1,
-              "column": 381
+              "column": 361
             },
             "end": {
               "line": 1,
-              "column": 485
+              "column": 465
             }
           }
         },
@@ -7372,7 +7403,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
           },
           "end": {
             "line": 1,
-            "column": 502
+            "column": 482
           }
         }
       },
@@ -7382,7 +7413,10 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("li");
-        var el2 = dom.createComment("");
+        var el2 = dom.createElement("a");
+        dom.setAttribute(el2,"class","button percent-width-100");
+        var el3 = dom.createTextNode("Checkin");
+        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("li");
@@ -7405,22 +7439,23 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element0 = dom.childAt(fragment, [1, 0]);
+        var element0 = dom.childAt(fragment, [0, 0]);
+        var element1 = dom.childAt(fragment, [1, 0]);
         var morphs = new Array(4);
-        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
-        morphs[1] = dom.createAttrMorph(element0, 'href');
+        morphs[0] = dom.createAttrMorph(element0, 'href');
+        morphs[1] = dom.createAttrMorph(element1, 'href');
         morphs[2] = dom.createMorphAt(dom.childAt(fragment, [2]),0,0);
         morphs[3] = dom.createMorphAt(dom.childAt(fragment, [3]),0,0);
         return morphs;
       },
       statements: [
-        ["block","link-to",["event-at-the-door.checkin"],["classNames","button percent-width-100"],0,null,["loc",[null,[1,4],[1,114]]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,149],[1,157]]]],"/attendances/new"]]],
-        ["block","link-to",["event-at-the-door.competition-list"],["classNames","button percent-width-100"],1,null,["loc",[null,[1,244],[1,372]]]],
-        ["block","link-to",["event-at-the-door.a-la-carte"],["classNames","button percent-width-100"],2,null,["loc",[null,[1,381],[1,497]]]]
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,30],[1,38]]]],"/checkin"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,129],[1,137]]]],"/attendances/new"]]],
+        ["block","link-to",["event-at-the-door.competition-list"],["classNames","button percent-width-100"],0,null,["loc",[null,[1,224],[1,352]]]],
+        ["block","link-to",["event-at-the-door.a-la-carte"],["classNames","button percent-width-100"],1,null,["loc",[null,[1,361],[1,477]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2]
+      templates: [child0, child1]
     };
   }()));
 
@@ -7539,6 +7574,41 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
         templates: []
       };
     }());
+    var child3 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.7",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 1008
+            },
+            "end": {
+              "line": 1,
+              "column": 1096
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Manage");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
     return {
       meta: {
         "revision": "Ember@1.13.7",
@@ -7550,7 +7620,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
           },
           "end": {
             "line": 1,
-            "column": 1088
+            "column": 1113
           }
         }
       },
@@ -7650,10 +7720,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
         dom.setAttribute(el1,"class","divider");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("li");
-        var el2 = dom.createElement("a");
-        dom.setAttribute(el2,"class","button expand");
-        var el3 = dom.createTextNode("Manage");
-        dom.appendChild(el2, el3);
+        var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
@@ -7666,7 +7733,6 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
         var element4 = dom.childAt(fragment, [9, 0]);
         var element5 = dom.childAt(fragment, [10, 0]);
         var element6 = dom.childAt(fragment, [14, 0]);
-        var element7 = dom.childAt(fragment, [16, 0]);
         var morphs = new Array(11);
         morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0, 0]),0,0);
         morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
@@ -7678,7 +7744,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
         morphs[7] = dom.createAttrMorph(element5, 'href');
         morphs[8] = dom.createMorphAt(dom.childAt(fragment, [13]),0,0);
         morphs[9] = dom.createAttrMorph(element6, 'href');
-        morphs[10] = dom.createAttrMorph(element7, 'href');
+        morphs[10] = dom.createMorphAt(dom.childAt(fragment, [16]),0,0);
         return morphs;
       },
       statements: [
@@ -7692,10 +7758,10 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
         ["attribute","href",["concat",["/hosted_events/",["get","event.id",["loc",[null,[1,735],[1,743]]]],"/housing"]]],
         ["block","link-to",["events.show.revenue"],[],2,null,["loc",[null,[1,831],[1,897]]]],
         ["attribute","href",["concat",["/hosted_events/",["get","event.id",["loc",[null,[1,932],[1,940]]]],"/charts"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","event.id",["loc",[null,[1,1034],[1,1042]]]],"/edit"]]]
+        ["block","link-to",["events.show.manage",["get","model.id",["loc",[null,[1,1040],[1,1048]]]]],["classNames","button expand"],3,null,["loc",[null,[1,1008],[1,1108]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2]
+      templates: [child0, child1, child2, child3]
     };
   }()));
 
@@ -10725,6 +10791,188 @@ define('aeonvera/templates/events/show/index', ['exports'], function (exports) {
         ["inline","to-usd",[["get","model.revenue",["loc",[null,[1,539],[1,552]]]]],[],["loc",[null,[1,530],[1,554]]]],
         ["inline","to-usd",[["get","model.unpaid",["loc",[null,[1,664],[1,676]]]]],[],["loc",[null,[1,655],[1,678]]]],
         ["inline","attendance-list",[],["model",["subexpr","@mut",[["get","model.recentRegistrations",["loc",[null,[1,795],[1,820]]]]],[],[]]],["loc",[null,[1,771],[1,822]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/manage', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.7",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 1690
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("a");
+        dom.setAttribute(el1,"class","button");
+        var el2 = dom.createTextNode("Event Settings");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("h3");
+        var el2 = dom.createTextNode("Configure");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("hr");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("ul");
+        dom.setAttribute(el1,"class","small-block-grid-2 medium-block-grid-3 large-block-grid-4");
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Levels");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Also known as 'tracks'. Here, you can configure if different levels require auditions, as well as other requirements.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Discounts");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Did someone win a pass to your event? Is there a sweet deal for students? Create a discount here.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Packages");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Most often 'Full Weekend', and 'Dance Only'. This is the core item that people will be paying for.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Pricing Tiers");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("These affect the price of packages either over time and/or based on number of registrations.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("A la Carte Items");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Smaller things for sale, such as water bottles, or shoe bags. These will also be available at the door.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Shirts");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Configure your event's shirt options and available sizes here.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Raffles");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Want to give away a prize to try to make some additional money? Includes ability to choose winner.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        var el3 = dom.createElement("h4");
+        var el4 = dom.createElement("a");
+        var el5 = dom.createTextNode("Custom Registration Fields");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("p");
+        var el4 = dom.createTextNode("Need to collect additional info? Want to display a disclaimer at the bottom of registration? This is it.");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [1]);
+        var element1 = dom.childAt(fragment, [4]);
+        var element2 = dom.childAt(element1, [0, 0, 0]);
+        var element3 = dom.childAt(element1, [1, 0, 0]);
+        var element4 = dom.childAt(element1, [2, 0, 0]);
+        var element5 = dom.childAt(element1, [3, 0, 0]);
+        var element6 = dom.childAt(element1, [4, 0, 0]);
+        var element7 = dom.childAt(element1, [5, 0, 0]);
+        var element8 = dom.childAt(element1, [6, 0, 0]);
+        var element9 = dom.childAt(element1, [7, 0, 0]);
+        var morphs = new Array(10);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createAttrMorph(element0, 'href');
+        morphs[2] = dom.createAttrMorph(element2, 'href');
+        morphs[3] = dom.createAttrMorph(element3, 'href');
+        morphs[4] = dom.createAttrMorph(element4, 'href');
+        morphs[5] = dom.createAttrMorph(element5, 'href');
+        morphs[6] = dom.createAttrMorph(element6, 'href');
+        morphs[7] = dom.createAttrMorph(element7, 'href');
+        morphs[8] = dom.createAttrMorph(element8, 'href');
+        morphs[9] = dom.createAttrMorph(element9, 'href');
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","Event Management"],["loc",[null,[1,0],[1,39]]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,65],[1,73]]]],"/edit"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,241],[1,249]]]],"/levels"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,438],[1,446]]]],"/discounts"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,621],[1,629]]]],"/packages"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,803],[1,811]]]],"/pricing_tiers"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,989],[1,997]]]],"/line_items"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1186],[1,1194]]]],"/shirts"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1328],[1,1336]]]],"/raffles"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1508],[1,1516]]]],"/custom_fields"]]]
       ],
       locals: [],
       templates: []
@@ -15142,6 +15390,16 @@ define('aeonvera/tests/components/nav/welcome/top-menu.jshint', function () {
   });
 
 });
+define('aeonvera/tests/components/page-header.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - components');
+  test('components/page-header.js should pass jshint', function() { 
+    ok(true, 'components/page-header.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/components/pricing-preview.jshint', function () {
 
   'use strict';
@@ -15551,6 +15809,43 @@ define('aeonvera/tests/integration/components/dashboard/hosted-events-test.jshin
   module('JSHint - integration/components/dashboard');
   test('integration/components/dashboard/hosted-events-test.js should pass jshint', function() { 
     ok(true, 'integration/components/dashboard/hosted-events-test.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/integration/components/page-header-test', ['ember-qunit', 'htmlbars-inline-precompile'], function (ember_qunit, hbs) {
+
+  'use strict';
+
+  function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+  ember_qunit.moduleForComponent('page-header', 'Integration | Component | page header', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(hbs['default'](_taggedTemplateLiteral(['{{page-header}}'], ['{{page-header}}'])));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(hbs['default'](_taggedTemplateLiteral(['\n    {{#page-header}}\n      template block text\n    {{/page-header}}\n  '], ['\n    {{#page-header}}\n      template block text\n    {{/page-header}}\n  '])));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('aeonvera/tests/integration/components/page-header-test.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - integration/components');
+  test('integration/components/page-header-test.js should pass jshint', function() { 
+    ok(true, 'integration/components/page-header-test.js should pass jshint.'); 
   });
 
 });
@@ -15981,6 +16276,16 @@ define('aeonvera/tests/routes/events/show/index.jshint', function () {
   module('JSHint - routes/events/show');
   test('routes/events/show/index.js should pass jshint', function() { 
     ok(true, 'routes/events/show/index.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/manage.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/events/show');
+  test('routes/events/show/manage.js should pass jshint', function() { 
+    ok(true, 'routes/events/show/manage.js should pass jshint.'); 
   });
 
 });
@@ -17210,7 +17515,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"name":"aeonvera","version":"0.0.0.de7d99fd"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"name":"aeonvera","version":"0.0.0.f9573bf5"});
 }
 
 /* jshint ignore:end */
