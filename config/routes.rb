@@ -27,10 +27,9 @@ AeonVera::Application.routes.draw do
     resources :shirts
     # TODO: make the above under events
     resources :events do
-      # ember doesn't know how to get here quite yet,
       resources :orders, controller: 'events/orders'
-      # but it needs to differentiate between an event's orders
-      # and a user's orders
+      resources :discounts, controller: 'events/discounts'
+      resources :packages, controller: 'events/packages'
     end
 
     # user specific info

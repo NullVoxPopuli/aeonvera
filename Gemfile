@@ -15,6 +15,7 @@ gem 'rack-cors', :require => 'rack/cors'
 # JSON serialization
 # gem "active_model_serializers", path: "/media/Ubuntu-Data/Development/active_model_serializers"
 gem "active_model_serializers", github: "NullVoxPopuli/active_model_serializers", branch: "sideload"
+# gem "active_model_serializers", github: "rails-api/active_model_serializers"
 
 
 # model helpers
