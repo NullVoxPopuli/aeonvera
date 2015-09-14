@@ -36,11 +36,12 @@
    - [Setup Guide for Ubuntu](https://gorails.com/setup/ubuntu/15.04)
   * PhantomJS >= 1.9
 
-
-    bundle install
-    rake db:create
-    rake db:migrate
-    rails s
+```
+bundle install
+rake db:create
+rake db:migrate
+rails s
+```
 
 ## Environment Variables
 
