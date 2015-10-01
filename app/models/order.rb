@@ -127,14 +127,15 @@ class Order < ActiveRecord::Base
       all.each do |order|
 
         order_user = order.user
+        order_attendee = order.attendance
 
         line_item_list = order.line_items.map do |i|
           "#{i.quantity} x #{i.name} @ #{i.price}"
         end.join(", ")
 
         row = [
-            order_user.try(:name) || "Unknown",
-            order_user.try(:email) || "Unknown",
+            order_user.try(:name) || order_attendee.try(:attendee_name) || "Unknown",
+            order_user.try(:email) || order_attendee.try(:attendee_name) || "Unknown",
             order.created_at,
             order.payment_method,
             order.paid_amount,

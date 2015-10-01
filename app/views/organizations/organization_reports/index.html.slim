@@ -1,7 +1,7 @@
 h2 Orders
 
 = search_form_for(@q, url: organization_report_index_path, html: {method: :get}) do |f|
-  
+
   .row
     .columns.medium-4
       = f.label :user_first_name_or_user_last_name_cont
@@ -35,7 +35,8 @@ table
   tbody
     - @orders.each do |order|
       tr
-        td = order.try(:user).try(:name) || order.attendance.attendee_name
+        td
+          = order.try(:user).try(:name) || order.attendance.attendee_name
         td = user_is_a_member?(order.user, @organization)
         td
           - order.line_items.each do |item|
@@ -47,4 +48,3 @@ table
         td = number_to_currency order.paid_amount
         td = number_to_currency order.total_fee_amount
         td = number_to_currency order.net_amount_received
-        
