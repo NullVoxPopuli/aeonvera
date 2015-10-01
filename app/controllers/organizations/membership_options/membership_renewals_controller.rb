@@ -9,7 +9,7 @@ class Organizations::MembershipOptions::MembershipRenewalsController < Applicati
 
   def non_members
     @search = User.ransack(params[:q])
-    @non_members = @search.result - @membership_option.members
+    @non_members = @search.result# - @membership_option.members
     respond_to do |format|
       format.json{
         render json: @non_members.to_json(only: [:id, :first_name, :last_name])
