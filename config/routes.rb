@@ -4,6 +4,10 @@ AeonVera::Application.routes.draw do
   # this should also enable the creation of
   # native mobile apps for android / iphone / whatever
   namespace :api, defaults: { format: :json } do
+    devise_for :users, :skip => :sessions,
+      :controllers => {
+        :passwords => 'api/users/passwords'
+      }
 
     # Various Event information / summaries
     resources :registered_events
