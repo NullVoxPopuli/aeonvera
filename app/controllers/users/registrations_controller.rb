@@ -1,4 +1,5 @@
 class Users::RegistrationsController < Devise::RegistrationsController
+  respond_to :html, :json
 
   def destroy
     if resource.upcoming_events.count > 0

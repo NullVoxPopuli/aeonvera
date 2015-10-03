@@ -9425,7 +9425,7 @@ return jQuery;
  *            Portions Copyright 2008-2011 Apple Inc. All rights reserved.
  * @license   Licensed under MIT license
  *            See https://raw.github.com/emberjs/ember.js/master/LICENSE
- * @version   1.13.7
+ * @version   1.13.10
  */
 
 (function() {
@@ -13194,7 +13194,9 @@ enifed("ember-application/system/application-instance", ["exports", "ember-metal
     */
     setupEventDispatcher: function () {
       var dispatcher = this.container.lookup('event_dispatcher:main');
-      dispatcher.setup(this.customEvents, this.rootElement);
+      var applicationCustomEvents = _emberMetalProperty_get.get(this.application, 'customEvents');
+
+      dispatcher.setup(applicationCustomEvents, this.rootElement);
 
       return dispatcher;
     },
@@ -13481,7 +13483,7 @@ enifed('ember-application/system/application', ['exports', 'dag-map', 'container
     */
     buildInstance: function () {
       return _emberApplicationSystemApplicationInstance["default"].create({
-        customEvents: _emberMetalProperty_get.get(this, 'customEvents'),
+        application: this,
         rootElement: _emberMetalProperty_get.get(this, 'rootElement'),
         applicationRegistry: this.registry
       });
@@ -13916,7 +13918,13 @@ enifed('ember-application/system/application', ['exports', 'dag-map', 'container
     instanceInitializers: _emberMetalPlatformCreate["default"](null),
 
     /**
-      Initializer receives an object which has the following attributes:
+      The goal of initializers should be to register dependencies and injections.
+      This phase runs once. Because these initializers may load code, they are
+      allowed to defer application readiness and advance it. If you need to access
+      the container or store you should use an InstanceInitializer that will be run
+      after all initializers and therefore after all code is loaded and the app is
+      ready.
+       Initializer receives an object which has the following attributes:
       `name`, `before`, `after`, `initialize`. The only required attribute is
       `initialize`, all others are optional.
        * `name` allows you to specify under which name the initializer is registered.
@@ -13991,6 +13999,7 @@ enifed('ember-application/system/application', ['exports', 'dag-map', 'container
        ```javascript
       Ember.Application.initializer({
         name: 'preload-data',
+        after: 'ember-data',   // ember-data must be loaded before we can access store
          initialize: function(container, application) {
           var store = container.lookup('store:main');
            store.pushPayload(preloadedData);
@@ -14009,7 +14018,62 @@ enifed('ember-application/system/application', ['exports', 'dag-map', 'container
        @method initializer
       @param initializer {Object}
       @public
-     */
+    */
+
+    /**
+      InstanceInitializers run after all initializers have run. Because
+      instanceInitializers run after the app is fully set up. We have access
+      to the store, container, and other items. However, these initializers run
+      after code has loaded and are not allowed to defer readiness.
+       InstanceInitializer receives an object which has the following attributes:
+      `name`, `before`, `after`, `initialize`. The only required attribute is
+      `initialize`, all others are optional.
+       * `name` allows you to specify under which name the instanceInitializer is
+      registered. This must be a unique name, as trying to register two
+      instanceInitializer with the same name will result in an error.
+       ```javascript
+      Ember.Application.instanceInitializer({
+        name: 'namedinstanceInitializer',
+         initialize: function(application) {
+          Ember.debug('Running namedInitializer!');
+        }
+      });
+      ```
+       * `before` and `after` are used to ensure that this initializer is ran prior
+      or after the one identified by the value. This value can be a single string
+      or an array of strings, referencing the `name` of other initializers.
+       * See Ember.Application.initializer for discussion on the usage of before
+      and after.
+       Example instanceInitializer to preload data into the store.
+       ```javascript
+      Ember.Application.initializer({
+        name: 'preload-data',
+         initialize: function(application) {
+          var userConfig, userConfigEncoded, store;
+          // We have a HTML escaped JSON representation of the user's basic
+          // configuration generated server side and stored in the DOM of the main
+          // index.html file. This allows the app to have access to a set of data
+          // without making any additional remote calls. Good for basic data that is
+          // needed for immediate rendering of the page. Keep in mind, this data,
+          // like all local models and data can be manipulated by the user, so it
+          // should not be relied upon for security or authorization.
+          //
+          // Grab the encoded data from the meta tag
+          userConfigEncoded = Ember.$('head meta[name=app-user-config]').attr('content');
+          // Unescape the text, then parse the resulting JSON into a real object
+          userConfig = JSON.parse(unescape(userConfigEncoded));
+          // Lookup the store
+          store = application.container.lookup('service:store');
+          // Push the encoded JSON into the store
+          store.pushPayload(userConfig);
+        }
+      });
+      ```
+       @method instanceInitializer
+      @param instanceInitializer
+      @public
+    */
+
     initializer: buildInitializerMethod('initializers', 'initializer'),
 
     /**
@@ -17757,6 +17821,8 @@ enifed("ember-htmlbars/hooks/link-render-node", ["exports", "ember-htmlbars/util
           params[0] = shouldDisplay(params[0]);break;
         case 'each':
           params[0] = eachParam(params[0]);break;
+        case '@content-helper':
+          break;
         default:
           helper = _emberHtmlbarsSystemLookupHelper.findHelper(path, env.view, env);
 
@@ -18034,11 +18100,135 @@ enifed("ember-htmlbars/keywords", ["exports", "htmlbars-runtime", "ember-metal/p
 enifed("ember-htmlbars/keywords/collection", ["exports", "ember-views/streams/utils", "ember-views/views/collection_view", "ember-htmlbars/node-managers/view-node-manager", "ember-metal/keys", "ember-metal/merge"], function (exports, _emberViewsStreamsUtils, _emberViewsViewsCollection_view, _emberHtmlbarsNodeManagersViewNodeManager, _emberMetalKeys, _emberMetalMerge) {
   /**
   @module ember
-  @submodule ember-htmlbars
+  @submodule ember-templates
   */
 
   "use strict";
 
+  /**
+    `{{collection}}` is a template helper for adding instances of
+    `Ember.CollectionView` to a template. See [Ember.CollectionView](/api/classes/Ember.CollectionView.html)
+     for additional information on how a `CollectionView` functions.
+  
+    `{{collection}}`'s primary use is as a block helper with a `contentBinding`
+    option pointing towards an `Ember.Array`-compatible object. An `Ember.View`
+    instance will be created for each item in its `content` property. Each view
+    will have its own `content` property set to the appropriate item in the
+    collection.
+  
+    The provided block will be applied as the template for each item's view.
+  
+    Given an empty `<body>` the following template:
+  
+    ```handlebars
+    {{! application.hbs }}
+    {{#collection content=model}}
+      Hi {{view.content.name}}
+    {{/collection}}
+    ```
+  
+    And the following application code
+  
+    ```javascript
+    App = Ember.Application.create();
+    App.ApplicationRoute = Ember.Route.extend({
+      model: function() {
+        return [{name: 'Yehuda'},{name: 'Tom'},{name: 'Peter'}];
+      }
+    });
+    ```
+  
+    The following HTML will result:
+  
+    ```html
+    <div class="ember-view">
+      <div class="ember-view">Hi Yehuda</div>
+      <div class="ember-view">Hi Tom</div>
+      <div class="ember-view">Hi Peter</div>
+    </div>
+    ```
+  
+    ### Non-block version of collection
+  
+    If you provide an `itemViewClass` option that has its own `template` you may
+    omit the block.
+  
+    The following template:
+  
+    ```handlebars
+    {{! application.hbs }}
+    {{collection content=model itemViewClass="an-item"}}
+    ```
+  
+    And application code
+  
+    ```javascript
+    App = Ember.Application.create();
+    App.ApplicationRoute = Ember.Route.extend({
+      model: function() {
+        return [{name: 'Yehuda'},{name: 'Tom'},{name: 'Peter'}];
+      }
+    });
+  
+    App.AnItemView = Ember.View.extend({
+      template: Ember.Handlebars.compile("Greetings {{view.content.name}}")
+    });
+    ```
+  
+    Will result in the HTML structure below
+  
+    ```html
+    <div class="ember-view">
+      <div class="ember-view">Greetings Yehuda</div>
+      <div class="ember-view">Greetings Tom</div>
+      <div class="ember-view">Greetings Peter</div>
+    </div>
+    ```
+  
+    ### Specifying a CollectionView subclass
+  
+    By default the `{{collection}}` helper will create an instance of
+    `Ember.CollectionView`. You can supply a `Ember.CollectionView` subclass to
+    the helper by passing it as the first argument:
+  
+    ```handlebars
+    {{#collection "my-custom-collection" content=model}}
+      Hi {{view.content.name}}
+    {{/collection}}
+    ```
+  
+    This example would look for the class `App.MyCustomCollection`.
+  
+    ### Forwarded `item.*`-named Options
+  
+    As with the `{{view}}`, helper options passed to the `{{collection}}` will be
+    set on the resulting `Ember.CollectionView` as properties. Additionally,
+    options prefixed with `item` will be applied to the views rendered for each
+    item (note the camelcasing):
+  
+    ```handlebars
+    {{#collection content=model
+                  itemTagName="p"
+                  itemClassNames="greeting"}}
+      Howdy {{view.content.name}}
+    {{/collection}}
+    ```
+  
+    Will result in the following HTML structure:
+  
+    ```html
+    <div class="ember-view">
+      <p class="ember-view greeting">Howdy Yehuda</p>
+      <p class="ember-view greeting">Howdy Tom</p>
+      <p class="ember-view greeting">Howdy Peter</p>
+    </div>
+    ```
+  
+    @method collection
+    @for Ember.Templates.helpers
+    @deprecated Use `{{each}}` helper instead.
+    @public
+  */
   exports["default"] = {
     setupState: function (state, env, scope, params, hash) {
       var read = env.hooks.getValue;
@@ -18319,8 +18509,159 @@ enifed('ember-htmlbars/keywords/each', ['exports', 'ember-runtime/controllers/ar
   }
 });
 enifed("ember-htmlbars/keywords/input", ["exports", "ember-metal/core", "ember-metal/merge"], function (exports, _emberMetalCore, _emberMetalMerge) {
+  /**
+  @module ember
+  @submodule ember-templates
+  */
+
   "use strict";
 
+  /**
+    The `{{input}}` helper lets you create an HTML `<input />` component.
+    It causes an `Ember.TextField` component to be rendered.  For more info,
+    see the [Ember.TextField](/api/classes/Ember.TextField.html) docs and
+    the [templates guide](http://emberjs.com/guides/templates/input-helpers/).
+  
+    ```handlebars
+    {{input value="987"}}
+    ```
+  
+    renders as:
+  
+    ```HTML
+    <input type="text" value="987" />
+    ```
+  
+    ### Text field
+  
+    If no `type` option is specified, a default of type 'text' is used.
+  
+    Many of the standard HTML attributes may be passed to this helper.
+  
+    <table>
+      <tr><td>`readonly`</td><td>`required`</td><td>`autofocus`</td></tr>
+      <tr><td>`value`</td><td>`placeholder`</td><td>`disabled`</td></tr>
+      <tr><td>`size`</td><td>`tabindex`</td><td>`maxlength`</td></tr>
+      <tr><td>`name`</td><td>`min`</td><td>`max`</td></tr>
+      <tr><td>`pattern`</td><td>`accept`</td><td>`autocomplete`</td></tr>
+      <tr><td>`autosave`</td><td>`formaction`</td><td>`formenctype`</td></tr>
+      <tr><td>`formmethod`</td><td>`formnovalidate`</td><td>`formtarget`</td></tr>
+      <tr><td>`height`</td><td>`inputmode`</td><td>`multiple`</td></tr>
+      <tr><td>`step`</td><td>`width`</td><td>`form`</td></tr>
+      <tr><td>`selectionDirection`</td><td>`spellcheck`</td><td>&nbsp;</td></tr>
+    </table>
+  
+  
+    When set to a quoted string, these values will be directly applied to the HTML
+    element. When left unquoted, these values will be bound to a property on the
+    template's current rendering context (most typically a controller instance).
+  
+  
+    A very common use of this helper is to bind the `value` of an input to an Object's attribute:
+  
+    ```handlebars
+    Search:
+    {{input value=searchWord}}
+    ```
+  
+    In this example, the inital value in the `<input />` will be set to the value of `searchWord`.
+    If the user changes the text, the value of `searchWord` will also be updated.
+  
+    ### Actions
+    The helper can send multiple actions based on user events.
+    The action property defines the action which is sent when
+    the user presses the return key.
+  
+    ```handlebars
+    {{input action="submit"}}
+    ```
+  
+    The helper allows some user events to send actions.
+  
+    * `enter`
+    * `insert-newline`
+    * `escape-press`
+    * `focus-in`
+    * `focus-out`
+    * `key-press`
+    * `key-up`
+  
+  
+    For example, if you desire an action to be sent when the input is blurred,
+    you only need to setup the action name to the event name property.
+  
+    ```handlebars
+    {{input focus-in="alertMessage"}}
+    ```
+  
+    See more about [Text Support Actions](/api/classes/Ember.TextField.html)
+  
+  
+    ### Extending `Ember.TextField`
+  
+    Internally, `{{input type="text"}}` creates an instance of `Ember.TextField`, passing
+    arguments from the helper to `Ember.TextField`'s `create` method. You can extend the
+    capabilities of text inputs in your applications by reopening this class. For example,
+    if you are building a Bootstrap project where `data-*` attributes are used, you
+    can add one to the `TextField`'s `attributeBindings` property:
+  
+  
+    ```javascript
+    Ember.TextField.reopen({
+      attributeBindings: ['data-error']
+    });
+    ```
+  
+    Keep in mind when writing `Ember.TextField` subclasses that `Ember.TextField`
+    itself extends `Ember.Component`. Expect isolated component semantics, not
+    legacy 1.x view semantics (like `controller` being present).
+  
+    See more about [Ember components](/api/classes/Ember.Component.html)
+  
+  
+    ### Checkbox
+  
+    Checkboxes are special forms of the `{{input}}` helper.  To create a `<checkbox />`:
+  
+    ```handlebars
+    Emberize Everything:
+    {{input type="checkbox" name="isEmberized" checked=isEmberized}}
+    ```
+  
+    This will bind checked state of this checkbox to the value of `isEmberized`  -- if either one changes,
+    it will be reflected in the other.
+  
+  
+    The following HTML attributes can be set via the helper:
+  
+    * `checked`
+    * `disabled`
+    * `tabindex`
+    * `indeterminate`
+    * `name`
+    * `autofocus`
+    * `form`
+  
+  
+    ### Extending `Ember.Checkbox`
+  
+    Internally, `{{input type="checkbox"}}` creates an instance of `Ember.Checkbox`, passing
+    arguments from the helper to `Ember.Checkbox`'s `create` method. You can extend the
+    capablilties of checkbox inputs in your applications by reopening this class. For example,
+    if you wanted to add a css class to all checkboxes in your application:
+  
+    ```javascript
+    Ember.Checkbox.reopen({
+      classNames: ['my-app-checkbox']
+    });
+    ```
+  
+  
+    @method input
+    @for Ember.Templates.helpers
+    @param {Hash} options
+    @public
+  */
   exports["default"] = {
     setupState: function (lastState, env, scope, params, hash) {
       var type = env.hooks.getValue(hash.type);
@@ -18391,7 +18732,7 @@ enifed("ember-htmlbars/keywords/mut", ["exports", "ember-metal/core", "ember-met
   exports.MUTABLE_REFERENCE = MUTABLE_REFERENCE;
   /**
     The `mut` helper lets you __clearly specify__ that a child `Component` can update the
-    (mutable) value passed to it, which will __change the value of the parent compnent__.
+    (mutable) value passed to it, which will __change the value of the parent component__.
   
     This is very helpful for passing mutable values to a `Component` of any size, but
     critical to understanding the logic of a large/complex `Component`.
@@ -18572,10 +18913,51 @@ enifed('ember-htmlbars/keywords/outlet', ['exports', 'htmlbars-runtime/hooks'], 
 enifed("ember-htmlbars/keywords/partial", ["exports", "ember-views/system/lookup_partial", "htmlbars-runtime"], function (exports, _emberViewsSystemLookup_partial, _htmlbarsRuntime) {
   /**
   @module ember
-  @submodule ember-htmlbars
+  @submodule ember-templates
   */
 
   "use strict";
+
+  /**
+    The `partial` helper renders another template without
+    changing the template context:
+  
+    ```handlebars
+    {{foo}}
+    {{partial "nav"}}
+    ```
+  
+    The above example template will render a template named
+    "_nav", which has the same context as the parent template
+    it's rendered into, so if the "_nav" template also referenced
+    `{{foo}}`, it would print the same thing as the `{{foo}}`
+    in the above example.
+  
+    If a "_nav" template isn't found, the `partial` helper will
+    fall back to a template named "nav".
+  
+    ### Bound template names
+  
+    The parameter supplied to `partial` can also be a path
+    to a property containing a template name, e.g.:
+  
+    ```handlebars
+    {{partial someTemplateName}}
+    ```
+  
+    The above example will look up the value of `someTemplateName`
+    on the template context (e.g. a controller) and use that
+    value as the name of the template to render. If the resolved
+    value is falsy, nothing will be rendered. If `someTemplateName`
+    changes, the partial will be re-rendered using the new template
+    name.
+  
+  
+    @method partial
+    @for Ember.Templates.helpers
+    @param {String} partialName the name of the template to render minus the leading underscore
+    @public
+  */
 
   exports["default"] = {
     setupState: function (state, env, scope, params, hash) {
@@ -18598,8 +18980,13 @@ enifed("ember-htmlbars/keywords/partial", ["exports", "ember-views/system/lookup
     }
   };
 });
-enifed("ember-htmlbars/keywords/readonly", ["exports", "ember-htmlbars/keywords/mut"], function (exports, _emberHtmlbarsKeywordsMut) {
-  "use strict";
+enifed('ember-htmlbars/keywords/readonly', ['exports', 'ember-htmlbars/keywords/mut'], function (exports, _emberHtmlbarsKeywordsMut) {
+  /**
+  @module ember
+  @submodule ember-templates
+  */
+
+  'use strict';
 
   exports["default"] = readonly;
 
@@ -18624,7 +19011,7 @@ enifed("ember-htmlbars/keywords/real_outlet", ["exports", "ember-metal/property_
 
   "use strict";
 
-  _emberHtmlbarsTemplatesTopLevelView["default"].meta.revision = 'Ember@1.13.7';
+  _emberHtmlbarsTemplatesTopLevelView["default"].meta.revision = 'Ember@1.13.10';
 
   exports["default"] = {
     willRender: function (renderNode, env) {
@@ -18749,9 +19136,195 @@ enifed("ember-htmlbars/keywords/template", ["exports", "ember-metal/core"], func
 enifed('ember-htmlbars/keywords/textarea', ['exports'], function (exports) {
   /**
   @module ember
-  @submodule ember-htmlbars
+  @submodule ember-templates
   */
 
+  /**
+    `{{textarea}}` inserts a new instance of `<textarea>` tag into the template.
+    The attributes of `{{textarea}}` match those of the native HTML tags as
+    closely as possible.
+  
+    The following HTML attributes can be set:
+  
+      * `value`
+      * `name`
+      * `rows`
+      * `cols`
+      * `placeholder`
+      * `disabled`
+      * `maxlength`
+      * `tabindex`
+      * `selectionEnd`
+      * `selectionStart`
+      * `selectionDirection`
+      * `wrap`
+      * `readonly`
+      * `autofocus`
+      * `form`
+      * `spellcheck`
+      * `required`
+  
+    When set to a quoted string, these value will be directly applied to the HTML
+    element. When left unquoted, these values will be bound to a property on the
+    template's current rendering context (most typically a controller instance).
+  
+    Unbound:
+  
+    ```handlebars
+    {{textarea value="Lots of static text that ISN'T bound"}}
+    ```
+  
+    Would result in the following HTML:
+  
+    ```html
+    <textarea class="ember-text-area">
+      Lots of static text that ISN'T bound
+    </textarea>
+    ```
+  
+    Bound:
+  
+    In the following example, the `writtenWords` property on `App.ApplicationController`
+    will be updated live as the user types 'Lots of text that IS bound' into
+    the text area of their browser's window.
+  
+    ```javascript
+    App.ApplicationController = Ember.Controller.extend({
+      writtenWords: "Lots of text that IS bound"
+    });
+    ```
+  
+    ```handlebars
+    {{textarea value=writtenWords}}
+    ```
+  
+     Would result in the following HTML:
+  
+    ```html
+    <textarea class="ember-text-area">
+      Lots of text that IS bound
+    </textarea>
+    ```
+  
+    If you wanted a one way binding between the text area and a div tag
+    somewhere else on your screen, you could use `Ember.computed.oneWay`:
+  
+    ```javascript
+    App.ApplicationController = Ember.Controller.extend({
+      writtenWords: "Lots of text that IS bound",
+      outputWrittenWords: Ember.computed.oneWay("writtenWords")
+    });
+    ```
+  
+    ```handlebars
+    {{textarea value=writtenWords}}
+  
+    <div>
+      {{outputWrittenWords}}
+    </div>
+    ```
+  
+    Would result in the following HTML:
+  
+    ```html
+    <textarea class="ember-text-area">
+      Lots of text that IS bound
+    </textarea>
+  
+    <-- the following div will be updated in real time as you type -->
+  
+    <div>
+      Lots of text that IS bound
+    </div>
+    ```
+  
+    Finally, this example really shows the power and ease of Ember when two
+    properties are bound to eachother via `Ember.computed.alias`. Type into
+    either text area box and they'll both stay in sync. Note that
+    `Ember.computed.alias` costs more in terms of performance, so only use it when
+    your really binding in both directions:
+  
+    ```javascript
+    App.ApplicationController = Ember.Controller.extend({
+      writtenWords: "Lots of text that IS bound",
+      twoWayWrittenWords: Ember.computed.alias("writtenWords")
+    });
+    ```
+  
+    ```handlebars
+    {{textarea value=writtenWords}}
+    {{textarea value=twoWayWrittenWords}}
+    ```
+  
+    ```html
+    <textarea id="ember1" class="ember-text-area">
+      Lots of text that IS bound
+    </textarea>
+  
+    <-- both updated in real time -->
+  
+    <textarea id="ember2" class="ember-text-area">
+      Lots of text that IS bound
+    </textarea>
+    ```
+  
+    ### Actions
+  
+    The helper can send multiple actions based on user events.
+  
+    The action property defines the action which is send when
+    the user presses the return key.
+  
+    ```handlebars
+    {{input action="submit"}}
+    ```
+  
+    The helper allows some user events to send actions.
+  
+  * `enter`
+  * `insert-newline`
+  * `escape-press`
+  * `focus-in`
+  * `focus-out`
+  * `key-press`
+  
+    For example, if you desire an action to be sent when the input is blurred,
+    you only need to setup the action name to the event name property.
+  
+    ```handlebars
+    {{textarea focus-in="alertMessage"}}
+    ```
+  
+    See more about [Text Support Actions](/api/classes/Ember.TextArea.html)
+  
+    ### Extension
+  
+    Internally, `{{textarea}}` creates an instance of `Ember.TextArea`, passing
+    arguments from the helper to `Ember.TextArea`'s `create` method. You can
+    extend the capabilities of text areas in your application by reopening this
+    class. For example, if you are building a Bootstrap project where `data-*`
+    attributes are used, you can globally add support for a `data-*` attribute
+    on all `{{textarea}}`s' in your app by reopening `Ember.TextArea` or
+    `Ember.TextSupport` and adding it to the `attributeBindings` concatenated
+    property:
+  
+    ```javascript
+    Ember.TextArea.reopen({
+      attributeBindings: ['data-error']
+    });
+    ```
+  
+    Keep in mind when writing `Ember.TextArea` subclasses that `Ember.TextArea`
+    itself extends `Ember.Component`. Expect isolated component semantics, not
+    legacy 1.x view semantics (like `controller` being present).
+  
+    See more about [Ember components](/api/classes/Ember.Component.html)
+  
+    @method textarea
+    @for Ember.Templates.helpers
+    @param {Hash} options
+    @public
+  */
   'use strict';
 
   exports["default"] = textarea;
@@ -18847,10 +19420,188 @@ enifed("ember-htmlbars/keywords/unbound", ["exports", "ember-metal/merge", "embe
 enifed("ember-htmlbars/keywords/view", ["exports", "ember-views/streams/utils", "ember-views/views/view", "ember-htmlbars/node-managers/view-node-manager", "ember-metal/keys"], function (exports, _emberViewsStreamsUtils, _emberViewsViewsView, _emberHtmlbarsNodeManagersViewNodeManager, _emberMetalKeys) {
   /**
   @module ember
-  @submodule ember-htmlbars
+  @submodule ember-templates
   */
 
   "use strict";
+
+  /**
+    `{{view}}` inserts a new instance of an `Ember.View` into a template passing its
+    options to the `Ember.View`'s `create` method and using the supplied block as
+    the view's own template.
+  
+    An empty `<body>` and the following template:
+  
+    ```handlebars
+    A span:
+    {{#view tagName="span"}}
+      hello.
+    {{/view}}
+    ```
+  
+    Will result in HTML structure:
+  
+    ```html
+    <body>
+      <!-- Note: the handlebars template script
+           also results in a rendered Ember.View
+           which is the outer <div> here -->
+  
+      <div class="ember-view">
+        A span:
+        <span id="ember1" class="ember-view">
+          Hello.
+        </span>
+      </div>
+    </body>
+    ```
+  
+    ### `parentView` setting
+  
+    The `parentView` property of the new `Ember.View` instance created through
+    `{{view}}` will be set to the `Ember.View` instance of the template where
+    `{{view}}` was called.
+  
+    ```javascript
+    aView = Ember.View.create({
+      template: Ember.Handlebars.compile("{{#view}} my parent: {{parentView.elementId}} {{/view}}")
+    });
+  
+    aView.appendTo('body');
+    ```
+  
+    Will result in HTML structure:
+  
+    ```html
+    <div id="ember1" class="ember-view">
+      <div id="ember2" class="ember-view">
+        my parent: ember1
+      </div>
+    </div>
+    ```
+  
+    ### Setting CSS id and class attributes
+  
+    The HTML `id` attribute can be set on the `{{view}}`'s resulting element with
+    the `id` option. This option will _not_ be passed to `Ember.View.create`.
+  
+    ```handlebars
+    {{#view tagName="span" id="a-custom-id"}}
+      hello.
+    {{/view}}
+    ```
+  
+    Results in the following HTML structure:
+  
+    ```html
+    <div class="ember-view">
+      <span id="a-custom-id" class="ember-view">
+        hello.
+      </span>
+    </div>
+    ```
+  
+    The HTML `class` attribute can be set on the `{{view}}`'s resulting element
+    with the `class` or `classNameBindings` options. The `class` option will
+    directly set the CSS `class` attribute and will not be passed to
+    `Ember.View.create`. `classNameBindings` will be passed to `create` and use
+    `Ember.View`'s class name binding functionality:
+  
+    ```handlebars
+    {{#view tagName="span" class="a-custom-class"}}
+      hello.
+    {{/view}}
+    ```
+  
+    Results in the following HTML structure:
+  
+    ```html
+    <div class="ember-view">
+      <span id="ember2" class="ember-view a-custom-class">
+        hello.
+      </span>
+    </div>
+    ```
+  
+    ### Supplying a different view class
+  
+    `{{view}}` can take an optional first argument before its supplied options to
+    specify a path to a custom view class.
+  
+    ```handlebars
+    {{#view "custom"}}{{! will look up App.CustomView }}
+      hello.
+    {{/view}}
+    ```
+  
+    The first argument can also be a relative path accessible from the current
+    context.
+  
+    ```javascript
+    MyApp = Ember.Application.create({});
+    MyApp.OuterView = Ember.View.extend({
+      innerViewClass: Ember.View.extend({
+        classNames: ['a-custom-view-class-as-property']
+      }),
+      template: Ember.Handlebars.compile('{{#view view.innerViewClass}} hi {{/view}}')
+    });
+  
+    MyApp.OuterView.create().appendTo('body');
+    ```
+  
+    Will result in the following HTML:
+  
+    ```html
+    <div id="ember1" class="ember-view">
+      <div id="ember2" class="ember-view a-custom-view-class-as-property">
+        hi
+      </div>
+    </div>
+    ```
+  
+    ### Blockless use
+  
+    If you supply a custom `Ember.View` subclass that specifies its own template
+    or provide a `templateName` option to `{{view}}` it can be used without
+    supplying a block. Attempts to use both a `templateName` option and supply a
+    block will throw an error.
+  
+    ```javascript
+    var App = Ember.Application.create();
+    App.WithTemplateDefinedView = Ember.View.extend({
+      templateName: 'defined-template'
+    });
+    ```
+  
+    ```handlebars
+    {{! application.hbs }}
+    {{view 'with-template-defined'}}
+    ```
+  
+    ```handlebars
+    {{! defined-template.hbs }}
+    Some content for the defined template view.
+    ```
+  
+    ### `viewName` property
+  
+    You can supply a `viewName` option to `{{view}}`. The `Ember.View` instance
+    will be referenced as a property of its parent view by this name.
+  
+    ```javascript
+    aView = Ember.View.create({
+      template: Ember.Handlebars.compile('{{#view viewName="aChildByName"}} hi {{/view}}')
+    });
+  
+    aView.appendTo('body');
+    aView.get('aChildByName') // the instance of Ember.View created by {{view}} helper
+    ```
+  
+    @method view
+    @for Ember.Templates.helpers
+    @public
+    @deprecated
+  */
 
   exports["default"] = {
     setupState: function (state, env, scope, params, hash) {
@@ -18956,6 +19707,11 @@ enifed("ember-htmlbars/keywords/view", ["exports", "ember-views/streams/utils", 
   }
 });
 enifed('ember-htmlbars/keywords/with', ['exports', 'ember-metal/core', 'ember-metal/property_get', 'htmlbars-runtime', 'ember-metal/streams/utils'], function (exports, _emberMetalCore, _emberMetalProperty_get, _htmlbarsRuntime, _emberMetalStreamsUtils) {
+  /**
+  @module ember
+  @submodule ember-templates
+  */
+
   'use strict';
 
   exports["default"] = {
@@ -19193,7 +19949,7 @@ enifed("ember-htmlbars/node-managers/component-node-manager", ["exports", "ember
     // If the component specifies its template via the `layout` or `template`
     // properties instead of using the template looked up in the container, get
     // them now that we have the component instance.
-    var result = extractComponentTemplates(component, templates);
+    var result = extractComponentTemplates(component, templates, layout);
     layout = result.layout || layout;
     templates = result.templates || templates;
 
@@ -19251,7 +20007,7 @@ enifed("ember-htmlbars/node-managers/component-node-manager", ["exports", "ember
     }
   }
 
-  function extractComponentTemplates(component, _templates) {
+  function extractComponentTemplates(component, _templates, _layout) {
     // Even though we looked up a layout from the container earlier, the
     // component may specify a `layout` property that overrides that.
     // The component may also provide a `template` property we should
@@ -19273,11 +20029,17 @@ enifed("ember-htmlbars/node-managers/component-node-manager", ["exports", "ember
       layout = componentLayout;
       templates = extractLegacyTemplate(_templates, componentTemplate);
     } else if (componentTemplate) {
-      // If the component has a `template` but no `layout`, use the template
-      // as the layout.
-      layout = componentTemplate;
+      if (_layout) {
+        // If the component has no `layout`, but one was found during
+        // `lookupComponent` in calling `create` function, use that
+        layout = _layout;
+      } else {
+        // If the component has a `template` but no `layout`, use the template
+        // as the layout.
+        layout = componentTemplate;
+        _emberMetalCore["default"].deprecate("Using deprecated `template` property on a Component.");
+      }
       templates = _templates;
-      _emberMetalCore["default"].deprecate("Using deprecated `template` property on a Component.");
     }
 
     return { layout: layout, templates: templates };
@@ -21627,6 +22389,8 @@ enifed("ember-metal-views/renderer", ["exports", "ember-metal/run_loop", "ember-
   }; // set attrs the first time
 
   Renderer.prototype.componentInitAttrs = function (component, attrs) {
+    // for attrs-proxy support
+    component.trigger('_internalDidReceiveAttrs');
     component.trigger('didInitAttrs', { attrs: attrs });
     component.trigger('didReceiveAttrs', { newAttrs: attrs });
   }; // set attrs the first time
@@ -21667,6 +22431,8 @@ enifed("ember-metal-views/renderer", ["exports", "ember-metal/run_loop", "ember-
       _emberMetalProperty_set.set(component, 'attrs', newAttrs);
     }
 
+    // for attrs-proxy support
+    component.trigger('_internalDidReceiveAttrs');
     component.trigger('didUpdateAttrs', { oldAttrs: oldAttrs, newAttrs: newAttrs });
     component.trigger('didReceiveAttrs', { oldAttrs: oldAttrs, newAttrs: newAttrs });
   };
@@ -24576,7 +25342,7 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   
     @class Ember
     @static
-    @version 1.13.7
+    @version 1.13.10
     @public
   */
 
@@ -24610,11 +25376,11 @@ enifed('ember-metal/core', ['exports'], function (exports) {
   
     @property VERSION
     @type String
-    @default '1.13.7'
+    @default '1.13.10'
     @static
     @public
   */
-  Ember.VERSION = '1.13.7';
+  Ember.VERSION = '1.13.10';
 
   /**
     The hash of environment variables used to control various configuration
@@ -24958,6 +25724,29 @@ enifed('ember-metal/dictionary', ['exports', 'ember-metal/platform/create'], fun
     delete dict['_dict'];
     return dict;
   }
+});
+enifed("ember-metal/empty_object", ["exports", "ember-metal/platform/create"], function (exports, _emberMetalPlatformCreate) {
+  "use strict";
+
+  // This exists because `Object.create(null)` is absurdly slow compared
+  // to `new EmptyObject()`. In either case, you want a null prototype
+  // when you're treating the object instances as arbitrary dictionaries
+  // and don't want your keys colliding with build-in methods on the
+  // default object prototype.
+
+  var proto = _emberMetalPlatformCreate["default"](null, {
+    // without this, we will always still end up with (new
+    // EmptyObject()).constructor === Object
+    constructor: {
+      value: undefined,
+      enumerable: false,
+      writable: true
+    }
+  });
+
+  function EmptyObject() {}
+  EmptyObject.prototype = proto;
+  exports["default"] = EmptyObject;
 });
 enifed('ember-metal/enumerable_utils', ['exports', 'ember-metal/core', 'ember-metal/array'], function (exports, _emberMetalCore, _emberMetalArray) {
   'use strict';
@@ -31122,7 +31911,7 @@ enifed('ember-metal/streams/utils', ['exports', './stream'], function (exports, 
       });
 
       for (i = 0, l = array.length; i < l; i++) {
-        subscribe(array[i], stream.notify, stream);
+        stream.addDependency(array[i]);
       }
 
       // used by angle bracket components to detect an attribute was provided
@@ -31523,6 +32312,9 @@ enifed("ember-metal/utils", ["exports", "ember-metal/core", "ember-metal/platfor
   */
 
   function guidFor(obj) {
+    if (obj && obj[GUID_KEY]) {
+      return obj[GUID_KEY];
+    }
 
     // special cases where we don't want to add a key to object
     if (obj === undefined) {
@@ -31560,10 +32352,6 @@ enifed("ember-metal/utils", ["exports", "ember-metal/core", "ember-metal/platfor
         return obj ? '(true)' : '(false)';
 
       default:
-        if (obj[GUID_KEY]) {
-          return obj[GUID_KEY];
-        }
-
         if (obj === Object) {
           return '(Object)';
         }
@@ -33184,6 +33972,35 @@ enifed('ember-routing-htmlbars/keywords/link-to', ['exports', 'ember-metal/strea
     To override this option for your entire application, see
     "Overriding Application-wide Defaults".
   
+    ### Keeping a link active for other routes
+  
+    If you need a link to be 'active' even when it doesn't match
+    the current route, you can use the the `current-when`
+    argument.
+  
+    ```handlebars
+    {{#link-to 'photoGallery' current-when='photos'}}
+      Photo Gallery
+    {{/link-to}}
+    ```
+  
+    This may be helpful for keeping links active for:
+  
+    * non-nested routes that are logically related
+    * some secondary menu approaches
+    * 'top navigation' with 'sub navigation' scenarios
+  
+    A link will be active if `current-when` is `true` or the current
+    route is the route this link would transition to.
+  
+    To match multiple routes 'space-separate' the routes:
+  
+    ```handlebars
+    {{#link-to 'gallery' current-when='photos drawings paintings'}}
+      Art Gallery
+    {{/link-to}}
+    ```
+  
     ### Supplying a model
     An optional model argument can be used for routes whose
     paths contain dynamic segments. This argument will become
@@ -33606,7 +34423,7 @@ enifed("ember-routing-views/views/link", ["exports", "ember-metal/core", "ember-
 
   "use strict";
 
-  _emberHtmlbarsTemplatesLinkTo["default"].meta.revision = 'Ember@1.13.7';
+  _emberHtmlbarsTemplatesLinkTo["default"].meta.revision = 'Ember@1.13.10';
 
   var linkComponentClassNameBindings = ['active', 'loading', 'disabled'];
   
@@ -33903,7 +34720,13 @@ enifed("ember-routing-views/views/link", ["exports", "ember-metal/core", "ember-
         return false;
       }
 
-      _emberMetalProperty_get.get(this, '_routing').transitionTo(_emberMetalProperty_get.get(this, 'targetRouteName'), _emberMetalProperty_get.get(this, 'models'), _emberMetalProperty_get.get(this, 'queryParams.values'), _emberMetalProperty_get.get(this, 'attrs.replace'));
+      var routing = _emberMetalProperty_get.get(this, '_routing');
+      var targetRouteName = this._handleOnlyQueryParamsSupplied(_emberMetalProperty_get.get(this, 'targetRouteName'));
+      var models = _emberMetalProperty_get.get(this, 'models');
+      var queryParamValues = _emberMetalProperty_get.get(this, 'queryParams.values');
+      var shouldReplace = _emberMetalProperty_get.get(this, 'attrs.replace');
+
+      routing.transitionTo(targetRouteName, models, queryParamValues, shouldReplace);
     },
 
     queryParams: null,
@@ -34139,7 +34962,7 @@ enifed("ember-routing-views/views/outlet", ["exports", "ember-views/views/view",
 
   "use strict";
 
-  _emberHtmlbarsTemplatesTopLevelView["default"].meta.revision = 'Ember@1.13.7';
+  _emberHtmlbarsTemplatesTopLevelView["default"].meta.revision = 'Ember@1.13.10';
 
   var CoreOutletView = _emberViewsViewsView["default"].extend({
     defaultTemplate: _emberHtmlbarsTemplatesTopLevelView["default"],
@@ -34352,11 +35175,13 @@ enifed("ember-routing/ext/controller", ["exports", "ember-metal/core", "ember-me
         var part = parts[i];
         var cacheValuePrefix = _calculateCacheValuePrefix(prefix, part);
         var value;
-        if (cacheValuePrefix && cacheValuePrefix in values) {
-          var partRemovedPrefix = part.indexOf(cacheValuePrefix) === 0 ? part.substr(cacheValuePrefix.length + 1) : part;
-          value = _emberMetalProperty_get.get(values[cacheValuePrefix], partRemovedPrefix);
-        } else {
-          value = _emberMetalProperty_get.get(values, part);
+        if (values) {
+          if (cacheValuePrefix && cacheValuePrefix in values) {
+            var partRemovedPrefix = part.indexOf(cacheValuePrefix) === 0 ? part.substr(cacheValuePrefix.length + 1) : part;
+            value = _emberMetalProperty_get.get(values[cacheValuePrefix], partRemovedPrefix);
+          } else {
+            value = _emberMetalProperty_get.get(values, part);
+          }
         }
         suffixes += '::' + part + ':' + value;
       }
@@ -36615,7 +37440,7 @@ enifed("ember-routing/system/route", ["exports", "ember-metal/core", "ember-meta
        @property controller
       @type Ember.Controller
       @since 1.6.0
-      @private
+      @public
     */
 
     _actions: {
@@ -51135,7 +51960,7 @@ enifed("ember-template-compiler/system/compile_options", ["exports", "ember-meta
 
     options.buildMeta = function buildMeta(program) {
       return {
-        revision: 'Ember@1.13.7',
+        revision: 'Ember@1.13.10',
         loc: program.loc,
         moduleName: options.moduleName
       };
@@ -52495,7 +53320,7 @@ enifed("ember-views", ["exports", "ember-runtime", "ember-views/system/jquery", 
   exports["default"] = _emberRuntime["default"];
 });
 // for the side effect of extending Ember.run.queues
-enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/mixin', 'ember-metal/utils', 'ember-metal/property_events', 'ember-metal/events'], function (exports, _emberMetalMixin, _emberMetalUtils, _emberMetalProperty_events, _emberMetalEvents) {
+enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/mixin', 'ember-metal/utils', 'ember-metal/property_events', 'ember-metal/events', 'ember-metal/empty_object'], function (exports, _emberMetalMixin, _emberMetalUtils, _emberMetalProperty_events, _emberMetalEvents, _emberMetalEmpty_object) {
   'use strict';
 
   exports.deprecation = deprecation;
@@ -52511,8 +53336,37 @@ enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/mixin', 'ember
     return val && val[MUTABLE_CELL];
   }
 
+  function setupAvoidPropagating(instance) {
+    // This caches the list of properties to avoid setting onto the component instance
+    // inside `_propagateAttrsToThis`.  We cache them so that every instantiated component
+    // does not have to pay the calculation penalty.
+    var constructor = instance.constructor;
+    if (!constructor.__avoidPropagating) {
+      constructor.__avoidPropagating = new _emberMetalEmpty_object["default"]();
+      var i = undefined,
+          l = undefined;
+      for (i = 0, l = instance.concatenatedProperties.length; i < l; i++) {
+        var prop = instance.concatenatedProperties[i];
+
+        constructor.__avoidPropagating[prop] = true;
+      }
+
+      for (i = 0, l = instance.mergedProperties.length; i < l; i++) {
+        var prop = instance.mergedProperties[i];
+
+        constructor.__avoidPropagating[prop] = true;
+      }
+    }
+  }
+
   var AttrsProxyMixin = {
     attrs: null,
+
+    init: function () {
+      this._super.apply(this, arguments);
+
+      setupAvoidPropagating(this);
+    },
 
     getAttr: function (key) {
       var attrs = this.attrs;
@@ -52540,20 +53394,19 @@ enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/mixin', 'ember
 
     _propagateAttrsToThis: function () {
       var attrs = this.attrs;
-      var values = {};
+
       for (var prop in attrs) {
-        if (prop !== 'attrs') {
-          values[prop] = this.getAttr(prop);
+        if (prop !== 'attrs' && !this.constructor.__avoidPropagating[prop]) {
+          this.set(prop, this.getAttr(prop));
         }
       }
-      this.setProperties(values);
     },
 
     initializeShape: _emberMetalEvents.on('init', function () {
       this._isDispatchingAttrs = false;
     }),
 
-    didReceiveAttrs: function () {
+    _internalDidReceiveAttrs: function () {
       this._super();
       this._isDispatchingAttrs = true;
       this._propagateAttrsToThis();
@@ -52570,7 +53423,8 @@ enifed('ember-views/compat/attrs-proxy', ['exports', 'ember-metal/mixin', 'ember
       if (attrs && key in attrs) {
         // do not deprecate accessing `this[key]` at this time.
         // add this back when we have a proper migration path
-        var possibleCell = attrs.key;
+        // Ember.deprecate(deprecation(key), { id: 'ember-views.', until: '3.0.0' });
+        var possibleCell = attrs[key];
 
         if (possibleCell && possibleCell[MUTABLE_CELL]) {
           return possibleCell.value;
@@ -56358,7 +57212,7 @@ enifed("ember-views/views/component", ["exports", "ember-metal/core", "ember-vie
 enifed("ember-views/views/container_view", ["exports", "ember-metal/core", "ember-runtime/mixins/mutable_array", "ember-views/views/view", "ember-metal/property_get", "ember-metal/property_set", "ember-metal/enumerable_utils", "ember-metal/mixin", "ember-metal/events", "ember-htmlbars/templates/container-view"], function (exports, _emberMetalCore, _emberRuntimeMixinsMutable_array, _emberViewsViewsView, _emberMetalProperty_get, _emberMetalProperty_set, _emberMetalEnumerable_utils, _emberMetalMixin, _emberMetalEvents, _emberHtmlbarsTemplatesContainerView) {
   "use strict";
 
-  _emberHtmlbarsTemplatesContainerView["default"].meta.revision = 'Ember@1.13.7';
+  _emberHtmlbarsTemplatesContainerView["default"].meta.revision = 'Ember@1.13.10';
 
   /**
   @module ember
@@ -61603,7 +62457,12 @@ enifed("htmlbars-util/morph-utils", ["exports"], function (exports) {
           current = current.nextMorph;
         }
       } else if (node.morphList) {
-        nodes.push(node.morphList);
+        var current = node.morphList.firstChildMorph;
+
+        while (current) {
+          nodes.push(current);
+          current = current.nextMorph;
+        }
       }
     }
   }
@@ -112484,7 +113343,7 @@ define('ember-cli-flash/services/flash-messages-service', ['exports', 'ember', '
     }).readOnly(),
 
     add: function add() {
-      var options = arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
       return this._addToQueue(options);
     },
@@ -112498,7 +113357,7 @@ define('ember-cli-flash/services/flash-messages-service', ['exports', 'ember', '
 
     // private
     _addToQueue: function _addToQueue() {
-      var options = arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
       var flashes = get(this, 'queue');
       var flash = this._newFlashMessage(options);
@@ -112508,7 +113367,7 @@ define('ember-cli-flash/services/flash-messages-service', ['exports', 'ember', '
     },
 
     _newFlashMessage: function _newFlashMessage() {
-      var options = arguments[0] === undefined ? {} : arguments[0];
+      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
       Ember['default'].assert('The flash message cannot be empty.', options.message);
 
@@ -112562,7 +113421,7 @@ define('ember-cli-flash/services/flash-messages-service', ['exports', 'ember', '
       Ember['default'].assert('The flash type cannot be undefined', type);
 
       this[type] = function (message) {
-        var options = arguments[1] === undefined ? {} : arguments[1];
+        var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
         var timeout = options.timeout;
         var priority = options.priority;
         var sticky = options.sticky;
@@ -112582,7 +113441,7 @@ define('ember-cli-flash/services/flash-messages-service', ['exports', 'ember', '
     _registerTypes: function _registerTypes() {
       var _this3 = this;
 
-      var types = arguments[0] === undefined ? [] : arguments[0];
+      var types = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
       forEach(types, function (type) {
         return _this3._registerType(type);
@@ -112610,7 +113469,7 @@ define('ember-cli-pickadate/components/pick-a-date', ['exports', 'ember', 'ember
   exports['default'] = Ember['default'].Component.extend({
     layout: layout['default'],
     picker: null,
-    placeholder: 'Select a date',
+    placeholder: "Select a date",
     options: {},
     value: null,
     date: null,
@@ -112663,7 +113522,7 @@ define('ember-cli-pickadate/components/pick-a-time', ['exports', 'ember', 'ember
   exports['default'] = Ember['default'].Component.extend({
     layout: layout['default'],
     picker: null,
-    placeholder: 'Select a time',
+    placeholder: "Select a time",
     options: {},
     value: null,
     date: null,
@@ -112705,7 +113564,7 @@ define('ember-cli-pickadate/templates/components/pick-a-date', ['exports'], func
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -112752,7 +113611,7 @@ define('ember-cli-pickadate/templates/components/pick-a-time', ['exports'], func
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -113126,11 +113985,10 @@ define('ember-i18n/config/zh', ['exports', 'ember-i18n/config/constants'], funct
   exports['default'] = {
     rtl: false,
 
-    pluralForm: function pluralForm() {
+    pluralForm: function pluralForm() /* n */{
       return constants.OTHER;
     }
   };
-  /* n */
 
 });
 define('ember-i18n/helper', ['exports', 'ember'], function (exports, Ember) {
@@ -113180,16 +114038,16 @@ define('ember-i18n/legacy-helper', ['exports', 'ember', 'ember-i18n/stream'], fu
   if (Ember['default'].Helper == null) {
     // @public
     helper = function tHelper(params, hash, options, env) {
-      var i18n = env.data.view.container.lookup("service:i18n");
+      var i18n = env.data.view.container.lookup('service:i18n');
       var i18nKey = params[0];
 
       var out = new Stream['default'](function () {
         var value = i18nKey.isStream ? i18nKey.value() : i18nKey;
-        return value === undefined ? "" : i18n.t(value, Stream.readHash(hash));
+        return value === undefined ? '' : i18n.t(value, Stream.readHash(hash));
       });
 
       // Once the view is destroyed destroy the steam as well
-      env.data.view.one("willDestroyElement", out, function () {
+      env.data.view.one('willDestroyElement', out, function () {
         this.destroy();
       });
 
@@ -113243,19 +114101,19 @@ define('ember-i18n/services/i18n', ['exports', 'ember', 'ember-i18n/stream', 'em
     // Returns the translation `key` interpolated with `data`
     // in the current `locale`.
     t: function t(key) {
-      var data = arguments[1] === undefined ? {} : arguments[1];
+      var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-      var locale = this.get("_locale");
+      var locale = this.get('_locale');
       Ember['default'].assert("I18n: Cannot translate when locale is null", locale);
-      var count = get(data, "count");
+      var count = get(data, 'count');
 
-      var defaults = makeArray(get(data, "default"));
+      var defaults = makeArray(get(data, 'default'));
 
       defaults.unshift(key);
       var template = locale.getCompiledTemplate(defaults, count);
 
       if (template._isMissing) {
-        this.trigger("missing", this.get("locale"), key, data);
+        this.trigger('missing', this.get('locale'), key, data);
       }
 
       return template(data);
@@ -113263,14 +114121,14 @@ define('ember-i18n/services/i18n', ['exports', 'ember', 'ember-i18n/stream', 'em
 
     // @public
     exists: function exists(key) {
-      var data = arguments[1] === undefined ? {} : arguments[1];
+      var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-      var locale = this.get("_locale");
+      var locale = this.get('_locale');
       Ember['default'].assert("I18n: Cannot check existance when locale is null", locale);
-      var count = get(data, "count");
+      var count = get(data, 'count');
 
       var translation = locale.findTranslation(makeArray(key), count);
-      return Ember['default'].typeOf(translation.result) !== "undefined";
+      return Ember['default'].typeOf(translation.result) !== 'undefined';
     },
 
     // @public
@@ -113278,8 +114136,8 @@ define('ember-i18n/services/i18n', ['exports', 'ember', 'ember-i18n/stream', 'em
       _addTranslations['default'](locale, translations, this.container);
       this._addLocale(locale);
 
-      if (this.get("locale").indexOf(locale) === 0) {
-        this.get("_locale").rebuild();
+      if (this.get('locale').indexOf(locale) === 0) {
+        this.get('_locale').rebuild();
       }
     },
 
@@ -113287,23 +114145,23 @@ define('ember-i18n/services/i18n', ['exports', 'ember', 'ember-i18n/stream', 'em
     //
     // adds a runtime locale to the array of locales on disk
     _addLocale: function _addLocale(locale) {
-      this.get("locales").addObject(locale);
+      this.get('locales').addObject(locale);
     },
 
-    _locale: Ember['default'].computed("locale", function () {
-      var locale = this.get("locale");
-      return locale ? new Locale['default'](this.get("locale"), this.container) : null;
+    _locale: Ember['default'].computed('locale', function () {
+      var locale = this.get('locale');
+      return locale ? new Locale['default'](this.get('locale'), this.container) : null;
     }),
 
-    _buildLocaleStream: Ember['default'].on("init", function () {
+    _buildLocaleStream: Ember['default'].on('init', function () {
       var _this = this;
 
       this.localeStream = new Stream['default'](function () {
-        return _this.get("locale");
+        return _this.get('locale');
       });
     }),
 
-    _notifyLocaleStream: Ember['default'].observer("locale", function () {
+    _notifyLocaleStream: Ember['default'].observer('locale', function () {
       this.localeStream.value(); // force the stream to be dirty
       this.localeStream.notify();
     })
@@ -113384,7 +114242,7 @@ define('ember-i18n/utils/i18n/compile-template', ['exports', 'ember'], function 
   // `Function(String, Boolean) -> Function(Object) -> String`.
 
   function compileTemplate(template) {
-    var rtl = arguments[1] === undefined ? false : arguments[1];
+    var rtl = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
     return function renderTemplate(data) {
       var result = template.replace(tripleStache, function (i, match) {
@@ -113627,10 +114485,10 @@ define('ember-i18n/utils/macro', ['exports', 'ember'], function (exports, Ember)
   // @public
 
   function createTranslatedComputedProperty(key) {
-    var interpolations = arguments[1] === undefined ? {} : arguments[1];
+    var interpolations = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     return Ember['default'].computed(values(interpolations), function () {
-      var i18n = get(this, "i18n");
+      var i18n = get(this, 'i18n');
       Ember['default'].assert("Cannot translate " + key + ". " + this + " does not have an i18n.", i18n);
       return i18n.t(key, mapPropertiesByHash(this, interpolations));
     });
@@ -114874,57 +115732,57 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
     cssClass: null,
     optionIdPath: "id",
     optionValuePath: null,
-    optionLabelPath: "text",
+    optionLabelPath: 'text',
     optionLabelSelectedPath: null,
-    optionHeadlinePath: "text",
-    optionDescriptionPath: "description",
+    optionHeadlinePath: 'text',
+    optionDescriptionPath: 'description',
     placeholder: null,
     multiple: false,
     allowClear: false,
     enabled: true,
     query: null,
-    typeaheadSearchingText: "Searching…",
-    typeaheadNoMatchesText: "No matches found",
-    typeaheadErrorText: "Loading failed",
+    typeaheadSearchingText: 'Searching…',
+    typeaheadNoMatchesText: 'No matches found',
+    typeaheadErrorText: 'Loading failed',
     searchEnabled: true,
     minimumInputLength: null,
     maximumInputLength: null,
-    valueSeparator: ",",
+    valueSeparator: ',',
 
     // internal state
     _hasSelectedMissingItems: false,
-    _hasPendingContentPromise: Ember['default'].computed.alias("content.isPending"),
-    _hasFailedContentPromise: Ember['default'].computed.alias("content.isRejected"),
-    _hasPendingValuePromise: Ember['default'].computed.alias("value.isPending"),
-    _hasFailedValuePromise: Ember['default'].computed.alias("value.isRejected"),
-    _typeaheadMode: Ember['default'].computed.bool("query"),
+    _hasPendingContentPromise: Ember['default'].computed.alias('content.isPending'),
+    _hasFailedContentPromise: Ember['default'].computed.alias('content.isRejected'),
+    _hasPendingValuePromise: Ember['default'].computed.alias('value.isPending'),
+    _hasFailedValuePromise: Ember['default'].computed.alias('value.isRejected'),
+    _typeaheadMode: Ember['default'].computed.bool('query'),
 
     didInsertElement: function didInsertElement() {
       var self = this,
           options = {},
-          optionIdPath = this.get("optionIdPath"),
-          optionLabelPath = this.get("optionLabelPath"),
-          optionLabelSelectedPath = this.get("optionLabelSelectedPath"),
-          optionHeadlinePath = this.get("optionHeadlinePath"),
-          optionDescriptionPath = this.get("optionDescriptionPath"),
-          content = this.get("content");
+          optionIdPath = this.get('optionIdPath'),
+          optionLabelPath = this.get('optionLabelPath'),
+          optionLabelSelectedPath = this.get('optionLabelSelectedPath'),
+          optionHeadlinePath = this.get('optionHeadlinePath'),
+          optionDescriptionPath = this.get('optionDescriptionPath'),
+          content = this.get('content');
 
       // ensure select2 is loaded
       Ember['default'].assert("select2 has to exist on Ember.$.fn.select2", typeof Ember['default'].$.fn.select2 === "function");
 
       // setup
-      options.placeholder = this.get("placeholder");
-      options.multiple = this.get("multiple");
-      options.allowClear = this.get("allowClear");
-      options.minimumResultsForSearch = this.get("searchEnabled") ? 0 : -1;
-      options.minimumInputLength = this.get("minimumInputLength");
-      options.maximumInputLength = this.get("maximumInputLength");
+      options.placeholder = this.get('placeholder');
+      options.multiple = this.get('multiple');
+      options.allowClear = this.get('allowClear');
+      options.minimumResultsForSearch = this.get('searchEnabled') ? 0 : -1;
+      options.minimumInputLength = this.get('minimumInputLength');
+      options.maximumInputLength = this.get('maximumInputLength');
 
       // ensure there is a value separator if needed (= when in multiple selection with value binding)
-      var missesValueSeperator = this.get("multiple") && this.get("optionValuePath") && !this.get("valueSeparator");
+      var missesValueSeperator = this.get('multiple') && this.get('optionValuePath') && !this.get('valueSeparator');
       Ember['default'].assert("select2#didInsertElement: You must specify a valueSeparator when in multiple mode.", !missesValueSeperator);
 
-      options.separator = this.get("valueSeparator");
+      options.separator = this.get('valueSeparator');
 
       // override select2's default id fetching behavior
       options.id = function (e) {
@@ -114935,7 +115793,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
       Ember['default'].assert("To use allowClear, you have to specify a placeholder", !options.allowClear || options.placeholder);
 
       // search can't be disabled for multiple selection mode
-      var illegalSearchInMultipleMode = options.multiple && !this.get("searchEnabled");
+      var illegalSearchInMultipleMode = options.multiple && !this.get('searchEnabled');
       Ember['default'].assert("Search field can't be disabled for multiple selection mode", !illegalSearchInMultipleMode);
 
       /*
@@ -114996,10 +115854,10 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
       options.query = function (query) {
         var select2 = this;
 
-        if (self.get("_typeaheadMode")) {
-          var deferred = Ember['default'].RSVP.defer("select2#query: " + query.term);
+        if (self.get('_typeaheadMode')) {
+          var deferred = Ember['default'].RSVP.defer('select2#query: ' + query.term);
 
-          self.sendAction("query", query, deferred);
+          self.sendAction('query', query, deferred);
 
           deferred.promise.then(function (result) {
             var data = result;
@@ -115027,7 +115885,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
             });
           });
         } else {
-          Ember['default'].assert("select2 has no content!", self.get("content"));
+          Ember['default'].assert("select2 has no content!", self.get('content'));
 
           var filteredContent = self.get("content").reduce(function (results, item) {
             // items may contain children, so filter them, too
@@ -115065,7 +115923,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         `typeaheadSearchingText`
        */
       options.formatSearching = function () {
-        var text = self.get("typeaheadSearchingText");
+        var text = self.get('typeaheadSearchingText');
 
         return Ember['default'].String.htmlSafe(text);
       };
@@ -115075,7 +115933,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         html-escaped user input
        */
       options.formatNoMatches = function (term) {
-        var text = self.get("typeaheadNoMatchesText");
+        var text = self.get('typeaheadNoMatchesText');
         if (text instanceof Ember['default'].Handlebars.SafeString) {
           text = text.string;
         }
@@ -115090,7 +115948,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         rejection reason
        */
       options.formatAjaxError = function (jqXHR, textStatus, errorThrown) {
-        var text = self.get("typeaheadErrorText");
+        var text = self.get('typeaheadErrorText');
 
         return Ember['default'].String.htmlSafe(Ember['default'].String.fmt(text, errorThrown));
       };
@@ -115124,14 +115982,14 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         // but make sure there is an appropriate error just in case.
         Ember['default'].assert("select2#initSelection has been called without an \"" + "optionValuePath\" set.", optionValuePath);
 
-        Ember['default'].assert("select2#initSelection can not map string values to full objects " + "in typeahead mode. Please open a github issue if you have questions to this.", !self.get("_typeaheadMode"));
+        Ember['default'].assert("select2#initSelection can not map string values to full objects " + "in typeahead mode. Please open a github issue if you have questions to this.", !self.get('_typeaheadMode'));
 
         var values;
         var filteredContent = [];
 
         // only split select2's string value on valueSeparator when in multiple mode
-        if (self.get("multiple")) {
-          var separator = self.get("valueSeparator");
+        if (self.get('multiple')) {
+          var separator = self.get('valueSeparator');
           values = value.split(separator);
         } else {
           values = [value];
@@ -115139,7 +115997,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
 
         // for every object, check if its optionValuePath is in the selected
         // values array and save it to the right position in filteredContent
-        var contentLength = get(content, "length"),
+        var contentLength = get(content, 'length'),
             unmatchedValues = values.length,
             matchIndex;
 
@@ -115178,11 +116036,11 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         // END loop over content
 
         if (unmatchedValues === 0) {
-          self.set("_hasSelectedMissingItems", false);
+          self.set('_hasSelectedMissingItems', false);
         } else {
           // disable the select2 element if there are keys left in the values
           // array that were not matched to an object
-          self.set("_hasSelectedMissingItems", true);
+          self.set('_hasSelectedMissingItems', true);
 
           Ember['default'].warn("select2#initSelection was not able to map each \"" + optionValuePath + "\" to an object from \"content\". The remaining " + "keys are: " + values + ". The input will be disabled until a) the " + "desired objects is added to the \"content\" array or b) the " + "\"value\" is changed.", !values.length);
         }
@@ -115201,7 +116059,7 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         The value will be read from the `cssClass` binding
        */
       options.containerCssClass = options.dropdownCssClass = function () {
-        return self.get("cssClass") || "";
+        return self.get('cssClass') || '';
       };
 
       this._select = this.$().select2(options);
@@ -115213,12 +116071,12 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         this.selectionChanged(data);
       }));
 
-      this.addObserver("content.[]", this.valueChanged);
-      this.addObserver("content.@each." + optionLabelPath, this.valueChanged);
-      this.addObserver("content.@each." + optionLabelSelectedPath, this.valueChanged);
-      this.addObserver("content.@each." + optionHeadlinePath, this.valueChanged);
-      this.addObserver("content.@each." + optionDescriptionPath, this.valueChanged);
-      this.addObserver("value", this.valueChanged);
+      this.addObserver('content.[]', this.valueChanged);
+      this.addObserver('content.@each.' + optionLabelPath, this.valueChanged);
+      this.addObserver('content.@each.' + optionLabelSelectedPath, this.valueChanged);
+      this.addObserver('content.@each.' + optionHeadlinePath, this.valueChanged);
+      this.addObserver('content.@each.' + optionDescriptionPath, this.valueChanged);
+      this.addObserver('value', this.valueChanged);
 
       // trigger initial data sync to set select2 to the external "value"
       this.valueChanged();
@@ -115245,12 +116103,12 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
         this._select.select2("destroy");
       }
 
-      this.removeObserver("content.[]", this.valueChanged);
-      this.removeObserver("content.@each." + this.get("optionLabelPath"), this.valueChanged);
-      this.removeObserver("content.@each." + this.get("optionLabelSelectedPath"), this.valueChanged);
-      this.removeObserver("content.@each." + this.get("optionHeadlinePath"), this.valueChanged);
-      this.removeObserver("content.@each." + this.get("optionDescriptionPath"), this.valueChanged);
-      this.removeObserver("value", this.valueChanged);
+      this.removeObserver('content.[]', this.valueChanged);
+      this.removeObserver('content.@each.' + this.get('optionLabelPath'), this.valueChanged);
+      this.removeObserver('content.@each.' + this.get('optionLabelSelectedPath'), this.valueChanged);
+      this.removeObserver('content.@each.' + this.get('optionHeadlinePath'), this.valueChanged);
+      this.removeObserver('content.@each.' + this.get('optionDescriptionPath'), this.valueChanged);
+      this.removeObserver('value', this.valueChanged);
     },
 
     /**
@@ -115280,8 +116138,8 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
       }
 
       this.set("value", value);
-      Ember['default'].run.schedule("actions", this, function () {
-        this.sendAction("didSelect", value, this);
+      Ember['default'].run.schedule('actions', this, function () {
+        this.sendAction('didSelect', value, this);
       });
     },
 
@@ -115323,9 +116181,9 @@ define('ember-select-2/components/select-2', ['exports', 'ember'], function (exp
     /**
      * Watch properties that determine the disabled state of the input.
      */
-    watchDisabled: Ember['default'].observer("_hasSelectedMissingItems", "_hasPendingContentPromise", "_hasFailedContentPromise", "_hasPendingValuePromise", "_hasFailedValuePromise", "enabled", function () {
+    watchDisabled: Ember['default'].observer('_hasSelectedMissingItems', '_hasPendingContentPromise', '_hasFailedContentPromise', '_hasPendingValuePromise', '_hasFailedValuePromise', 'enabled', function () {
       var select = this._select,
-          disabled = this.get("_hasSelectedMissingItems") || this.get("_hasPendingContentPromise") || this.get("_hasFailedContentPromise") || this.get("_hasPendingValuePromise") || this.get("_hasFailedValuePromise") || !this.get("enabled");
+          disabled = this.get('_hasSelectedMissingItems') || this.get('_hasPendingContentPromise') || this.get('_hasFailedContentPromise') || this.get('_hasPendingValuePromise') || this.get('_hasFailedValuePromise') || !this.get('enabled');
 
       if (select) {
         Ember['default'].run(function () {
@@ -115406,7 +116264,7 @@ define('ember-time-input/templates/components/time-input', ['exports'], function
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {

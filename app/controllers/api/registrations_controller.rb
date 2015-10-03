@@ -1,4 +1,4 @@
-class Api::RegistrationController < APIController
+class Api::RegistrationsController < APIController
 
   def index
     @attendances = current_user.attendances

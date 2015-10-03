@@ -1,4 +1,5 @@
 class ConfirmationsController < Devise::ConfirmationsController
+  respond_to :html, :json
 
   private
 

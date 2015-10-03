@@ -13,6 +13,13 @@ define('aeonvera/adapters/application', ['exports', 'ember-data', 'aeonvera/conf
   });
 
 });
+define('aeonvera/adapters/package', ['exports', 'ember-data'], function (exports, DS) {
+
+	'use strict';
+
+	exports['default'] = DS['default'].ActiveModelAdapter.extend({});
+
+});
 define('aeonvera/app', ['exports', 'ember', 'ember/resolver', 'ember/load-initializers', 'aeonvera/config/environment'], function (exports, Ember, Resolver, loadInitializers, config) {
 
 	'use strict';
@@ -78,7 +85,7 @@ define('aeonvera/components/error-field-wrapper', ['exports', 'ember'], function
 
     fieldErrors: (function () {
       var field = this.get('field');
-      return this.get('errors').get(field) || [];
+      return this.get('errors.' + field) || [];
     }).property('errors.[]')
   });
 
@@ -148,7 +155,7 @@ define('aeonvera/components/event-at-the-door/checkin-list', ['exports', 'ember'
     percentCheckedIn: (function () {
       var checkedIn = this.get('numberCheckedIn');
       /* var checkedOut = this.get('numberCheckedOut'); */
-      var total = this.get('model').get('length');
+      var total = this.get('model').get("length");
       var percent = checkedIn / total * 100;
 
       return Math.round(percent, 2);
@@ -483,6 +490,57 @@ define('aeonvera/components/page-header', ['exports', 'ember'], function (export
   });
 
 });
+define('aeonvera/components/password-reset', ['exports', 'ember', 'aeonvera/config/environment'], function (exports, Ember, ENV) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    email: null,
+
+    errors: (function () {
+      return this.get('model.errors');
+    }).property('model'),
+
+    emailClass: (function () {
+      var errors = this.get('errors');
+      if (errors.get('email') && errors.get('email').length > 0) {
+        return 'error';
+      }
+      return errors.email;
+    }).property('errors'),
+
+    actions: {
+      reset: function reset() {
+        var self = this;
+        var url = ENV['default'].host + '/api/users/password.json';
+        var data = {
+          user: {
+            email: this.get('email')
+          }
+        };
+
+        Ember['default'].$.ajax({
+          url: url,
+          type: 'POST',
+          data: data,
+          success: function success(data) {
+            self.sendAction('action');
+          },
+          error: function error(jqxhr, status, text) {
+            var json = Ember['default'].$.parseJSON(jqxhr.responseText);
+            var errors = json.errors;
+            var modelErrors = self.get('model.errors');
+            modelErrors.clear();
+            for (var field in errors) {
+              modelErrors.add(field, errors[field]);
+            }
+          }
+        });
+      }
+    }
+  });
+
+});
 define('aeonvera/components/pick-a-date', ['exports', 'ember-cli-pickadate/components/pick-a-date'], function (exports, pick_a_date) {
 
 	'use strict';
@@ -513,12 +571,12 @@ define('aeonvera/components/pricing-preview', ['exports', 'ember'], function (ex
 
 		actions: {
 			reCalculate: function reCalculate(enteredValue) {
-				var serviceFee = this.$('#serviceFee');
-				var cardFee = this.$('#cardFee');
-				var buyerPays = this.$('#buyerPays');
-				var youGet = this.$('#youGet');
-				var ticketPrice = this.$('#ticketPrice');
-				var absorbFees = this.$('#absorbFees');
+				var serviceFee = this.$("#serviceFee");
+				var cardFee = this.$("#cardFee");
+				var buyerPays = this.$("#buyerPays");
+				var youGet = this.$("#youGet");
+				var ticketPrice = this.$("#ticketPrice");
+				var absorbFees = this.$("#absorbFees");
 
 				var value = typeof enteredValue !== 'undefined' ? enteredValue : parseFloat(ticketPrice.val());
 
@@ -672,12 +730,12 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
     /**
      * The name of your company or website.
      */
-    name: 'Demo Site',
+    name: "Demo Site",
 
     /**
      * A description of the product or service being purchased.
      */
-    description: '2 widgets ($20.00)',
+    description: "2 widgets ($20.00)",
 
     /**
      * The amount (in cents) that's shown to the user. Note that you
@@ -698,7 +756,7 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
     /**
      * The currency of the amount (3-letter ISO code). The default is USD.
      */
-    currency: 'USD',
+    currency: "USD",
 
     /**
      * The label of the payment button in the Checkout form (e.g. “Subscribe”,
@@ -729,7 +787,7 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
     /**
      * The text to be shown on the default blue button.
      */
-    label: 'Pay with card',
+    label: "Pay with card",
 
     /**
      * Specify whether to include the option to "Remember Me" for future
@@ -818,7 +876,7 @@ define('aeonvera/components/stripe-checkout', ['exports', 'ember', 'aeonvera/con
       var self = this;
 
       if (Ember['default'].isNone(this.get('key'))) {
-        throw ['Your Stripe key must be set to use the stripe-checkout component. ', 'Set the key in your environment.js file (ENV.stripe.key) or set the ', 'key property on the component when instantiating it in your hbs template. ', 'Find your Stripe publishable key at https://dashboard.stripe.com/account/apikeys'].join('\n');
+        throw ["Your Stripe key must be set to use the stripe-checkout component. ", "Set the key in your environment.js file (ENV.stripe.key) or set the ", "key property on the component when instantiating it in your hbs template. ", "Find your Stripe publishable key at https://dashboard.stripe.com/account/apikeys"].join('\n');
       }
 
       var handler = StripeCheckout.configure({
@@ -918,14 +976,14 @@ define('aeonvera/components/tool-tip', ['exports', 'ember'], function (exports, 
 
   exports['default'] = Ember['default'].Component.extend({
     attributeBindings: ["data-tooltip", "data-width", "title"],
-    tagName: "span",
-    classNames: ["has-tip"],
+    tagName: 'span',
+    classNames: ['has-tip'],
     "data-tooltip": true,
-    title: Ember['default'].computed.alias("message"),
+    title: Ember['default'].computed.alias('message'),
 
     "data-width": (function () {
-      return this.get("width") || 200;
-    }).property("width")
+      return this.get('width') || 200;
+    }).property('width')
 
   });
 
@@ -960,16 +1018,16 @@ define('aeonvera/controllers/application', ['exports', 'ember'], function (expor
           */
           self.get('flashMessages').success('You will receive an email with instructions about how to confirm your account in a few minutes.');
           jQuery('#signup-modal a.close-reveal-modal').trigger('click');
-        }, function () {});
+        }, function () {
+          /*
+            error
+            - show error messages
+          */
+        });
       }
     }
 
   });
-
-  /*
-    error
-    - show error messages
-  */
 
 });
 define('aeonvera/controllers/dashboard', ['exports', 'ember'], function (exports, Ember) {
@@ -1106,7 +1164,7 @@ define('aeonvera/controllers/event-at-the-door/a-la-carte', ['exports', 'ember']
           send the token to the server to actually create the charge
          */
         order.setProperties({
-          paymentMethod: 'Stripe',
+          paymentMethod: "Stripe",
           checkoutToken: args.id,
           checkoutEmail: args.email
         });
@@ -1220,6 +1278,27 @@ define('aeonvera/controllers/events/show/revenue', ['exports', 'ember'], functio
       return parsed;
     }).property('endTime', 'endDate'),
 
+    totalPaidAmount: (function () {
+      var orders = this.get('filteredOrders');
+      return orders.mapBy('paidAmount').reduce(function (a, b) {
+        return a + b;
+      });
+    }).property('filteredOrders'),
+
+    totalAmountReceived: (function () {
+      var orders = this.get('filteredOrders');
+      return orders.mapBy('netAmountReceived').reduce(function (a, b) {
+        return a + b;
+      });
+    }).property('filteredOrders'),
+
+    totalFeeAmount: (function () {
+      var orders = this.get('filteredOrders');
+      return orders.mapBy('totalFeeAmount').reduce(function (a, b) {
+        return a + b;
+      });
+    }).property('filteredOrders'),
+
     filteredOrders: (function () {
       var model = this.get('model');
       var startTime = this.get('startDateTime');
@@ -1300,7 +1379,7 @@ define('aeonvera/helpers/date-range', ['exports', 'ember'], function (exports, E
     var formattedStartDate = moment(startDate).format('ll');
     var formattedEndDate = moment(endDate).format('ll');
 
-    var range = formattedStartDate + ' - ' + formattedEndDate;
+    var range = formattedStartDate + " - " + formattedEndDate;
 
     return range;
   });
@@ -1345,58 +1424,58 @@ define('aeonvera/helpers/fa-icon', ['exports', 'ember'], function (exports, Embe
    */
   var faIcon = function faIcon(name, options) {
     if (Ember['default'].typeOf(name) !== 'string') {
-      var message = 'fa-icon: no icon specified';
+      var message = "fa-icon: no icon specified";
       warn(message);
       return Ember['default'].String.htmlSafe(message);
     }
 
     var params = options.hash,
         classNames = [],
-        html = '';
+        html = "";
 
-    classNames.push('fa');
+    classNames.push("fa");
     if (!name.match(FA_PREFIX)) {
-      name = 'fa-' + name;
+      name = "fa-" + name;
     }
     classNames.push(name);
     if (params.spin) {
-      classNames.push('fa-spin');
+      classNames.push("fa-spin");
     }
     if (params.flip) {
-      classNames.push('fa-flip-' + params.flip);
+      classNames.push("fa-flip-" + params.flip);
     }
     if (params.rotate) {
-      classNames.push('fa-rotate-' + params.rotate);
+      classNames.push("fa-rotate-" + params.rotate);
     }
     if (params.lg) {
-      warn('fa-icon: the \'lg\' parameter is deprecated. Use \'size\' instead. I.e. {{fa-icon size="lg"}}');
-      classNames.push('fa-lg');
+      warn("fa-icon: the 'lg' parameter is deprecated. Use 'size' instead. I.e. {{fa-icon size=\"lg\"}}");
+      classNames.push("fa-lg");
     }
     if (params.x) {
-      warn('fa-icon: the \'x\' parameter is deprecated. Use \'size\' instead. I.e. {{fa-icon size="' + params.x + '"}}');
-      classNames.push('fa-' + params.x + 'x');
+      warn("fa-icon: the 'x' parameter is deprecated. Use 'size' instead. I.e. {{fa-icon size=\"" + params.x + "\"}}");
+      classNames.push("fa-" + params.x + "x");
     }
     if (params.size) {
-      if (Ember['default'].typeOf(params.size) === 'string' && params.size.match(/\d+/)) {
+      if (Ember['default'].typeOf(params.size) === "string" && params.size.match(/\d+/)) {
         params.size = Number(params.size);
       }
-      if (Ember['default'].typeOf(params.size) === 'number') {
-        classNames.push('fa-' + params.size + 'x');
+      if (Ember['default'].typeOf(params.size) === "number") {
+        classNames.push("fa-" + params.size + "x");
       } else {
-        classNames.push('fa-' + params.size);
+        classNames.push("fa-" + params.size);
       }
     }
     if (params.fixedWidth) {
-      classNames.push('fa-fw');
+      classNames.push("fa-fw");
     }
     if (params.listItem) {
-      classNames.push('fa-li');
+      classNames.push("fa-li");
     }
     if (params.pull) {
-      classNames.push('pull-' + params.pull);
+      classNames.push("pull-" + params.pull);
     }
     if (params.border) {
-      classNames.push('fa-border');
+      classNames.push("fa-border");
     }
     if (params.classNames && !Ember['default'].isArray(params.classNames)) {
       params.classNames = [params.classNames];
@@ -1405,17 +1484,17 @@ define('aeonvera/helpers/fa-icon', ['exports', 'ember'], function (exports, Embe
       Array.prototype.push.apply(classNames, params.classNames);
     }
 
-    html += '<';
+    html += "<";
     var tagName = params.tagName || 'i';
     html += tagName;
-    html += ' class=\'' + classNames.join(' ') + '\'';
+    html += " class='" + classNames.join(" ") + "'";
     if (params.title) {
-      html += ' title=\'' + params.title + '\'';
+      html += " title='" + params.title + "'";
     }
     if (params.ariaHidden === undefined || params.ariaHidden) {
-      html += ' aria-hidden="true"';
+      html += " aria-hidden=\"true\"";
     }
-    html += '></' + tagName + '>';
+    html += "></" + tagName + ">";
     return Ember['default'].String.htmlSafe(html);
   };
 
@@ -1494,7 +1573,7 @@ define('aeonvera/helpers/to-usd', ['exports', 'ember'], function (exports, Ember
     }
 
     var amount = (value || 0).toFixed(2),
-        sign = "$";
+        sign = '$';
 
     return "" + sign + amount;
   });
@@ -1542,7 +1621,7 @@ define('aeonvera/initializers/current-user', ['exports', 'ember', 'simple-auth/s
 
       Session['default'].reopen({
         setCurrentUser: (function () {
-          var accessToken = this.get("secure.token");
+          var accessToken = this.get('secure.token');
 
           /*
             not sure if this will be needed, but token and email are
@@ -1560,17 +1639,17 @@ define('aeonvera/initializers/current-user', ['exports', 'ember', 'simple-auth/s
               make a call to the server that only returns the current user
               see UserController#show
             */
-            return container.lookup("service:store")
+            return container.lookup('service:store')
             /*
               the id of 0 here doesn't actually matter,
               the server alwasy returns the current user.
               This is just to route to the show action on the controller.
             */
-            .find("user", 0).then(function (user) {
-              self.set("content.currentUser", user);
+            .find('user', 0).then(function (user) {
+              self.set('content.currentUser', user);
             });
           }
-        }).observes("secure.token")
+        }).observes('secure.token')
       });
     }
   };
@@ -1605,8 +1684,14 @@ define('aeonvera/initializers/error-handler', ['exports', 'ember', 'aeonvera/con
       method: 'POST',
       dataType: 'json',
       data: { error: errorData },
-      success: function success() {},
-      error: function error() {}
+      success: function success() /*data, textStatus, jqXHR*/{
+        // notify the user what happened, give link
+        // similar to atom.io's editor
+
+      },
+      error: function error() /*jqXHR, textStatus, errorThrown*/{
+        // not sure what to do if this fails... we can't report it
+      }
     });
   };
 
@@ -1636,12 +1721,6 @@ define('aeonvera/initializers/error-handler', ['exports', 'ember', 'aeonvera/con
       }
     }
   };
-  /*data, textStatus, jqXHR*/
-  // notify the user what happened, give link
-  // similar to atom.io's editor
-
-  /*jqXHR, textStatus, errorThrown*/
-  // not sure what to do if this fails... we can't report it
 
 });
 define('aeonvera/initializers/export-application-global', ['exports', 'ember', 'aeonvera/config/environment'], function (exports, Ember, config) {
@@ -1650,11 +1729,28 @@ define('aeonvera/initializers/export-application-global', ['exports', 'ember', '
 
   exports.initialize = initialize;
 
-  function initialize(container, application) {
-    var classifiedName = Ember['default'].String.classify(config['default'].modulePrefix);
+  function initialize() {
+    var application = arguments[1] || arguments[0];
+    if (config['default'].exportApplicationGlobal !== false) {
+      var value = config['default'].exportApplicationGlobal;
+      var globalName;
 
-    if (config['default'].exportApplicationGlobal && !window[classifiedName]) {
-      window[classifiedName] = application;
+      if (typeof value === 'string') {
+        globalName = value;
+      } else {
+        globalName = Ember['default'].String.classify(config['default'].modulePrefix);
+      }
+
+      if (!window[globalName]) {
+        window[globalName] = application;
+
+        application.reopen({
+          willDestroy: function willDestroy() {
+            this._super.apply(this, arguments);
+            delete window[globalName];
+          }
+        });
+      }
     }
   }
 
@@ -1804,7 +1900,7 @@ define('aeonvera/initializers/subdomain', ['exports', 'ember', 'aeonvera/config/
   var urlChecker = Ember['default'].Object.extend({
 
     subdomain: (function () {
-      var regexParse = new RegExp('[a-z-0-9]{2,63}.[a-z.]{2,5}$');
+      var regexParse = new RegExp('[a-z\-0-9]{2,63}\.[a-z\.]{2,5}$');
       var urlParts = regexParse.exec(this.get('hostname'));
       if (urlParts) return this.normalize(this.get('hostname').replace(urlParts[0], '').slice(0, -1));else return this.normalize('');
     }).property('hostname'),
@@ -1841,18 +1937,18 @@ define('aeonvera/instance-initializers/ember-i18n', ['exports', 'ember', 'ember-
   'use strict';
 
   exports['default'] = {
-    name: "ember-i18n",
+    name: 'ember-i18n',
 
     initialize: function initialize(instance) {
       var defaultLocale = (ENV['default'].i18n || {}).defaultLocale;
       if (defaultLocale === undefined) {
-        Ember['default'].warn("ember-i18n did not find a default locale; falling back to \"en\".");
-        defaultLocale = "en";
+        Ember['default'].warn('ember-i18n did not find a default locale; falling back to "en".');
+        defaultLocale = 'en';
       }
-      instance.container.lookup("service:i18n").set("locale", defaultLocale);
+      instance.container.lookup('service:i18n').set('locale', defaultLocale);
 
       if (legacyHelper['default'] != null) {
-        Ember['default'].HTMLBars._registerHelper("t", legacyHelper['default']);
+        Ember['default'].HTMLBars._registerHelper('t', legacyHelper['default']);
       }
     }
   };
@@ -1873,7 +1969,11 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
     createyourevent: 'Create Your Event',
     lookingforscene: 'Looking for a scene?',
     whatisheader: 'What is ÆONVERA?',
-    whatis: 'It is a system that helps event and scene organizers manage their events, lessons, and dances.     It helps scenes manage memberships and benefits.     It helps event organizers more easily manage their event both before and during the event.     It is constantly growing and responding to the community and doing everything it can to make the lives of organizers easier.     For more information on "how", checkout the features page.',
+    whatis: 'It is a system that helps event and scene organizers manage their events, lessons, and dances. \
+      It helps scenes manage memberships and benefits. \
+      It helps event organizers more easily manage their event both before and during the event. \
+      It is constantly growing and responding to the community and doing everything it can to make the lives of organizers easier. \
+      For more information on "how", checkout the features page.',
 
     features: 'Features',
     pricing: 'Pricing',
@@ -1888,9 +1988,14 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
 
     atdPaymentCollectionAgree: 'You agree that by clicking the pay button below, that you have collected {{amount}} from the customer.',
 
-    featuresinfo: 'List of current and upcoming features and possible explanations of each.     ÆONVERA is written by, and is for Swing Dancers.',
-    pricinginfo: 'Overview of pricing.     The most important thing to note is that if your event dosn\'t have a need     for collecting payments electronically, you can use ÆONVERA for free.     Every feature.',
-    faqinfo: 'Questions that are frequently asked as well as ones that might be     thought, but not spoken.',
+    featuresinfo: 'List of current and upcoming features and possible explanations of each. \
+      ÆONVERA is written by, and is for Swing Dancers.',
+    pricinginfo: 'Overview of pricing. \
+      The most important thing to note is that if your event dosn\'t have a need \
+      for collecting payments electronically, you can use ÆONVERA for free. \
+      Every feature.',
+    faqinfo: 'Questions that are frequently asked as well as ones that might be \
+      thought, but not spoken.',
 
     tos: 'Terms of Service',
     privacy: 'Privacy',
@@ -1918,13 +2023,31 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
         idea: 'I have an idea, will you please implement it?'
       },
       answers: {
-        howhelp: 'If you have general question about ÆONVERA, you can contact Preston         by clicking the email / envelope icon at the bottom of every page. If you         have a question about a particular event, it would be more efficient to         contact the event organizers.',
-        idea: 'Possibly. At the bottom of every page, you\'ll see a "Submit Ideas"         link. Feel free to click that and submit an "issue" on GitHub. If your         idea can meet the needs of the many, it\'ll get done. Exact timeline         cannot be known unless it\'s really urgent - like a bug or something.',
+        howhelp: 'If you have general question about ÆONVERA, you can contact Preston \
+          by clicking the email / envelope icon at the bottom of every page. If you \
+          have a question about a particular event, it would be more efficient to \
+          contact the event organizers.',
+        idea: 'Possibly. At the bottom of every page, you\'ll see a "Submit Ideas" \
+          link. Feel free to click that and submit an "issue" on GitHub. If your \
+          idea can meet the needs of the many, it\'ll get done. Exact timeline \
+          cannot be known unless it\'s really urgent - like a bug or something.',
         butthis: 'That\'s fine. Free will and such.',
         whystripe: '',
         pricecompare: '',
-        name: 'Names can mean a lot - they can also mean nothing. The owner of ÆONVERA         spent numerous days looking up various prefixes and suffixes to stitch together.         Eventually he decided to use a sort of exotic, yet ancient word ÆON - meaning "life".         ÆON is a good word just by itself and has a nice ring to it, especially when pronounced         with a long "a" sound instead of a typical "e" sound. But the owner felt that there         needed to be a suffix. Eventually VERA, meaning "true", was chosen so mean that ÆONVERA         is true to life, true to its promises, and true to its mission to help guide organizers         and attempt to relieve the stress that comes from organizing and mananging attendees.',
-        pronounce: 'The "Æ" letter, in Modern English does not have an agreed         upon pronunciation. Some people pronounce it as "ee", like in "eon",        some pronounce it as "eh", as in "esophagus".          The creator of ÆONVERA pronounces it as a long "a" sound like in "ape".        "Vera" is pronounced like in         Aloe Vera. No tricks on that one.'
+        name: 'Names can mean a lot - they can also mean nothing. The owner of ÆONVERA \
+          spent numerous days looking up various prefixes and suffixes to stitch together. \
+          Eventually he decided to use a sort of exotic, yet ancient word ÆON - meaning "life". \
+          ÆON is a good word just by itself and has a nice ring to it, especially when pronounced \
+          with a long "a" sound instead of a typical "e" sound. But the owner felt that there \
+          needed to be a suffix. Eventually VERA, meaning "true", was chosen so mean that ÆONVERA \
+          is true to life, true to its promises, and true to its mission to help guide organizers \
+          and attempt to relieve the stress that comes from organizing and mananging attendees.',
+        pronounce: 'The "Æ" letter, in Modern English does not have an agreed \
+          upon pronunciation. Some people pronounce it as "ee", like in "eon",\
+          some pronounce it as "eh", as in "esophagus".  \
+          The creator of ÆONVERA pronounces it as a long "a" sound like in "ape".\
+          "Vera" is pronounced like in \
+          Aloe Vera. No tricks on that one.'
       }
     }
   };
@@ -2021,18 +2144,18 @@ define('aeonvera/models/attendance', ['exports', 'ember', 'ember-data'], functio
       var paid = this.get('amountPaid');
       var doesOwe = owed > 0;
       var hasPaid = paid > 0;
-      var status = '';
+      var status = "";
 
       if (doesOwe) {
-        status += 'Owe: $' + owed;
+        status += "Owe: $" + owed;
       }
 
       if (doesOwe && hasPaid) {
-        status += ', ';
+        status += ", ";
       }
 
       if (hasPaid) {
-        status += 'Paid: $' + paid;
+        status += "Paid: $" + paid;
       }
 
       return status;
@@ -2066,11 +2189,11 @@ define('aeonvera/models/community', ['exports', 'ember-data'], function (exports
     owner: DS['default'].belongsTo('user'),
 
     location: (function () {
-      return this.get('city') + ', ' + this.get('state');
+      return this.get('city') + ", " + this.get('state');
     }).property('city', 'state'),
 
     logo_is_missing: (function () {
-      return this.get('logo_url').indexOf('missing') !== -1;
+      return this.get('logo_url').indexOf("missing") !== -1;
     }).property('logo_url')
   });
 
@@ -2110,15 +2233,15 @@ define('aeonvera/models/competition', ['exports', 'ember-data', 'aeonvera/models
       var kind = this.get('kind');
 
       if (kind === 0) {
-        return 'Solo Jazz';
+        return "Solo Jazz";
       } else if (kind === 1) {
-        return 'Jack & Jill';
+        return "Jack & Jill";
       } else if (kind === 2) {
-        return 'Strictly';
+        return "Strictly";
       } else if (kind === 3) {
-        return 'Team';
+        return "Team";
       } else if (kind === 4) {
-        return 'Crossover Jack & Jill';
+        return "Crossover Jack & Jill";
       }
     }).property('kind')
 
@@ -2131,6 +2254,72 @@ define('aeonvera/models/competition', ['exports', 'ember-data', 'aeonvera/models
   //   let kind = this.get('kind');
   //   return (kind === 1 || kind === 4)
   // }.property('kind')
+
+});
+define('aeonvera/models/discount', ['exports', 'ember', 'ember-data'], function (exports, Ember, DS) {
+
+  'use strict';
+
+  exports['default'] = DS['default'].Model.extend({
+
+    DOLLARS_OFF: 0,
+    PERCENT_OFF: 1,
+
+    code: DS['default'].attr('string'),
+    amount: DS['default'].attr('string'),
+    kind: DS['default'].attr('number'),
+    timesUsed: DS['default'].attr('number'),
+
+    discountType: DS['default'].attr('string'),
+    appliesTo: DS['default'].attr('string'),
+    allowedNumberOfUses: DS['default'].attr('number'),
+
+    host: DS['default'].belongsTo('host', { polymorphic: true, async: true }),
+    // allowedPackages: DS.hasMany('package'),
+    packages: DS['default'].hasMany('package', { async: true }),
+    // restraints: DS.hasMany('restraint')
+
+    discount: (function () {
+      var kind = this.get('kind');
+      var amount = this.get('amount');
+
+      if (kind === this.get('DOLLARS_OFF')) {
+        return '$' + amount;
+      }
+
+      return amount + '%';
+    }).property('amount', 'kind'),
+
+    restrictedTo: (function () {
+      var nameArray = [];
+      // let packages = this.get('packages');
+      // let host = this.get('host');
+      // let hostId = host.get('id'); //this.get('hostId');
+      // let hostType = host.get('type');
+      // let parentPath = Ember.String.underscore(hostType);
+      // parentPath = Ember.String.pluralize(parentPath);
+      //
+      // let adapter = this.store.adapterFor('packages');
+      //
+      // let rootNamespace = adapter.namespace;
+      // let eventDiscountNamespace = rootNamespace + '/' + parentPath + '/' + hostId + '/packages';
+      //
+      // adapter.set('namespace', eventDiscountNamespace);
+      //
+      // console.log(adapter.namespace);
+      // console.log(this.store.adapterFor('packages').namespace);
+
+      return this.get('packages', { event_id: 16 });
+      // packages.forEach(function(pack){
+      //   let name = pack.get('name');
+      //
+      //   nameArray.push(name);
+      // });
+
+      return nameArray.join(', ');
+    }).property('allowedPackages')
+
+  });
 
 });
 define('aeonvera/models/event-attendance', ['exports', 'ember-data', 'aeonvera/models/attendance'], function (exports, DS, Attendance) {
@@ -2201,7 +2390,7 @@ define('aeonvera/models/event', ['exports', 'ember-data', 'aeonvera/models/host'
 	  	TODO: find a way to make the 'stripe' key not a string somehow
 	  	so typing it over and over doesn't lead to silent errors
 	  */
-			var integrations = this.get('integrations').filterBy('name', 'stripe');
+			var integrations = this.get('integrations').filterBy('name', "stripe");
 			var stripeIntegration = null;
 
 			if (integrations.length > 0) {
@@ -2218,7 +2407,11 @@ define('aeonvera/models/host', ['exports', 'ember-data'], function (exports, DS)
   'use strict';
 
   exports['default'] = DS['default'].Model.extend({
-    name: DS['default'].attr('string')
+    name: DS['default'].attr('string'),
+
+    type: (function () {
+      return this.constructor.modelName;
+    }).property()
   });
 
 });
@@ -2430,8 +2623,8 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
       takes the line item, and makes an order line item out of it
     */
     addLineItem: function addLineItem(lineItem) {
-      var quantity = arguments[1] === undefined ? 1 : arguments[1];
-      var price = arguments[2] === undefined ? lineItem.get('currentPrice') : arguments[2];
+      var quantity = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+      var price = arguments.length <= 2 || arguments[2] === undefined ? lineItem.get('currentPrice') : arguments[2];
       return (function () {
         var orderLineItem = this.get('lineItems').createRecord({
           lineItem: lineItem,
@@ -2455,8 +2648,8 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
         but I don't know how that's going to work yet
     */
     markPaid: function markPaid(paymentMethod) {
-      var checkNumber = arguments[1] === undefined ? null : arguments[1];
-      var stripeData = arguments[2] === undefined ? null : arguments[2];
+      var checkNumber = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+      var stripeData = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
       /*
         orders can't be changed once paid.
@@ -2511,10 +2704,10 @@ define('aeonvera/models/registered-event', ['exports', 'ember-data'], function (
 		url: DS['default'].attr('string'),
 
 		registrationStatus: (function () {
-			if (this.get('isAttending')) {
-				return 'Attending';
+			if (this.get("isAttending")) {
+				return "Attending";
 			} else {
-				return 'Not Attending';
+				return "Not Attending";
 			}
 		}).property('isAttending'),
 
@@ -2634,9 +2827,20 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
     index route is automatic
   */
   exports['default'] = Router.map(function () {
+
     this.route('logout');
     this.route('login');
     this.route('signup');
+    this.route('password-reset', function () {
+      this.route('success');
+    });
+
+    /* event registration - subdomain based */
+    this.route('dance-event');
+    /* organization registration - subdomain based */
+    this.route('dance-organization');
+
+    /* public facing */
     this.resource('welcome', function () {
       this.route('features');
       this.route('pricing');
@@ -2651,6 +2855,7 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
       this.route('about');
     });
 
+    /* must be logged in for */
     this.route('dashboard', {
       path: '/'
     }, function () {
@@ -2664,12 +2869,16 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
         this.route('a-la-carte');
       });
       this.resource('events', function () {
-        this.route('show', {
-          path: ':event_id'
-        }, function () {
+        this.route('show', { path: ':event_id' }, function () {
           /* attendees, volunteers, etc */
           this.route('revenue');
           this.route('manage');
+          this.route('discounts', function () {
+            this.route('new');
+            this.route('show', { path: ':discount_id' }, function () {
+              this.route('edit');
+            });
+          });
         });
         this.route('housing-requests', function () {
           this.route('new');
@@ -2691,7 +2900,7 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
       this.route('packages');
     });
 
-    this.route('upcoming-events');
+    this.route("upcoming-events");
     this.route('communities');
 
     this.resource('user', function () {
@@ -2707,75 +2916,122 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
 });
 define('aeonvera/routes/application', ['exports', 'ember', 'simple-auth/mixins/application-route-mixin'], function (exports, Ember, ApplicationRouteMixin) {
 
-	'use strict';
+  'use strict';
 
-	exports['default'] = Ember['default'].Route.extend(ApplicationRouteMixin['default'], {
-		// intl: Ember.inject.service(),
-		// beforeModel: function(){
-		// 	// define the app's runtime locale
-		// 	// For example, here you would maybe do an API lookup to resolver
-		// 	// which locale the user should be targeted and perhaps lazily
-		// 	// load translations using XHR and calling intl's `addTranslation`/`addTranslations`
-		// 	// method with the results of the XHR request
-		// 	this.get('intl').setLocale('en-us');
-		// },
+  exports['default'] = Ember['default'].Route.extend(ApplicationRouteMixin['default'], {
+    // intl: Ember.inject.service(),
+    beforeModel: function beforeModel() {
+      var self = this;
+      //   // define the app's runtime locale
+      //   // For example, here you would maybe do an API lookup to resolver
+      //   // which locale the user should be targeted and perhaps lazily
+      //   // load translations using XHR and calling intl's `addTranslation`/`addTranslations`
+      //   // method with the results of the XHR request
+      //   this.get('intl').setLocale('en-us');
 
-		// http://stackoverflow.com/questions/12150624/ember-js-multiple-named-outlet-usage
-		renderTemplate: function renderTemplate() {
+      // check if there is a subdomain
+      // if there is, send a request to get the model matching the subdomain, as
+      // every event / organization most have a unique subdomain.
+      // redirect to the appropriate route (event or organization)
+      // based on what type of model comes back.
+      //
+      // TODO: should this be a service?
 
-			// Render default outlet
-			this.render();
+      // if (this.get('hasSubdomain')){
+      //   this.get('modelForSubdomain').then(function(model){
+      //     let type = model.get('type');
+      //     if (type === 'event'){
+      //       self.transitionTo('dance-event');
+      //     } else if (type === 'organization'){
+      //       self.transitionTo('dance-organization');
+      //     }
+      //     // otherwise proceed as normal?
+      //   });
+      // }
+    },
 
-			// render footer
-			this.render('shared/footer', {
-				outlet: 'bottom-footer',
-				into: 'application'
-			});
-		},
+    modelForSubdomain: (function () {
+      var currentSubdomain = this.get('currentSubdomain');
 
-		actions: {
+      Ember['default'].$.ajax({
+        url: '/api/host_for?subdomain=' + currentSubdomain
+      });
+    }).property('currentSubdomain'),
 
-			linkToRoute: function linkToRoute(item) {
-				this.transitionTo(item.route);
-			},
+    hasSubdomain: (function () {
+      return Ember['default'].isPresent(this.get('currentSubdomain'));
+    }).property('currentSubdomain'),
 
-			exitOffCanvas: function exitOffCanvas() {
-				this.$('a.exit-off-canvas').click();
-			},
+    currentSubdomain: function currentSubdomain() {
+      var domain = /:\/\/([^\/]+)/.exec(window.location.href)[1];
+      var domainParts = domain.split('.');
+      domainParts.pop(); // remove TLD
+      domainParts.pop(); // remove domain
+      var subdomain = domainParts.join('.');
 
-			redirectToLogin: function redirectToLogin() {
-				this.transitionTo('login');
-			},
+      if (subdomain.ToLowerCase() === 'www') {
+        return '';
+      }
 
-			redirectToSignup: function redirectToSignup() {
-				this.transitionTo('signup');
-			},
+      return subdomain;
+    },
 
-			invalidateSession: function invalidateSession() {
-				this.get('session').invalidate();
-				localStorage.clear();
-			},
+    // http://stackoverflow.com/questions/12150624/ember-js-multiple-named-outlet-usage
+    renderTemplate: function renderTemplate() {
 
-			sessionAuthenticationSucceeded: function sessionAuthenticationSucceeded() {
-				// close the modal
-				Ember['default'].$('a.close-reveal-modal').trigger('click');
+      // Render default outlet
+      this.render();
 
-				// set user and redirect
-				this.transitionTo('dashboard');
+      // render footer
+      this.render('shared/footer', {
+        outlet: 'bottom-footer',
+        into: 'application'
+      });
+    },
 
-				// notify of success
-				Ember['default'].get(this, 'flashMessages').success('You have successfully logged in');
-			},
+    actions: {
 
-			sessionAuthenticationFailed: function sessionAuthenticationFailed(error) {
-				Ember['default'].Logger.debug('Session authentication failed!');
+      linkToRoute: function linkToRoute(item) {
+        this.transitionTo(item.route);
+      },
 
-				Ember['default'].$('#login-error-message .message').text(error.error || error);
-				Ember['default'].$('#login-error-message').show();
-			}
+      exitOffCanvas: function exitOffCanvas() {
+        this.$('a.exit-off-canvas').click();
+      },
 
-		}
-	});
+      redirectToLogin: function redirectToLogin() {
+        this.transitionTo('login');
+      },
+
+      redirectToSignup: function redirectToSignup() {
+        this.transitionTo('signup');
+      },
+
+      invalidateSession: function invalidateSession() {
+        this.get('session').invalidate();
+        localStorage.clear();
+      },
+
+      sessionAuthenticationSucceeded: function sessionAuthenticationSucceeded() {
+        // close the modal
+        Ember['default'].$('a.close-reveal-modal').trigger('click');
+
+        // set user and redirect
+        this.transitionTo('dashboard');
+
+        // notify of success
+        Ember['default'].get(this, 'flashMessages').success('You have successfully logged in');
+      },
+
+      sessionAuthenticationFailed: function sessionAuthenticationFailed(error) {
+        Ember['default'].Logger.debug('Session authentication failed!');
+
+        Ember['default'].$('#login-error-message .message').text(error.error || error);
+        Ember['default'].$('#login-error-message').show();
+      }
+
+    }
+  });
 
 });
 define('aeonvera/routes/communities', ['exports', 'ember'], function (exports, Ember) {
@@ -2799,6 +3055,20 @@ define('aeonvera/routes/communities', ['exports', 'ember'], function (exports, E
       return this.store.findAll('community');
     }
   });
+
+});
+define('aeonvera/routes/dance-event', ['exports', 'ember'], function (exports, Ember) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].Route.extend({});
+
+});
+define('aeonvera/routes/dance-organization', ['exports', 'ember'], function (exports, Ember) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].Route.extend({});
 
 });
 define('aeonvera/routes/dashboard', ['exports', 'ember', 'aeonvera/mixins/authenticated-ui'], function (exports, Ember, AuthenticatedUi) {
@@ -3013,6 +3283,39 @@ define('aeonvera/routes/events/show', ['exports', 'ember'], function (exports, E
   });
 
 });
+define('aeonvera/routes/events/show/discounts/index', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    model: function model() {
+      var event = this.modelFor('events.show');
+      var adapter = this.store.adapterFor('orders');
+      var rootNamespace = adapter.namespace;
+      var eventNamespace = rootNamespace + '/events/' + event.get('id');
+
+      adapter.set('namespace', eventNamespace);
+
+      var promise = this.store.findAll('discount');
+
+      /*
+        set it back the way it was
+        this might introduce race condition problems
+      */
+      adapter.set('namespace', rootNamespace);
+
+      return promise;
+    }
+  });
+
+});
+define('aeonvera/routes/events/show/discounts/new', ['exports', 'ember'], function (exports, Ember) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].Route.extend({});
+
+});
 define('aeonvera/routes/events/show/index', ['exports', 'ember'], function (exports, Ember) {
 
 	'use strict';
@@ -3029,6 +3332,13 @@ define('aeonvera/routes/events/show/manage', ['exports', 'ember'], function (exp
       return this.modelFor('events.show');
     }
   });
+
+});
+define('aeonvera/routes/events/show/revenue-loading', ['exports', 'ember', 'aeonvera/mixins/loading'], function (exports, Ember, Loading) {
+
+	'use strict';
+
+	exports['default'] = Ember['default'].Route.extend(Loading['default'], {});
 
 });
 define('aeonvera/routes/events/show/revenue', ['exports', 'ember'], function (exports, Ember) {
@@ -3111,6 +3421,27 @@ define('aeonvera/routes/not-found', ['exports', 'ember'], function (exports, Emb
 
   });
   // playText: 'How about tetris isntead?'
+
+});
+define('aeonvera/routes/password-reset', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    activate: function activate() {
+      Ember['default'].$('a.close-reveal-modal').trigger('click');
+    },
+
+    model: function model() {
+      return this.get('store').createRecord('user');
+    },
+
+    actions: {
+      resetSuccess: function resetSuccess() {
+        this.transitionTo('password-reset.success');
+      }
+    }
+  });
 
 });
 define('aeonvera/routes/register', ['exports', 'ember'], function (exports, Ember) {
@@ -3252,7 +3583,7 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -3290,7 +3621,7 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -3398,7 +3729,7 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -3438,7 +3769,7 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
       var child1 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -3476,7 +3807,7 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -3540,7 +3871,7 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -3604,7 +3935,7 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -3682,7 +4013,7 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -3720,7 +4051,7 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -3798,7 +4129,7 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -3836,7 +4167,7 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -3875,7 +4206,7 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -3925,7 +4256,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -3966,7 +4297,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4049,7 +4380,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4084,7 +4415,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4122,7 +4453,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -4206,7 +4537,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-list', ['exports
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4244,7 +4575,7 @@ define('aeonvera/templates/components/event-at-the-door/checkin-list', ['exports
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -4385,7 +4716,7 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4424,7 +4755,7 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4463,7 +4794,7 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4502,7 +4833,7 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4541,7 +4872,7 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child4 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4579,7 +4910,7 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -4694,7 +5025,7 @@ define('aeonvera/templates/components/flash-message', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4736,7 +5067,7 @@ define('aeonvera/templates/components/flash-message', ['exports'], function (exp
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -4785,7 +5116,7 @@ define('aeonvera/templates/components/flash-message', ['exports'], function (exp
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -4830,7 +5161,7 @@ define('aeonvera/templates/components/flash-message', ['exports'], function (exp
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -4875,7 +5206,7 @@ define('aeonvera/templates/components/foundation-modal', ['exports'], function (
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -4936,7 +5267,7 @@ define('aeonvera/templates/components/handle-payment', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5092,7 +5423,7 @@ define('aeonvera/templates/components/labeled-radio-button', ['exports'], functi
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5145,7 +5476,7 @@ define('aeonvera/templates/components/links/external-link', ['exports'], functio
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5185,7 +5516,7 @@ define('aeonvera/templates/components/links/external-link', ['exports'], functio
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5233,9 +5564,44 @@ define('aeonvera/templates/components/login-help-modal', ['exports'], function (
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.10",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 216
+            },
+            "end": {
+              "line": 1,
+              "column": 279
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Forgot your password?");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5244,7 +5610,7 @@ define('aeonvera/templates/components/login-help-modal', ['exports'], function (
           },
           "end": {
             "line": 1,
-            "column": 654
+            "column": 661
           }
         }
       },
@@ -5267,12 +5633,7 @@ define('aeonvera/templates/components/login-help-modal', ['exports'], function (
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("p");
-        var el3 = dom.createElement("a");
-        dom.setAttribute(el3,"href","/users/password/new");
-        var el4 = dom.createElement("span");
-        var el5 = dom.createTextNode("Forgot your password?");
-        dom.appendChild(el4, el5);
-        dom.appendChild(el3, el4);
+        var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("br");
         dom.appendChild(el2, el3);
@@ -5320,12 +5681,16 @@ define('aeonvera/templates/components/login-help-modal', ['exports'], function (
         dom.appendChild(el0, el1);
         return el0;
       },
-      buildRenderNodes: function buildRenderNodes() { return []; },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0, 1]),0,0);
+        return morphs;
+      },
       statements: [
-
+        ["block","link-to",["password-reset"],[],0,null,["loc",[null,[1,216],[1,291]]]]
       ],
       locals: [],
-      templates: []
+      templates: [child0]
     };
   }()));
 
@@ -5337,7 +5702,7 @@ define('aeonvera/templates/components/login-modal', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5520,7 +5885,7 @@ define('aeonvera/templates/components/nav/dashboard/left-items', ['exports'], fu
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5552,7 +5917,7 @@ define('aeonvera/templates/components/nav/dashboard/left-items', ['exports'], fu
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5599,7 +5964,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5638,7 +6003,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5677,7 +6042,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5724,7 +6089,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5768,7 +6133,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child4 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5814,7 +6179,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child5 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -5857,7 +6222,7 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -5991,7 +6356,7 @@ define('aeonvera/templates/components/nav/left-off-canvas-menu', ['exports'], fu
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -6037,7 +6402,7 @@ define('aeonvera/templates/components/nav/right-off-canvas-menu', ['exports'], f
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -6084,7 +6449,7 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6117,7 +6482,7 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6156,7 +6521,7 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6195,7 +6560,7 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6234,7 +6599,7 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child4 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6272,7 +6637,7 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -6344,7 +6709,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -6385,7 +6750,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6425,7 +6790,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6470,7 +6835,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6514,7 +6879,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6560,7 +6925,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child4 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6601,7 +6966,7 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -6659,7 +7024,7 @@ define('aeonvera/templates/components/page-header', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -6697,6 +7062,109 @@ define('aeonvera/templates/components/page-header', ['exports'], function (expor
   }()));
 
 });
+define('aeonvera/templates/components/password-reset', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.10",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 63
+            },
+            "end": {
+              "line": 1,
+              "column": 216
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Email");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["value",["subexpr","@mut",[["get","email",["loc",[null,[1,162],[1,167]]]]],[],[]],"placeholder","yourname@domain.tld","type","email"],["loc",[null,[1,148],[1,216]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "revision": "Ember@1.13.10",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 316
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("form");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row collapse");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("br");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("button");
+        dom.setAttribute(el3,"type","submit");
+        dom.setAttribute(el3,"class","right");
+        var el4 = dom.createTextNode("Reset Password");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var morphs = new Array(2);
+        morphs[0] = dom.createElementMorph(element0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["element","action",["reset"],["on","submit"],["loc",[null,[1,6],[1,36]]]],
+        ["block","error-field-wrapper",[],["errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,93],[1,99]]]]],[],[]],"field","email"],0,null,["loc",[null,[1,63],[1,240]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/pricing-preview', ['exports'], function (exports) {
 
   'use strict';
@@ -6704,7 +7172,7 @@ define('aeonvera/templates/components/pricing-preview', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -6899,7 +7367,7 @@ define('aeonvera/templates/components/radio-button', ['exports'], function (expo
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6957,7 +7425,7 @@ define('aeonvera/templates/components/radio-button', ['exports'], function (expo
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -6997,7 +7465,7 @@ define('aeonvera/templates/components/radio-button', ['exports'], function (expo
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -7042,7 +7510,7 @@ define('aeonvera/templates/components/sidebar-container', ['exports'], function 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -7094,7 +7562,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7129,7 +7597,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7164,7 +7632,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7199,7 +7667,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7233,7 +7701,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -7325,7 +7793,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7360,7 +7828,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7394,7 +7862,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -7468,7 +7936,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7507,7 +7975,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7542,7 +8010,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7577,7 +8045,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7611,7 +8079,7 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -7774,7 +8242,7 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7817,7 +8285,7 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7860,7 +8328,7 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7903,7 +8371,7 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7954,7 +8422,7 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child4 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -7996,7 +8464,7 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8122,7 +8590,7 @@ define('aeonvera/templates/components/stripe-checkout', ['exports'], function (e
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -8163,7 +8631,7 @@ define('aeonvera/templates/components/stripe-checkout', ['exports'], function (e
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -8203,7 +8671,7 @@ define('aeonvera/templates/components/stripe-checkout', ['exports'], function (e
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8248,7 +8716,7 @@ define('aeonvera/templates/components/stripe/checkout-button', ['exports'], func
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8294,7 +8762,7 @@ define('aeonvera/templates/components/tool-tip', ['exports'], function (exports)
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8339,7 +8807,7 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8407,7 +8875,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
         var child0 = (function() {
           return {
             meta: {
-              "revision": "Ember@1.13.7",
+              "revision": "Ember@1.13.10",
               "loc": {
                 "source": null,
                 "start": {
@@ -8446,7 +8914,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
         var child1 = (function() {
           return {
             meta: {
-              "revision": "Ember@1.13.7",
+              "revision": "Ember@1.13.10",
               "loc": {
                 "source": null,
                 "start": {
@@ -8482,7 +8950,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
           var child0 = (function() {
             return {
               meta: {
-                "revision": "Ember@1.13.7",
+                "revision": "Ember@1.13.10",
                 "loc": {
                   "source": null,
                   "start": {
@@ -8517,7 +8985,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
           var child1 = (function() {
             return {
               meta: {
-                "revision": "Ember@1.13.7",
+                "revision": "Ember@1.13.10",
                 "loc": {
                   "source": null,
                   "start": {
@@ -8555,7 +9023,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
           }());
           return {
             meta: {
-              "revision": "Ember@1.13.7",
+              "revision": "Ember@1.13.10",
               "loc": {
                 "source": null,
                 "start": {
@@ -8593,7 +9061,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
         }());
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -8670,7 +9138,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -8758,7 +9226,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -8792,7 +9260,7 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8851,7 +9319,7 @@ define('aeonvera/templates/dashboard/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -8957,7 +9425,7 @@ define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -9015,7 +9483,7 @@ define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9068,7 +9536,7 @@ define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -9118,7 +9586,7 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -9188,7 +9656,7 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9227,7 +9695,7 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9267,7 +9735,7 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9301,7 +9769,7 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -9382,7 +9850,7 @@ define('aeonvera/templates/event-at-the-door', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -9428,7 +9896,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9467,7 +9935,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9520,7 +9988,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9573,7 +10041,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -9629,7 +10097,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           var child0 = (function() {
             return {
               meta: {
-                "revision": "Ember@1.13.7",
+                "revision": "Ember@1.13.10",
                 "loc": {
                   "source": null,
                   "start": {
@@ -9668,7 +10136,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           var child1 = (function() {
             return {
               meta: {
-                "revision": "Ember@1.13.7",
+                "revision": "Ember@1.13.10",
                 "loc": {
                   "source": null,
                   "start": {
@@ -9719,7 +10187,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           }());
           return {
             meta: {
-              "revision": "Ember@1.13.7",
+              "revision": "Ember@1.13.10",
               "loc": {
                 "source": null,
                 "start": {
@@ -9762,7 +10230,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         var child1 = (function() {
           return {
             meta: {
-              "revision": "Ember@1.13.7",
+              "revision": "Ember@1.13.10",
               "loc": {
                 "source": null,
                 "start": {
@@ -9801,7 +10269,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         }());
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -9869,7 +10337,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
       var child1 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -9907,7 +10375,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -10007,7 +10475,7 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10105,7 +10573,7 @@ define('aeonvera/templates/event-at-the-door/checkin', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10159,7 +10627,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -10199,7 +10667,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -10233,7 +10701,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -10317,7 +10785,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10383,7 +10851,7 @@ define('aeonvera/templates/event-at-the-door/index', ['exports'], function (expo
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10447,7 +10915,7 @@ define('aeonvera/templates/events', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10517,7 +10985,7 @@ define('aeonvera/templates/events/index', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -10555,7 +11023,7 @@ define('aeonvera/templates/events/index', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10605,14 +11073,74 @@ define('aeonvera/templates/events/index', ['exports'], function (exports) {
   }()));
 
 });
-define('aeonvera/templates/events/show', ['exports'], function (exports) {
+define('aeonvera/templates/events/show/discounts/index', ['exports'], function (exports) {
 
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.10",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 141
+            },
+            "end": {
+              "line": 1,
+              "column": 298
+            }
+          }
+        },
+        arity: 1,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("tr");
+          var el2 = dom.createElement("td");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("td");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("td");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("td");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [0]);
+          var morphs = new Array(4);
+          morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+          morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+          morphs[2] = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
+          morphs[3] = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
+          return morphs;
+        },
+        statements: [
+          ["content","discount.code",["loc",[null,[1,176],[1,193]]]],
+          ["content","discount.timesUsed",["loc",[null,[1,202],[1,224]]]],
+          ["content","discount.discount",["loc",[null,[1,233],[1,254]]]],
+          ["content","discount.restrictedTo",["loc",[null,[1,263],[1,288]]]]
+        ],
+        locals: ["discount"],
+        templates: []
+      };
+    }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10621,7 +11149,7 @@ define('aeonvera/templates/events/show', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 10
+            "column": 323
           }
         }
       },
@@ -10632,17 +11160,81 @@ define('aeonvera/templates/events/show', ['exports'], function (exports) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Code");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Times Used");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Discount");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Restricted To");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("tbody");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(1);
+        var morphs = new Array(2);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1, 1]),0,0);
         dom.insertBoundary(fragment, 0);
-        dom.insertBoundary(fragment, null);
         return morphs;
       },
       statements: [
-        ["content","outlet",["loc",[null,[1,0],[1,10]]]]
+        ["inline","page-header",[],["text","Discounts"],["loc",[null,[1,0],[1,32]]]],
+        ["block","each",[["get","model",["loc",[null,[1,161],[1,166]]]]],[],0,null,["loc",[null,[1,141],[1,307]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/discounts/new', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.10",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 0
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes() { return []; },
+      statements: [
+
       ],
       locals: [],
       templates: []
@@ -10657,7 +11249,7 @@ define('aeonvera/templates/events/show/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10803,9 +11395,44 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "revision": "Ember@1.13.10",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 412
+            },
+            "end": {
+              "line": 1,
+              "column": 470
+            }
+          }
+        },
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Discounts");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -10814,7 +11441,7 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
           },
           "end": {
             "line": 1,
-            "column": 1690
+            "column": 1699
           }
         }
       },
@@ -10852,9 +11479,7 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("li");
         var el3 = dom.createElement("h4");
-        var el4 = dom.createElement("a");
-        var el5 = dom.createTextNode("Discounts");
-        dom.appendChild(el4, el5);
+        var el4 = dom.createComment("");
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         var el3 = dom.createElement("p");
@@ -10941,24 +11566,23 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
         var element0 = dom.childAt(fragment, [1]);
         var element1 = dom.childAt(fragment, [4]);
         var element2 = dom.childAt(element1, [0, 0, 0]);
-        var element3 = dom.childAt(element1, [1, 0, 0]);
-        var element4 = dom.childAt(element1, [2, 0, 0]);
-        var element5 = dom.childAt(element1, [3, 0, 0]);
-        var element6 = dom.childAt(element1, [4, 0, 0]);
-        var element7 = dom.childAt(element1, [5, 0, 0]);
-        var element8 = dom.childAt(element1, [6, 0, 0]);
-        var element9 = dom.childAt(element1, [7, 0, 0]);
+        var element3 = dom.childAt(element1, [2, 0, 0]);
+        var element4 = dom.childAt(element1, [3, 0, 0]);
+        var element5 = dom.childAt(element1, [4, 0, 0]);
+        var element6 = dom.childAt(element1, [5, 0, 0]);
+        var element7 = dom.childAt(element1, [6, 0, 0]);
+        var element8 = dom.childAt(element1, [7, 0, 0]);
         var morphs = new Array(10);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createAttrMorph(element0, 'href');
         morphs[2] = dom.createAttrMorph(element2, 'href');
-        morphs[3] = dom.createAttrMorph(element3, 'href');
-        morphs[4] = dom.createAttrMorph(element4, 'href');
-        morphs[5] = dom.createAttrMorph(element5, 'href');
-        morphs[6] = dom.createAttrMorph(element6, 'href');
-        morphs[7] = dom.createAttrMorph(element7, 'href');
-        morphs[8] = dom.createAttrMorph(element8, 'href');
-        morphs[9] = dom.createAttrMorph(element9, 'href');
+        morphs[3] = dom.createMorphAt(dom.childAt(element1, [1, 0]),0,0);
+        morphs[4] = dom.createAttrMorph(element3, 'href');
+        morphs[5] = dom.createAttrMorph(element4, 'href');
+        morphs[6] = dom.createAttrMorph(element5, 'href');
+        morphs[7] = dom.createAttrMorph(element6, 'href');
+        morphs[8] = dom.createAttrMorph(element7, 'href');
+        morphs[9] = dom.createAttrMorph(element8, 'href');
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
@@ -10966,16 +11590,16 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
         ["inline","page-header",[],["text","Event Management"],["loc",[null,[1,0],[1,39]]]],
         ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,65],[1,73]]]],"/edit"]]],
         ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,241],[1,249]]]],"/levels"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,438],[1,446]]]],"/discounts"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,621],[1,629]]]],"/packages"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,803],[1,811]]]],"/pricing_tiers"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,989],[1,997]]]],"/line_items"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1186],[1,1194]]]],"/shirts"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1328],[1,1336]]]],"/raffles"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1508],[1,1516]]]],"/custom_fields"]]]
+        ["block","link-to",["events.show.discounts"],[],0,null,["loc",[null,[1,412],[1,482]]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,630],[1,638]]]],"/packages"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,812],[1,820]]]],"/pricing_tiers"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,998],[1,1006]]]],"/line_items"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1195],[1,1203]]]],"/shirts"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1337],[1,1345]]]],"/raffles"]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,1517],[1,1525]]]],"/custom_fields"]]]
       ],
       locals: [],
-      templates: []
+      templates: [child0]
     };
   }()));
 
@@ -10988,16 +11612,16 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 690
+              "column": 985
             },
             "end": {
               "line": 1,
-              "column": 902
+              "column": 1197
             }
           }
         },
@@ -11036,10 +11660,10 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
           return morphs;
         },
         statements: [
-          ["inline","date-with-format",[["get","order.createdAt",["loc",[null,[1,750],[1,765]]]],"lll"],[],["loc",[null,[1,731],[1,773]]]],
-          ["inline","to-usd",[["get","order.paidAmount",["loc",[null,[1,791],[1,807]]]]],[],["loc",[null,[1,782],[1,809]]]],
-          ["inline","to-usd",[["get","order.netAmountReceived",["loc",[null,[1,827],[1,850]]]]],[],["loc",[null,[1,818],[1,852]]]],
-          ["inline","to-usd",[["get","order.totalFeeAmount",["loc",[null,[1,870],[1,890]]]]],[],["loc",[null,[1,861],[1,892]]]]
+          ["inline","date-with-format",[["get","order.createdAt",["loc",[null,[1,1045],[1,1060]]]],"lll"],[],["loc",[null,[1,1026],[1,1068]]]],
+          ["inline","to-usd",[["get","order.paidAmount",["loc",[null,[1,1086],[1,1102]]]]],[],["loc",[null,[1,1077],[1,1104]]]],
+          ["inline","to-usd",[["get","order.netAmountReceived",["loc",[null,[1,1122],[1,1145]]]]],[],["loc",[null,[1,1113],[1,1147]]]],
+          ["inline","to-usd",[["get","order.totalFeeAmount",["loc",[null,[1,1165],[1,1185]]]]],[],["loc",[null,[1,1156],[1,1187]]]]
         ],
         locals: ["order"],
         templates: []
@@ -11047,7 +11671,7 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -11056,7 +11680,7 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
           },
           "end": {
             "line": 1,
-            "column": 927
+            "column": 1222
           }
         }
       },
@@ -11108,6 +11732,54 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Transactions");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("span");
+        var el2 = dom.createTextNode("Total:");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("td");
+        var el5 = dom.createTextNode("Totals");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("td");
+        var el5 = dom.createTextNode("Gross Paid");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("td");
+        var el5 = dom.createTextNode("Net Amount Received");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("td");
+        var el5 = dom.createTextNode("Fees");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("tbody");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("td");
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("td");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("td");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("td");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
         var el1 = dom.createElement("table");
         var el2 = dom.createElement("thead");
         var el3 = dom.createElement("tr");
@@ -11140,12 +11812,16 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
         var element1 = dom.childAt(fragment, [0]);
         var element2 = dom.childAt(element1, [0, 1]);
         var element3 = dom.childAt(element1, [1, 1]);
-        var morphs = new Array(5);
+        var element4 = dom.childAt(fragment, [3, 1, 0]);
+        var morphs = new Array(8);
         morphs[0] = dom.createMorphAt(dom.childAt(element2, [0]),0,0);
         morphs[1] = dom.createMorphAt(dom.childAt(element2, [1]),0,0);
         morphs[2] = dom.createMorphAt(dom.childAt(element3, [0]),0,0);
         morphs[3] = dom.createMorphAt(dom.childAt(element3, [1]),0,0);
-        morphs[4] = dom.createMorphAt(dom.childAt(fragment, [1, 1]),0,0);
+        morphs[4] = dom.createMorphAt(dom.childAt(element4, [1]),0,0);
+        morphs[5] = dom.createMorphAt(dom.childAt(element4, [2]),0,0);
+        morphs[6] = dom.createMorphAt(dom.childAt(element4, [3]),0,0);
+        morphs[7] = dom.createMorphAt(dom.childAt(fragment, [4, 1]),0,0);
         return morphs;
       },
       statements: [
@@ -11153,7 +11829,10 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
         ["inline","input",[],["type","time","placeholder","00:00","value",["subexpr","@mut",[["get","startTime",["loc",[null,[1,269],[1,278]]]]],[],[]]],["loc",[null,[1,223],[1,280]]]],
         ["inline","date-picker",[],["date",["subexpr","@mut",[["get","endDate",["loc",[null,[1,415],[1,422]]]]],[],[]],"valueFormat","YYYY-MM-DD","allowBlank",true],["loc",[null,[1,396],[1,465]]]],
         ["inline","input",[],["type","time","placeholder","00:00","value",["subexpr","@mut",[["get","endTime",["loc",[null,[1,546],[1,553]]]]],[],[]]],["loc",[null,[1,500],[1,555]]]],
-        ["block","each",[["get","filteredOrders",["loc",[null,[1,707],[1,721]]]]],[],0,null,["loc",[null,[1,690],[1,911]]]]
+        ["inline","to-usd",[["get","totalPaidAmount",["loc",[null,[1,758],[1,773]]]]],[],["loc",[null,[1,749],[1,775]]]],
+        ["inline","to-usd",[["get","totalAmountReceived",["loc",[null,[1,793],[1,812]]]]],[],["loc",[null,[1,784],[1,814]]]],
+        ["inline","to-usd",[["get","totalFeeAmount",["loc",[null,[1,832],[1,846]]]]],[],["loc",[null,[1,823],[1,848]]]],
+        ["block","each",[["get","filteredOrders",["loc",[null,[1,1002],[1,1016]]]]],[],0,null,["loc",[null,[1,985],[1,1206]]]]
       ],
       locals: [],
       templates: [child0]
@@ -11168,7 +11847,7 @@ define('aeonvera/templates/loading', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -11220,7 +11899,7 @@ define('aeonvera/templates/not-found', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -11277,6 +11956,182 @@ define('aeonvera/templates/not-found', ['exports'], function (exports) {
   }()));
 
 });
+define('aeonvera/templates/password-reset', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.10",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 138
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","row");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","small-12 medium-6 columns medium-offset-3");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [2, 0]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["content","outlet",["loc",[null,[1,80],[1,90]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/password-reset/index', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.10",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 296
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("p");
+        var el2 = dom.createTextNode("Just enter your email address below, and you'll be sent an email with a confirmation link. This link is to verify that you are the owner of the email, and will allow you to set your new password.");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,2,2,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","Reset Your Password"],["loc",[null,[1,0],[1,42]]]],
+        ["inline","password-reset",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,267],[1,272]]]]],[],[]],"action","resetSuccess"],["loc",[null,[1,244],[1,296]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/password-reset/success', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "revision": "Ember@1.13.10",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 378
+          }
+        }
+      },
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("p");
+        var el2 = dom.createTextNode("Password reset instructions have been sent. Please allow a couple minutes for the email to traverse the internet and find its way to your inbox. If you do not receive the email, please double check your spam folder, or any other filtering you may have. If you have any questions, you may always email ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1]),1,1);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","Reset Your Password"],["loc",[null,[1,0],[1,42]]]],
+        ["content","links/mail-support-link",["loc",[null,[1,346],[1,374]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
 define('aeonvera/templates/register', ['exports'], function (exports) {
 
   'use strict';
@@ -11284,7 +12139,7 @@ define('aeonvera/templates/register', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -11324,7 +12179,7 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -11363,7 +12218,7 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -11401,7 +12256,7 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -11509,7 +12364,7 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
       var child0 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -11544,7 +12399,7 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
       var child1 = (function() {
         return {
           meta: {
-            "revision": "Ember@1.13.7",
+            "revision": "Ember@1.13.10",
             "loc": {
               "source": null,
               "start": {
@@ -11582,7 +12437,7 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
       }());
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -11647,7 +12502,7 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -11681,7 +12536,7 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -11765,7 +12620,7 @@ define('aeonvera/templates/user/edit', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -11806,7 +12661,7 @@ define('aeonvera/templates/user/edit', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12042,7 +12897,7 @@ define('aeonvera/templates/welcome/about', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12194,7 +13049,7 @@ define('aeonvera/templates/welcome/faq', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12543,7 +13398,7 @@ define('aeonvera/templates/welcome/features', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12635,7 +13490,7 @@ define('aeonvera/templates/welcome/features/at-the-door', ['exports'], function 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12782,7 +13637,7 @@ define('aeonvera/templates/welcome/features/discounts-and-tiers', ['exports'], f
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12852,7 +13707,7 @@ define('aeonvera/templates/welcome/features/housing', ['exports'], function (exp
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -12929,7 +13784,7 @@ define('aeonvera/templates/welcome/features/inventory', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -13000,7 +13855,7 @@ define('aeonvera/templates/welcome/features/registration', ['exports'], function
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -13126,7 +13981,7 @@ define('aeonvera/templates/welcome/features/reporting', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -13242,7 +14097,7 @@ define('aeonvera/templates/welcome/get-started', ['exports'], function (exports)
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -13296,7 +14151,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -13335,7 +14190,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -13374,7 +14229,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -13440,7 +14295,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child3 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -13479,7 +14334,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child4 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -13518,7 +14373,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child5 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -13556,7 +14411,7 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -13751,7 +14606,7 @@ define('aeonvera/templates/welcome/opensource', ['exports'], function (exports) 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -13965,7 +14820,7 @@ define('aeonvera/templates/welcome/pricing', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14044,7 +14899,7 @@ define('aeonvera/templates/welcome/pricing/free-or-not', ['exports'], function (
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14147,7 +15002,7 @@ define('aeonvera/templates/welcome/pricing/pricing-features', ['exports'], funct
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14273,7 +15128,7 @@ define('aeonvera/templates/welcome/privacy', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14642,7 +15497,7 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -14675,7 +15530,7 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -14708,7 +15563,7 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     var child2 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -14740,7 +15595,7 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14843,7 +15698,7 @@ define('aeonvera/templates/welcome/tos/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14889,7 +15744,7 @@ define('aeonvera/templates/welcome/tos/non-organizers', ['exports'], function (e
     var child0 = (function() {
       return {
         meta: {
-          "revision": "Ember@1.13.7",
+          "revision": "Ember@1.13.10",
           "loc": {
             "source": null,
             "start": {
@@ -14921,7 +15776,7 @@ define('aeonvera/templates/welcome/tos/non-organizers', ['exports'], function (e
     }());
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -14980,7 +15835,7 @@ define('aeonvera/templates/welcome/tos/organizers', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -15099,7 +15954,7 @@ define('aeonvera/templates/welcome/tos/updates', ['exports'], function (exports)
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "revision": "Ember@1.13.7",
+        "revision": "Ember@1.13.10",
         "loc": {
           "source": null,
           "start": {
@@ -15157,6 +16012,16 @@ define('aeonvera/tests/adapters/application.jshint', function () {
   module('JSHint - adapters');
   test('adapters/application.js should pass jshint', function() { 
     ok(true, 'adapters/application.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/adapters/package.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - adapters');
+  test('adapters/package.js should pass jshint', function() { 
+    ok(true, 'adapters/package.js should pass jshint.'); 
   });
 
 });
@@ -15400,6 +16265,16 @@ define('aeonvera/tests/components/page-header.jshint', function () {
   });
 
 });
+define('aeonvera/tests/components/password-reset.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - components');
+  test('components/password-reset.js should pass jshint', function() { 
+    ok(false, 'components/password-reset.js should pass jshint.\ncomponents/password-reset.js: line 33, col 28, \'data\' is defined but never used.\ncomponents/password-reset.js: line 36, col 41, \'text\' is defined but never used.\ncomponents/password-reset.js: line 36, col 33, \'status\' is defined but never used.\n\n3 errors'); 
+  });
+
+});
 define('aeonvera/tests/components/pricing-preview.jshint', function () {
 
   'use strict';
@@ -15608,7 +16483,7 @@ define('aeonvera/tests/helpers/ember-i18n/test-helpers', ['ember'], function (Em
       };
     } else {
       return function () {
-        throw new Error('ember-i18n could not find a compatible test framework');
+        throw new Error("ember-i18n could not find a compatible test framework");
       };
     }
   })();
@@ -15742,6 +16617,9 @@ define('aeonvera/tests/integration/components/dashboard/attended-events-test', [
 
   'use strict';
 
+  var _templateObject = _taggedTemplateLiteral(['{{dashboard/attended-events}}'], ['{{dashboard/attended-events}}']),
+      _templateObject2 = _taggedTemplateLiteral(['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  '], ['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  ']);
+
   function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
   ember_qunit.moduleForComponent('dashboard/attended-events', 'Integration | Component | dashboard/attended events', {
@@ -15754,12 +16632,12 @@ define('aeonvera/tests/integration/components/dashboard/attended-events-test', [
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    this.render(hbs['default'](_taggedTemplateLiteral(['{{dashboard/attended-events}}'], ['{{dashboard/attended-events}}'])));
+    this.render(hbs['default'](_templateObject));
 
     assert.equal(this.$().text().trim(), '');
 
     // Template block usage:
-    this.render(hbs['default'](_taggedTemplateLiteral(['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  '], ['\n    {{#dashboard/attended-events}}\n      template block text\n    {{/dashboard/attended-events}}\n  '])));
+    this.render(hbs['default'](_templateObject2));
 
     assert.equal(this.$().text().trim(), 'template block text');
   });
@@ -15779,6 +16657,9 @@ define('aeonvera/tests/integration/components/dashboard/hosted-events-test', ['e
 
   'use strict';
 
+  var _templateObject = _taggedTemplateLiteral(['{{dashboard/hosted-events}}'], ['{{dashboard/hosted-events}}']),
+      _templateObject2 = _taggedTemplateLiteral(['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  '], ['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  ']);
+
   function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
   ember_qunit.moduleForComponent('dashboard/hosted-events', 'Integration | Component | dashboard/hosted events', {
@@ -15791,12 +16672,12 @@ define('aeonvera/tests/integration/components/dashboard/hosted-events-test', ['e
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    this.render(hbs['default'](_taggedTemplateLiteral(['{{dashboard/hosted-events}}'], ['{{dashboard/hosted-events}}'])));
+    this.render(hbs['default'](_templateObject));
 
     assert.equal(this.$().text().trim(), '');
 
     // Template block usage:
-    this.render(hbs['default'](_taggedTemplateLiteral(['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  '], ['\n    {{#dashboard/hosted-events}}\n      template block text\n    {{/dashboard/hosted-events}}\n  '])));
+    this.render(hbs['default'](_templateObject2));
 
     assert.equal(this.$().text().trim(), 'template block text');
   });
@@ -15816,6 +16697,9 @@ define('aeonvera/tests/integration/components/page-header-test', ['ember-qunit',
 
   'use strict';
 
+  var _templateObject = _taggedTemplateLiteral(['{{page-header}}'], ['{{page-header}}']),
+      _templateObject2 = _taggedTemplateLiteral(['\n    {{#page-header}}\n      template block text\n    {{/page-header}}\n  '], ['\n    {{#page-header}}\n      template block text\n    {{/page-header}}\n  ']);
+
   function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
   ember_qunit.moduleForComponent('page-header', 'Integration | Component | page header', {
@@ -15828,12 +16712,12 @@ define('aeonvera/tests/integration/components/page-header-test', ['ember-qunit',
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    this.render(hbs['default'](_taggedTemplateLiteral(['{{page-header}}'], ['{{page-header}}'])));
+    this.render(hbs['default'](_templateObject));
 
     assert.equal(this.$().text().trim(), '');
 
     // Template block usage:
-    this.render(hbs['default'](_taggedTemplateLiteral(['\n    {{#page-header}}\n      template block text\n    {{/page-header}}\n  '], ['\n    {{#page-header}}\n      template block text\n    {{/page-header}}\n  '])));
+    this.render(hbs['default'](_templateObject2));
 
     assert.equal(this.$().text().trim(), 'template block text');
   });
@@ -15926,6 +16810,16 @@ define('aeonvera/tests/models/competition.jshint', function () {
   module('JSHint - models');
   test('models/competition.js should pass jshint', function() { 
     ok(true, 'models/competition.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/models/discount.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - models');
+  test('models/discount.js should pass jshint', function() { 
+    ok(false, 'models/discount.js should pass jshint.\nmodels/discount.js: line 60, col 5, Unreachable \'return\' after \'return\'.\nmodels/discount.js: line 1, col 8, \'Ember\' is defined but never used.\n\n2 errors'); 
   });
 
 });
@@ -16115,7 +17009,7 @@ define('aeonvera/tests/routes/application.jshint', function () {
 
   module('JSHint - routes');
   test('routes/application.js should pass jshint', function() { 
-    ok(true, 'routes/application.js should pass jshint.'); 
+    ok(false, 'routes/application.js should pass jshint.\nroutes/application.js: line 7, col 9, \'self\' is defined but never used.\n\n1 error'); 
   });
 
 });
@@ -16126,6 +17020,26 @@ define('aeonvera/tests/routes/communities.jshint', function () {
   module('JSHint - routes');
   test('routes/communities.js should pass jshint', function() { 
     ok(true, 'routes/communities.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/dance-event.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes');
+  test('routes/dance-event.js should pass jshint', function() { 
+    ok(true, 'routes/dance-event.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/dance-organization.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes');
+  test('routes/dance-organization.js should pass jshint', function() { 
+    ok(true, 'routes/dance-organization.js should pass jshint.'); 
   });
 
 });
@@ -16269,6 +17183,26 @@ define('aeonvera/tests/routes/events/show.jshint', function () {
   });
 
 });
+define('aeonvera/tests/routes/events/show/discounts/index.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/events/show/discounts');
+  test('routes/events/show/discounts/index.js should pass jshint', function() { 
+    ok(true, 'routes/events/show/discounts/index.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/discounts/new.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/events/show/discounts');
+  test('routes/events/show/discounts/new.js should pass jshint', function() { 
+    ok(true, 'routes/events/show/discounts/new.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/routes/events/show/index.jshint', function () {
 
   'use strict';
@@ -16286,6 +17220,16 @@ define('aeonvera/tests/routes/events/show/manage.jshint', function () {
   module('JSHint - routes/events/show');
   test('routes/events/show/manage.js should pass jshint', function() { 
     ok(true, 'routes/events/show/manage.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/revenue-loading.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes/events/show');
+  test('routes/events/show/revenue-loading.js should pass jshint', function() { 
+    ok(true, 'routes/events/show/revenue-loading.js should pass jshint.'); 
   });
 
 });
@@ -16336,6 +17280,16 @@ define('aeonvera/tests/routes/not-found.jshint', function () {
   module('JSHint - routes');
   test('routes/not-found.js should pass jshint', function() { 
     ok(true, 'routes/not-found.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/password-reset.jshint', function () {
+
+  'use strict';
+
+  module('JSHint - routes');
+  test('routes/password-reset.js should pass jshint', function() { 
+    ok(true, 'routes/password-reset.js should pass jshint.'); 
   });
 
 });
@@ -16443,7 +17397,10 @@ define('aeonvera/tests/unit/components/external-link-test', ['ember-qunit'], fun
 
   'use strict';
 
-  ember_qunit.moduleForComponent('external-link', {});
+  ember_qunit.moduleForComponent('external-link', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16456,9 +17413,6 @@ define('aeonvera/tests/unit/components/external-link-test', ['ember-qunit'], fun
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/external-link-test.jshint', function () {
@@ -16475,7 +17429,10 @@ define('aeonvera/tests/unit/components/login-help-modal-test', ['ember-qunit'], 
 
   'use strict';
 
-  ember_qunit.moduleForComponent('login-help-modal', 'Unit | Component | login help modal', {});
+  ember_qunit.moduleForComponent('login-help-modal', 'Unit | Component | login help modal', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16488,9 +17445,6 @@ define('aeonvera/tests/unit/components/login-help-modal-test', ['ember-qunit'], 
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/login-help-modal-test.jshint', function () {
@@ -16507,7 +17461,10 @@ define('aeonvera/tests/unit/components/login-modal-test', ['ember-qunit'], funct
 
   'use strict';
 
-  ember_qunit.moduleForComponent('login-modal', 'Unit | Component | login modal', {});
+  ember_qunit.moduleForComponent('login-modal', 'Unit | Component | login modal', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16520,9 +17477,6 @@ define('aeonvera/tests/unit/components/login-modal-test', ['ember-qunit'], funct
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/login-modal-test.jshint', function () {
@@ -16539,7 +17493,10 @@ define('aeonvera/tests/unit/components/nav/left-off-canvas-menu-test', ['ember-q
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/left-off-canvas-menu', {});
+  ember_qunit.moduleForComponent('nav/left-off-canvas-menu', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16552,9 +17509,6 @@ define('aeonvera/tests/unit/components/nav/left-off-canvas-menu-test', ['ember-q
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/left-off-canvas-menu-test.jshint', function () {
@@ -16571,7 +17525,10 @@ define('aeonvera/tests/unit/components/nav/right-off-canvas-menu-test', ['ember-
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/right-off-canvas-menu', {});
+  ember_qunit.moduleForComponent('nav/right-off-canvas-menu', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16584,9 +17541,6 @@ define('aeonvera/tests/unit/components/nav/right-off-canvas-menu-test', ['ember-
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/right-off-canvas-menu-test.jshint', function () {
@@ -16603,7 +17557,10 @@ define('aeonvera/tests/unit/components/nav/welcome/left-items-test', ['ember-qun
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/welcome/left-items', {});
+  ember_qunit.moduleForComponent('nav/welcome/left-items', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16616,9 +17573,6 @@ define('aeonvera/tests/unit/components/nav/welcome/left-items-test', ['ember-qun
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/welcome/left-items-test.jshint', function () {
@@ -16635,7 +17589,10 @@ define('aeonvera/tests/unit/components/nav/welcome/right-items-test', ['ember-qu
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/welcome/right-items', {});
+  ember_qunit.moduleForComponent('nav/welcome/right-items', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16648,9 +17605,6 @@ define('aeonvera/tests/unit/components/nav/welcome/right-items-test', ['ember-qu
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/welcome/right-items-test.jshint', function () {
@@ -16667,7 +17621,10 @@ define('aeonvera/tests/unit/components/nav/welcome/top-menu-test', ['ember-qunit
 
   'use strict';
 
-  ember_qunit.moduleForComponent('nav/welcome/top-menu', {});
+  ember_qunit.moduleForComponent('nav/welcome/top-menu', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16680,9 +17637,6 @@ define('aeonvera/tests/unit/components/nav/welcome/top-menu-test', ['ember-qunit
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/nav/welcome/top-menu-test.jshint', function () {
@@ -16699,7 +17653,10 @@ define('aeonvera/tests/unit/components/pricing-preview-test', ['ember-qunit'], f
 
   'use strict';
 
-  ember_qunit.moduleForComponent('pricing-preview', {});
+  ember_qunit.moduleForComponent('pricing-preview', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar']
+  });
 
   ember_qunit.test('it renders', function (assert) {
     assert.expect(2);
@@ -16712,9 +17669,6 @@ define('aeonvera/tests/unit/components/pricing-preview-test', ['ember-qunit'], f
     this.render();
     assert.equal(component._state, 'inDOM');
   });
-
-  // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar']
 
 });
 define('aeonvera/tests/unit/components/pricing-preview-test.jshint', function () {
@@ -16764,16 +17718,16 @@ define('aeonvera/tests/unit/controllers/application-test', ['ember-qunit'], func
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:application', {});
+  ember_qunit.moduleFor('controller:application', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/controllers/application-test.jshint', function () {
@@ -16790,16 +17744,16 @@ define('aeonvera/tests/unit/controllers/login-test', ['ember-qunit'], function (
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:login', {});
+  ember_qunit.moduleFor('controller:login', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/controllers/login-test.jshint', function () {
@@ -16816,16 +17770,16 @@ define('aeonvera/tests/unit/controllers/welcome-test', ['ember-qunit'], function
 
   'use strict';
 
-  ember_qunit.moduleFor('controller:welcome', {});
+  ember_qunit.moduleFor('controller:welcome', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/controllers/welcome-test.jshint', function () {
@@ -17096,15 +18050,15 @@ define('aeonvera/tests/unit/routes/application-test', ['ember-qunit'], function 
 
   'use strict';
 
-  ember_qunit.moduleFor('route:application', {});
+  ember_qunit.moduleFor('route:application', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/application-test.jshint', function () {
@@ -17121,15 +18075,15 @@ define('aeonvera/tests/unit/routes/attended-events-test', ['ember-qunit'], funct
 
   'use strict';
 
-  ember_qunit.moduleFor('route:attended-events', 'Unit | Route | attended events', {});
+  ember_qunit.moduleFor('route:attended-events', 'Unit | Route | attended events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/attended-events-test.jshint', function () {
@@ -17146,15 +18100,15 @@ define('aeonvera/tests/unit/routes/communities-test', ['ember-qunit'], function 
 
   'use strict';
 
-  ember_qunit.moduleFor('route:communities', 'Unit | Route | communities', {});
+  ember_qunit.moduleFor('route:communities', 'Unit | Route | communities', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/communities-test.jshint', function () {
@@ -17171,15 +18125,15 @@ define('aeonvera/tests/unit/routes/dashboard-test', ['ember-qunit'], function (e
 
   'use strict';
 
-  ember_qunit.moduleFor('route:dashboard', 'Unit | Route | dashboard', {});
+  ember_qunit.moduleFor('route:dashboard', 'Unit | Route | dashboard', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/dashboard-test.jshint', function () {
@@ -17196,15 +18150,15 @@ define('aeonvera/tests/unit/routes/events-test', ['ember-qunit'], function (embe
 
   'use strict';
 
-  ember_qunit.moduleFor('route:events', {});
+  ember_qunit.moduleFor('route:events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/events-test.jshint', function () {
@@ -17221,15 +18175,15 @@ define('aeonvera/tests/unit/routes/hosted-events-test', ['ember-qunit'], functio
 
   'use strict';
 
-  ember_qunit.moduleFor('route:hosted-events', 'Unit | Route | hosted events', {});
+  ember_qunit.moduleFor('route:hosted-events', 'Unit | Route | hosted events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/hosted-events-test.jshint', function () {
@@ -17246,15 +18200,15 @@ define('aeonvera/tests/unit/routes/login-test', ['ember-qunit'], function (ember
 
   'use strict';
 
-  ember_qunit.moduleFor('route:login', {});
+  ember_qunit.moduleFor('route:login', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/login-test.jshint', function () {
@@ -17271,15 +18225,15 @@ define('aeonvera/tests/unit/routes/logout-test', ['ember-qunit'], function (embe
 
   'use strict';
 
-  ember_qunit.moduleFor('route:logout', 'Unit | Route | logout', {});
+  ember_qunit.moduleFor('route:logout', 'Unit | Route | logout', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/logout-test.jshint', function () {
@@ -17296,15 +18250,15 @@ define('aeonvera/tests/unit/routes/orders-test', ['ember-qunit'], function (embe
 
   'use strict';
 
-  ember_qunit.moduleFor('route:orders', 'Unit | Route | orders', {});
+  ember_qunit.moduleFor('route:orders', 'Unit | Route | orders', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/orders-test.jshint', function () {
@@ -17321,15 +18275,15 @@ define('aeonvera/tests/unit/routes/register-test', ['ember-qunit'], function (em
 
   'use strict';
 
-  ember_qunit.moduleFor('route:register', 'Unit | Route | register', {});
+  ember_qunit.moduleFor('route:register', 'Unit | Route | register', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/register-test.jshint', function () {
@@ -17346,15 +18300,15 @@ define('aeonvera/tests/unit/routes/registered-events-test', ['ember-qunit'], fun
 
   'use strict';
 
-  ember_qunit.moduleFor('route:registered-events', 'Unit | Route | registered events', {});
+  ember_qunit.moduleFor('route:registered-events', 'Unit | Route | registered events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/registered-events-test.jshint', function () {
@@ -17371,15 +18325,15 @@ define('aeonvera/tests/unit/routes/upcoming-events-test', ['ember-qunit'], funct
 
   'use strict';
 
-  ember_qunit.moduleFor('route:upcoming-events', 'Unit | Route | upcoming events', {});
+  ember_qunit.moduleFor('route:upcoming-events', 'Unit | Route | upcoming events', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/upcoming-events-test.jshint', function () {
@@ -17396,15 +18350,15 @@ define('aeonvera/tests/unit/routes/welcome-test', ['ember-qunit'], function (emb
 
   'use strict';
 
-  ember_qunit.moduleFor('route:welcome', {});
+  ember_qunit.moduleFor('route:welcome', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
 
   ember_qunit.test('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['controller:foo']
 
 });
 define('aeonvera/tests/unit/routes/welcome-test.jshint', function () {
@@ -17421,16 +18375,16 @@ define('aeonvera/tests/unit/services/current-registering-object-test', ['ember-q
 
   'use strict';
 
-  ember_qunit.moduleFor('service:current-registering-object', 'Unit | Service | current registering object', {});
+  ember_qunit.moduleFor('service:current-registering-object', 'Unit | Service | current registering object', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var service = this.subject();
     assert.ok(service);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
 
 });
 define('aeonvera/tests/unit/services/current-registering-object-test.jshint', function () {
@@ -17447,16 +18401,16 @@ define('aeonvera/tests/unit/services/current-user-test', ['ember-qunit'], functi
 
   'use strict';
 
-  ember_qunit.moduleFor('service:current-user', 'Unit | Service | current user', {});
+  ember_qunit.moduleFor('service:current-user', 'Unit | Service | current user', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
 
   // Replace this with your real tests.
   ember_qunit.test('it exists', function (assert) {
     var service = this.subject();
     assert.ok(service);
   });
-
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
 
 });
 define('aeonvera/tests/unit/services/current-user-test.jshint', function () {
@@ -17515,7 +18469,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"name":"aeonvera","version":"0.0.0.f9573bf5"});
+  require("aeonvera/app")["default"].create({"defaultLocale":"en","LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"name":"aeonvera","version":"0.0.0.8ca966bc"});
 }
 
 /* jshint ignore:end */
