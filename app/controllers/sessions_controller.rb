@@ -1,9 +1,10 @@
 class SessionsController < Devise::SessionsController
+  respond_to :html, :json
+
   protect_from_forgery with: :null_session
   skip_before_filter :verify_authenticity_token
   skip_before_filter :verify_signed_out_user
 
-  respond_to :html, :json
 
   def create
     super do |user|
