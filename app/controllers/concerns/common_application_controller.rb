@@ -78,7 +78,9 @@ module CommonApplicationController
     return redirect_to "#{request.protocol}#{new_path}#{request.fullpath}?#{params.to_param}"
   end
 
-
+  def current_user
+    @current_user
+  end
 
   def current_domain
     APPLICATION_CONFIG[:domain][Rails.env]
@@ -111,7 +113,7 @@ module CommonApplicationController
         elsif Devise.secure_compare(user.authentication_token, token)
           sign_in user, store: false
 
-          current_user = user
+          @current_user = user
         end
       end
 
