@@ -79,6 +79,10 @@ module CommonApplicationController
   end
 
   def current_user
+    @current_user ||= authenticate_user_from_token!
+    # binding.pry
+    # unless @current_user
+    #   ||= User.where(authentication_token: params[:auth_token]).first
     @current_user
   end
 
@@ -105,18 +109,16 @@ module CommonApplicationController
       user_email = options[:email].presence
       user = user_email && User.find_by_email(user_email)
 
-      # binding.pry
-
       if user
         if !user.confirmed?
           user.errors.add(:base, I18n.t('devise.failure.unconfirmed'))
         elsif Devise.secure_compare(user.authentication_token, token)
-          sign_in user, store: false
-
-          @current_user = user
+          # sign_in user, store: false
+          sign_in(:user, user)
         end
       end
 
+      user
     end
   end
 
