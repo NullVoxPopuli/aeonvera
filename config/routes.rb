@@ -31,11 +31,14 @@ AeonVera::Application.routes.draw do
     resources :line_items
     resources :order_line_items
     resources :shirts
+    resources :packages
+    resources :discounts
+    
     # TODO: make the above under events
     resources :events do
       resources :orders, controller: 'events/orders'
-      resources :discounts, controller: 'events/discounts'
-      resources :packages, controller: 'events/packages'
+      # resources :discounts, controller: 'events/discounts'
+      # resources :packages, controller: 'events/packages'
     end
 
     # user specific info

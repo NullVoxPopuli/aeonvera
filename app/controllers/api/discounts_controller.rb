@@ -1,4 +1,4 @@
-class Api::Events::DiscountsController < APIController
+class Api::DiscountsController < APIController
   include SetsEvent
   include LazyCrud
 
