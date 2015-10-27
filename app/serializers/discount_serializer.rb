@@ -8,7 +8,8 @@ class DiscountSerializer < ActiveModel::Serializer
     :allowed_number_of_uses,
     :times_used, :package_ids
 
-    # has_many :allowed_packages
+    has_many :allowed_packages
+
 
     def package_ids
       object.allowed_package_ids
