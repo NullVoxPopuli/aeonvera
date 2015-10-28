@@ -3,7 +3,8 @@ class PricingTierSerializer < ActiveModel::Serializer
   attributes :id, :event_id,
     :increase_by, :increase_after_date,
     :increase_after_total_registrants,
-    :number_of_leads, :number_of_follows
+    :number_of_leads, :number_of_follows,
+    :is_opening_tier
 
     def number_of_follows
       object.attendances.follows.count
@@ -23,5 +24,9 @@ class PricingTierSerializer < ActiveModel::Serializer
 
     def increase_after_total_registrants
       object.registrants
+    end
+
+    def is_opening_tier
+      object == object.event.opening_tier
     end
 end

@@ -1,11 +1,12 @@
 class ShirtSerializer < ActiveModel::Serializer
-
+  type 'shirt'
   attributes :id, :name,
     :current_price, :price,
     :sizes,
     :expires_at,
     :host_id, :host_type, :event_id,
-    :xs_price, :s_price, :sm_price, :m_price, :l_price, :xl_price, :xxl_price, :xxxl_price
+    :xs_price, :s_price, :sm_price, :m_price, :l_price, :xl_price, :xxl_price, :xxxl_price,
+    :number_purchased
 
     def sizes
       available = object.metadata["sizes"].reject {|s| s.blank? }
@@ -20,6 +21,10 @@ class ShirtSerializer < ActiveModel::Serializer
       end
 
       result
+    end
+
+    def number_purchased
+      object.order_line_items.count
     end
 
     def event_id

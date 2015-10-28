@@ -24,7 +24,7 @@ class Raffle < ActiveRecord::Base
 	# it's ok to return a array with objects in it, because we
 	# are not going to store the result of this
 	#
-	# @return [Array<Attendance]
+	# @return [Array<Attendance>]
 	def build_participant_weights
 		result = []
 		ticket_holders.each do |ticket_holder|

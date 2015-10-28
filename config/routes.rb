@@ -35,6 +35,7 @@ AeonVera::Application.routes.draw do
     resources :discounts
     resources :levels
     resources :pricing_tiers
+    resources :raffles
 
     # TODO: make the above under events
     resources :events do
