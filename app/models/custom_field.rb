@@ -11,6 +11,7 @@ class CustomField < ActiveRecord::Base
   validates :host, presence: true
   validates :user, presence: true
 
+  # TODO: is it worth it to make subclasses for all these
   KIND_TEXT = 0
   KIND_FORMATTED_TEXT = 1
   KIND_NUMBER = 2

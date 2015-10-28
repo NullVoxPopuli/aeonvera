@@ -36,6 +36,7 @@ AeonVera::Application.routes.draw do
     resources :levels
     resources :pricing_tiers
     resources :raffles
+    resources :custom_fields
 
     # TODO: make the above under events
     resources :events do
