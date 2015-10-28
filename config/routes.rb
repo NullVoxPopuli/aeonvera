@@ -33,7 +33,9 @@ AeonVera::Application.routes.draw do
     resources :shirts
     resources :packages
     resources :discounts
-    
+    resources :levels
+    resources :pricing_tiers
+
     # TODO: make the above under events
     resources :events do
       resources :orders, controller: 'events/orders'
