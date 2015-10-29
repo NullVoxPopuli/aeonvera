@@ -37,6 +37,9 @@ AeonVera::Application.routes.draw do
     resources :pricing_tiers
     resources :raffles
     resources :custom_fields
+    resources :chart_data
+    get '/chart_infos/:id', to: 'chart_data#show'
+    get '/charts/:id', to: 'chart_data#show'
 
     # TODO: make the above under events
     resources :events do

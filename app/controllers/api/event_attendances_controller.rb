@@ -10,7 +10,13 @@ class Api::EventAttendancesController < APIController
     :checked_in_at)
 
   def index
-    @attendances = @event.attendances
+    if params[:cancelled]
+      @attendances = @event.cancelled_attendances
+    else
+      @attendances = @event.attendances
+      @attendances = @attendances.unpaid if params[:unpaid]
+    end
+    
     render json: @attendances
   end
 
