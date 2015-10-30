@@ -54,6 +54,16 @@ class IncomeAndRegistrationsChartSerializer < ActiveModel::Serializer
         income << (money += (order.net_amount_received || 0)).round(2)
       end
 
+      if (i_last = income_times.last) != (r_last = registration_times.last)
+        if i_last > r_last
+          registration_times << i_last
+          registrations << registrations.last
+        else
+          income_times << r_last
+          income << income.last
+        end
+      end
+
       @data = {
         incomes: income,
         registrations: registrations,
