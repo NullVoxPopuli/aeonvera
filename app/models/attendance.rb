@@ -82,10 +82,12 @@ class Attendance < ActiveRecord::Base
 
   scope :leads, ->{ where(dance_orientation: LEAD) }
   scope :follows, ->{ where(dance_orientation: FOLLOW) }
+  scope :volunteering, -> { where(interested_in_volunteering: true) }
 
   accepts_nested_attributes_for :custom_field_responses
   accepts_nested_attributes_for :housing_request
   accepts_nested_attributes_for :housing_provision
+
 
   def add(object)
     send("#{object.class.name.demodulize.underscore.pluralize}") << object

@@ -25,6 +25,8 @@ AeonVera::Application.routes.draw do
     # per event
     # ideally this stuff would be nested under events
     resources :housing_requests
+    resources :volunteers
+    resources :housing_stats
     resources :event_attendances
     resources :competitions
     resources :competition_responses
