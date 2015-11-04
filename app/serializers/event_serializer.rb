@@ -20,6 +20,8 @@ class EventSerializer < ActiveModel::Serializer
     :logo_url_thumb, :logo_url_medium, :logo_url,
     :url
 
+
+    belongs_to :opening_tier
     has_many :integrations
 
     def url
