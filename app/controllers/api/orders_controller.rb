@@ -9,18 +9,18 @@ class Api::OrdersController < APIController
 
 
   def index
-    @orders = current_user.orders
+    @orders = orders_proxy
     render json: @orders,
       each_serializer: OrderSerializer, root: :orders
   end
 
   def show
-    @order = current_user.orders.find(params[:id])
+    @order = orders_proxy.find(params[:id])
     render json: @order
   end
 
   def create
-    @order = @host.orders.new(order_params)
+    @order = orders_proxy.new(order_params)
 
     @order.save
 
@@ -53,6 +53,11 @@ class Api::OrdersController < APIController
   end
 
   private
+
+  def orders_proxy
+    parent = (@host || @event)# || current_user)
+    (parent ? parent.orders : Order)
+  end
 
   def load_integration
     @integration = (@host || @event).integrations[Integration::STRIPE]

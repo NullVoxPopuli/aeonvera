@@ -4,11 +4,16 @@ class EventSummarySerializer < HostedEventSerializer
   attributes :id, :name, :location,
     :registration_opens_at, :starts_at, :ends_at, :url,
     :number_of_leads, :number_of_follows, :number_of_shirts_sold,
-    :revenue, :unpaid
+    :revenue, :unpaid, :event_id
 
   has_many :event_attendances
+
   def event_attendances
     object.recent_registrations
+  end
+
+  def event_id
+    object.id
   end
 
   def revenue
