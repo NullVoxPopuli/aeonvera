@@ -16,7 +16,7 @@ class Event < ActiveRecord::Base
 
   has_many :custom_fields, as: :host
   has_many :orders, as: :host
-  
+
   has_many :attendances,
     -> { where(attending: true).order("attendances.created_at DESC") },
     as: :host, class_name: "EventAttendance"
@@ -207,6 +207,14 @@ class Event < ActiveRecord::Base
 
   def shirts_available?
     !self.shirt_sales_end_at || self.shirt_sales_end_at > Time.now
+  end
+
+  def is_accessible_to?(user)
+    return true if self.hosted_by == user
+    return true if user.attended_event_ids.include?(self.id)
+    return true if user.hosted_event_ids.include?(self.id)
+
+    false
   end
 
 end

@@ -19,7 +19,8 @@ class Api::PackagesController < APIController
 
   def resource_proxy
     # current_user.hosted_and_collaborated_events
-    current_user.hosted_events.find(params[:event_id]).packages
+    # TODO: figure out how to scope to hosted_events as well as registered
+    Event.find(params[:event_id]).packages
   end
 
 end

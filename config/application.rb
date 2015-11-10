@@ -53,7 +53,7 @@ module AeonVera
     # PayPal::SDK::Core::Config.load('spec/config/paypal.yml',  ENV['RACK_ENV'] || 'development')
 
     config.autoload_paths += [config.root.join('lib')]
-
+    
     config.generators do |g|
       g.test_framework :rspec
     end

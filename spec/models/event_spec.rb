@@ -7,6 +7,32 @@ describe Event do
     end
   end
 
+  describe :is_accessible_to? do
+    let(:event){ create_event }
+
+    it 'is if hosting' do
+      expect(event.is_accessible_to?(event.hosted_by)).to eq true
+    end
+
+    it 'is if collaborating' do
+      user = create(:user)
+      Collaboration.new(collaborated: event, user: user).save!
+      event.reload
+      user.reload
+      expect(event.is_accessible_to?(user)).to eq true
+    end
+
+    it 'is if registered' do
+      user = create(:user)
+      attendance = create(:attendance, event: event, attendee: user)
+      expect(event.is_accessible_to?(user)).to eq true
+    end
+
+    it 'is not' do
+      expect(event.is_accessible_to?(create(:user))).to eq false
+    end
+  end
+
   describe '#pricing_tiers_in_order' do
     let(:event){ create_event }
 
