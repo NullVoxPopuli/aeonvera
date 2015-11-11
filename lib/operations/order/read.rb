@@ -1,5 +1,5 @@
 module Operations
-  class OrderLineItem::Read < Base
+  class Order::Read < Base
     def run
       model if allowed?
     end

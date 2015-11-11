@@ -17,8 +17,6 @@ describe Event do
     it 'is if collaborating' do
       user = create(:user)
       Collaboration.new(collaborated: event, user: user).save!
-      event.reload
-      user.reload
       expect(event.is_accessible_to?(user)).to eq true
     end
 

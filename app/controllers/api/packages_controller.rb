@@ -11,8 +11,8 @@ class Api::PackagesController < APIController
   end
 
   def show
-    @package = resource_proxy.find(params[:id])
-    render json: @package
+    operation = Operations::Package::Read.new(current_user, params)
+    render json: operation.run
   end
 
   private

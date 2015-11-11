@@ -17,8 +17,18 @@ module Operations
       self.params = params
     end
 
+    def id_from_params
+      id = params[:id]
+      if filter = params[:filter]
+        id = filter[:id].split(',')
+      end
+
+      id
+    end
+
     def model
-      @model ||= object_class.find(params[:id])
+      # TODO: not sure if multiple ids is a good idea here
+      @model ||= object_class.find(id_from_params)
     end
 
     def object_class
@@ -43,6 +53,10 @@ module Operations
 
     def policy_for(object)
       @policy ||= policy_class.new(current_user, object)
+    end
+
+    def allowed?
+      policy_for(model)
     end
 
     # checks the policy

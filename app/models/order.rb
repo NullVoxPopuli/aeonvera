@@ -36,6 +36,14 @@ class Order < ActiveRecord::Base
     # create a bad state
   end
 
+  def is_accessible_to?(someone)
+    return true if someone == user
+    return true if user.hosted_events.include?(event)
+    return true if user.collaborated_events.include?(event)
+
+    false
+  end
+
   # DEPRECATED: Was for use with PayPal's API
   def set_payment_token(token)
     self.payment_token = token

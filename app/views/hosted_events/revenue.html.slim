@@ -9,6 +9,7 @@ div
         th Post Registration
     tbody
       tr
+        td = number_to_currency(@total)
         td = number_to_currency(@net_revenue)
         td = number_to_currency(@event.preregistration_revenue)
         td = number_to_currency(@event.postregistration_revenue)

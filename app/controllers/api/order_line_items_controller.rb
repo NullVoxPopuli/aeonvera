@@ -5,7 +5,7 @@ class Api::OrderLineItemsController < APIController
   # before_action :sets_event
 
   def index
-    operation = OrderLineItem::Read.new(current_user, params)
+    operation = Operations::OrderLineItem::Read.new(current_user, params)
 
     render json: operation.run
   end

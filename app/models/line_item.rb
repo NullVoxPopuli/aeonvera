@@ -12,7 +12,7 @@ class LineItem < ActiveRecord::Base
   belongs_to :event, class_name: Event.name,
     foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
 
-  # has_many :order_line_items, as: :line_item
+  has_many :order_line_items, as: :line_item
 
   has_many :attendance_line_items
   has_many :attendances,

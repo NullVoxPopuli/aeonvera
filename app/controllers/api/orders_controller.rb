@@ -15,8 +15,8 @@ class Api::OrdersController < APIController
   end
 
   def show
-    @order = orders_proxy.find(params[:id])
-    render json: @order
+    operation = Operations::Order::Read.new(current_user, params)
+    render json: operation.run
   end
 
   def create
