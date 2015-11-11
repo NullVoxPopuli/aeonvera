@@ -1,4 +1,13 @@
 module EventLoader
+  def event(id: nil)
+    id = (id or params[:hosted_event_id] or params[:event_id] or params[:id])
+
+    operation = Operations::Event::Read.new(current_user, {
+        id: id
+      })
+    render json: operation.run
+  end
+
   def set_event(id: nil)
     id = (id or params[:hosted_event_id] or params[:event_id] or params[:id])
     begin

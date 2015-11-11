@@ -1,4 +1,16 @@
 module Operations
+  #
+  # An example Operation may looy like
+  #
+  # module Operations
+  #   class Event::Read < Base
+  #     def run
+  #       model if allowed?
+  #     end
+  #   end
+  # end
+  #
+  # TODO: make the above the 'default' and not require to be defined
   class Base
     POLICY_CLASS_PREFIX = 'Policies::'.freeze
     POLICY_CLASS_SUFFIX = 'Policy'.freeze
