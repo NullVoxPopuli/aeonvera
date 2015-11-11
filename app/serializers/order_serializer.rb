@@ -6,6 +6,7 @@ class OrderSerializer < ActiveModel::Serializer
     :paid, :payment_method,
     :host_name, :host_url,
     :created_at, :user_email,
+    :payment_received_at,
     :total_in_cents
 
   has_many :order_line_items

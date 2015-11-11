@@ -1,9 +1,13 @@
 class Api::CompetitionsController < APIController
 
-  include SetsEvent
-
   def index
-    render json: @event.competitions, each_serializer: CompetitionSerializer
+    operation = Operations::Competition::Read.new(current_user, params)
+    render json: operation.run
+  end
+
+  def show
+    operation = Operations::Competition::Read.new(current_user, params)
+    render json: operation.run
   end
 
 end

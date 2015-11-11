@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150904200810) do
+ActiveRecord::Schema.define(version: 20151111175948) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -334,6 +334,7 @@ ActiveRecord::Schema.define(version: 20150904200810) do
     t.decimal  "total_fee_amount",                default: 0.0,    null: false
     t.integer  "user_id"
     t.string   "host_type",           limit: 255
+    t.datetime "payment_received_at"
   end
 
   add_index "orders", ["host_id", "host_type"], name: "index_orders_on_host_id_and_host_type", using: :btree
