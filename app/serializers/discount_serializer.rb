@@ -1,4 +1,5 @@
 class DiscountSerializer < ActiveModel::Serializer
+  type 'discount'
 
   attributes :id, :code,
     :amount, :kind, :discount_type,
