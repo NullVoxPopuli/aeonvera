@@ -38,9 +38,29 @@ module Operations
       id
     end
 
+    def scoped_model(scoped_params)
+      klass_name = scoped_params[:type]
+      operation_name = "Operations::#{klass_name}::Read"
+      operation = operation_name.constantize.new(current_user, id: scoped_params[:id])
+      operation.run
+    end
+
     def model
       # TODO: not sure if multiple ids is a good idea here
-      @model ||= object_class.find(id_from_params)
+      # if we don't have a(ny) id(s), get all of them
+      @model ||=
+        if id_from_params
+          object_class.find(id_from_params)
+        elsif scope = params[:scope]
+          if scoped = scoped_model(scope)
+            association = association_name_from_object
+            scoped.send(association)
+          else
+            raise "Parent object of type #{scope[:type]} not accessible"
+          end
+        else
+          object_class.where(params).accessible_to(current_user)
+        end
     end
 
     def object_class
@@ -49,6 +69,10 @@ module Operations
 
     def object_type_of_interest
       @object_type_name ||= self.class.name.deconstantize.demodulize
+    end
+
+    def association_name_from_object
+      object_type_of_interest.tableize
     end
 
     def policy_class

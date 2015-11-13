@@ -7,11 +7,10 @@ class Api::OrdersController < APIController
   before_action :sets_host, only: [:create, :update]
   before_action :load_integration, only: [:update, :create]
 
-
   def index
-    @orders = orders_proxy
-    render json: @orders,
-      each_serializer: OrderSerializer, root: :orders
+    operation = Operations::Order::ReadAll.new(current_user, params)
+
+    render json: operation.run
   end
 
   def show
@@ -53,6 +52,11 @@ class Api::OrdersController < APIController
   end
 
   private
+
+  def order_where_params
+    keys = (Order.column_names & params.keys)
+    params.slice(*keys).symbolize_keys
+  end
 
   def orders_proxy
     parent = (@host || @event)# || current_user)
