@@ -16,7 +16,7 @@ module Operations
     POLICY_CLASS_SUFFIX = 'Policy'.freeze
     POLICY_SUFFIX = '?'.freeze
 
-    attr_accessor :params, :current_user
+    attr_accessor :params, :current_user, :authorized_via_parent
 
     class << self
       def run(current_user, params)
@@ -27,6 +27,7 @@ module Operations
     def initialize(current_user, params)
       self.current_user = current_user
       self.params = params
+      self.authorized_via_parent = false
     end
 
     def id_from_params
@@ -39,10 +40,15 @@ module Operations
     end
 
     def scoped_model(scoped_params)
-      klass_name = scoped_params[:type]
-      operation_name = "Operations::#{klass_name}::Read"
-      operation = operation_name.constantize.new(current_user, id: scoped_params[:id])
-      operation.run
+      unless @scoped_model
+        klass_name = scoped_params[:type]
+        operation_name = "Operations::#{klass_name}::Read"
+        operation = operation_name.constantize.new(current_user, id: scoped_params[:id])
+        @scoped_model = operation.run
+        self.authorized_via_parent = !!@scoped_model
+      end
+
+      return @scoped_model
     end
 
     def model
@@ -88,7 +94,10 @@ module Operations
     end
 
     def policy_for(object)
-      @policy ||= policy_class.new(current_user, object)
+      @policy ||= policy_class.new(
+        current_user,
+        object,
+        authorized_via_parent: authorized_via_parent)
     end
 
     def allowed?

@@ -9,7 +9,6 @@ class Api::OrdersController < APIController
 
   def index
     operation = Operations::Order::ReadAll.new(current_user, params)
-
     render json: operation.run
   end
 
