@@ -1,5 +1,6 @@
 # object is actually an Organization in this serializer
 class CommunitySerializer < ActiveModel::Serializer
+  type 'community'
 
   attributes :id, :name, :tagline,
     :city, :state, :beta, :owner_id,

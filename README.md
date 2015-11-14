@@ -34,7 +34,10 @@
   * Ruby Version >= 2.2
   * PostgreSQL >= 9.3
    - [Setup Guide for Ubuntu](https://gorails.com/setup/ubuntu/15.04)
+    - `sudo apt-get install libpq-dev`
   * PhantomJS >= 1.9
+    - `apt-get install -y libqtwebkit-dev qt4-qmake
+`
 
 ```
 bundle install
