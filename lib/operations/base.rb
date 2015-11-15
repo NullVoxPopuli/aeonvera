@@ -31,12 +31,14 @@ module Operations
     end
 
     def id_from_params
-      id = params[:id]
-      if filter = params[:filter]
-        id = filter[:id].split(',')
+      unless @id_from_params
+        @id_from_params = params[:id]
+        if filter = params[:filter]
+          @id_from_params = filter[:id].split(',')
+        end
       end
 
-      id
+      @id_from_params
     end
 
     def scoped_model(scoped_params)
@@ -56,17 +58,29 @@ module Operations
       # if we don't have a(ny) id(s), get all of them
       @model ||=
         if id_from_params
-          object_class.find(id_from_params)
-        elsif scope = params[:scope]
-          if scoped = scoped_model(scope)
-            association = association_name_from_object
-            scoped.send(association)
-          else
-            raise "Parent object of type #{scope[:type]} not accessible"
-          end
+          model_from_id
+        elsif params[:scope]
+          model_from_scope
         else
-          object_class.where(params).accessible_to(current_user)
+          model_from_params
         end
+    end
+
+    def model_from_params
+      object_class.where(params).accessible_to(current_user)
+    end
+
+    def model_from_scope(scope = params[:scope])
+      if scoped = scoped_model(scope)
+        association = association_name_from_object
+        scoped.send(association)
+      else
+        raise "Parent object of type #{scope[:type]} not accessible"
+      end
+    end
+
+    def model_from_id
+      object_class.find(id_from_params)
     end
 
     def object_class
