@@ -213,9 +213,13 @@ class Event < ActiveRecord::Base
     return true if self.hosted_by == user
     return true if user.attended_event_ids.include?(self.id)
     return true if user.collaborated_event_ids.include?(self.id)
-    return true if user.hosted_event_ids.include?(self.id)
 
     false
+  end
+
+  # a higher level of access
+  def is_accessible_as_collaborator?(user)
+
   end
 
 end

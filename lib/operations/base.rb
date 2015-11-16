@@ -61,6 +61,9 @@ module Operations
           model_from_id
         elsif params[:scope]
           model_from_scope
+        elsif key = params.keys.grep(/_id$/)
+          # hopefully there is only ever one of these passed
+          model_from_named_id(key.first)
         else
           model_from_params
         end
@@ -68,6 +71,15 @@ module Operations
 
     def model_from_params
       object_class.where(params).accessible_to(current_user)
+    end
+
+    def model_from_named_id(key)
+      name, id = key.split('_')
+      name = name.camelize
+      model_from_scope(
+        id: id,
+        type: name
+      )
     end
 
     def model_from_scope(scope = params[:scope])

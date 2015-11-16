@@ -3,7 +3,7 @@ class Api::EventAttendancesController < APIController
   include LazyCrud
   include EventLoader
 
-  before_action :set_event, only: [:index, :show]
+  before_action :set_event, only: [:show]
 
   set_param_whitelist(
     :dance_orientation,
@@ -13,10 +13,10 @@ class Api::EventAttendancesController < APIController
     if params[:cancelled]
       @attendances = @event.cancelled_attendances
     else
-      @attendances = @event.attendances
+      @attendances = Operations::EventAttendance::ReadAll.new(current_user, params).run
       @attendances = @attendances.unpaid if params[:unpaid]
     end
-    
+
     render json: @attendances
   end
 

@@ -3,6 +3,7 @@
 # - for each event they are collaborating on
 module DefaultPermissions
 
+  # Whach each part of the Permission Settings mean
   KIND = 0
   DEFAULT_ACCESS = 1
   DESCRIPTION = 2
@@ -12,10 +13,7 @@ module DefaultPermissions
   OBJECT = 0
   ACCESS = 1
 
-  UNRELATED = 0
-  OWNER = 1
-  COLLABORATOR = 2
-  RESTRICT_COLLABORATORS = [false, true, false]
+  RESTRICT_COLLABORATORS = {unrelated: false, owner: true, collaborator: false, registrant: true}
 
   # (present action)_(object singular)
   PERMISSIONS = {

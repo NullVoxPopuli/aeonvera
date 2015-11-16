@@ -5,7 +5,8 @@ module EventLoader
     operation = Operations::Event::Read.new(current_user, {
         id: id
       })
-    render json: operation.run
+
+    operation.run
   end
 
   def set_event(id: nil)

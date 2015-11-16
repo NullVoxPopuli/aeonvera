@@ -29,4 +29,11 @@ class Level < ActiveRecord::Base
   def requirement_name
     REQUIREMENT_NAMES[requirement]
   end
+
+  def is_accessible_to?(user)
+    return true if self.event.hosted_by == user
+    return true if user.collaborated_event_ids.include?(self.event_id)
+
+    false
+  end
 end

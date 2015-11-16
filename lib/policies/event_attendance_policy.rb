@@ -1,14 +1,12 @@
 module Policies
-  class OrderPolicy < Base
+  class EventAttendancePolicy < Base
     def read?(order = object)
       order.is_accessible_to? user
     end
 
-    alias_method :send_receipt?, :read?
-
     def read_all?
       return true if authorized_via_parent
-      accessible = object.map { |order| read?(order) }
+      accessible = object.map { |ea| read?(ea) }
       accessible.all?
     end
   end
