@@ -1,5 +1,5 @@
-module Operations
-  class Host::Read < Base
+module HostOperations
+  class Read < SkinnyControllers::Operation::Base
     def run
       model # always allowed, never restricted
     end

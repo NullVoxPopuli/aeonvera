@@ -4,6 +4,7 @@ class Level < ActiveRecord::Base
   belongs_to :user
   belongs_to :event
   has_many :attendances, -> { where(attending: true).order("attendances.created_at DESC") }
+  has_many :event_attendances, -> { where(attending: true).order("attendances.created_at DESC") }
   belongs_to :package
 
   #before_destroy { |level|

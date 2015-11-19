@@ -1,19 +1,14 @@
 class Api::EventAttendancesController < APIController
-  # TODO: should the parent object be set by lazy_crud?
-  include LazyCrud
+  include SkinnyControllers::Diet
   include EventLoader
 
   before_action :set_event, only: [:show]
-
-  set_param_whitelist(
-    :dance_orientation,
-    :checked_in_at)
 
   def index
     if params[:cancelled]
       @attendances = @event.cancelled_attendances
     else
-      @attendances = Operations::EventAttendance::ReadAll.new(current_user, params).run
+      @attendances = model
       @attendances = @attendances.unpaid if params[:unpaid]
     end
 

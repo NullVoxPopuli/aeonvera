@@ -1,0 +1,5 @@
+class DiscountPolicy < SkinnyControllers::Policy::Base
+  def read?
+    object.event.is_accessible_to? user
+  end
+end

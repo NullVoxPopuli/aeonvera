@@ -1,5 +1,5 @@
-module Operations
-  class Order::SendReceipt < Base
+module OrderOperations
+    class SendReceipt < Base
     def run
       if allowed?
         AttendanceMailer.payment_received_email(order: model).deliver_now

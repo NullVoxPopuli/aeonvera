@@ -17,6 +17,8 @@ gem 'rack-cors', :require => 'rack/cors'
 gem "active_model_serializers", github: "rails-api/active_model_serializers", branch: "master"
 # gem "active_model_serializers", github: "rails-api/active_model_serializers"
 
+# controllers, chill out!
+gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_controllers'
 
 # model helpers
 gem 'date_time_attribute'

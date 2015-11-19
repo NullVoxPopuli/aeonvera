@@ -46,6 +46,12 @@ GIT
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
 
+PATH
+  remote: /home/lprestonsegoiii/Development/skinny_controllers
+  specs:
+    skinny_controllers (0.3.2)
+      activesupport
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -477,6 +483,7 @@ DEPENDENCIES
   sdoc
   select2-rails
   simplecov
+  skinny_controllers!
   slim-rails
   sqlite3
   stripe

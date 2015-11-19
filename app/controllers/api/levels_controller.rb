@@ -1,14 +1,11 @@
 class Api::LevelsController < APIController
-  include EventLoader
+  include SkinnyControllers::Diet
 
   def index
-    # TODO: also check permissions of each  levels?
-    @levels = event.levels
-    render json: @levels, include: params[:include]
+    render json: model, include: params[:include]
   end
 
   def show
-    operation = Operations::Level::Read.new(current_user, params)
-    render json: operation.run
+    render json: model
   end
 end
