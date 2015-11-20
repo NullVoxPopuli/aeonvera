@@ -12,10 +12,9 @@
 
  ------------------------------
 
- [![Build Status](http://img.shields.io/travis/NullVoxPopuli/aeonvera.svg?style=flat-square)](https://travis-ci.org/NullVoxPopuli/aeonvera)
- [![Code Climate](http://img.shields.io/codeclimate/github/NullVoxPopuli/aeonvera.svg?style=flat-square)](https://codeclimate.com/github/NullVoxPopuli/aeonvera)
- [![Test Coverage](http://img.shields.io/codeclimate/coverage/github/NullVoxPopuli/aeonvera.svg?style=flat-square)](https://codeclimate.com/github/NullVoxPopuli/aeonvera)
-
+[![Build Status](https://travis-ci.org/NullVoxPopuli/aeonvera.svg)](https://travis-ci.org/NullVoxPopuli/aeonvera)
+[![Code Climate](https://codeclimate.com/github/NullVoxPopuli/aeonvera/badges/gpa.svg)](https://codeclimate.com/github/NullVoxPopuli/aeonvera)
+[![Test Coverage](https://codeclimate.com/github/NullVoxPopuli/aeonvera/badges/coverage.svg)](https://codeclimate.com/github/NullVoxPopuli/aeonvera/coverage)
 
 ## Issues / Bug Reports
 
