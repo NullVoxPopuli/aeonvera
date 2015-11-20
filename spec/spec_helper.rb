@@ -32,9 +32,20 @@ if ENV['TRAVIS']
   CodeClimate::TestReporter.start
 else
   require 'simplecov'
-  SimpleCov.start do
-    add_filter '/spec/'
-  end
+end
+
+SimpleCov.start do
+  add_group 'Models', 'app/models'
+  add_group 'Controllers', 'app/controllers/api'
+  add_group 'Operations', 'app/operations'
+  add_group 'Policies', 'app/policies'
+  add_group 'Mailers', 'app/mailers'
+  add_group 'Serializers', 'app/serializers'
+  add_group 'Services', 'app/services'
+
+
+  filters.clear
+  add_filter '/spec/'
 end
 
 

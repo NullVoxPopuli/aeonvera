@@ -16,7 +16,14 @@ namespace :spec do
     #
     # task.pattern = file_list
 
-    task.pattern = ['spec/controllers/api', 'spec/mailers', 'spec/models', 'spec/operations', 'spec/policies', 'spec/routing']
+    task.pattern = [
+      'spec/controllers/api',
+      'spec/mailers',
+      'spec/models',
+      'spec/operations',
+      'spec/policies',
+      'spec/routing'
+    ]
   end
 
 end

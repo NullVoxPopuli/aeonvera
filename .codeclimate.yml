@@ -3,6 +3,15 @@ languages:
   JavaScript: false
   PHP: false
   Python: false
+
+engines:
+  rubocop:
+    enabled: true
+
+ratings:
+  paths:
+    - app/**
+
 exclude_paths:
   - spec/
   - app/views
