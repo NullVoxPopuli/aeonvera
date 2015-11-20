@@ -26,6 +26,18 @@ if ENV['SQL']
   show_sql
 end
 
+if ENV['TRAVIS']
+  ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
+  require 'codeclimate-test-reporter'
+  CodeClimate::TestReporter.start
+else
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
+end
+
+
 RSpec.configure do |config|
 
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added

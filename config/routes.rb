@@ -69,29 +69,6 @@ AeonVera::Application.routes.draw do
 
   resources :dances
 
-  constraints(AdminSubdomain) do
-    namespace :admin, path: "/" do
-      post '/auth/admin/callback', :to => 'sessions#authenticate'
-      get '/auth/failure', :to => 'sessions#failure'
-
-      resources :users do
-        member do
-          # get :assume_control
-        end
-      end
-
-      resources :money
-
-      resources :events do
-        member do
-          get :toggle_beta
-        end
-      end
-
-      root to: "money#index"
-    end
-  end
-
   namespace :oauth do
     get 'stripe/new', to: "stripe#new"
     get 'stripe/authorize', to: 'stripe#authorize'

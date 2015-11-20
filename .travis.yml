@@ -1,10 +1,13 @@
 language: ruby
 rvm:
   - 2.2
+  - 2.3
   - ruby-head
 matrix:
   allow_failures:
-    - rvm: ruby-head
+    - rvm:
+      - 2.3
+      - ruby-head
 env:
   - TRAVIS=true
 
@@ -17,7 +20,8 @@ script:
   # - RAILS_ENV=test rake db:migrate
   - psql -c 'create database travis_ci_test;' -U postgres
   # rspec imports the schema
-  - bundle exec rspec
+  #- bundle exec rspec
+  - bundle exec rake spec:api
 
 bundler_args: "--local --without documentation"
 
