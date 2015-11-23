@@ -1,5 +1,5 @@
 module OrderOperations
-    class SendReceipt < Base
+    class SendReceipt < SkinnyControllers::Operation::Base
     def run
       if allowed?
         AttendanceMailer.payment_received_email(order: model).deliver_now

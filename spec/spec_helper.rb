@@ -1,5 +1,29 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+if ENV['TRAVIS']
+  ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
+  require 'codeclimate-test-reporter'
+  CodeClimate::TestReporter.start
+else
+  require 'simplecov'
+end
+
+SimpleCov.start do
+  add_group 'Models', 'app/models'
+  add_group 'Controllers', 'app/controllers/api'
+  add_group 'Operations', 'app/operations'
+  add_group 'Policies', 'app/policies'
+  add_group 'Mailers', 'app/mailers'
+  add_group 'Serializers', 'app/serializers'
+  add_group 'Services', 'app/services'
+
+
+  # filters.clear
+  add_filter '/gems/'
+  add_filter '/spec/'
+end
+
+
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
@@ -26,27 +50,6 @@ if ENV['SQL']
   show_sql
 end
 
-if ENV['TRAVIS']
-  ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
-  require 'codeclimate-test-reporter'
-  CodeClimate::TestReporter.start
-else
-  require 'simplecov'
-end
-
-SimpleCov.start do
-  add_group 'Models', 'app/models'
-  add_group 'Controllers', 'app/controllers/api'
-  add_group 'Operations', 'app/operations'
-  add_group 'Policies', 'app/policies'
-  add_group 'Mailers', 'app/mailers'
-  add_group 'Serializers', 'app/serializers'
-  add_group 'Services', 'app/services'
-
-
-  # filters.clear
-  add_filter '/spec/'
-end
 
 
 RSpec.configure do |config|
