@@ -44,7 +44,7 @@ SimpleCov.start do
   add_group 'Services', 'app/services'
 
 
-  filters.clear
+  # filters.clear
   add_filter '/spec/'
 end
 
