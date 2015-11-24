@@ -14,6 +14,20 @@ end
 
 silence_stream(STDOUT, &load_schema)
 
+# Requires supporting ruby files with custom matchers and macros, etc,
+# in spec/support/ and its subdirectories.
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+
+# Checks for pending migrations before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
+
+# for debugging, sometimes it's helpful to see the sql for each request
+# especially for our complicated / numerous relationships
+if ENV['SQL']
+  show_sql
+end
+
 if ENV['TRAVIS']
   ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
   require 'codeclimate-test-reporter'
@@ -36,22 +50,6 @@ SimpleCov.start do
   add_filter '/gems/'
   add_filter '/spec/'
 end
-
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-
-# Checks for pending migrations before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
-
-# for debugging, sometimes it's helpful to see the sql for each request
-# especially for our complicated / numerous relationships
-if ENV['SQL']
-  show_sql
-end
-
-
 
 RSpec.configure do |config|
 
