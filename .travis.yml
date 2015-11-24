@@ -10,7 +10,6 @@ matrix:
       - ruby-head
 env:
   - TRAVIS=true
-  - DB=postgres
 
 before_srcipt:
   # - RAILS_ENV=test rake db:create; rake db:migrate
@@ -20,7 +19,7 @@ script:
   # - RAILS_ENV=test rake db:create
   # - RAILS_ENV=test rake db:migrate
   # - plsql -c 'create database travis_ci_test;' -U postgres
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database travis_ci_test;' -U postgres; fi"
+  - sh -c "psql -c 'create database travis_ci_test;' -U postgres"
 
   # rspec imports the schema
   #- bundle exec rspec
