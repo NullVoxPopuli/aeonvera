@@ -1,5 +1,19 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
+
+
+require File.expand_path("../../config/environment", __FILE__)
+require 'rspec/rails'
+
+load_schema = lambda do
+  # ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+  load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default
+  #ActiveRecord::Migrator.up('db/migrate') # use migrations
+  ap "Database loaded"
+end
+
+silence_stream(STDOUT, &load_schema)
+
 if ENV['TRAVIS']
   ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
   require 'codeclimate-test-reporter'
@@ -22,19 +36,6 @@ SimpleCov.start do
   add_filter '/gems/'
   add_filter '/spec/'
 end
-
-
-require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-
-load_schema = lambda do
-  # ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
-  load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default
-  #ActiveRecord::Migrator.up('db/migrate') # use migrations
-  ap "Database loaded"
-end
-
-silence_stream(STDOUT, &load_schema)
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

@@ -7,6 +7,10 @@ def login(user = @user = create(:user))
   sign_in user
 end
 
+def force_login(user)
+  allow(controller).to receive(:current_user){ user }
+end
+
 def confirmed_user(user = @user = create(:user))
   user.confirm!
   user
