@@ -1,5 +1,5 @@
 class Api::OrdersController < APIController
-
+  include SkinnyControllers::Diet
   include HostLoader
   include StripeCharge
 
@@ -8,46 +8,19 @@ class Api::OrdersController < APIController
   before_action :load_integration, only: [:update, :create]
 
   def index
-    operation = Operations::Order::ReadAll.new(current_user, params)
-    render json: operation.run
+    render json: model
   end
 
   def show
-    operation = Operations::Order::Read.new(current_user, params)
-    render json: operation.run
+    render json: model
   end
 
   def create
-    @order = orders_proxy.new(order_params)
-
-    @order.save
-
-    respond_with @order
+    render json: model
   end
 
   def update
-    @order = @host.orders.find(params[:id])
-
-    if order_params[:payment_method] != Payable::Methods::STRIPE
-      @order.check_number = all_order_params[:check_number]
-
-      @order.paid = true
-      @order.paid_amount = all_order_params[:paid_amount]
-      @order.net_amount_received = @order.paid_amount
-      @order.total_fee_amount = 0
-    else
-
-      if stripe_params[:checkout_token].present?
-        charge_card!(stripe_params[:checkout_token], stripe_params[:checkout_email], absorb_fees: true)
-      else
-        @orders.errors.add(:base, "No Stripe Information Found")
-      end
-
-    end
-
-    @order.save if @order.errors.full_messages.empty?
-
-    respond_with @order
+    render json: model
   end
 
   private
@@ -55,11 +28,6 @@ class Api::OrdersController < APIController
   def order_where_params
     keys = (Order.column_names & params.keys)
     params.slice(*keys).symbolize_keys
-  end
-
-  def orders_proxy
-    parent = (@host || @event)# || current_user)
-    (parent ? parent.orders : Order)
   end
 
   def load_integration
