@@ -5,9 +5,7 @@ rvm:
   - ruby-head
 matrix:
   allow_failures:
-    - rvm:
-      #- 2.3
-      - ruby-head
+    - rvm: ruby-head
 env:
   - TRAVIS=true
 
