@@ -11,7 +11,7 @@ class Api::HostsController < APIController
   private
 
   def host_from_subdomain
-    @host ||= Operations::Host::Read.new(current_user, host_params).run
+    @host ||= HostOperations::Read.new(current_user, host_params).run
   end
 
   def host_params
