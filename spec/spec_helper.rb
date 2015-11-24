@@ -5,15 +5,6 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
-load_schema = lambda do
-  # ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
-  load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default
-  #ActiveRecord::Migrator.up('db/migrate') # use migrations
-  ap "Database loaded"
-end
-
-silence_stream(STDOUT, &load_schema)
-
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }

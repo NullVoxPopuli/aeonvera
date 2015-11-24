@@ -20,8 +20,7 @@ script:
   # - RAILS_ENV=test rake db:migrate
   # - plsql -c 'create database travis_ci_test;' -U postgres
   - sh -c "psql -c 'create database travis_ci_test;' -U postgres"
-
-  # rspec imports the schema
+  - RAILS_ENV=test rake db:schema:load
   #- bundle exec rspec
   - bundle exec rake spec:api
 
