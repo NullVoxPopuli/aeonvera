@@ -1,11 +1,5 @@
 class Api::OrdersController < APIController
   include SkinnyControllers::Diet
-  include HostLoader
-  include StripeCharge
-
-  before_action :find_host_params, only: [:create, :update]
-  before_action :sets_host, only: [:create, :update]
-  before_action :load_integration, only: [:update, :create]
 
   def index
     render json: model
@@ -24,6 +18,13 @@ class Api::OrdersController < APIController
   end
 
   private
+
+  def update_order_params
+    {
+      stripe: stripe_params,
+      order: all_order_params
+    }
+  end
 
   def order_where_params
     keys = (Order.column_names & params.keys)

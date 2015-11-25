@@ -22,7 +22,8 @@ namespace :spec do
       'spec/models',
       'spec/operations',
       'spec/policies',
-      'spec/routing'
+      'spec/routing',
+      'spec/services'
     ]
   end
 
