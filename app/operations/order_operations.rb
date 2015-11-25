@@ -23,25 +23,30 @@ module OrderOperations
         order.net_amount_received = order.paid_amount
         order.total_fee_amount = 0
       else
-        integration = order.host.integrations[Integration::STRIPE]
-
-        if stripe_params[:checkout_token].present?
-          # absorbing fees should only be at the door.
-          # TODO: find a way to verify if an order update is coming from a payment from pre-registraiton
-          #       or if it is coming from at the door
-          order = StripeCharge.charge_card!(
-            stripe_params[:checkout_token],
-            stripe_params[:checkout_email],
-            absorb_fees: true,
-            secret_key: integration.config[:access_token],
-            order: order)
-        else
-          order.errors.add(:base, "No Stripe Information Found")
-        end
-
+        order = update_stripe(order, stripe_params)
       end
 
       order.save if order.errors.full_messages.empty?
+
+      order
+    end
+
+    def update_stripe(order, stripe_params)
+      integration = order.host.integrations[Integration::STRIPE]
+
+      if stripe_params[:checkout_token].present?
+        # absorbing fees should only be at the door.
+        # TODO: find a way to verify if an order update is coming from a payment from pre-registraiton
+        #       or if it is coming from at the door
+        order = StripeCharge.charge_card!(
+          stripe_params[:checkout_token],
+          stripe_params[:checkout_email],
+          absorb_fees: true,
+          secret_key: integration.config[:access_token],
+          order: order)
+      else
+        order.errors.add(:base, "No Stripe Information Found")
+      end
 
       order
     end

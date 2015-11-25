@@ -10,8 +10,14 @@ engines:
 
 ratings:
   paths:
-    - app/**
+    - app/controllers/api/**/*
+    - app/mailers/*
+    - app/models/**/*
+    - app/operations/**/*
+    - app/policies/**/*
+    - app/serializers/**/*
+    - app/services/**/*
+
 
 exclude_paths:
   - spec/
-  - app/views
