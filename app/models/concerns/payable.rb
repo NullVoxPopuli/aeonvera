@@ -149,7 +149,7 @@ module Payable
   end
 
   def check_number
-    checks.first
+    checks.first.try(:[], 'number')
   end
 
   def sub_total

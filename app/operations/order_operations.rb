@@ -23,6 +23,7 @@ module OrderOperations
         order.net_amount_received = order.paid_amount
         order.total_fee_amount = 0
       else
+        integration = order.host.integrations[Integration::STRIPE]
 
         if stripe_params[:checkout_token].present?
           # absorbing fees should only be at the door.
@@ -32,10 +33,10 @@ module OrderOperations
             stripe_params[:checkout_token],
             stripe_params[:checkout_email],
             absorb_fees: true,
-            access_token: integration.config[:access_token],
+            secret_key: integration.config[:access_token],
             order: order)
         else
-          orders.errors.add(:base, "No Stripe Information Found")
+          order.errors.add(:base, "No Stripe Information Found")
         end
 
       end

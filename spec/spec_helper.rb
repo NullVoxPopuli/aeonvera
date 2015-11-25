@@ -19,8 +19,15 @@ SimpleCov.start do
 
 
   # filters.clear
+  add_filter '/app/controllers/[^a][^p][^i]'
+  add_filter '/app/helpers/'
+  add_filter '/app/decorators/'
+  add_filter '/app/views/'
   add_filter '/gems/'
   add_filter '/spec/'
+  add_filter '/config/'
+  add_filter '/public/'
+  add_filter '/db/'
 end
 
 
