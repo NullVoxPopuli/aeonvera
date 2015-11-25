@@ -2,13 +2,15 @@ module StripeCharge
 
   module_function
 
-  
+
   # requires that a host (event, org) exists
   # also integration
   # also order
   #
   #
-  #
+  # @param [String] token the stripe-checkout.js token from the UI
+  # @param [String] email who to send the receipt to
+  # @param [Boolean] absorb_fees if the event host should eat the fees or not
   # @param [String] secret_key the access token here is what determines
   #                 what account the charge gets sent to
   #
@@ -16,16 +18,6 @@ module StripeCharge
     host = order.host
     description = host.name
     beta = host.beta?
-
-    # used to remove fees for at the door
-    # Stripe == fees (paid by customer)
-    # Credit == no fees (paid by event)
-    # This is to not confuse attendees (why is there this hidden fee?).
-    #
-    # at least for now, this is handled here until the checkin screen
-    # can be done in ember, where changing payment method on screen makes
-    # more sense.
-    order.payment_method = params[:payment_method] if params[:payment_method]
 
     amount = order.total(absorb_fees: absorb_fees)
 
@@ -58,7 +50,7 @@ module StripeCharge
   # @param [Integer] multiplier what to multiply the amount by
   # @param [Symbol] output conversion method
   def to_cents(from, multiplier: 100, output: :to_i)
-    (from * multiplier).send(output)
+    (from * multiplier).round.send(output)
   end
 
   def statement_description(string)

@@ -168,6 +168,9 @@ group :test do
   gem "factory_girl_rails"
   gem "factory_girl", github: "thoughtbot/factory_girl"
 
+  # Mock Stripe objects
+  gem 'stripe-ruby-mock', '~> 2.2.1', :require => 'stripe_mock'
+
   gem 'database_cleaner'
 
   gem "capybara"

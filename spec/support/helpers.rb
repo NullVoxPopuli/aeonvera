@@ -38,6 +38,24 @@ def create_event
   event
 end
 
+def create_integration(params)
+  attributes = {
+    kind: Integration::STRIPE,
+    config: {
+      'access_token' => STRIPE_CONFIG['secret_key'],
+      'livemode' => false,
+      'refresh_token' => nil,
+      'token_type' => 'bearer',
+      'stripe_publishable_key' => STRIPE_CONFIG['publishable_key'],
+      'stripe_user_id' => nil,
+      'scope' => 'read_write'
+    }
+  }.merge(params)
+  i = Integration.new(attributes)
+  i.save
+  i
+end
+
 
 def event_path(path, params = {})
   ["hosted_events/#{path}", { hosted_event_id: @event.id.to_s }.merge(params)]

@@ -3,7 +3,49 @@ require 'spec_helper'
 describe StripeCharge do
 
   context 'charge_card!' do
+    let(:stripe_helper) { StripeMock.create_test_helper }
+    before { StripeMock.start }
+    after { StripeMock.stop }
 
+    before(:each) do
+      @event = event = create_event
+      package = create(:package, event: event)
+      integration = create_integration(owner: event)
+      order = create(:order, host: event)
+      order.add(package)
+
+      token = stripe_helper.generate_card_token
+      @charge = ->{
+        StripeCharge.charge_card!(
+          token,
+          'whatever@idk.com',
+          order: order,
+          secret_key: STRIPE_CONFIG['secret_key']
+        )
+      }
+
+    end
+
+    it 'succeeds' do
+      order = @charge.call
+      expect(order.errors).to be_empty
+    end
+
+    it 'adds an error if the card is declined' do
+      StripeMock.prepare_card_error(:card_declined)
+
+      order = @charge.call
+      expect(order.errors).to_not be_empty
+    end
+
+    it 'does not apply the application fee if the event is beta' do
+      @event.beta = true
+      order = @charge.call
+
+      actual = order.paid_amount
+      expected = order.total(absorb_fees: true)
+      expect(actual).to eq expected
+    end
   end
 
   context 'to_cents' do

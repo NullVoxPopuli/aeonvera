@@ -43,7 +43,7 @@ module StripePaymentHandler
 
       # retrieve the transaction
       # first the the access token for the event's Stripe payment processor
-      integration = self.event.integrations[Integration::STRIPE]
+      integration = self.host.integrations[Integration::STRIPE]
       key = integration.config["access_token"]
 
       transaction = Stripe::BalanceTransaction.retrieve(transaction_id, key)
