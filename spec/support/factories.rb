@@ -178,10 +178,11 @@ FactoryGirl.define do
   factory :order do
     metadata { {} }
     event
+    user
   end
 
   factory :order_line_item do
-
+    order
   end
 
   factory :attendance, class: EventAttendance do
