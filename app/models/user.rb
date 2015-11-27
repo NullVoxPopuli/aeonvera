@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
   include SoftDeletable
   include HasMemberships
-  include Permissable
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable,
