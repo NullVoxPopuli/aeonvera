@@ -53,7 +53,7 @@ module AeonVera
     # PayPal::SDK::Core::Config.load('spec/config/paypal.yml',  ENV['RACK_ENV'] || 'development')
 
     config.autoload_paths += [config.root.join('lib')]
-    
+
     config.generators do |g|
       g.test_framework :rspec
     end
@@ -84,7 +84,7 @@ module AeonVera
           origins "*"
           resource "*",
             :headers => :any,
-            :methods => [:get, :post, :delete, :put, :options, :head],
+            :methods => [:get, :post, :patch, :delete, :put, :options, :head],
             :credentials => true
         end
       # end

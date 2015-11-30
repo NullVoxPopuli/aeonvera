@@ -14,6 +14,6 @@ class LevelSerializer < ActiveModel::Serializer
     end
 
     def requirement
-      object.requirement_name
+      object.requirement
     end
 end
