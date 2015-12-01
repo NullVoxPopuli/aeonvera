@@ -373,7 +373,7 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
-    skinny_controllers (0.5.3)
+    skinny_controllers (0.5.8)
       activesupport
     slim (3.0.3)
       temple (~> 0.7.3)

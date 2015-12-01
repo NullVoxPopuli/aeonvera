@@ -16,4 +16,22 @@ class Api::LevelsController < APIController
   def update
     render json: model
   end
+
+  private
+
+  def update_level_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(:name, :requirement)
+  end
+
+  def create_level_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(:name, :requirement, :event_id)
+  end
+
+
 end

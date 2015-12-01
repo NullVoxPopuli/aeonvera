@@ -5,15 +5,15 @@ class EventPolicy < SkinnyControllers::Policy::Base
     end
 
     def update?
-      parent.hosted_by == user
+      parent && parent.hosted_by == user
     end
 
     def delete?
-      parent.hosted_by == user
+      parent && parent.hosted_by == user
     end
 
     def create?
-      parent.hosted_by == user
+      parent && parent.hosted_by == user
     end
 
     private
