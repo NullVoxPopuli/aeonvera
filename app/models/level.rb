@@ -7,6 +7,8 @@ class Level < ActiveRecord::Base
   has_many :event_attendances, -> { where(attending: true).order("attendances.created_at DESC") }
   belongs_to :package
 
+  validates :name, presence: true
+
   #before_destroy { |level|
   #  result = level.attendances.size == 0
   #  if result
