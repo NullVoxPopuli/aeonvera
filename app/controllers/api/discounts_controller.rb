@@ -1,24 +1,12 @@
-class Api::DiscountsController < APIController
-  include EventLoader
-  # include LazyCrud
-  #
-  # set_resource_parent Event
-
-  def index
-    # TODO: should I check permissions of the discounts?
-    render json: event.discounts, include: params[:include]
-  end
-
-  def show
-    operation = Operations::Discount::Read.new(current_user, params)
-    render json: operation.run
-  end
+class Api::DiscountsController < Api::ResourceController
 
   private
 
-  def resource_proxy
-    # current_user.hosted_and_collaborated_events
-    current_user.hosted_events.find(params[:event_id]).discounts
+  def update_discount_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(:code, :amount, :kind)
   end
 
   def resource_params

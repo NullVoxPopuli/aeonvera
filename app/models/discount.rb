@@ -50,6 +50,7 @@ class Discount < ActiveRecord::Base
   alias_attribute :percent, :value
 
   validates :code, presence: true
+  validates :amount, presence: true
   validate :code_is_valid?
 
   def restrained_to?(item)
