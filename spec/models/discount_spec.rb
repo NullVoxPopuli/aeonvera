@@ -4,7 +4,7 @@ describe Discount do
 
 	context '#code' do
 		it 'does not allow & for the code' do
-			d = Discount.new(code: "J&J")
+			d = Discount.new(code: "J&J", amount: 5)
 			expect(d.valid?).to eq false
 			msgs = d.errors.full_messages
 			expect(msgs.first).to include("Code")

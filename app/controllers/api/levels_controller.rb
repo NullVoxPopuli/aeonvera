@@ -15,10 +15,7 @@ class Api::LevelsController < Api::ResourceController
   #      "relationships"=>{"event"=>{"data"=>{"type"=>"events", "id"=>"16"}}},
   #    "type"=>"levels"}, "level"=>{}}
   def create_level_params
-    attributes = params
-      .require(:data)
-      .require(:attributes)
-      .permit(:name, :requirement)
+    attributes = update_level_params
 
     event_relationship = params
       .require(:data).require(:relationships)

@@ -22,6 +22,8 @@ module LevelOperations
       else
         (model.presence || Level.new).errors.add(:base, 'not authorized')
       end
+
+      model
     end
 
     def update

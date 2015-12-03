@@ -66,7 +66,8 @@ describe Api::LevelsController, type: :controller do
       force_login(event.hosted_by)
       level = build(:level, event: event)
 
-      json_api = {"data":{"attributes": level.attributes ,"type":"levels"}}
+      json_api = {"data":{"attributes": level.attributes ,"type":"levels",
+        "relationships": {"event":{"data": {"id": level.event_id}}}}}
 
       expect{
         post :create, json_api
@@ -78,8 +79,9 @@ describe Api::LevelsController, type: :controller do
       event = create(:event, user: create(:user))
       level = build(:level, event: event)
 
-      json_api = {"data":{"attributes": level.attributes ,"type":"levels"}}
-
+      json_api = {"data":{"attributes": level.attributes ,"type":"levels",
+        "relationships": {"event":{"data": {"id": level.event_id}}}}}
+        
       expect{
         post :create, json_api
       }.to change(Level, :count).by(0)

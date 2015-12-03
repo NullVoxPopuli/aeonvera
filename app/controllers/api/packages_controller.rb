@@ -1,26 +1,36 @@
-class Api::PackagesController < APIController
-  # respond_to :json
-  #
-  # include SetsEvent
-  # include LazyCrud
-  #
-  # set_resource_parent Event
-  def index
-    @packages = resource_proxy
-    render json: @packages, each_serializer: PackageSerializer
-  end
-
-  def show
-    operation = Operations::Package::Read.new(current_user, params)
-    render json: operation.run
-  end
-
+class Api::PackagesController < Api::ResourceController
   private
 
-  def resource_proxy
-    # current_user.hosted_and_collaborated_events
-    # TODO: figure out how to scope to hosted_events as well as registered
-    Event.find(params[:event_id]).packages
+  def update_package_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(
+        :name,
+        :initial_price, :at_the_door_price,
+        :attendee_limit, :expires_at, :requires_track,
+        :ignore_pricing_tiers, :deleted_at
+      )
+  end
+
+  # @example
+  #   {"data"=>{
+  #      "attributes"=>{
+  #         "number_of_leads"=>nil, "number_of_follows"=>nil, "name"=>"", "requirement"=>2},
+  #      "relationships"=>{"event"=>{"data"=>{"type"=>"events", "id"=>"16"}}},
+  #    "type"=>"levels"}, "level"=>{}}
+  def create_package_params
+    attributes = params
+      .require(:data)
+      .require(:attributes)
+      .permit(:name, :initial_price, :at_the_door_price,
+      )
+
+    event_relationship = params
+      .require(:data).require(:relationships)
+      .require(:event).require(:data).permit(:id)
+
+    attributes.merge(event_id: event_relationship[:id])
   end
 
 end
