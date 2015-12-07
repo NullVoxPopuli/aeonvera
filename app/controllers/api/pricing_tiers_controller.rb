@@ -1,2 +1,2 @@
-class Api::PricingTiersController < ResourceController
+class Api::PricingTiersController < Api::ResourceController
 end
