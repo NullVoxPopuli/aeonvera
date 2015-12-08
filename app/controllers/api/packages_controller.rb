@@ -1,4 +1,4 @@
-class Api::PackagesController < Api::ResourceController
+class Api::PackagesController < Api::EventResourceController
   private
 
   def update_package_params

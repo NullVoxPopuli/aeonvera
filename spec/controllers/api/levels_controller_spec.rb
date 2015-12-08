@@ -4,15 +4,45 @@ describe Api::LevelsController, type: :controller do
   context 'index' do
 
     it 'gets all levels' do
-      event = create_event
+      force_login(user = create(:user))
+      event = create(:event, user: user)
       create(:level, event: event)
       create(:level, event: event)
 
-      get :index
+      get :index, event_id: event.id
       json = JSON.parse(response.body)
       data = json['data']
 
       expect(data.count).to eq 2
+    end
+
+    it 'does not get levels from another event' do
+      force_login(user = create(:user))
+      event = create(:event, user: user)
+      create(:level, event: event)
+      create(:level, event: event)
+      other_event = create_event
+      create(:level, event: other_event)
+      create(:level, event: other_event)
+      create(:level, event: other_event)
+
+      get :index, event_id: event.id
+      json = JSON.parse(response.body)
+      data = json['data']
+
+      expect(data.count).to eq 2
+
+    end
+
+    it 'requires the event id to be specified' do
+      force_login(user = create(:user))
+      event = create(:event, user: user)
+      create(:level, event: event)
+      create(:level, event: event)
+
+      expect{
+        get :index
+      }.to raise_error
     end
   end
 
@@ -81,7 +111,7 @@ describe Api::LevelsController, type: :controller do
 
       json_api = {"data":{"attributes": level.attributes ,"type":"levels",
         "relationships": {"event":{"data": {"id": level.event_id}}}}}
-        
+
       expect{
         post :create, json_api
       }.to change(Level, :count).by(0)

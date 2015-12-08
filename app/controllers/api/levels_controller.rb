@@ -1,4 +1,4 @@
-class Api::LevelsController < Api::ResourceController
+class Api::LevelsController < Api::EventResourceController
   private
 
   def update_level_params
