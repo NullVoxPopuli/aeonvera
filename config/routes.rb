@@ -59,11 +59,6 @@ AeonVera::Application.routes.draw do
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
     resources :users
-
-    # when errors happen on the ember side of things
-    # they are posted here so that rails can send the
-    # error off to github for review as an issue
-    post '/front_end_error', to: 'errors#from_ember'
   end
 
 

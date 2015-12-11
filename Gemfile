@@ -33,8 +33,7 @@ gem "authorizable", github: "NullVoxPopuli/authorizable"
 
 
 # error capturing
-# gem "exception_notification" # email notifications
-gem 'party_foul'
+gem 'rollbar', '~> 2.5.0'
 
 # app performance monitoring
 gem "newrelic_rpm"
