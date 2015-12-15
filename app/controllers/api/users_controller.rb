@@ -1,5 +1,6 @@
 class Api::UsersController < APIController
 
+  before_filter :must_be_logged_in, except: :create
 
   def show
     # this should never return any other user
@@ -21,7 +22,11 @@ class Api::UsersController < APIController
 
   # updating profile information
   def update
-    current_user.update(user_params)
+    update_params = user_params.merge(
+      current_password: params[:user].try(:[], :current_password)
+    )
+
+    current_user.update_with_password(update_params)
     render json: current_user
   end
 
@@ -64,7 +69,6 @@ class Api::UsersController < APIController
       :email,
       :password,
       :password_confirmation,
-      :current_password,
       :time_zone
       # don't worry about null / '' fields
       # all fields on a user are required,

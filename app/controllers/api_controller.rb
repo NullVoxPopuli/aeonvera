@@ -19,4 +19,19 @@ class APIController < ActionController::Base
 
 
   respond_to :json
+
+  def must_be_logged_in
+    unless current_user
+      render json: {
+          jsonapi: { version: '1.0' },
+          errors: [
+            {
+              code: 401,
+              title: 'Unauthorized'
+            }
+          ]
+        }, status: 401
+      return false
+    end
+  end
 end
