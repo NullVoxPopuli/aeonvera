@@ -14,7 +14,7 @@ class Api::UsersController < APIController
     if user.save
       render json: user, status: :created
     else
-      respond_with user
+      render json: user
     end
   end
 
@@ -22,7 +22,7 @@ class Api::UsersController < APIController
   # updating profile information
   def update
     current_user.update(user_params)
-    respond_with current_user
+    render json: current_user
   end
 
 
@@ -44,9 +44,8 @@ class Api::UsersController < APIController
         current_user.destroy
       end
 
-      ap current_user.errors.full_messages
       if current_user.errors.full_messages.present?
-        respond_with current_user
+        render json: current_user
       else
         render json: current_user, status: :success
       end
