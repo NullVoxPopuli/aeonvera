@@ -13,10 +13,25 @@ class Api::EventResourceController < Api::ResourceController
 
   def create_params_with(attributes, host: true)
     # if host, require different part of the params
-    event_relationship = params
-      .require(:data).require(:relationships)
-      .require(:event).require(:data).permit(:id)
+    if host
+      host_relationship = params
+        .require(:data).require(:relationships)
+        .require(:host).require(:data).permit(:id, :type)
 
-    attributes.merge(event_id: event_relationship[:id])
+      # convert the type to ruby class
+      # this is why conventions are important...
+      ember_type = host_relationship[:type]
+      klass = ember_type.singularize.classify
+
+      attributes.merge(
+        host_id: host_relationship[:id],
+        host_type: klass)
+    else
+      host_relationship = params
+        .require(:data).require(:relationships)
+        .require(:event).require(:data).permit(:id)
+
+      attributes.merge(event_id: event_relationship[:id])
+    end
   end
 end

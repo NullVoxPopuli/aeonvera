@@ -37,7 +37,7 @@ class Api::OrdersController < APIController
   end
 
   def order_params
-    params[:order].permit(:paid_amount, :payment_method, :attendance_id)
+    params[:order].try(:permit, :paid_amount, :payment_method, :attendance_id)
   end
 
   def all_order_params

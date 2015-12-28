@@ -1,9 +1,14 @@
-class Api::CustomFieldsController < APIController
+class Api::CustomFieldsController < Api::EventResourceController
+  private
 
-  include SetsEvent
-
-  def index
-    render json: @event.custom_fields, include: params[:include]
+  def update_custom_field_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(:label, :kind, :default_value, :editable)
   end
 
+  def create_custom_field_params
+    create_params_with(update_custom_field_params, host: true)
+  end
 end

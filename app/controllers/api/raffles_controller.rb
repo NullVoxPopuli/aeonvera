@@ -1,9 +1,16 @@
-class Api::RafflesController < APIController
+class Api::RafflesController < Api::EventResourceController
 
-  include SetsEvent
+  private
 
-  def index
-    render json: @event.raffles, include: params[:include]
+  def update_raffle_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(:name, :winner_id)
+  end
+
+  def create_raffle_params
+    create_params_with(update_raffle_params)
   end
 
 end
