@@ -5,9 +5,19 @@ class Api::EventResourceController < Api::ResourceController
     render json: model, include: params[:include]
   end
 
+
+  def show
+    model = operation_class.new(current_user, params, show_params).run
+    render json: model, include: params[:include]
+  end
+
   private
 
   def index_params
+    params.require(:event_id)
+  end
+
+  def show_params
     params.require(:event_id)
   end
 
@@ -27,7 +37,7 @@ class Api::EventResourceController < Api::ResourceController
         host_id: host_relationship[:id],
         host_type: klass)
     else
-      host_relationship = params
+      event_relationship = params
         .require(:data).require(:relationships)
         .require(:event).require(:data).permit(:id)
 

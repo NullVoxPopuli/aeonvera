@@ -1,0 +1,3 @@
+class OrganizationSerializer < CommunitySerializer
+
+end

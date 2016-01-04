@@ -20,7 +20,8 @@ AeonVera::Application.routes.draw do
 
     # organizations / communties
     # TODO: finalize a name for these
-    resources :communities
+    resources :communities # public
+    resources :organizations # managing
 
     # per event
     # ideally this stuff would be nested under events

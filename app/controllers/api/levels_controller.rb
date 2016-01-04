@@ -9,7 +9,7 @@ class Api::LevelsController < Api::EventResourceController
   end
 
   def create_level_params
-    create_params_with(update_level_params)
+    create_params_with(update_level_params, host: false)
   end
 
 end
