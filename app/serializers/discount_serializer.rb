@@ -6,7 +6,7 @@ class DiscountSerializer < ActiveModel::Serializer
     :disabled,
     :applies_to,
     :host_id, :host_type,
-    :allowed_number_of_uses,
+    :allowed_number_of_uses, :requires_student_id,
     :times_used, :package_ids
 
     has_many :allowed_packages

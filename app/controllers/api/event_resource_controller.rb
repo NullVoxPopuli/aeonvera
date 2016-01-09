@@ -14,7 +14,7 @@ class Api::EventResourceController < Api::ResourceController
   private
 
   def index_params
-    params.require(:event_id)
+    params[:filter] ? params : params.require(:event_id)
   end
 
   def show_params

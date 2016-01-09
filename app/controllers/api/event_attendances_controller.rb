@@ -1,11 +1,11 @@
 class Api::EventAttendancesController < APIController
   include SkinnyControllers::Diet
   include EventLoader
-
-  before_action :set_event, only: [:show]
+  self.model_class = Attendance
 
   def index
     if params[:cancelled]
+      set_event
       @attendances = @event.cancelled_attendances
     else
       @attendances = model
@@ -16,8 +16,7 @@ class Api::EventAttendancesController < APIController
   end
 
   def show
-    @attendance = @event.attendances.find(params[:id])
-    render json: @attendance
+    render json: model
   end
 
 end

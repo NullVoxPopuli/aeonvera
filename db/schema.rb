@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151111175948) do
+ActiveRecord::Schema.define(version: 20160109151554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 20151111175948) do
     t.integer  "allowed_number_of_uses"
     t.string   "host_type",              limit: 255
     t.string   "discount_type",          limit: 255
+    t.boolean  "requires_student_id",                default: false
   end
 
   create_table "events", force: :cascade do |t|

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe HostedEvents::PaymentsController do
+describe PaymentsController do
 
 
   before(:each) do

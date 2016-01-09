@@ -5,6 +5,7 @@ class Event < ActiveRecord::Base
   include HasDomain
   include HasLogo
 
+  # aliases, cause I keep forgetting which is what
   belongs_to :hosted_by, class_name: "User"
   belongs_to :user, foreign_key: :hosted_by_id
 
@@ -210,6 +211,7 @@ class Event < ActiveRecord::Base
   end
 
   def is_accessible_to?(user)
+    return false unless user
     return true if self.hosted_by == user
     return true if user.attended_event_ids.include?(self.id)
     return true if user.collaborated_event_ids.include?(self.id)
