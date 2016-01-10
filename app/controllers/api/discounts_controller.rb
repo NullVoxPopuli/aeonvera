@@ -6,7 +6,7 @@ class Api::DiscountsController < Api::ResourceController
     params
       .require(:data)
       .require(:attributes)
-      .permit(:code, :amount, :kind)
+      .permit(:code, :amount, :kind, :requires_student_id)
   end
 
   def resource_params
