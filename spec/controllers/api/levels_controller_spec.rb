@@ -48,11 +48,12 @@ describe Api::LevelsController, type: :controller do
 
   context 'show' do
     it 'returns details about a level' do
-      event = create_event
+      force_login(user = create(:user))
+      event = create(:event, user: user)
       level = create(:level, event: event)
       create(:level, event: event)
 
-      get :show, id: level.id
+      get :show, id: level.id, event_id: event.id
       json = JSON.parse(response.body)
       data = json['data']
 

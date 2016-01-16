@@ -63,6 +63,32 @@ describe Api::UsersController, type: :controller do
         expect(user.errors).to be_empty
       }.to change(ActionMailer::Base.deliveries, :count).by(1)
     end
+
+    it 'does not create a user with the same email address' do
+      old_user = create_confirmed_user
+
+      user = build(:user, {
+        first_name: 'first2',
+        last_name: 'last2',
+        email: old_user.email,
+        time_zone: 'EST'
+      })
+
+      expect{
+        post :create, { user: user.attributes.merge(
+          password: 'whatever',
+          password_confirmation: 'whatever')
+        }
+      }.to change(User, :count).by(0)
+
+      expected = ActiveModel::SerializableResource.new(user).serializable_hash.to_json
+      # the difference here is the confirmation sent at...
+      # I don't know how to ignore that during the compare atm
+      json = JSON.parse(response.body)
+      errors = json['errors']
+      expect(errors).to be_present
+      expect(errors.first['detail']).to include('has already been taken')
+    end
   end
 
   context 'update' do
@@ -71,9 +97,8 @@ describe Api::UsersController, type: :controller do
       force_login(user)
 
       first = user.first_name + ' updated'
-      patch :update,  { id: user.id, user: { first_name: first } }
+      patch :update,  { id: user.id, user: { first_name: first, current_password: user.password } }
       json = JSON.parse(response.body)
-
       first_name_field = json['data']['attributes']['first_name']
 
       expect(first_name_field).to eq first

@@ -1,0 +1,19 @@
+require 'rails_helper'
+
+RSpec.describe Api::UpcomingEventsController, type: :controller do
+  before(:each) do
+    allow(controller).to receive(:current_user){ nil }
+    @event = create(:event)
+  end
+
+  context 'index' do
+    it 'does not require authentication' do
+      get :index
+
+      body = response.body
+      json = JSON.parse(body)
+      data = json['data']
+      expect(data.count).to eq 1
+    end
+  end
+end

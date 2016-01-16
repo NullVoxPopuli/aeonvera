@@ -1,7 +1,12 @@
-def login_as_confirmed_user(user = @user)
+def create_confirmed_user(user = @user)
   user ||= create(:user)
   user.confirmed_at = Time.now
   user.save
+  user
+end
+
+def login_as_confirmed_user(user = @user)
+  user ||= create_confirmed_user(user)
   login_as(user, scope: :user)
   @user = user
 end
