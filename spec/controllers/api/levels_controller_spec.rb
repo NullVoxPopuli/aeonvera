@@ -76,7 +76,7 @@ describe Api::LevelsController, type: :controller do
       expect(Level.find(level.id).name).to eq new_name
     end
 
-    it 'does not updates a level when access is denied' do
+    it 'does not updates a level when access is denied (due to another user owning the level)' do
       force_login(user = create(:user))
       event = create(:event, user: create(:user))
       level = create(:level, event: event)
@@ -86,6 +86,9 @@ describe Api::LevelsController, type: :controller do
 
       patch :update, json_api
 
+      json = JSON.parse(response.body)
+      errors = json['errors']
+      expect(errors).to be_present
       expect(Level.find(level.id).name).to eq level.name
     end
   end

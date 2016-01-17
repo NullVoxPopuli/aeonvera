@@ -37,4 +37,50 @@ RSpec.describe Api::PackagesController, type: :controller do
     end
   end
 
+  context 'update' do
+    it 'updates a package' do
+      force_login(user = create(:user))
+      event = create(:event, user: user)
+      package = create(:package, event: event)
+
+      new_name = package.name + ' updated'
+      json_api = {
+        id: package.id,
+        "data":{"
+          id":"#{package.id}",
+          "attributes":{
+            "name": new_name
+          },"type":"packages"}}
+
+      patch :update, json_api
+
+      json = JSON.parse(response.body)
+      data = json['data']
+      attributes = data['attributes']
+      expect(attributes['name']).to eq new_name
+      expect(Package.find(package.id).name).to eq new_name
+    end
+
+    it 'does not updates a package when access is denied (due to another user owning the level)' do
+      force_login(user = create(:user))
+      event = create(:event, user: create(:user))
+      package = create(:package, event: event)
+
+      new_name = package.name + ' updated'
+      json_api = {
+        id: package.id,
+        "data":{"
+          id":"#{package.id}",
+          "attributes":{
+            "name": new_name
+          },"type":"packages"}}
+      patch :update, json_api
+
+      json = JSON.parse(response.body)
+      errors = json['errors']
+      expect(errors).to be_present
+      expect(Package.find(package.id).name).to eq package.name
+    end
+  end
+
 end
