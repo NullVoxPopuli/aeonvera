@@ -1,16 +1,38 @@
-class Api::EventsController < APIController
-  include EventLoader
-  before_action :set_event, only: [:show, :index]
+class Api::EventsController < Api::ResourceController
 
   def index; show; end
+
   def show
-    render json: @event, each_serializer: EventSerializer
+    render json: model
+  end
+
+  def new
+    render json: model
   end
 
   private
 
-  def id
-    params[:event_id] || params[:id]
+  def update_event_params
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(
+        :name, :short_description, :domain,
+        :starts_at, :ends_at,
+        :mail_payments_end_at, :electronic_payments_end_at,
+        :refunds_end_at, :has_volunteers,
+        :volunteer_description,
+        :housing_status, :housing_nights,
+        :allow_discounts, :shirt_sales_end_at,
+        :show_at_the_door_prices_at, :allow_combined_discounts,
+        :location, :show_on_public_calendar,
+        :make_attendees_pay_fees, :accept_only_electronic_payments,
+        :logo,
+        :registration_email_disclaimer)
+  end
+
+  def create_event_params
+    update_event_params
   end
 
 end

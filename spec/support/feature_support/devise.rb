@@ -1,6 +1,6 @@
 def create_confirmed_user(user = @user)
   user ||= create(:user)
-  user.confirmed_at = Time.now
+  user.confirmed_at = 2.days.ago
   user.save
   user
 end
@@ -12,9 +12,7 @@ def login_as_confirmed_user(user = @user)
 end
 
 def login_through_api(user = @user)
-  user ||= create(:user)
-  user.confirmed_at = 2.days.ago
-  user.save
+  user ||= create_confirmed_user(user)
   @user = user
 
   # Authorization and Accept grabbed from Ember

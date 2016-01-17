@@ -5,7 +5,6 @@ class Api::EventResourceController < Api::ResourceController
     render json: model, include: params[:include]
   end
 
-
   def show
     model = operation_class.new(current_user, params, show_params).run
     render json: model, include: params[:include]
@@ -18,7 +17,7 @@ class Api::EventResourceController < Api::ResourceController
   end
 
   def show_params
-    params.require(:event_id)
+  #   params.require(:event_id)
   end
 
   def create_params_with(attributes, host: true)
