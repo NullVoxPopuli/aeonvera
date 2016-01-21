@@ -10,7 +10,7 @@ class Api::RafflesController < Api::EventResourceController
   end
 
   def create_raffle_params
-    create_params_with(update_raffle_params)
+    create_params_with(update_raffle_params, host: false)
   end
 
 end

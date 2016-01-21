@@ -11,7 +11,8 @@ class DiscountSerializer < ActiveModel::Serializer
 
     has_many :allowed_packages
 
-
+    belongs_to :host
+    
     def package_ids
       object.allowed_package_ids
     end

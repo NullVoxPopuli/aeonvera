@@ -9,8 +9,15 @@ class Api::DiscountsController < Api::ResourceController
       .permit(:code, :amount, :kind, :requires_student_id)
   end
 
+  def create_discount_params
+    attributes = update_discount_params
+    relationship = params
+      .require(:data).require(:relationships)
+      .require(:host).require(:data).permit(:id, :type)
+  end
+
   def resource_params
-    params[resource_singular_name].try(:permit,  [
+    params[:discount].try(:permit,  [
       :value, :name, :kind,
       :affects, :allowed_number_of_uses,
       restraints_attributes: [

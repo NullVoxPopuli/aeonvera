@@ -5,6 +5,8 @@ class LevelSerializer < ActiveModel::Serializer
     :number_of_leads, :number_of_follows,
     :requirement, :deleted_at
 
+    belongs_to :event
+
     def number_of_follows
       object.attendances.follows.count
     end
