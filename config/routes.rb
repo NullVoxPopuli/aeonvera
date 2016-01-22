@@ -41,6 +41,7 @@ AeonVera::Application.routes.draw do
     resources :levels
     resources :pricing_tiers
     resources :raffles
+    resources :raffle_tickets
     resources :custom_fields
     resources :chart_data
     get '/chart_infos/:id', to: 'chart_data#show'
