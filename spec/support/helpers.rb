@@ -69,3 +69,13 @@ end
 def root_test_domain
   APPLICATION_CONFIG[:domain][Rails.env]
 end
+
+def json_api_data
+  json = JSON.parse(response.body)
+  data = json['data']
+end
+
+def json_api_included
+  json = JSON.parse(response.body)
+  data = json['included']
+end

@@ -15,6 +15,11 @@ class Raffle < ActiveRecord::Base
 		build_participant_weights.sample
 	end
 
+  def choose_winner!
+    self.winner = choose_winner
+    save
+  end
+
 	def ticket_holders
 		self.event.attendances.participating_in_raffle(self.id)
 	end

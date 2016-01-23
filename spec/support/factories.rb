@@ -57,6 +57,19 @@ FactoryGirl.define do
     end
   end
 
+  factory :raffle do
+    name "Some Test Raffle"
+    event
+  end
+
+  factory :raffle_ticket, class: LineItem::RaffleTicket do
+    name "1 Ticket"
+    number_of_tickets 1
+    current_price 5
+    raffle
+    host factory: :event
+  end
+
   factory :housing_request do
     preferred_gender_to_house_with "Guys"
     need_transportation false
@@ -209,6 +222,9 @@ FactoryGirl.define do
 
   factory :organization_attendance, class: OrganizationAttendance do
 
+  end
+
+  factory(:attendance_line_item) do
   end
 
   factory :attendee, class: User do
