@@ -6,6 +6,31 @@ RSpec.describe Api::RafflesController, type: :controller do
     @event = create(:event, hosted_by: @user)
   end
 
+  context 'show' do
+    it 'includes the purchasers' do
+      raffle = create(:raffle, event: @event)
+      ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: {'number_of_tickets' => 1})
+      attendance = create(:attendance, event: @event)
+      create(:attendance_line_item,
+        attendance: attendance,
+        line_item: ticket_option,
+        quantity: 1,
+        line_item_type: ticket_option.class.name)
+
+      get :show, id: raffle.id, include: 'ticket_purchasers'
+
+      included = json_api_included
+
+      expect(included).to_not be_nil
+      expect(included.count).to be 1
+      attributes = included.first['attributes']
+
+      expect(attributes['attendance_id']).to eq attendance.id
+      expect(attributes['number_of_tickets_purchased']).to eq 1
+      expect(attributes['name']).to eq attendance.attendee_name
+    end
+  end
+
   context 'update' do
     context 'chooses a new winner' do
       before(:each) do

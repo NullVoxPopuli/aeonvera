@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Api::UpcomingEventsController, type: :controller do
   before(:each) do
     allow(controller).to receive(:current_user){ nil }
+    Event.destroy_all
     @event = create(:event)
   end
 

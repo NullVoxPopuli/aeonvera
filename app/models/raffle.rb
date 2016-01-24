@@ -1,15 +1,26 @@
 class Raffle < ActiveRecord::Base
   include SoftDeletable
 	belongs_to :event
+
 	has_many :raffle_tickets,
-		class_name: "LineItem::RaffleTicket",
+		class_name: LineItem::RaffleTicket.name,
 		foreign_key: "reference_id"
 	has_many :tickets,
-		class_name: "LineItem::RaffleTicket",
+		class_name: LineItem::RaffleTicket.name,
 		foreign_key: "reference_id"
+
+  has_many :ticket_purchases,
+    class_name: AttendanceLineItem.name,
+    through: :raffle_tickets,
+    source: :attendance_line_items
+
+  has_many :ticket_purchasers,
+    class_name: Attendance.name,
+    through: :raffle_tickets,
+    source: :purchasers
+
 	belongs_to :winner,
 		class_name: "Attendance"
-
 
 	def choose_winner
 		build_participant_weights.sample
