@@ -1,13 +1,8 @@
 class Api::OrderLineItemsController < APIController
-  # include EventLoader
-
-  # before_action :find_event_id
-  # before_action :sets_event
+  include SkinnyControllers::Diet
 
   def index
-    operation = Operations::OrderLineItem::Read.new(current_user, params)
-
-    render json: operation.run
+    render json: model, include: params[:include]
   end
 
   def show
