@@ -2,14 +2,6 @@ class Api::EventsController < Api::ResourceController
 
   def index; show; end
 
-  def show
-    render json: model
-  end
-
-  def new
-    render json: model
-  end
-
   private
 
   def update_event_params
