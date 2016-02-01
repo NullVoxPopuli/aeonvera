@@ -18,11 +18,15 @@ class EventSerializer < ActiveModel::Serializer
     :make_attendees_pay_fees,
     :registration_email_disclaimer,
     :logo_url_thumb, :logo_url_medium, :logo_url,
-    :url
+    :url, :has_stripe_integration
 
 
     belongs_to :opening_tier
     has_many :integrations
+
+    def has_stripe_integration
+      object.integrations[:stripe].present?
+    end
 
     def url
       object.url
