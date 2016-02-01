@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160130114728) do
+ActiveRecord::Schema.define(version: 20160109151554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -196,7 +196,6 @@ ActiveRecord::Schema.define(version: 20160130114728) do
     t.datetime "logo_updated_at"
     t.text     "registration_email_disclaimer"
     t.boolean  "legacy_housing",                              default: false, null: false
-    t.boolean  "ask_if_leading_or_following",                 default: true,  null: false
   end
 
   add_index "events", ["domain"], name: "index_events_on_domain", using: :btree
