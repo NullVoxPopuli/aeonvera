@@ -17,7 +17,8 @@ class Oauth::StripeController < OauthController
 
     flash[:notice] = "Stripe has been successfully connected. You may now begin taking payments."
     if @payable.is_a?(Event)
-      redirect_to hosted_event_payment_processors_path(@payable)
+      redirect_to "/events/#{@payable.id}/edit/payment-processors"
+      # redirect_to hosted_event_payment_processors_path(@payable)
     else
       redirect_to organization_payment_processors_path(@payable)
     end

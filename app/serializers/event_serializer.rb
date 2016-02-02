@@ -21,7 +21,8 @@ class EventSerializer < ActiveModel::Serializer
     :url, :has_stripe_integration
 
 
-    belongs_to :opening_tier
+    belongs_to :opening_tier, serializer: OpeningTierSerializer
+    has_many :pricing_tiers
     has_many :integrations
 
     def has_stripe_integration
