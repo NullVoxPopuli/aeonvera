@@ -2,9 +2,8 @@ class Api::OrganizationsController < APIController
   include SkinnyControllers::Diet
 
   def index
-    set_mine
-    # model = operation_class.new(current_user, params, index_params).run
-    render json: model, include: params[:include]
+    # TODO: add a `self.parent = :method` to SkinnyControllers
+    render json: current_user.organizations, include: params[:include]
   end
 
   def show
