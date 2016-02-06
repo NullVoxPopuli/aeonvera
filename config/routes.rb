@@ -12,16 +12,18 @@ AeonVera::Application.routes.draw do
       }
 
     # Various Event information / summaries
-    resources :registered_events
-    resources :upcoming_events
-    resources :hosted_events
-    resources :registerable_events
-    resources :event_summaries, only: [:show]
+    resources :registered_events # personally registured events for current user
+    resources :upcoming_events # public calendar
+    resources :hosted_events # TODO: Is this used?
+    resources :registerable_events # TODO: is this used?
+    resources :event_summaries, only: [:show] # overview
 
     # organizations / communties
     # TODO: finalize a name for these
     resources :communities # public
     resources :organizations # managing
+    resources :organization_summaries, only: [:show] # overview
+    resources :organization_attendances 
 
     # per event
     # ideally this stuff would be nested under events

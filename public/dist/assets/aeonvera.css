@@ -6267,6 +6267,12 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
   padding-top: 0px;
   text-align: left; }
 
+.padding-left-0 {
+  padding-left: 0px; }
+
+.margin-left-0 {
+  margin-left: 0px; }
+
 .padding-left-5 {
   padding-left: 5px; }
 
@@ -6290,6 +6296,12 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
 
 .margin-left-20 {
   margin-left: 20px; }
+
+.padding-right-0 {
+  padding-right: 0px; }
+
+.margin-right-0 {
+  margin-right: 0px; }
 
 .padding-right-5 {
   padding-right: 5px; }
@@ -6315,6 +6327,12 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
 .margin-right-20 {
   margin-right: 20px; }
 
+.padding-bottom-0 {
+  padding-bottom: 0px; }
+
+.margin-bottom-0 {
+  margin-bottom: 0px; }
+
 .padding-bottom-5 {
   padding-bottom: 5px; }
 
@@ -6338,6 +6356,12 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
 
 .margin-bottom-20 {
   margin-bottom: 20px; }
+
+.padding-top-0 {
+  padding-top: 0px; }
+
+.margin-top-0 {
+  margin-top: 0px; }
 
 .padding-top-5 {
   padding-top: 5px; }
@@ -6544,6 +6568,9 @@ body.with-small-footer .off-canvas-wrap, body.with-small-footer .inner-wrap {
 
 .alert-color {
   color: #f04124; }
+
+.white-color {
+  color: white; }
 
 .icon-thumbnail {
   font-size: 96px;

@@ -104,13 +104,23 @@ define('aeonvera/authorizers/application', ['exports', 'ember-simple-auth/author
 	exports['default'] = Devise['default'].extend();
 
 });
-define('aeonvera/blueprints/ember-cli-pickadate', ['exports', 'ember-cli-pickadate/blueprints/ember-cli-pickadate'], function (exports, ember_cli_pickadate) {
+define('aeonvera/components/attendance-link', ['exports', 'ember'], function (exports, Ember) {
 
-	'use strict';
+  'use strict';
 
+  exports['default'] = Ember['default'].Component.extend({
+    id: (function () {
+      return this.get('model.id');
+    }).property(),
 
+    name: (function () {
+      var model = this.get('model');
+      var aName = model.get('attendeeName');
+      var name = model.get('name');
 
-	exports['default'] = ember_cli_pickadate['default'];
+      return aName || name;
+    }).property()
+  });
 
 });
 define('aeonvera/components/attendance-list', ['exports', 'ember'], function (exports, Ember) {
@@ -129,7 +139,7 @@ define('aeonvera/components/attendance-list', ['exports', 'ember'], function (ex
   });
 
 });
-define('aeonvera/components/c3-chart', ['exports', 'ember-cli-c3/components/c3-chart'], function (exports, c3_chart) {
+define('aeonvera/components/c3-chart', ['exports', 'ember-c3/components/c3-chart'], function (exports, c3_chart) {
 
 	'use strict';
 
@@ -143,28 +153,6 @@ define('aeonvera/components/date-picker', ['exports', 'ember', 'ember-cli-datepi
 	'use strict';
 
 	exports['default'] = Datepicker['default'];
-
-});
-define('aeonvera/components/date-time-input', ['exports', 'ember'], function (exports, Ember) {
-
-  'use strict';
-
-  exports['default'] = Ember['default'].Component.extend({
-
-    timeOptions: (function () {
-      return {
-        // editable: true,
-      };
-    }).property(),
-
-    dateOptions: (function () {
-      return {
-        selectMonths: true,
-        selectYears: true
-      };
-    }).property()
-
-  });
 
 });
 define('aeonvera/components/delete-undelete', ['exports', 'ember'], function (exports, Ember) {
@@ -194,6 +182,17 @@ define('aeonvera/components/delete-undelete', ['exports', 'ember'], function (ex
   });
 
 });
+define('aeonvera/components/donate-to-aeonvera', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    initFoundation: (function () {
+      this.$(document).foundation('reflow');
+    }).on('didInsertElement')
+  });
+
+});
 define('aeonvera/components/error-field-wrapper', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -213,14 +212,54 @@ define('aeonvera/components/error-field-wrapper', ['exports', 'ember'], function
   });
 
 });
+define('aeonvera/components/event/custom-field/edit-form', ['exports', 'ember', 'aeonvera/mixins/components/edit-form'], function (exports, Ember, Form) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend(Form['default'], {
+    modelName: 'custom-field',
+    saveSuccessPath: 'events.show.custom-fields.show', // should be show?
+    cancelPath: 'events.show.custom-fields'
+  });
+
+});
 define('aeonvera/components/event/discount/edit-form', ['exports', 'ember', 'aeonvera/mixins/components/edit-form'], function (exports, Ember, Form) {
 
   'use strict';
 
   exports['default'] = Ember['default'].Component.extend(Form['default'], {
     modelName: 'discount',
-    saveSuccessPath: 'events.show.discounts.show',
-    cancelPath: 'events.show.discount'
+    saveSuccessPath: 'events.show.discounts.show', // should be show?
+    cancelPath: 'events.show.discounts',
+    parentAssociation: 'event',
+    parentId: 'event_id'
+  });
+
+});
+define('aeonvera/components/event/edit-raffle-ticket', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    isEditing: false,
+    actions: {
+      toggleEdit: function toggleEdit() {
+        this.set('isEditing', !this.get('isEditing'));
+      },
+
+      save: function save() {
+        var _this = this;
+
+        var model = this.get('model');
+
+        model.save().then(function (record) {
+          _this.get('flashMessages').success('Saved Successfully');
+          _this.set('isEditing', !_this.get('isEditing'));
+        }, function (failure) {
+          _this.get('flashMessages').alert('Saving failed. ' + failure);
+        });
+      }
+    }
   });
 
 });
@@ -230,8 +269,10 @@ define('aeonvera/components/event/level/edit-form', ['exports', 'ember', 'aeonve
 
   exports['default'] = Ember['default'].Component.extend(Form['default'], {
     modelName: 'level',
-    saveSuccessPath: 'events.show.levels.show',
-    cancelPath: 'events.show.levels'
+    saveSuccessPath: 'events.show.levels.show', // should be show?
+    cancelPath: 'events.show.levels',
+    parentAssociation: 'event',
+    parentId: 'event_id'
   });
 
 });
@@ -241,7 +282,7 @@ define('aeonvera/components/event/line-item/edit-form', ['exports', 'ember', 'ae
 
   exports['default'] = Ember['default'].Component.extend(Form['default'], {
     modelName: 'a-la-carte-item',
-    saveSuccessPath: 'events.show.a-la-carte-items.show',
+    saveSuccessPath: 'events.show.a-la-carte-items', // should be show?
     cancelPath: 'events.show.a-la-carte-items'
   });
 
@@ -252,7 +293,7 @@ define('aeonvera/components/event/package/edit-form', ['exports', 'ember', 'aeon
 
   exports['default'] = Ember['default'].Component.extend(Form['default'], {
     modelName: 'package',
-    saveSuccessPath: 'events.show.packages.show',
+    saveSuccessPath: 'events.show.packages', // should be show?
     cancelPath: 'events.show.packages'
   });
 
@@ -263,9 +304,22 @@ define('aeonvera/components/event/pricing-tier/edit-form', ['exports', 'ember', 
 
   exports['default'] = Ember['default'].Component.extend(Form['default'], {
     modelName: 'pricing-tier',
-    saveSuccessPath: 'events.show.pricing-tiers.show',
+    saveSuccessPath: 'events.show.pricing-tiers', // should be show?
     cancelPath: 'events.show.pricing-tiers'
 
+  });
+
+});
+define('aeonvera/components/event/raffle/edit-form', ['exports', 'ember', 'aeonvera/mixins/components/edit-form'], function (exports, Ember, Form) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend(Form['default'], {
+    modelName: 'raffle',
+    saveSuccessPath: 'events.show.raffles.show', // should be show?
+    cancelPath: 'events.show.raffles',
+    parentAssociation: 'event',
+    parentId: 'event_id'
   });
 
 });
@@ -357,6 +411,24 @@ define('aeonvera/components/event-at-the-door/checkin-list', ['exports', 'ember'
       }
     }
 
+  });
+
+});
+define('aeonvera/components/file-upload', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    url: '',
+
+    actions: {
+      fileLoaded: function fileLoaded(file) {
+        // readAs="readAsFile"
+        console.log(file.name, file.type, file.size);
+        // readAs="readAsArrayBuffer|readAsBinaryString|readAsDataURL|readAsText"
+        console.log(file.filename, file.type, file.data, file.size);
+      }
+    }
   });
 
 });
@@ -906,24 +978,6 @@ define('aeonvera/components/payment-status-badge', ['exports', 'ember'], functio
   });
 
 });
-define('aeonvera/components/pick-a-date', ['exports', 'ember-cli-pickadate/components/pick-a-date'], function (exports, pick_a_date) {
-
-	'use strict';
-
-
-
-	exports['default'] = pick_a_date['default'];
-
-});
-define('aeonvera/components/pick-a-time', ['exports', 'ember-cli-pickadate/components/pick-a-time'], function (exports, pick_a_time) {
-
-	'use strict';
-
-
-
-	exports['default'] = pick_a_time['default'];
-
-});
 define('aeonvera/components/pricing-preview', ['exports', 'ember'], function (exports, Ember) {
 
 	'use strict';
@@ -1084,6 +1138,15 @@ define('aeonvera/components/select-2', ['exports', 'ember-select-2/components/se
 		making it available to the dummy application!
 	 */
 	exports['default'] = Select2Component['default'];
+
+});
+define('aeonvera/components/sidebar/community-sidebar', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Component.extend({
+    community: Ember['default'].computed.alias('model')
+  });
 
 });
 define('aeonvera/components/sidebar/dashboard-sidebar', ['exports', 'ember'], function (exports, Ember) {
@@ -1696,6 +1759,55 @@ define('aeonvera/controllers/events/index', ['exports', 'ember'], function (expo
   });
 
 });
+define('aeonvera/controllers/events/show/edit', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    saveSuccessPath: 'events.show.manage',
+    cancelPath: 'events.show.manage',
+    modelName: 'event',
+
+    isDirty: (function () {
+      return !this.get('model.hasDirtyAttributes');
+    }).property('model.hasDirtyAttributes'),
+
+    submitTitle: (function () {
+      if (this.get('isDirty')) {
+        return 'Cannot save when there have been no changes';
+      } else {
+        return 'Save Changes';
+      }
+    }).property('isDirty'),
+
+    actions: {
+      save: function save() {
+        var _this = this;
+
+        var model = this.get('model');
+
+        model.save().then(function (record) {
+          _this.get('flashMessages').success('Saved Successfully');
+          var path = _this.get('saveSuccessPath');
+          //let params = {};
+          //params[this.get('modelNameId')] = record.get('id');
+
+          _this.transitionToRoute(path, record.get('id'));
+        }, function (failure) {
+          _this.get('flashMessages').alert('Saving failed. ' + failure);
+        });
+      },
+
+      cancel: function cancel() {
+        var path = this.get('cancelPath');
+
+        this.get('model').rollbackAttributes();
+        this.transitionToRoute(path);
+      }
+    }
+  });
+
+});
 define('aeonvera/controllers/events/show/pricing-tiers/index', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -1711,6 +1823,28 @@ define('aeonvera/controllers/events/show/pricing-tiers/index', ['exports', 'embe
     sortProperties: ['isOpeningTier:desc', 'registrantsAlias:asc', 'increaseAfterDate:asc'],
     sortedTiers: Ember['default'].computed.sort('model', 'sortProperties')
 
+  });
+
+});
+define('aeonvera/controllers/events/show/raffles/show/index', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    actions: {
+      chooseWinner: function chooseWinner() {
+        var _this = this;
+
+        var model = this.get('model');
+        model.set('chooseNewWinner', true);
+        model.save().then(function (record) {
+          _this.get('flashMessages').success('A new winner has been randomly chosen.');
+        }, function (failure) {
+          _this.get('flashMessages').alert('Choosing a new winner failed. ' + failure);
+        });
+      }
+
+    }
   });
 
 });
@@ -1816,6 +1950,16 @@ define('aeonvera/controllers/events/show/revenue', ['exports', 'ember'], functio
         console.log(time);
       }
     }
+  });
+
+});
+define('aeonvera/controllers/my-communities/manage', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Controller.extend({
+    sidebar: null,
+    data: null
   });
 
 });
@@ -2438,6 +2582,7 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
 
   exports['default'] = {
     appname: 'ÆONVERA',
+    domain: 'aeonvera.com',
     holdingcompany: 'Precognition, LLC',
     subheader: 'Event registration designed for dancers.',
     lookingforevent: 'Looking for an event?',
@@ -2476,7 +2621,7 @@ define('aeonvera/locales/en/translations', ['exports'], function (exports) {
     tos: 'Terms of Service',
     privacy: 'Privacy',
     submitideas: 'Submit Ideas',
-    copyright: 'Copyright © 2013-2015 Precognition LLC',
+    copyright: 'Copyright © 2013-2016 Precognition LLC',
 
     formoreinfo: 'For more information: ',
 
@@ -2585,18 +2730,46 @@ define('aeonvera/mixins/components/edit-form', ['exports', 'ember'], function (e
       }
     }).property('isDirty'),
 
+    parentModelId: (function () {
+
+      var passedParent = this.get('parent');
+      if (!Ember['default'].isPresent(passedParent)) {
+        console.log('parent not passed in, moving on...');
+      } else {
+        return passedParent.get('id');
+      }
+
+      var association = this.get('parentAssociation');
+
+      if (!Ember['default'].isPresent(association)) {
+        console.log('association not found');
+      }
+
+      var parent = this.get('model').get(association);
+
+      if (!Ember['default'].isPresent(parent)) {
+        console.log('parent not found');
+      }
+
+      if (Ember['default'].isPresent(parent)) {
+        return parent.get('id');
+      }
+
+      return '';
+    }).property('model'),
+
     actions: {
       save: function save() {
         var _this = this;
 
         var model = this.get('model');
+
         model.save().then(function (record) {
           _this.get('flashMessages').success('Saved Successfully');
           var path = _this.get('saveSuccessPath');
-          var params = {};
-          params[_this.get('modelNameId')] = record.get('id');
-
-          _this.get('router').transitionTo(path, params);
+          var parentId = _this.get('parentModelId');
+          var recordId = record.get('id');
+          _this.get('router').transitionTo(path, parentId, recordId);
         }, function (failure) {
           _this.get('flashMessages').alert('Saving failed. ' + failure);
         });
@@ -2771,12 +2944,18 @@ define('aeonvera/mixins/routes/crud/events/index', ['exports', 'ember'], functio
   'use strict';
 
   exports['default'] = Ember['default'].Mixin.create({
+    parentIdKey: 'event_id',
+    parentPathRoot: 'events.show',
+
     model: function model() {
       var modelName = this.get('modelName');
-      var event = this.modelFor('events.show');
-      return this.store.query(modelName, {
-        event_id: event.get('id')
-      });
+      var parentPathRoot = this.get('parentPathRoot');
+      var parent = this.modelFor(parentPathRoot);
+      var query = {};
+      var key = this.get('parentIdKey');
+      query[key] = parent.get('id');
+
+      return this.store.query(modelName, query);
     }
   });
 
@@ -2789,9 +2968,16 @@ define('aeonvera/mixins/routes/crud/events/new', ['exports', 'ember'], function 
     model: function model(params) {
       var modelName = this.get('modelName');
       var event = this.modelFor('events.show');
-      return this.store.createRecord(modelName, {
-        event: event
-      });
+      var isPolymorphicHost = this.get('isPolymorphicHost');
+      // might need to do something for non event hosts?
+      // idk how generic I want to get with this
+      var key = Ember['default'].isPresent(isPolymorphicHost) ? 'host' : 'event';
+      var modelParams = {};
+      modelParams[key] = event;
+
+      var recordPromise = this.store.createRecord(modelName, modelParams);
+
+      return recordPromise;
     }
   });
 
@@ -2801,9 +2987,11 @@ define('aeonvera/mixins/routes/crud/events/show/edit', ['exports', 'ember'], fun
   'use strict';
 
   exports['default'] = Ember['default'].Mixin.create({
+    parentPathRoot: 'events.show',
+
     model: function model() {
       var modelName = this.get('modelName');
-      var path = 'events.show.' + modelName + 's.show';
+      var path = this.get('parentPathRoot') + '.' + modelName + 's.show';
       var obj = this.modelFor(path);
       return obj;
     },
@@ -2832,14 +3020,12 @@ define('aeonvera/mixins/routes/crud/events/show/index', ['exports', 'ember'], fu
   'use strict';
 
   exports['default'] = Ember['default'].Mixin.create({
-    model: function model() {
+    parentPathRoot: 'events.show',
+    model: function model(params) {
       var modelName = this.get('modelName');
-      var path = 'events.show.' + modelName + 's.show';
-
+      var path = this.get('parentPathRoot') + '.' + modelName + 's.show';
+      // let path = 'events.show.' + modelName + 's.show';
       var obj = this.modelFor(path);
-      // this.store.query('event-attendance', {
-      //   level_id: level.get('id')
-      // });
       return obj;
     }
   });
@@ -2850,10 +3036,30 @@ define('aeonvera/mixins/routes/crud/events/show', ['exports', 'ember'], function
   'use strict';
 
   exports['default'] = Ember['default'].Mixin.create({
+    parentPath: 'events.show',
+    parentIdName: 'event_id',
+    include: '',
+
     model: function model(params) {
       var modelName = this.get('modelName');
       var idName = modelName.underscore() + '_id';
-      return this.store.findRecord(modelName, params[idName]);
+      var parentPath = this.get('parentPath');
+      var parent = this.modelFor(parentPath);
+      var query = {};
+      var parentIdName = this.get('parentIdName');
+      var include = this.get('include');
+      query[parentIdName] = parent.get('id');
+
+      if (Ember['default'].isPresent(include)) {
+        query['include'] = include;
+      }
+
+      var record = this.store.findRecord(modelName, params[idName], {
+        adapterOptions: {
+          query: query
+        }
+      });
+      return record;
     }
   });
 
@@ -2899,12 +3105,11 @@ define('aeonvera/models/chart', ['exports', 'ember-data'], function (exports, DS
   });
 
 });
-define('aeonvera/models/community', ['exports', 'ember-data'], function (exports, DS) {
+define('aeonvera/models/community', ['exports', 'ember-data', 'aeonvera/models/host'], function (exports, DS, Host) {
 
   'use strict';
 
-  exports['default'] = DS['default'].Model.extend({
-    name: DS['default'].attr('string'),
+  exports['default'] = Host['default'].extend({
     tagline: DS['default'].attr('string'),
 
     city: DS['default'].attr('string'),
@@ -3002,8 +3207,9 @@ define('aeonvera/models/custom-field', ['exports', 'ember', 'ember-data'], funct
     defaultValue: DS['default'].attr('string'),
     editable: DS['default'].attr('boolean'),
 
-    event: DS['default'].belongsTo('event'),
-    host: DS['default'].belongsTo('host', { polymorphic: true })
+    host: DS['default'].belongsTo('host', {
+      polymorphic: true
+    })
 
   });
 
@@ -3021,6 +3227,7 @@ define('aeonvera/models/discount', ['exports', 'ember', 'ember-data', 'aeonvera/
     amount: DS['default'].attr('string'),
     kind: DS['default'].attr('number'),
     timesUsed: DS['default'].attr('number'),
+    requiresStudentId: DS['default'].attr('boolean'),
 
     discountType: DS['default'].attr('string'),
     appliesTo: DS['default'].attr('string'),
@@ -3146,6 +3353,7 @@ define('aeonvera/models/event', ['exports', 'ember-data', 'aeonvera/models/host'
 		url: DS['default'].attr('string'),
 
 		integrations: DS['default'].hasMany('integration'),
+		hasStripeIntegration: DS['default'].attr('boolean'),
 
 		packages: DS['default'].hasMany('package', {
 			async: true
@@ -3157,7 +3365,7 @@ define('aeonvera/models/event', ['exports', 'ember-data', 'aeonvera/models/host'
 			async: true
 		}),
 		openingTier: DS['default'].belongsTo('openingTier', {
-			async: false
+			async: true
 		}),
 
 		registrationOpensAt: (function () {
@@ -3187,6 +3395,7 @@ define('aeonvera/models/host', ['exports', 'ember-data'], function (exports, DS)
 
   exports['default'] = DS['default'].Model.extend({
     name: DS['default'].attr('string'),
+    domain: DS['default'].attr('string'),
 
     type: (function () {
       return this.constructor.modelName;
@@ -3291,7 +3500,25 @@ define('aeonvera/models/level', ['exports', 'ember-data', 'aeonvera/mixins/model
 
     eventAttendances: DS['default'].hasMany('event-attendance', {
       async: true
-    })
+    }),
+
+    requirementName: (function () {
+      var requirement = this.get('requirement');
+
+      if (requirement === 0) {
+        return 'No Restriction';
+      }
+
+      if (requirement === 1) {
+        return 'Audition';
+      }
+
+      if (requirement === 2) {
+        return 'Be Invited';
+      }
+
+      return '';
+    }).property('requirement')
   });
 
 });
@@ -3324,7 +3551,9 @@ define('aeonvera/models/line-item', ['exports', 'ember-data', 'aeonvera/mixins/m
     event: DS['default'].belongsTo('event'),
     host: DS['default'].belongsTo('host', {
       polymorphic: true
-    })
+    }),
+
+    attendances: DS['default'].hasMany('attendance')
 
   });
 
@@ -3500,6 +3729,37 @@ define('aeonvera/models/order', ['exports', 'ember-data'], function (exports, DS
   });
 
 });
+define('aeonvera/models/organization-summary', ['exports', 'ember-data'], function (exports, DS) {
+
+  'use strict';
+
+  exports['default'] = DS['default'].Model.extend({
+    revenuePastMonth: DS['default'].attr('number'),
+    unpaidPastMonth: DS['default'].attr('number'),
+    newMembershipsPastMonth: DS['default'].attr('number'),
+    netReceivedPastMonth: DS['default'].attr('string'),
+
+    // attendances: DS.hasMany('organizationAttendances', {
+    //   async: false
+    // }),
+
+    organization: DS['default'].belongsTo('organization', {
+      async: true
+    }),
+
+    recentRegistrations: (function () {
+      return this.get('attendances');
+    }).property('attendances')
+  });
+
+});
+define('aeonvera/models/organization', ['exports', 'ember-data', 'aeonvera/models/community'], function (exports, DS, Community) {
+
+	'use strict';
+
+	exports['default'] = Community['default'].extend({});
+
+});
 define('aeonvera/models/package', ['exports', 'ember', 'ember-data'], function (exports, Ember, DS) {
 
   'use strict';
@@ -3557,6 +3817,17 @@ define('aeonvera/models/pricing-tier', ['exports', 'ember', 'ember-data', 'aeonv
   });
 
 });
+define('aeonvera/models/raffle-ticket-purchaser', ['exports', 'ember', 'ember-data'], function (exports, Ember, DS) {
+
+  'use strict';
+
+  exports['default'] = DS['default'].Model.extend({
+    name: DS['default'].attr('string'),
+    attendanceId: DS['default'].attr('number'),
+    numberOfTicketsPurchased: DS['default'].attr('number')
+  });
+
+});
 define('aeonvera/models/raffle-ticket', ['exports', 'ember-data', 'aeonvera/models/line-item'], function (exports, DS, LineItem) {
 
   'use strict';
@@ -3576,9 +3847,15 @@ define('aeonvera/models/raffle', ['exports', 'ember', 'ember-data'], function (e
     numberOfPurchasedTickets: DS['default'].attr('number'),
     winner: DS['default'].attr('string'),
     winnerHasBeenChosen: DS['default'].attr('boolean'),
+    /* client side property only that tells the server to
+       randomly choose a new winner */
+    chooseNewWinner: DS['default'].attr('boolean'),
 
     event: DS['default'].belongsTo('event'),
-    availableTickets: DS['default'].hasMany('raffle-tickets')
+    raffleTickets: DS['default'].hasMany('raffle-tickets'),
+    ticketPurchasers: DS['default'].hasMany('raffle-ticket-purchaser', {
+      async: false
+    })
 
   });
 
@@ -3757,6 +4034,7 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
     this.route('logout');
     this.route('login');
     this.route('signup');
+    this.route('donation-thankyou');
     this.route('password-reset', function () {
       this.route('success');
     });
@@ -3810,6 +4088,52 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
     this.route('dashboard', {
       path: '/'
     }, function () {
+      this.route('my-communities', {
+        resetNamespace: true
+      }, function () {
+        this.route('manage', {
+          path: '/manage/:organization_id'
+        }, function () {
+          this.route('edit');
+          this.route('dances', function () {
+            this.route('new');
+            this.route('show', {
+              path: ':dance_id'
+            }, function () {
+              this.route('edit');
+            });
+          });
+          this.route('lessons', function () {
+            this.route('new');
+            this.route('show', {
+              path: ':lesson_id'
+            }, function () {
+              this.route('edit');
+            });
+          });
+          this.route('reports');
+          this.route('officers');
+          this.route('membership', function () {
+            this.route('discounts', function () {
+              this.route('new');
+              this.route('show', {
+                path: ':discount_id'
+              }, function () {
+                this.route('edit');
+              });
+            });
+            this.route('membership-options', function () {
+              this.route('new');
+              this.route('show', {
+                path: ':membership_option_id'
+              }, function () {
+                this.route('edit');
+              });
+            });
+          });
+        });
+      });
+
       this.route('hosted-events');
       this.route('registered-events');
       this.route('orders');
@@ -3905,6 +4229,12 @@ define('aeonvera/router', ['exports', 'ember', 'aeonvera/config/environment'], f
               path: ':raffle_id'
             }, function () {
               this.route('edit');
+              this.route('raffle-tickets', function () {
+                this.route('new');
+                this.route('show', {
+                  path: ':raffle_ticket_id'
+                });
+              });
             });
           });
           this.route('custom-fields', function () {
@@ -4372,7 +4702,8 @@ define('aeonvera/routes/events/show/custom-fields/new', ['exports', 'ember', 'ae
   'use strict';
 
   exports['default'] = Ember['default'].Route.extend(New['default'], {
-    modelName: 'custom-field'
+    modelName: 'custom-field',
+    isPolymorphicHost: true
   });
 
 });
@@ -4455,6 +4786,17 @@ define('aeonvera/routes/events/show/edit/index', ['exports', 'ember'], function 
 	exports['default'] = Ember['default'].Route.extend({});
 
 });
+define('aeonvera/routes/events/show/edit/payment-processors', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    model: function model() {
+      return this.modelFor('events.show');
+    }
+  });
+
+});
 define('aeonvera/routes/events/show/edit', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
@@ -4462,8 +4804,9 @@ define('aeonvera/routes/events/show/edit', ['exports', 'ember'], function (expor
   exports['default'] = Ember['default'].Route.extend({
 
     model: function model() {
-      var eventSummary = this.modelFor('events.show');
-      return this.store.find('event', eventSummary.get('id'));
+      var eventModel = this.modelFor('events.show');
+      return eventModel;
+      //return this.store.find('event', eventSummary.get('id'));
     }
   });
 
@@ -4675,16 +5018,129 @@ define('aeonvera/routes/events/show/pricing-tiers/show', ['exports', 'ember', 'a
   });
 
 });
-define('aeonvera/routes/events/show/raffles/index', ['exports', 'ember'], function (exports, Ember) {
+define('aeonvera/routes/events/show/raffles/index', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/index'], function (exports, Ember, Index) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(Index['default'], {
+    modelName: 'raffle'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/new', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/new'], function (exports, Ember, New) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(New['default'], {
+    modelName: 'raffle'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/edit', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/show/edit'], function (exports, Ember, ShowEdit) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(ShowEdit['default'], {
+    modelName: 'raffle'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/index', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/show/index'], function (exports, Ember, ShowIndex) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(ShowIndex['default'], {
+    modelName: 'raffle'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/raffle-tickets/index', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/index'], function (exports, Ember, Index) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(Index['default'], {
+    modelName: 'raffle-ticket',
+    parentIdKey: 'raffle_id',
+    parentPathRoot: 'events.show.raffles.show'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/raffle-tickets/new', ['exports', 'ember'], function (exports, Ember) {
 
   'use strict';
 
   exports['default'] = Ember['default'].Route.extend({
+    modelName: 'raffle-ticket',
 
-    model: function model() {
-      var event = this.modelFor('events.show');
-      return this.store.query('raffle', { event_id: event.get('id') });
+    model: function model(params) {
+      var modelName = this.get('modelName');
+      var raffle = this.modelFor('events.show.raffles.show');
+
+      var parentKey = 'raffle';
+      var modelParams = {};
+      modelParams[parentKey] = raffle;
+
+      var recordPromise = this.store.createRecord(modelName, modelParams);
+
+      return recordPromise;
     }
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/raffle-tickets/show/edit', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/show/edit'], function (exports, Ember, ShowEdit) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(ShowEdit['default'], {
+    modelName: 'raffle-ticket',
+    parentPathRoot: 'events.show.raffles.show'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/raffle-tickets/show/index', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/show/index'], function (exports, Ember, ShowIndex) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(ShowIndex['default'], {
+    modelName: 'raffle-ticket',
+    parentPathRoot: 'events.show.raffles.show'
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show/raffle-tickets/show', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    idName: 'raffle_ticket_id',
+    modelName: 'raffle-ticket',
+
+    model: function model(params) {
+      var raffle = this.modelFor('events.show.raffles.show');
+      var idName = this.get('idName');
+      var modelName = this.get('modelName');
+
+      var record = this.store.findRecord(modelName, params[idName], {
+        adapterOptions: {
+          query: {
+            raffle_id: raffle.get('id'),
+            include: 'attendances'
+          }
+        }
+      });
+
+      return record;
+    }
+  });
+
+});
+define('aeonvera/routes/events/show/raffles/show', ['exports', 'ember', 'aeonvera/mixins/routes/crud/events/show'], function (exports, Ember, Show) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend(Show['default'], {
+    modelName: 'raffle',
+    include: 'ticket_purchasers'
   });
 
 });
@@ -4842,7 +5298,13 @@ define('aeonvera/routes/events/show', ['exports', 'ember'], function (exports, E
     },
 
     model: function model(params) {
-      return this.store.findRecord('event', params.event_id);
+      return this.store.findRecord('event', params.event_id, {
+        adapterOptions: {
+          query: {
+            'include': 'opening_tier'
+          }
+        }
+      });
     }
   });
 
@@ -4898,6 +5360,50 @@ define('aeonvera/routes/logout', ['exports', 'ember'], function (exports, Ember)
     redirect: function redirect() {
       localStorage.clear();
       this.transitionTo('welcome');
+    }
+  });
+
+});
+define('aeonvera/routes/my-communities/index', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+
+    model: function model() {
+      return this.store.query('organization', {
+        mine: true
+      });
+    }
+  });
+
+});
+define('aeonvera/routes/my-communities/manage', ['exports', 'ember'], function (exports, Ember) {
+
+  'use strict';
+
+  exports['default'] = Ember['default'].Route.extend({
+    renderTemplate: function renderTemplate() {
+      this.render('my-communities/manage', {
+        into: 'application'
+      });
+    },
+
+    afterModel: function afterModel(model /*, transition */) {
+      this._super();
+
+      this.set('title', model.get('name'));
+
+      var self = this;
+      Ember['default'].run.later(function () {
+        var dashboard = self.controllerFor('my-communities/manage');
+        dashboard.set('data', model);
+      });
+    },
+
+    model: function model(params) {
+      var id = params.organization_id;
+      return this.store.findRecord('organization-summary', id);
     }
   });
 
@@ -5241,17 +5747,17 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 452
+              "column": 474
             },
             "end": {
               "line": 1,
-              "column": 574
+              "column": 596
             }
           },
           "moduleName": "aeonvera/templates/application.hbs"
@@ -5274,7 +5780,7 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
           return morphs;
         },
         statements: [
-          ["inline","flash-message",[],["flash",["subexpr","@mut",[["get","flash",["loc",[null,[1,514],[1,519]]]]],[],[]],"messageStyle","foundation","classNames","flash-message"],["loc",[null,[1,492],[1,574]]]]
+          ["inline","flash-message",[],["flash",["subexpr","@mut",[["get","flash",["loc",[null,[1,536],[1,541]]]]],[],[]],"messageStyle","foundation","classNames","flash-message"],["loc",[null,[1,514],[1,596]]]]
         ],
         locals: ["flash"],
         templates: []
@@ -5282,8 +5788,10 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -5292,7 +5800,7 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 678
+            "column": 700
           }
         },
         "moduleName": "aeonvera/templates/application.hbs"
@@ -5306,6 +5814,8 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"data-offcanvas","true");
         dom.setAttribute(el1,"class","off-canvas-wrap");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
         var el2 = dom.createComment("");
@@ -5348,21 +5858,22 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [0]);
-        var element1 = dom.childAt(element0, [5]);
+        var element1 = dom.childAt(element0, [6]);
         var element2 = dom.childAt(element1, [3, 0]);
         var element3 = dom.childAt(element2, [0]);
-        var morphs = new Array(11);
+        var morphs = new Array(12);
         morphs[0] = dom.createMorphAt(element0,0,0);
         morphs[1] = dom.createMorphAt(element0,1,1);
         morphs[2] = dom.createMorphAt(element0,2,2);
         morphs[3] = dom.createMorphAt(element0,3,3);
         morphs[4] = dom.createMorphAt(element0,4,4);
-        morphs[5] = dom.createMorphAt(element1,1,1);
-        morphs[6] = dom.createMorphAt(element1,2,2);
-        morphs[7] = dom.createMorphAt(element3,0,0);
-        morphs[8] = dom.createMorphAt(element3,1,1);
-        morphs[9] = dom.createMorphAt(element2,1,1);
-        morphs[10] = dom.createMorphAt(element1,4,4);
+        morphs[5] = dom.createMorphAt(element0,5,5);
+        morphs[6] = dom.createMorphAt(element1,1,1);
+        morphs[7] = dom.createMorphAt(element1,2,2);
+        morphs[8] = dom.createMorphAt(element3,0,0);
+        morphs[9] = dom.createMorphAt(element3,1,1);
+        morphs[10] = dom.createMorphAt(element2,1,1);
+        morphs[11] = dom.createMorphAt(element1,4,4);
         return morphs;
       },
       statements: [
@@ -5371,12 +5882,13 @@ define('aeonvera/templates/application', ['exports'], function (exports) {
         ["content","login-modal",["loc",[null,[1,135],[1,150]]]],
         ["content","login-help-modal",["loc",[null,[1,150],[1,170]]]],
         ["inline","sign-up-modal",[],["action","registerNewUser","model",["subexpr","@mut",[["get","user",["loc",[null,[1,217],[1,221]]]]],[],[]]],["loc",[null,[1,170],[1,223]]]],
-        ["inline","nav/left-off-canvas-menu",[],["items",["subexpr","@mut",[["get","mobileMenuLeft",["loc",[null,[1,311],[1,325]]]]],[],[]]],["loc",[null,[1,278],[1,327]]]],
-        ["inline","nav/right-off-canvas-menu",[],["items",["subexpr","@mut",[["get","mobileMenuRight",["loc",[null,[1,361],[1,376]]]]],[],[]]],["loc",[null,[1,327],[1,378]]]],
-        ["block","each",[["get","flashMessages.queue",["loc",[null,[1,460],[1,479]]]]],[],0,null,["loc",[null,[1,452],[1,583]]]],
-        ["content","outlet",["loc",[null,[1,583],[1,593]]]],
-        ["inline","outlet",["bottom-footer"],[],["loc",[null,[1,599],[1,625]]]],
-        ["inline","outlet",["fixed-footer"],[],["loc",[null,[1,641],[1,666]]]]
+        ["content","donate-to-aeonvera",["loc",[null,[1,223],[1,245]]]],
+        ["inline","nav/left-off-canvas-menu",[],["items",["subexpr","@mut",[["get","mobileMenuLeft",["loc",[null,[1,333],[1,347]]]]],[],[]]],["loc",[null,[1,300],[1,349]]]],
+        ["inline","nav/right-off-canvas-menu",[],["items",["subexpr","@mut",[["get","mobileMenuRight",["loc",[null,[1,383],[1,398]]]]],[],[]]],["loc",[null,[1,349],[1,400]]]],
+        ["block","each",[["get","flashMessages.queue",["loc",[null,[1,482],[1,501]]]]],[],0,null,["loc",[null,[1,474],[1,605]]]],
+        ["content","outlet",["loc",[null,[1,605],[1,615]]]],
+        ["inline","outlet",["bottom-footer"],[],["loc",[null,[1,621],[1,647]]]],
+        ["inline","outlet",["fixed-footer"],[],["loc",[null,[1,663],[1,688]]]]
       ],
       locals: [],
       templates: [child0]
@@ -5393,8 +5905,8 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -5436,8 +5948,8 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
       var child1 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -5477,8 +5989,8 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -5544,8 +6056,13 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -5602,6 +6119,101 @@ define('aeonvera/templates/communities', ['exports'], function (exports) {
   }()));
 
 });
+define('aeonvera/templates/components/attendance-link', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 69
+            }
+          },
+          "moduleName": "aeonvera/templates/components/attendance-link.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+          return morphs;
+        },
+        statements: [
+          ["content","name",["loc",[null,[1,54],[1,62]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 81
+          }
+        },
+        "moduleName": "aeonvera/templates/components/attendance-link.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["events.show.registrations.show",["get","id",["loc",[null,[1,44],[1,46]]]]],[],0,null,["loc",[null,[1,0],[1,81]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/attendance-list', ['exports'], function (exports) {
 
   'use strict';
@@ -5612,8 +6224,8 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
         var child0 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -5653,8 +6265,8 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -5727,8 +6339,8 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -5768,8 +6380,10 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -5840,66 +6454,6 @@ define('aeonvera/templates/components/attendance-list', ['exports'], function (e
   }()));
 
 });
-define('aeonvera/templates/components/date-time-input', ['exports'], function (exports) {
-
-  'use strict';
-
-  exports['default'] = Ember.HTMLBars.template((function() {
-    return {
-      meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
-        "loc": {
-          "source": null,
-          "start": {
-            "line": 1,
-            "column": 0
-          },
-          "end": {
-            "line": 1,
-            "column": 311
-          }
-        },
-        "moduleName": "aeonvera/templates/components/date-time-input.hbs"
-      },
-      isEmpty: false,
-      arity: 0,
-      cachedFragment: null,
-      hasRendered: false,
-      buildFragment: function buildFragment(dom) {
-        var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","row");
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","small-6 columns");
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","small-6 columns");
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        dom.appendChild(el0, el1);
-        return el0;
-      },
-      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element0 = dom.childAt(fragment, [0]);
-        var morphs = new Array(2);
-        morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
-        morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
-        return morphs;
-      },
-      statements: [
-        ["inline","pick-a-date",[],["date",["subexpr","readonly",[["get","value",["loc",[null,[1,75],[1,80]]]]],[],["loc",[null,[1,65],[1,81]]]],"nulls-date",true,"on-selected",["subexpr","action",[["subexpr","mut",[["get","value",["loc",[null,[1,123],[1,128]]]]],[],["loc",[null,[1,118],[1,129]]]]],[],["loc",[null,[1,110],[1,130]]]],"options",["subexpr","readonly",[["get","dateOptions",["loc",[null,[1,149],[1,160]]]]],[],["loc",[null,[1,139],[1,161]]]]],["loc",[null,[1,46],[1,163]]]],
-        ["inline","pick-a-time",[],["date",["subexpr","readonly",[["get","value",["loc",[null,[1,227],[1,232]]]]],[],["loc",[null,[1,217],[1,233]]]],"on-selected",["subexpr","action",[["subexpr","mut",[["get","value",["loc",[null,[1,259],[1,264]]]]],[],["loc",[null,[1,254],[1,265]]]]],[],["loc",[null,[1,246],[1,266]]]],"options",["subexpr","readonly",[["get","timeOptions",["loc",[null,[1,285],[1,296]]]]],[],["loc",[null,[1,275],[1,297]]]]],["loc",[null,[1,198],[1,299]]]]
-      ],
-      locals: [],
-      templates: []
-    };
-  }()));
-
-});
 define('aeonvera/templates/components/delete-undelete', ['exports'], function (exports) {
 
   'use strict';
@@ -5908,8 +6462,13 @@ define('aeonvera/templates/components/delete-undelete', ['exports'], function (e
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": {
+            "name": "modifiers",
+            "modifiers": [
+              "action"
+            ]
+          },
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -5952,8 +6511,8 @@ define('aeonvera/templates/components/delete-undelete', ['exports'], function (e
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -5995,8 +6554,13 @@ define('aeonvera/templates/components/delete-undelete', ['exports'], function (e
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -6036,6 +6600,209 @@ define('aeonvera/templates/components/delete-undelete', ['exports'], function (e
   }()));
 
 });
+define('aeonvera/templates/components/donate-to-aeonvera', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": {
+            "name": "missing-wrapper",
+            "problems": [
+              "multiple-nodes"
+            ]
+          },
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 1848
+            }
+          },
+          "moduleName": "aeonvera/templates/components/donate-to-aeonvera.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("ul");
+          dom.setAttribute(el1,"data-accordion","true");
+          dom.setAttribute(el1,"class","no-margins accordion");
+          var el2 = dom.createElement("li");
+          dom.setAttribute(el2,"class","accordion-navigation");
+          var el3 = dom.createElement("a");
+          dom.setAttribute(el3,"href","#donate-why");
+          var el4 = dom.createTextNode("Why am I taking donations?");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("div");
+          dom.setAttribute(el3,"id","donate-why");
+          dom.setAttribute(el3,"class","content");
+          var el4 = dom.createElement("span");
+          var el5 = dom.createTextNode("Programming is a lot of work, and while there is a small fee attached to each transaction, I also have am married with full time job -- so I don't have a lot of time to dedicate to working on ");
+          dom.appendChild(el4, el5);
+          var el5 = dom.createComment("");
+          dom.appendChild(el4, el5);
+          var el5 = dom.createTextNode(". ");
+          dom.appendChild(el4, el5);
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("li");
+          dom.setAttribute(el2,"class","accordion-navigation");
+          var el3 = dom.createElement("a");
+          dom.setAttribute(el3,"href","#donate-what");
+          var el4 = dom.createTextNode("What do donations go towards?");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("div");
+          dom.setAttribute(el3,"id","donate-what");
+          dom.setAttribute(el3,"class","content");
+          var el4 = dom.createElement("ul");
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Increasing Test coverage (every bug fix is also coupled with an automated test to make sure that *that* specific bug scenario never happens again.)");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Helping event organizers learn the system");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Taking time away from life and such to implement desired features (This is a big one). See: ");
+          dom.appendChild(el5, el6);
+          var el6 = dom.createComment("");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Deferring replys to the support email from registrants to the appropriate event organizers.");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Maintaining 100% uptime (Taking time out of my day in the rare event something happens to the server)");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Implementing the ability to take PayPal payments (or payments from any other payment processors)");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          var el5 = dom.createElement("li");
+          var el6 = dom.createTextNode("Working on features that will eventually allow event organizers total autonomy in event management, including documentation, todos, and guides.");
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Clicking the donate button will navigate away from ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createTextNode(".");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("form");
+          dom.setAttribute(el1,"action","https://www.paypal.com/cgi-bin/webscr");
+          dom.setAttribute(el1,"method","post");
+          dom.setAttribute(el1,"target","_top");
+          var el2 = dom.createElement("input");
+          dom.setAttribute(el2,"type","hidden");
+          dom.setAttribute(el2,"name","cmd");
+          dom.setAttribute(el2,"value","_s-xclick");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("input");
+          dom.setAttribute(el2,"type","hidden");
+          dom.setAttribute(el2,"name","hosted_button_id");
+          dom.setAttribute(el2,"value","XJUBCDQP89NSS");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("input");
+          dom.setAttribute(el2,"type","submit");
+          dom.setAttribute(el2,"class","button success");
+          dom.setAttribute(el2,"border","0");
+          dom.setAttribute(el2,"name","Donate");
+          dom.setAttribute(el2,"alt","PayPal - The safer, easier way to pay online!");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [0]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createMorphAt(dom.childAt(element0, [0, 1, 0]),1,1);
+          morphs[1] = dom.createMorphAt(dom.childAt(element0, [1, 1, 0, 2]),1,1);
+          morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3]),1,1);
+          return morphs;
+        },
+        statements: [
+          ["inline","t",["appname"],[],["loc",[null,[1,447],[1,462]]]],
+          ["content","links/submit-idea-link",["loc",[null,[1,915],[1,941]]]],
+          ["inline","t",["appname"],[],["loc",[null,[1,1499],[1,1514]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 1869
+          }
+        },
+        "moduleName": "aeonvera/templates/components/donate-to-aeonvera.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["block","foundation-modal",[],["title","Donate to ÆONVERA","name","donate-price-pick"],0,null,["loc",[null,[1,0],[1,1869]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/error-field-wrapper', ['exports'], function (exports) {
 
   'use strict';
@@ -6045,8 +6812,8 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -6086,8 +6853,8 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6128,8 +6895,14 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -6173,6 +6946,396 @@ define('aeonvera/templates/components/error-field-wrapper', ['exports'], functio
   }()));
 
 });
+define('aeonvera/templates/components/event/custom-field/edit-form', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 109
+            },
+            "end": {
+              "line": 1,
+              "column": 338
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/custom-field/edit-form.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Field Label");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["value",["subexpr","@mut",[["get","model.label",["loc",[null,[1,247],[1,258]]]]],[],[]],"placeholder","How many years have you been dancing?","type","text","required",true],["loc",[null,[1,233],[1,338]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 385
+            },
+            "end": {
+              "line": 1,
+              "column": 576
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/custom-field/edit-form.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Field is Editable?");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["checked",["subexpr","@mut",[["get","model.editable",["loc",[null,[1,544],[1,558]]]]],[],[]],"type","checkbox"],["loc",[null,[1,528],[1,576]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child2 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 600
+            },
+            "end": {
+              "line": 1,
+              "column": 804
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/custom-field/edit-form.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Default Value");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["value",["subexpr","@mut",[["get","model.defaultValue",["loc",[null,[1,756],[1,774]]]]],[],[]],"placeholder","4","type","text"],["loc",[null,[1,742],[1,804]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child3 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 840
+            },
+            "end": {
+              "line": 1,
+              "column": 1604
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/custom-field/edit-form.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Kind of Field");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Text");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Formatted Text");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Number");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Date");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Time");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Datetime");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Checkbox");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Range");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createTextNode("Phone");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("br");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(9);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          morphs[1] = dom.createMorphAt(fragment,4,4,contextualElement);
+          morphs[2] = dom.createMorphAt(fragment,7,7,contextualElement);
+          morphs[3] = dom.createMorphAt(fragment,10,10,contextualElement);
+          morphs[4] = dom.createMorphAt(fragment,13,13,contextualElement);
+          morphs[5] = dom.createMorphAt(fragment,16,16,contextualElement);
+          morphs[6] = dom.createMorphAt(fragment,19,19,contextualElement);
+          morphs[7] = dom.createMorphAt(fragment,22,22,contextualElement);
+          morphs[8] = dom.createMorphAt(fragment,25,25,contextualElement);
+          return morphs;
+        },
+        statements: [
+          ["inline","radio-button",[],["value",0,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,995],[1,1005]]]]],[],[]]],["loc",[null,[1,961],[1,1007]]]],
+          ["inline","radio-button",[],["value",1,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1064],[1,1074]]]]],[],[]]],["loc",[null,[1,1030],[1,1076]]]],
+          ["inline","radio-button",[],["value",2,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1143],[1,1153]]]]],[],[]]],["loc",[null,[1,1109],[1,1155]]]],
+          ["inline","radio-button",[],["value",3,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1214],[1,1224]]]]],[],[]]],["loc",[null,[1,1180],[1,1226]]]],
+          ["inline","radio-button",[],["value",4,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1283],[1,1293]]]]],[],[]]],["loc",[null,[1,1249],[1,1295]]]],
+          ["inline","radio-button",[],["value",5,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1352],[1,1362]]]]],[],[]]],["loc",[null,[1,1318],[1,1364]]]],
+          ["inline","radio-button",[],["value",6,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1425],[1,1435]]]]],[],[]]],["loc",[null,[1,1391],[1,1437]]]],
+          ["inline","radio-button",[],["value",8,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1498],[1,1508]]]]],[],[]]],["loc",[null,[1,1464],[1,1510]]]],
+          ["inline","radio-button",[],["value",9,"groupValue",["subexpr","@mut",[["get","model.kind",["loc",[null,[1,1568],[1,1578]]]]],[],[]]],["loc",[null,[1,1534],[1,1580]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 1938
+          }
+        },
+        "moduleName": "aeonvera/templates/components/event/custom-field/edit-form.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("form");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","columns small-12 medium-6");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","row");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","row");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","small-12 columns");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","right");
+        var el5 = dom.createElement("ul");
+        dom.setAttribute(el5,"class","button-group");
+        var el6 = dom.createElement("li");
+        var el7 = dom.createElement("button");
+        dom.setAttribute(el7,"class","secondary");
+        var el8 = dom.createTextNode("Cancel");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createElement("button");
+        var el8 = dom.createTextNode("Save");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var element1 = dom.childAt(element0, [0]);
+        var element2 = dom.childAt(element1, [0]);
+        var element3 = dom.childAt(element2, [1]);
+        var element4 = dom.childAt(element0, [1, 0, 0, 0]);
+        var element5 = dom.childAt(element4, [0, 0]);
+        var element6 = dom.childAt(element4, [1, 0]);
+        var morphs = new Array(9);
+        morphs[0] = dom.createElementMorph(element0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element2, [0]),0,0);
+        morphs[2] = dom.createMorphAt(element3,0,0);
+        morphs[3] = dom.createMorphAt(element3,1,1);
+        morphs[4] = dom.createMorphAt(element1,1,1);
+        morphs[5] = dom.createElementMorph(element5);
+        morphs[6] = dom.createAttrMorph(element6, 'disabled');
+        morphs[7] = dom.createAttrMorph(element6, 'title');
+        morphs[8] = dom.createElementMorph(element6);
+        return morphs;
+      },
+      statements: [
+        ["element","action",["save"],["on","submit"],["loc",[null,[1,6],[1,35]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,166],[1,178]]]]],[],[]],"field","label"],0,null,["loc",[null,[1,109],[1,362]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,451],[1,463]]]]],[],[]],"field","editable"],1,null,["loc",[null,[1,385],[1,600]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,666],[1,678]]]]],[],[]],"field","defaultValue"],2,null,["loc",[null,[1,600],[1,828]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,906],[1,918]]]]],[],[]],"field","kind"],3,null,["loc",[null,[1,840],[1,1628]]]],
+        ["element","action",["cancel"],["on","click"],["loc",[null,[1,1737],[1,1767]]]],
+        ["attribute","disabled",["get","isDirty",["loc",[null,[1,1829],[1,1836]]]]],
+        ["attribute","title",["get","submitTitle",["loc",[null,[1,1847],[1,1858]]]]],
+        ["element","action",["save"],["on","click"],["loc",[null,[1,1861],[1,1889]]]]
+      ],
+      locals: [],
+      templates: [child0, child1, child2, child3]
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/event/discount/edit-form', ['exports'], function (exports) {
 
   'use strict';
@@ -6181,8 +7344,8 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6227,8 +7390,8 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6273,8 +7436,8 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6330,8 +7493,8 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6373,10 +7536,62 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
         templates: []
       };
     }());
+    var child4 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 1179
+            },
+            "end": {
+              "line": 1,
+              "column": 1380
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/discount/edit-form.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Require Student ID?");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, 0);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["checked",["subexpr","@mut",[["get","model.requiresStudentId",["loc",[null,[1,1292],[1,1315]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1276],[1,1333]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -6385,7 +7600,7 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
           },
           "end": {
             "line": 1,
-            "column": 1466
+            "column": 1714
           }
         },
         "moduleName": "aeonvera/templates/components/event/discount/edit-form.hbs"
@@ -6403,6 +7618,11 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
@@ -6442,19 +7662,20 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [0]);
         var element1 = dom.childAt(element0, [0]);
-        var element2 = dom.childAt(element0, [2, 0, 0, 0]);
+        var element2 = dom.childAt(element0, [3, 0, 0, 0]);
         var element3 = dom.childAt(element2, [0, 0]);
         var element4 = dom.childAt(element2, [1, 0]);
-        var morphs = new Array(9);
+        var morphs = new Array(10);
         morphs[0] = dom.createElementMorph(element0);
         morphs[1] = dom.createMorphAt(element1,0,0);
         morphs[2] = dom.createMorphAt(element1,1,1);
         morphs[3] = dom.createMorphAt(element1,2,2);
         morphs[4] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
-        morphs[5] = dom.createElementMorph(element3);
-        morphs[6] = dom.createAttrMorph(element4, 'disabled');
-        morphs[7] = dom.createAttrMorph(element4, 'title');
-        morphs[8] = dom.createElementMorph(element4);
+        morphs[5] = dom.createMorphAt(dom.childAt(element0, [2]),0,0);
+        morphs[6] = dom.createElementMorph(element3);
+        morphs[7] = dom.createAttrMorph(element4, 'disabled');
+        morphs[8] = dom.createAttrMorph(element4, 'title');
+        morphs[9] = dom.createElementMorph(element4);
         return morphs;
       },
       statements: [
@@ -6463,13 +7684,264 @@ define('aeonvera/templates/components/event/discount/edit-form', ['exports'], fu
         ["block","error-field-wrapper",[],["classes","columns small-6 medium-3","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,410],[1,422]]]]],[],[]],"field","amount"],1,null,["loc",[null,[1,345],[1,587]]]],
         ["block","error-field-wrapper",[],["classes","columns small-6 medium-3","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,652],[1,664]]]]],[],[]],"field","kind"],2,null,["loc",[null,[1,587],[1,855]]]],
         ["block","error-field-wrapper",[],["classes","columns small-5 medium-4","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,943],[1,955]]]]],[],[]],"field","allowedNumberOfUses"],3,null,["loc",[null,[1,878],[1,1156]]]],
-        ["element","action",["cancel"],["on","click"],["loc",[null,[1,1265],[1,1295]]]],
-        ["attribute","disabled",["get","isDirty",["loc",[null,[1,1357],[1,1364]]]]],
-        ["attribute","title",["get","submitTitle",["loc",[null,[1,1375],[1,1386]]]]],
-        ["element","action",["save"],["on","click"],["loc",[null,[1,1389],[1,1417]]]]
+        ["block","error-field-wrapper",[],["classes","columns small-12","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,1236],[1,1248]]]]],[],[]],"field","requiresStudentId"],4,null,["loc",[null,[1,1179],[1,1404]]]],
+        ["element","action",["cancel"],["on","click"],["loc",[null,[1,1513],[1,1543]]]],
+        ["attribute","disabled",["get","isDirty",["loc",[null,[1,1605],[1,1612]]]]],
+        ["attribute","title",["get","submitTitle",["loc",[null,[1,1623],[1,1634]]]]],
+        ["element","action",["save"],["on","click"],["loc",[null,[1,1637],[1,1665]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2, child3]
+      templates: [child0, child1, child2, child3, child4]
+    };
+  }()));
+
+});
+define('aeonvera/templates/components/event/edit-raffle-ticket', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      var child0 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 34
+              },
+              "end": {
+                "line": 1,
+                "column": 241
+              }
+            },
+            "moduleName": "aeonvera/templates/components/event/edit-raffle-ticket.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("label");
+            var el2 = dom.createElement("span");
+            var el3 = dom.createTextNode("Number of Tickets");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+            dom.insertBoundary(fragment, null);
+            return morphs;
+          },
+          statements: [
+            ["inline","input",[],["type","number","min","0","step","1","value",["subexpr","@mut",[["get","model.numberOfTickets",["loc",[null,[1,218],[1,239]]]]],[],[]]],["loc",[null,[1,173],[1,241]]]]
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      var child1 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 265
+              },
+              "end": {
+                "line": 1,
+                "column": 446
+              }
+            },
+            "moduleName": "aeonvera/templates/components/event/edit-raffle-ticket.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("label");
+            var el2 = dom.createElement("span");
+            var el3 = dom.createTextNode("Price ($)");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+            dom.insertBoundary(fragment, null);
+            return morphs;
+          },
+          statements: [
+            ["inline","input",[],["type","number","min","0","step","any","value",["subexpr","@mut",[["get","model.price",["loc",[null,[1,433],[1,444]]]]],[],[]]],["loc",[null,[1,386],[1,446]]]]
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      return {
+        meta: {
+          "fragmentReason": {
+            "name": "missing-wrapper",
+            "problems": [
+              "multiple-nodes"
+            ]
+          },
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 526
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/edit-raffle-ticket.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("div");
+          dom.setAttribute(el1,"class","row");
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("button");
+          var el2 = dom.createTextNode("Save");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element1 = dom.childAt(fragment, [0]);
+          var element2 = dom.childAt(fragment, [1]);
+          var morphs = new Array(3);
+          morphs[0] = dom.createMorphAt(element1,0,0);
+          morphs[1] = dom.createMorphAt(element1,1,1);
+          morphs[2] = dom.createElementMorph(element2);
+          return morphs;
+        },
+        statements: [
+          ["block","error-field-wrapper",[],["classes","columns small-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,90],[1,102]]]]],[],[]],"field","numberOfTickets"],0,null,["loc",[null,[1,34],[1,265]]]],
+          ["block","error-field-wrapper",[],["classes","columns small-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,321],[1,333]]]]],[],[]],"field","price"],1,null,["loc",[null,[1,265],[1,470]]]],
+          ["element","action",["save"],["on","click"],["loc",[null,[1,484],[1,512]]]]
+        ],
+        locals: [],
+        templates: [child0, child1]
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 526
+            },
+            "end": {
+              "line": 1,
+              "column": 590
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/edit-raffle-ticket.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("button");
+          var el2 = dom.createTextNode("Edit");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [0]);
+          var morphs = new Array(1);
+          morphs[0] = dom.createElementMorph(element0);
+          return morphs;
+        },
+        statements: [
+          ["element","action",["toggleEdit"],["on","click"],["loc",[null,[1,542],[1,576]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 597
+          }
+        },
+        "moduleName": "aeonvera/templates/components/event/edit-raffle-ticket.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["block","if",[["get","isEditing",["loc",[null,[1,6],[1,15]]]]],[],0,1,["loc",[null,[1,0],[1,597]]]]
+      ],
+      locals: [],
+      templates: [child0, child1]
     };
   }()));
 
@@ -6482,8 +7954,8 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6528,8 +8000,8 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6538,7 +8010,7 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
             },
             "end": {
               "line": 1,
-              "column": 678
+              "column": 676
             }
           },
           "moduleName": "aeonvera/templates/components/event/level/edit-form.hbs"
@@ -6564,7 +8036,7 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
           var el1 = dom.createComment("");
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("label");
-          var el2 = dom.createTextNode("Be Invitated");
+          var el2 = dom.createTextNode("Be Invited");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           var el1 = dom.createElement("br");
@@ -6589,7 +8061,7 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
         statements: [
           ["inline","radio-button",[],["value",1,"groupValue",["subexpr","@mut",[["get","model.requirement",["loc",[null,[1,462],[1,479]]]]],[],[]]],["loc",[null,[1,428],[1,481]]]],
           ["inline","radio-button",[],["value",2,"groupValue",["subexpr","@mut",[["get","model.requirement",["loc",[null,[1,542],[1,559]]]]],[],[]]],["loc",[null,[1,508],[1,561]]]],
-          ["inline","radio-button",[],["value",0,"groupValue",["subexpr","@mut",[["get","model.requirement",["loc",[null,[1,626],[1,643]]]]],[],[]]],["loc",[null,[1,592],[1,645]]]]
+          ["inline","radio-button",[],["value",0,"groupValue",["subexpr","@mut",[["get","model.requirement",["loc",[null,[1,624],[1,641]]]]],[],[]]],["loc",[null,[1,590],[1,643]]]]
         ],
         locals: [],
         templates: []
@@ -6597,8 +8069,13 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -6607,7 +8084,7 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
           },
           "end": {
             "line": 1,
-            "column": 1012
+            "column": 1010
           }
         },
         "moduleName": "aeonvera/templates/components/event/level/edit-form.hbs"
@@ -6673,11 +8150,11 @@ define('aeonvera/templates/components/event/level/edit-form', ['exports'], funct
       statements: [
         ["element","action",["save"],["on","submit"],["loc",[null,[1,6],[1,35]]]],
         ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,119],[1,131]]]]],[],[]],"field","name"],0,null,["loc",[null,[1,53],[1,290]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,356],[1,368]]]]],[],[]],"field","shortDescription"],1,null,["loc",[null,[1,290],[1,702]]]],
-        ["element","action",["cancel"],["on","click"],["loc",[null,[1,811],[1,841]]]],
-        ["attribute","disabled",["get","isDirty",["loc",[null,[1,903],[1,910]]]]],
-        ["attribute","title",["get","submitTitle",["loc",[null,[1,921],[1,932]]]]],
-        ["element","action",["save"],["on","click"],["loc",[null,[1,935],[1,963]]]]
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,356],[1,368]]]]],[],[]],"field","shortDescription"],1,null,["loc",[null,[1,290],[1,700]]]],
+        ["element","action",["cancel"],["on","click"],["loc",[null,[1,809],[1,839]]]],
+        ["attribute","disabled",["get","isDirty",["loc",[null,[1,901],[1,908]]]]],
+        ["attribute","title",["get","submitTitle",["loc",[null,[1,919],[1,930]]]]],
+        ["element","action",["save"],["on","click"],["loc",[null,[1,933],[1,961]]]]
       ],
       locals: [],
       templates: [child0, child1]
@@ -6693,8 +8170,8 @@ define('aeonvera/templates/components/event/line-item/edit-form', ['exports'], f
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6739,8 +8216,8 @@ define('aeonvera/templates/components/event/line-item/edit-form', ['exports'], f
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6785,8 +8262,8 @@ define('aeonvera/templates/components/event/line-item/edit-form', ['exports'], f
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6842,8 +8319,8 @@ define('aeonvera/templates/components/event/line-item/edit-form', ['exports'], f
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -6887,8 +8364,13 @@ define('aeonvera/templates/components/event/line-item/edit-form', ['exports'], f
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -6994,8 +8476,8 @@ define('aeonvera/templates/components/event/package/edit-form', ['exports'], fun
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7040,8 +8522,8 @@ define('aeonvera/templates/components/event/package/edit-form', ['exports'], fun
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7109,8 +8591,13 @@ define('aeonvera/templates/components/event/package/edit-form', ['exports'], fun
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -7205,8 +8692,8 @@ define('aeonvera/templates/components/event/pricing-tier/edit-form', ['exports']
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7256,8 +8743,8 @@ define('aeonvera/templates/components/event/pricing-tier/edit-form', ['exports']
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7302,8 +8789,8 @@ define('aeonvera/templates/components/event/pricing-tier/edit-form', ['exports']
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7347,8 +8834,13 @@ define('aeonvera/templates/components/event/pricing-tier/edit-form', ['exports']
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -7457,6 +8949,148 @@ define('aeonvera/templates/components/event/pricing-tier/edit-form', ['exports']
   }()));
 
 });
+define('aeonvera/templates/components/event/raffle/edit-form', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 53
+            },
+            "end": {
+              "line": 1,
+              "column": 292
+            }
+          },
+          "moduleName": "aeonvera/templates/components/event/raffle/edit-form.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Name of the Raffle");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["value",["subexpr","@mut",[["get","model.name",["loc",[null,[1,206],[1,216]]]]],[],[]],"placeholder","Private lesson with an Instructor","type","text","required",true],["loc",[null,[1,192],[1,292]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 635
+          }
+        },
+        "moduleName": "aeonvera/templates/components/event/raffle/edit-form.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("form");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","small-12 medium-6 columns");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","right");
+        var el5 = dom.createElement("ul");
+        dom.setAttribute(el5,"class","button-group");
+        var el6 = dom.createElement("li");
+        var el7 = dom.createElement("button");
+        dom.setAttribute(el7,"class","secondary");
+        var el8 = dom.createTextNode("Cancel");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        var el6 = dom.createElement("li");
+        var el7 = dom.createElement("button");
+        var el8 = dom.createTextNode("Save");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var element1 = dom.childAt(element0, [1, 0, 0, 0]);
+        var element2 = dom.childAt(element1, [0, 0]);
+        var element3 = dom.childAt(element1, [1, 0]);
+        var morphs = new Array(6);
+        morphs[0] = dom.createElementMorph(element0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+        morphs[2] = dom.createElementMorph(element2);
+        morphs[3] = dom.createAttrMorph(element3, 'disabled');
+        morphs[4] = dom.createAttrMorph(element3, 'title');
+        morphs[5] = dom.createElementMorph(element3);
+        return morphs;
+      },
+      statements: [
+        ["element","action",["save"],["on","submit"],["loc",[null,[1,6],[1,35]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","model.errors",["loc",[null,[1,119],[1,131]]]]],[],[]],"field","name"],0,null,["loc",[null,[1,53],[1,316]]]],
+        ["element","action",["cancel"],["on","click"],["loc",[null,[1,434],[1,464]]]],
+        ["attribute","disabled",["get","isDirty",["loc",[null,[1,526],[1,533]]]]],
+        ["attribute","title",["get","submitTitle",["loc",[null,[1,544],[1,555]]]]],
+        ["element","action",["save"],["on","click"],["loc",[null,[1,558],[1,586]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['exports'], function (exports) {
 
   'use strict';
@@ -7465,8 +9099,8 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7509,8 +9143,8 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7595,8 +9229,8 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7633,8 +9267,8 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7674,8 +9308,13 @@ define('aeonvera/templates/components/event-at-the-door/checkin-attendance', ['e
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -7761,8 +9400,8 @@ define('aeonvera/templates/components/event-at-the-door/checkin-list', ['exports
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7802,8 +9441,13 @@ define('aeonvera/templates/components/event-at-the-door/checkin-list', ['exports
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -7938,6 +9582,59 @@ define('aeonvera/templates/components/event-at-the-door/checkin-list', ['exports
   }()));
 
 });
+define('aeonvera/templates/components/file-upload', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 39
+          }
+        },
+        "moduleName": "aeonvera/templates/components/file-upload.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","file-picker",[],["fileLoaded","fileLoaded"],["loc",[null,[1,0],[1,39]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exports) {
 
   'use strict';
@@ -7946,8 +9643,8 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -7988,8 +9685,8 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -8030,8 +9727,8 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -8072,8 +9769,8 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -8114,8 +9811,8 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -8155,8 +9852,10 @@ define('aeonvera/templates/components/fixed-top-nav', ['exports'], function (exp
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8272,8 +9971,13 @@ define('aeonvera/templates/components/foundation-modal', ['exports'], function (
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8336,8 +10040,13 @@ define('aeonvera/templates/components/handle-payment', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8495,8 +10204,13 @@ define('aeonvera/templates/components/income-and-registrations-graph', ['exports
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8543,8 +10257,14 @@ define('aeonvera/templates/components/labeled-radio-button', ['exports'], functi
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8599,8 +10319,13 @@ define('aeonvera/templates/components/links/external-link', ['exports'], functio
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": {
+            "name": "missing-wrapper",
+            "problems": [
+              "wrong-type"
+            ]
+          },
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -8642,8 +10367,14 @@ define('aeonvera/templates/components/links/external-link', ['exports'], functio
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8695,8 +10426,13 @@ define('aeonvera/templates/components/login-form', ['exports'], function (export
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -8866,8 +10602,8 @@ define('aeonvera/templates/components/login-help-modal', ['exports'], function (
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -8903,8 +10639,10 @@ define('aeonvera/templates/components/login-help-modal', ['exports'], function (
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9007,8 +10745,10 @@ define('aeonvera/templates/components/login-modal', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9076,8 +10816,8 @@ define('aeonvera/templates/components/model-table', ['exports'], function (expor
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9119,8 +10859,8 @@ define('aeonvera/templates/components/model-table', ['exports'], function (expor
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -9160,8 +10900,8 @@ define('aeonvera/templates/components/model-table', ['exports'], function (expor
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9201,8 +10941,8 @@ define('aeonvera/templates/components/model-table', ['exports'], function (expor
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": false,
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9261,8 +11001,8 @@ define('aeonvera/templates/components/nav/dashboard/left-items', ['exports'], fu
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9296,8 +11036,10 @@ define('aeonvera/templates/components/nav/dashboard/left-items', ['exports'], fu
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9346,8 +11088,8 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9388,8 +11130,8 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9430,8 +11172,8 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9480,8 +11222,8 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9527,8 +11269,8 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9576,8 +11318,8 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     var child5 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9622,8 +11364,13 @@ define('aeonvera/templates/components/nav/dashboard/right-items', ['exports'], f
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9759,8 +11506,10 @@ define('aeonvera/templates/components/nav/left-off-canvas-menu', ['exports'], fu
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9808,8 +11557,10 @@ define('aeonvera/templates/components/nav/right-off-canvas-menu', ['exports'], f
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -9858,8 +11609,8 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9894,8 +11645,8 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9936,8 +11687,8 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -9978,8 +11729,8 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10020,8 +11771,8 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10061,8 +11812,13 @@ define('aeonvera/templates/components/nav/welcome/left-items', ['exports'], func
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -10136,8 +11892,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -10180,8 +11936,10 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": {
+            "name": "triple-curlies"
+          },
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10223,8 +11981,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10271,8 +12029,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10318,8 +12076,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10367,8 +12125,8 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10411,8 +12169,14 @@ define('aeonvera/templates/components/nav/welcome/right-items', ['exports'], fun
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -10472,8 +12236,8 @@ define('aeonvera/templates/components/page-header', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": false,
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -10521,8 +12285,8 @@ define('aeonvera/templates/components/password-reset', ['exports'], function (ex
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10567,8 +12331,13 @@ define('aeonvera/templates/components/password-reset', ['exports'], function (ex
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -10630,8 +12399,8 @@ define('aeonvera/templates/components/payment-status-badge', ['exports'], functi
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10679,8 +12448,8 @@ define('aeonvera/templates/components/payment-status-badge', ['exports'], functi
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -10727,8 +12496,13 @@ define('aeonvera/templates/components/payment-status-badge', ['exports'], functi
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -10775,8 +12549,10 @@ define('aeonvera/templates/components/pricing-preview', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -10973,8 +12749,10 @@ define('aeonvera/templates/components/radio-button', ['exports'], function (expo
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": {
+            "name": "triple-curlies"
+          },
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11034,8 +12812,8 @@ define('aeonvera/templates/components/radio-button', ['exports'], function (expo
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11077,8 +12855,13 @@ define('aeonvera/templates/components/radio-button', ['exports'], function (expo
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -11126,8 +12909,8 @@ define('aeonvera/templates/components/registrant/order/line-item-discount-row', 
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11169,8 +12952,8 @@ define('aeonvera/templates/components/registrant/order/line-item-discount-row', 
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11213,8 +12996,8 @@ define('aeonvera/templates/components/registrant/order/line-item-discount-row', 
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11256,8 +13039,8 @@ define('aeonvera/templates/components/registrant/order/line-item-discount-row', 
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11299,8 +13082,13 @@ define('aeonvera/templates/components/registrant/order/line-item-discount-row', 
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -11361,8 +13149,13 @@ define('aeonvera/templates/components/registrant/order/line-item-row', ['exports
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -11428,8 +13221,8 @@ define('aeonvera/templates/components/registrant/order-summary', ['exports'], fu
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11469,8 +13262,13 @@ define('aeonvera/templates/components/registrant/order-summary', ['exports'], fu
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -11558,8 +13356,8 @@ define('aeonvera/templates/components/registrant/orders-summary', ['exports'], f
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -11614,8 +13412,8 @@ define('aeonvera/templates/components/registrant/orders-summary', ['exports'], f
       var child1 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -11657,8 +13455,8 @@ define('aeonvera/templates/components/registrant/orders-summary', ['exports'], f
       var child2 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -11703,8 +13501,8 @@ define('aeonvera/templates/components/registrant/orders-summary', ['exports'], f
       var child3 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -11748,8 +13546,8 @@ define('aeonvera/templates/components/registrant/orders-summary', ['exports'], f
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11805,8 +13603,10 @@ define('aeonvera/templates/components/registrant/orders-summary', ['exports'], f
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -11856,8 +13656,8 @@ define('aeonvera/templates/components/registrant-summary', ['exports'], function
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11900,8 +13700,8 @@ define('aeonvera/templates/components/registrant-summary', ['exports'], function
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11942,8 +13742,8 @@ define('aeonvera/templates/components/registrant-summary', ['exports'], function
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -11977,8 +13777,14 @@ define('aeonvera/templates/components/registrant-summary', ['exports'], function
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -12081,6 +13887,435 @@ define('aeonvera/templates/components/registrant-summary', ['exports'], function
   }()));
 
 });
+define('aeonvera/templates/components/sidebar/community-sidebar', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 8
+            },
+            "end": {
+              "line": 1,
+              "column": 67
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["content","model.name",["loc",[null,[1,53],[1,67]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 131
+            },
+            "end": {
+              "line": 1,
+              "column": 197
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Registrations");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child2 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 218
+            },
+            "end": {
+              "line": 1,
+              "column": 298
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Unpaid Registrations");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child3 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 362
+            },
+            "end": {
+              "line": 1,
+              "column": 416
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Revenue");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child4 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 437
+            },
+            "end": {
+              "line": 1,
+              "column": 507
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Membership");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child5 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 566
+            },
+            "end": {
+              "line": 1,
+              "column": 630
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Lessons");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child6 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 651
+            },
+            "end": {
+              "line": 1,
+              "column": 713
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Dances");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child7 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 759
+            },
+            "end": {
+              "line": 1,
+              "column": 872
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Edit Community Settings");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 889
+          }
+        },
+        "moduleName": "aeonvera/templates/components/sidebar/community-sidebar.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("li");
+        var el2 = dom.createElement("h5");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        dom.setAttribute(el1,"class","divider");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createTextNode("View");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        dom.setAttribute(el1,"class","divider");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createTextNode("Reporting");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        dom.setAttribute(el1,"class","divider");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createTextNode("Edit");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        dom.setAttribute(el1,"class","divider");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(8);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0, 0]),0,0);
+        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [3]),0,0);
+        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [4]),0,0);
+        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [7]),0,0);
+        morphs[4] = dom.createMorphAt(dom.childAt(fragment, [8]),0,0);
+        morphs[5] = dom.createMorphAt(dom.childAt(fragment, [11]),0,0);
+        morphs[6] = dom.createMorphAt(dom.childAt(fragment, [12]),0,0);
+        morphs[7] = dom.createMorphAt(dom.childAt(fragment, [14]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["my-communities.manage",["get","model.id",["loc",[null,[1,43],[1,51]]]]],[],0,null,["loc",[null,[1,8],[1,79]]]],
+        ["block","link-to",["events.show.registrations"],[],1,null,["loc",[null,[1,131],[1,209]]]],
+        ["block","link-to",["events.show.unpaid-registrations"],[],2,null,["loc",[null,[1,218],[1,310]]]],
+        ["block","link-to",["events.show.revenue"],[],3,null,["loc",[null,[1,362],[1,428]]]],
+        ["block","link-to",["my-communities.manage.membership"],[],4,null,["loc",[null,[1,437],[1,519]]]],
+        ["block","link-to",["my-communities.manage.lessons"],[],5,null,["loc",[null,[1,566],[1,642]]]],
+        ["block","link-to",["my-communities.manage.dances"],[],6,null,["loc",[null,[1,651],[1,725]]]],
+        ["block","link-to",["my-communities.manage.edit",["get","model.id",["loc",[null,[1,799],[1,807]]]]],["classNames","button expand"],7,null,["loc",[null,[1,759],[1,884]]]]
+      ],
+      locals: [],
+      templates: [child0, child1, child2, child3, child4, child5, child6, child7]
+    };
+  }()));
+
+});
 define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], function (exports) {
 
   'use strict';
@@ -12089,8 +14324,8 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12127,8 +14362,8 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12165,8 +14400,8 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12203,8 +14438,8 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12213,7 +14448,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
             },
             "end": {
               "line": 1,
-              "column": 376
+              "column": 382
             }
           },
           "moduleName": "aeonvera/templates/components/sidebar/dashboard-sidebar.hbs"
@@ -12225,7 +14460,45 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
         buildFragment: function buildFragment(dom) {
           var el0 = dom.createDocumentFragment();
           var el1 = dom.createElement("span");
-          var el2 = dom.createTextNode("Orders");
+          var el2 = dom.createTextNode("My Communities");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child4 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 403
+            },
+            "end": {
+              "line": 1,
+              "column": 460
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/dashboard-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Order History");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
@@ -12240,8 +14513,13 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -12250,7 +14528,7 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
           },
           "end": {
             "line": 1,
-            "column": 520
+            "column": 604
           }
         },
         "moduleName": "aeonvera/templates/components/sidebar/dashboard-sidebar.hbs"
@@ -12289,6 +14567,10 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("li");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("li");
         dom.setAttribute(el1,"class","divider");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("li");
@@ -12306,12 +14588,13 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(5);
+        var morphs = new Array(6);
         morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
         morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1]),0,0);
         morphs[2] = dom.createMorphAt(dom.childAt(fragment, [4]),0,0);
         morphs[3] = dom.createMorphAt(dom.childAt(fragment, [5]),0,0);
         morphs[4] = dom.createMorphAt(dom.childAt(fragment, [6]),0,0);
+        morphs[5] = dom.createMorphAt(dom.childAt(fragment, [7]),0,0);
         return morphs;
       },
       statements: [
@@ -12319,10 +14602,11 @@ define('aeonvera/templates/components/sidebar/dashboard-sidebar', ['exports'], f
         ["block","link-to",["user.edit"],[],0,null,["loc",[null,[1,38],[1,99]]]],
         ["block","link-to",["dashboard.registered-events"],[],1,null,["loc",[null,[1,148],[1,232]]]],
         ["block","link-to",["dashboard.hosted-events"],[],2,null,["loc",[null,[1,241],[1,317]]]],
-        ["block","link-to",["dashboard.orders"],[],3,null,["loc",[null,[1,326],[1,388]]]]
+        ["block","link-to",["my-communities"],[],3,null,["loc",[null,[1,326],[1,394]]]],
+        ["block","link-to",["dashboard.orders"],[],4,null,["loc",[null,[1,403],[1,472]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2, child3]
+      templates: [child0, child1, child2, child3, child4]
     };
   }()));
 
@@ -12335,17 +14619,55 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 224
+              "column": 4
             },
             "end": {
               "line": 1,
-              "column": 340
+              "column": 102
+            }
+          },
+          "moduleName": "aeonvera/templates/components/sidebar/event-at-the-door-sidebar.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("CheckIN");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 244
+            },
+            "end": {
+              "line": 1,
+              "column": 360
             }
           },
           "moduleName": "aeonvera/templates/components/sidebar/event-at-the-door-sidebar.hbs"
@@ -12370,20 +14692,20 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
         templates: []
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 361
+              "column": 381
             },
             "end": {
               "line": 1,
-              "column": 465
+              "column": 485
             }
           },
           "moduleName": "aeonvera/templates/components/sidebar/event-at-the-door-sidebar.hbs"
@@ -12410,8 +14732,13 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -12420,7 +14747,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
           },
           "end": {
             "line": 1,
-            "column": 482
+            "column": 502
           }
         },
         "moduleName": "aeonvera/templates/components/sidebar/event-at-the-door-sidebar.hbs"
@@ -12432,10 +14759,7 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
         var el1 = dom.createElement("li");
-        var el2 = dom.createElement("a");
-        dom.setAttribute(el2,"class","button percent-width-100");
-        var el3 = dom.createTextNode("Checkin");
-        dom.appendChild(el2, el3);
+        var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("li");
@@ -12458,23 +14782,22 @@ define('aeonvera/templates/components/sidebar/event-at-the-door-sidebar', ['expo
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element0 = dom.childAt(fragment, [0, 0]);
-        var element1 = dom.childAt(fragment, [1, 0]);
+        var element0 = dom.childAt(fragment, [1, 0]);
         var morphs = new Array(4);
-        morphs[0] = dom.createAttrMorph(element0, 'href');
-        morphs[1] = dom.createAttrMorph(element1, 'href');
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+        morphs[1] = dom.createAttrMorph(element0, 'href');
         morphs[2] = dom.createMorphAt(dom.childAt(fragment, [2]),0,0);
         morphs[3] = dom.createMorphAt(dom.childAt(fragment, [3]),0,0);
         return morphs;
       },
       statements: [
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,30],[1,38]]]],"/checkin"]]],
-        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,129],[1,137]]]],"/attendances/new"]]],
-        ["block","link-to",["event-at-the-door.competition-list"],["classNames","button percent-width-100"],0,null,["loc",[null,[1,224],[1,352]]]],
-        ["block","link-to",["event-at-the-door.a-la-carte"],["classNames","button percent-width-100"],1,null,["loc",[null,[1,361],[1,477]]]]
+        ["block","link-to",["event-at-the-door.checkin"],["classNames","button percent-width-100"],0,null,["loc",[null,[1,4],[1,114]]]],
+        ["attribute","href",["concat",["/hosted_events/",["get","model.id",["loc",[null,[1,149],[1,157]]]],"/attendances/new"]]],
+        ["block","link-to",["event-at-the-door.competition-list"],["classNames","button percent-width-100"],1,null,["loc",[null,[1,244],[1,372]]]],
+        ["block","link-to",["event-at-the-door.a-la-carte"],["classNames","button percent-width-100"],2,null,["loc",[null,[1,381],[1,497]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
     };
   }()));
 
@@ -12487,8 +14810,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12529,8 +14852,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12567,8 +14890,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12605,8 +14928,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12643,8 +14966,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12681,8 +15004,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child5 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12719,8 +15042,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child6 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12757,8 +15080,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child7 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12795,8 +15118,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child8 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12833,8 +15156,8 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     var child9 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -12870,8 +15193,13 @@ define('aeonvera/templates/components/sidebar/event-sidebar', ['exports'], funct
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13005,8 +15333,10 @@ define('aeonvera/templates/components/sidebar-container', ['exports'], function 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13060,8 +15390,8 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13106,8 +15436,8 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13152,8 +15482,8 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13198,8 +15528,8 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13252,8 +15582,8 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13297,8 +15627,10 @@ define('aeonvera/templates/components/sign-up-modal', ['exports'], function (exp
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13425,8 +15757,13 @@ define('aeonvera/templates/components/stripe/checkout-button', ['exports'], func
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13475,8 +15812,13 @@ define('aeonvera/templates/components/stripe-checkout', ['exports'], function (e
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": {
+            "name": "missing-wrapper",
+            "problems": [
+              "wrong-type"
+            ]
+          },
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13519,8 +15861,8 @@ define('aeonvera/templates/components/stripe-checkout', ['exports'], function (e
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13562,8 +15904,13 @@ define('aeonvera/templates/components/stripe-checkout', ['exports'], function (e
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13610,8 +15957,13 @@ define('aeonvera/templates/components/tool-tip', ['exports'], function (exports)
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13659,8 +16011,8 @@ define('aeonvera/templates/dance-community', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -13702,8 +16054,14 @@ define('aeonvera/templates/dance-community', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13801,8 +16159,13 @@ define('aeonvera/templates/dance-event/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "empty-body"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13841,8 +16204,14 @@ define('aeonvera/templates/dance-event', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -13934,8 +16303,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
         var child0 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -13976,8 +16345,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
         var child1 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -14015,8 +16384,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
           var child0 = (function() {
             return {
               meta: {
-                "topLevel": null,
-                "revision": "Ember@2.1.1",
+                "fragmentReason": false,
+                "revision": "Ember@2.3.0-beta.3",
                 "loc": {
                   "source": null,
                   "start": {
@@ -14053,8 +16422,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
           var child1 = (function() {
             return {
               meta: {
-                "topLevel": null,
-                "revision": "Ember@2.1.1",
+                "fragmentReason": false,
+                "revision": "Ember@2.3.0-beta.3",
                 "loc": {
                   "source": null,
                   "start": {
@@ -14094,8 +16463,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
           }());
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -14135,8 +16504,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -14215,8 +16584,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -14306,8 +16675,8 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -14343,8 +16712,14 @@ define('aeonvera/templates/dashboard/hosted-events', ['exports'], function (expo
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -14405,8 +16780,14 @@ define('aeonvera/templates/dashboard/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -14514,8 +16895,8 @@ define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -14575,8 +16956,8 @@ define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -14631,8 +17012,14 @@ define('aeonvera/templates/dashboard/orders', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -14684,8 +17071,8 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -14757,8 +17144,8 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -14799,8 +17186,8 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -14842,8 +17229,8 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -14879,8 +17266,13 @@ define('aeonvera/templates/dashboard/registered-events', ['exports'], function (
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -14963,8 +17355,10 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -14973,7 +17367,7 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 228
+            "column": 243
           }
         },
         "moduleName": "aeonvera/templates/dashboard.hbs"
@@ -14987,7 +17381,7 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","row full-width");
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","large-3 medium-4 columns");
+        dom.setAttribute(el2,"class","large-3 medium-4 columns padding-left-0");
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","sidebar");
         var el4 = dom.createElement("nav");
@@ -15015,8 +17409,78 @@ define('aeonvera/templates/dashboard', ['exports'], function (exports) {
         return morphs;
       },
       statements: [
-        ["inline","component",[["get","sidebar",["loc",[null,[1,125],[1,132]]]]],["model",["subexpr","@mut",[["get","data",["loc",[null,[1,139],[1,143]]]]],[],[]]],["loc",[null,[1,113],[1,145]]]],
-        ["content","outlet",["loc",[null,[1,206],[1,216]]]]
+        ["inline","component",[["get","sidebar",["loc",[null,[1,140],[1,147]]]]],["model",["subexpr","@mut",[["get","data",["loc",[null,[1,154],[1,158]]]]],[],[]]],["loc",[null,[1,128],[1,160]]]],
+        ["content","outlet",["loc",[null,[1,221],[1,231]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/donation-thankyou', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 194
+          }
+        },
+        "moduleName": "aeonvera/templates/donation-thankyou.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","imageoverlay text-center panel callout extra-padding header");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("p");
+        var el3 = dom.createElement("em");
+        var el4 = dom.createTextNode("Your monetary support is much appreciated. :-)");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [3]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","Thank you!"],["loc",[null,[1,85],[1,118]]]]
       ],
       locals: [],
       templates: []
@@ -15032,8 +17496,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -15074,8 +17538,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -15130,8 +17594,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -15186,8 +17650,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -15245,8 +17709,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           var child0 = (function() {
             return {
               meta: {
-                "topLevel": null,
-                "revision": "Ember@2.1.1",
+                "fragmentReason": false,
+                "revision": "Ember@2.3.0-beta.3",
                 "loc": {
                   "source": null,
                   "start": {
@@ -15287,8 +17751,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           var child1 = (function() {
             return {
               meta: {
-                "topLevel": null,
-                "revision": "Ember@2.1.1",
+                "fragmentReason": false,
+                "revision": "Ember@2.3.0-beta.3",
                 "loc": {
                   "source": null,
                   "start": {
@@ -15341,8 +17805,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
           }());
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -15387,8 +17851,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         var child1 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -15429,8 +17893,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -15500,8 +17964,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
       var child1 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -15541,8 +18005,8 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -15644,8 +18108,10 @@ define('aeonvera/templates/event-at-the-door/a-la-carte', ['exports'], function 
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -15745,8 +18211,10 @@ define('aeonvera/templates/event-at-the-door/checkin', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -15802,17 +18270,17 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 66
+              "column": 81
             },
             "end": {
               "line": 1,
-              "column": 137
+              "column": 152
             }
           },
           "moduleName": "aeonvera/templates/event-at-the-door/competition-list.hbs"
@@ -15835,7 +18303,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
           return morphs;
         },
         statements: [
-          ["inline","sidebar/event-at-the-door-sidebar",[],["model",["subexpr","@mut",[["get","event",["loc",[null,[1,130],[1,135]]]]],[],[]]],["loc",[null,[1,88],[1,137]]]]
+          ["inline","sidebar/event-at-the-door-sidebar",[],["model",["subexpr","@mut",[["get","event",["loc",[null,[1,145],[1,150]]]]],[],[]]],["loc",[null,[1,103],[1,152]]]]
         ],
         locals: [],
         templates: []
@@ -15845,17 +18313,17 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 481
+                "column": 496
               },
               "end": {
                 "line": 1,
-                "column": 579
+                "column": 594
               }
             },
             "moduleName": "aeonvera/templates/event-at-the-door/competition-list.hbs"
@@ -15882,17 +18350,17 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 246
+              "column": 261
             },
             "end": {
               "line": 1,
-              "column": 604
+              "column": 619
             }
           },
           "moduleName": "aeonvera/templates/event-at-the-door/competition-list.hbs"
@@ -15958,10 +18426,10 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
           return morphs;
         },
         statements: [
-          ["content","competition.name",["loc",[null,[1,282],[1,302]]]],
-          ["content","eventName",["loc",[null,[1,307],[1,320]]]],
-          ["content","eventName",["loc",[null,[1,326],[1,339]]]],
-          ["block","each",[["get","competition.competitionResponses",["loc",[null,[1,489],[1,521]]]]],[],0,null,["loc",[null,[1,481],[1,588]]]]
+          ["content","competition.name",["loc",[null,[1,297],[1,317]]]],
+          ["content","eventName",["loc",[null,[1,322],[1,335]]]],
+          ["content","eventName",["loc",[null,[1,341],[1,354]]]],
+          ["block","each",[["get","competition.competitionResponses",["loc",[null,[1,504],[1,536]]]]],[],0,null,["loc",[null,[1,496],[1,603]]]]
         ],
         locals: ["competition"],
         templates: [child0]
@@ -15969,8 +18437,10 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -15979,7 +18449,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
           },
           "end": {
             "line": 1,
-            "column": 625
+            "column": 640
           }
         },
         "moduleName": "aeonvera/templates/event-at-the-door/competition-list.hbs"
@@ -15993,7 +18463,7 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","row full-width");
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","large-3 medium-4 columns");
+        dom.setAttribute(el2,"class","large-3 medium-4 columns padding-left-0");
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
@@ -16021,9 +18491,9 @@ define('aeonvera/templates/event-at-the-door/competition-list', ['exports'], fun
         return morphs;
       },
       statements: [
-        ["block","sidebar-container",[],[],0,null,["loc",[null,[1,66],[1,159]]]],
-        ["content","eventName",["loc",[null,[1,228],[1,241]]]],
-        ["block","each",[["get","model",["loc",[null,[1,254],[1,259]]]]],[],1,null,["loc",[null,[1,246],[1,613]]]]
+        ["block","sidebar-container",[],[],0,null,["loc",[null,[1,81],[1,174]]]],
+        ["content","eventName",["loc",[null,[1,243],[1,256]]]],
+        ["block","each",[["get","model",["loc",[null,[1,269],[1,274]]]]],[],1,null,["loc",[null,[1,261],[1,628]]]]
       ],
       locals: [],
       templates: [child0, child1]
@@ -16038,8 +18508,10 @@ define('aeonvera/templates/event-at-the-door/index', ['exports'], function (expo
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16105,8 +18577,13 @@ define('aeonvera/templates/event-at-the-door', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16151,52 +18628,10 @@ define('aeonvera/templates/events/index', ['exports'], function (exports) {
   'use strict';
 
   exports['default'] = Ember.HTMLBars.template((function() {
-    var child0 = (function() {
-      return {
-        meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
-          "loc": {
-            "source": null,
-            "start": {
-              "line": 1,
-              "column": 66
-            },
-            "end": {
-              "line": 1,
-              "column": 124
-            }
-          },
-          "moduleName": "aeonvera/templates/events/index.hbs"
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createComment("");
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
-          dom.insertBoundary(fragment, 0);
-          dom.insertBoundary(fragment, null);
-          return morphs;
-        },
-        statements: [
-          ["inline","sidebar/event-sidebar",[],["model",["subexpr","@mut",[["get","data",["loc",[null,[1,118],[1,122]]]]],[],[]]],["loc",[null,[1,88],[1,124]]]]
-        ],
-        locals: [],
-        templates: []
-      };
-    }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": false,
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16205,7 +18640,7 @@ define('aeonvera/templates/events/index', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 212
+            "column": 17
           }
         },
         "moduleName": "aeonvera/templates/events/index.hbs"
@@ -16216,34 +18651,18 @@ define('aeonvera/templates/events/index', ['exports'], function (exports) {
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("div");
-        dom.setAttribute(el1,"class","row full-width");
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","large-3 medium-4 columns");
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
-        dom.appendChild(el1, el2);
-        var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","large-9 medium-8 columns");
-        var el3 = dom.createComment("");
-        dom.appendChild(el2, el3);
+        var el1 = dom.createElement("h2");
+        var el2 = dom.createTextNode("Managing");
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
       },
-      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element0 = dom.childAt(fragment, [0]);
-        var morphs = new Array(2);
-        morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
-        morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
-        return morphs;
-      },
+      buildRenderNodes: function buildRenderNodes() { return []; },
       statements: [
-        ["block","sidebar-container",[],[],0,null,["loc",[null,[1,66],[1,146]]]],
-        ["content","outlet",["loc",[null,[1,190],[1,200]]]]
+
       ],
       locals: [],
-      templates: [child0]
+      templates: []
     };
   }()));
 
@@ -16257,8 +18676,8 @@ define('aeonvera/templates/events/show/a-la-carte-items/index', ['exports'], fun
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -16298,8 +18717,8 @@ define('aeonvera/templates/events/show/a-la-carte-items/index', ['exports'], fun
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -16366,8 +18785,14 @@ define('aeonvera/templates/events/show/a-la-carte-items/index', ['exports'], fun
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16445,8 +18870,14 @@ define('aeonvera/templates/events/show/a-la-carte-items/new', ['exports'], funct
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16497,8 +18928,13 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/edit', ['exports'],
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16546,8 +18982,8 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -16557,6 +18993,44 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
             "end": {
               "line": 1,
               "column": 90
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/a-la-carte-items/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 102
+            },
+            "end": {
+              "line": 1,
+              "column": 192
             }
           },
           "moduleName": "aeonvera/templates/events/show/a-la-carte-items/show/index.hbs"
@@ -16581,21 +19055,21 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
         templates: []
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 354
+                "column": 456
               },
               "end": {
                 "line": 1,
-                "column": 444
+                "column": 546
               }
             },
             "moduleName": "aeonvera/templates/events/show/a-la-carte-items/show/index.hbs"
@@ -16618,7 +19092,7 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
             return morphs;
           },
           statements: [
-            ["content","registration.attendeeName",["loc",[null,[1,415],[1,444]]]]
+            ["content","registration.attendeeName",["loc",[null,[1,517],[1,546]]]]
           ],
           locals: [],
           templates: []
@@ -16626,17 +19100,17 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 299
+              "column": 401
             },
             "end": {
               "line": 1,
-              "column": 645
+              "column": 747
             }
           },
           "moduleName": "aeonvera/templates/events/show/a-la-carte-items/show/index.hbs"
@@ -16682,11 +19156,11 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
           return morphs;
         },
         statements: [
-          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,398],[1,413]]]]],[],0,null,["loc",[null,[1,354],[1,456]]]],
-          ["content","registration.danceOrientation",["loc",[null,[1,465],[1,498]]]],
-          ["content","registration.packageName",["loc",[null,[1,507],[1,535]]]],
-          ["content","registration.paymentStatus",["loc",[null,[1,544],[1,574]]]],
-          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,602],[1,627]]]],"LLL"],[],["loc",[null,[1,583],[1,635]]]]
+          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,500],[1,515]]]]],[],0,null,["loc",[null,[1,456],[1,558]]]],
+          ["content","registration.danceOrientation",["loc",[null,[1,567],[1,600]]]],
+          ["content","registration.packageName",["loc",[null,[1,609],[1,637]]]],
+          ["content","registration.paymentStatus",["loc",[null,[1,646],[1,676]]]],
+          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,704],[1,729]]]],"LLL"],[],["loc",[null,[1,685],[1,737]]]]
         ],
         locals: ["registration"],
         templates: [child0]
@@ -16694,8 +19168,14 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16704,7 +19184,7 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
           },
           "end": {
             "line": 1,
-            "column": 670
+            "column": 772
           }
         },
         "moduleName": "aeonvera/templates/events/show/a-la-carte-items/show/index.hbs"
@@ -16715,6 +19195,8 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
@@ -16756,22 +19238,24 @@ define('aeonvera/templates/events/show/a-la-carte-items/show/index', ['exports']
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(4);
+        var morphs = new Array(5);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
-        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [2]),1,1);
-        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [3, 1]),0,0);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [3]),1,1);
+        morphs[4] = dom.createMorphAt(dom.childAt(fragment, [4, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
-        ["block","link-to",["events.show.a-la-carte-items.show.edit"],["classNames","button"],0,null,["loc",[null,[1,0],[1,102]]]],
-        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,126],[1,131]]]]],[],[]]],["loc",[null,[1,102],[1,133]]]],
-        ["content","model.name",["loc",[null,[1,166],[1,180]]]],
-        ["block","each",[["get","model.registrations",["loc",[null,[1,307],[1,326]]]]],[],1,null,["loc",[null,[1,299],[1,654]]]]
+        ["block","link-to",["events.show.a-la-carte-items"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,102]]]],
+        ["block","link-to",["events.show.a-la-carte-items.show.edit"],["classNames","button"],1,null,["loc",[null,[1,102],[1,204]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,228],[1,233]]]]],[],[]]],["loc",[null,[1,204],[1,235]]]],
+        ["content","model.name",["loc",[null,[1,268],[1,282]]]],
+        ["block","each",[["get","model.registrations",["loc",[null,[1,409],[1,428]]]]],[],2,null,["loc",[null,[1,401],[1,756]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
     };
   }()));
 
@@ -16783,8 +19267,14 @@ define('aeonvera/templates/events/show/a-la-carte-items/show', ['exports'], func
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -16838,8 +19328,8 @@ define('aeonvera/templates/events/show/cancelled-registrations', ['exports'], fu
         var child0 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -16879,8 +19369,8 @@ define('aeonvera/templates/events/show/cancelled-registrations', ['exports'], fu
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -16953,8 +19443,8 @@ define('aeonvera/templates/events/show/cancelled-registrations', ['exports'], fu
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -16995,8 +19485,8 @@ define('aeonvera/templates/events/show/cancelled-registrations', ['exports'], fu
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -17035,8 +19525,14 @@ define('aeonvera/templates/events/show/cancelled-registrations', ['exports'], fu
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17116,8 +19612,13 @@ define('aeonvera/templates/events/show/charts', ['exports'], function (exports) 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17163,20 +19664,100 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
 
   exports['default'] = Ember.HTMLBars.template((function() {
     var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 36
+            },
+            "end": {
+              "line": 1,
+              "column": 129
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/custom-fields/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("New Custom Field");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
       var child0 = (function() {
+        var child0 = (function() {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 1,
+                  "column": 283
+                },
+                "end": {
+                  "line": 1,
+                  "column": 352
+                }
+              },
+              "moduleName": "aeonvera/templates/events/show/custom-fields/index.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+              dom.insertBoundary(fragment, 0);
+              dom.insertBoundary(fragment, null);
+              return morphs;
+            },
+            statements: [
+              ["content","field.label",["loc",[null,[1,337],[1,352]]]]
+            ],
+            locals: [],
+            templates: []
+          };
+        }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 144
+                "column": 249
               },
               "end": {
                 "line": 1,
-                "column": 253
+                "column": 424
               }
             },
             "moduleName": "aeonvera/templates/events/show/custom-fields/index.hbs"
@@ -17212,27 +19793,27 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
             return morphs;
           },
           statements: [
-            ["content","field.label",["loc",[null,[1,178],[1,193]]]],
-            ["content","field.kind",["loc",[null,[1,202],[1,216]]]],
-            ["content","field.editable",["loc",[null,[1,225],[1,243]]]]
+            ["block","link-to",["events.show.custom-fields.show",["get","field.id",["loc",[null,[1,327],[1,335]]]]],[],0,null,["loc",[null,[1,283],[1,364]]]],
+            ["content","field.kind",["loc",[null,[1,373],[1,387]]]],
+            ["content","field.editable",["loc",[null,[1,396],[1,414]]]]
           ],
           locals: ["field"],
-          templates: []
+          templates: [child0]
         };
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 118
+              "column": 223
             },
             "end": {
               "line": 1,
-              "column": 262
+              "column": 433
             }
           },
           "moduleName": "aeonvera/templates/events/show/custom-fields/index.hbs"
@@ -17255,26 +19836,26 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
           return morphs;
         },
         statements: [
-          ["block","each",[["get","model",["loc",[null,[1,152],[1,157]]]]],[],0,null,["loc",[null,[1,144],[1,262]]]]
+          ["block","each",[["get","model",["loc",[null,[1,257],[1,262]]]]],[],0,null,["loc",[null,[1,249],[1,433]]]]
         ],
         locals: [],
         templates: [child0]
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 262
+              "column": 433
             },
             "end": {
               "line": 1,
-              "column": 331
+              "column": 502
             }
           },
           "moduleName": "aeonvera/templates/events/show/custom-fields/index.hbs"
@@ -17304,8 +19885,14 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17314,7 +19901,7 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
           },
           "end": {
             "line": 1,
-            "column": 354
+            "column": 525
           }
         },
         "moduleName": "aeonvera/templates/events/show/custom-fields/index.hbs"
@@ -17325,6 +19912,8 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("table");
@@ -17352,18 +19941,336 @@ define('aeonvera/templates/events/show/custom-fields/index', ['exports'], functi
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(2);
+        var morphs = new Array(3);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
-        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1, 1]),0,0);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [2, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
         ["inline","page-header",[],["text","Custom Fields"],["loc",[null,[1,0],[1,36]]]],
-        ["block","if",[["subexpr","is-present",[["get","model",["loc",[null,[1,136],[1,141]]]]],[],["loc",[null,[1,124],[1,142]]]]],[],0,1,["loc",[null,[1,118],[1,338]]]]
+        ["block","link-to",["events.show.custom-fields.new"],["classNames","button"],0,null,["loc",[null,[1,36],[1,141]]]],
+        ["block","if",[["subexpr","is-present",[["get","model",["loc",[null,[1,241],[1,246]]]]],[],["loc",[null,[1,229],[1,247]]]]],[],1,2,["loc",[null,[1,223],[1,509]]]]
+      ],
+      locals: [],
+      templates: [child0, child1, child2]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/custom-fields/new', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 83
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/custom-fields/new.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","New Custom Field"],["loc",[null,[1,0],[1,39]]]],
+        ["inline","event/custom-field/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,76],[1,81]]]]],[],[]]],["loc",[null,[1,39],[1,83]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/custom-fields/show/edit', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 44
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/custom-fields/show/edit.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","event/custom-field/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,37],[1,42]]]]],[],[]]],["loc",[null,[1,0],[1,44]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/custom-fields/show/index', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 87
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/custom-fields/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 99
+            },
+            "end": {
+              "line": 1,
+              "column": 186
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/custom-fields/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Edit");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 284
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/custom-fields/show/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Answers");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["events.show.custom-fields"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,99]]]],
+        ["block","link-to",["events.show.custom-fields.show.edit"],["classNames","button"],1,null,["loc",[null,[1,99],[1,198]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,222],[1,227]]]]],[],[]]],["loc",[null,[1,198],[1,229]]]]
       ],
       locals: [],
       templates: [child0, child1]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/custom-fields/show', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 41
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/custom-fields/show.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text",["subexpr","@mut",[["get","model.name",["loc",[null,[1,19],[1,29]]]]],[],[]]],["loc",[null,[1,0],[1,31]]]],
+        ["content","outlet",["loc",[null,[1,31],[1,41]]]]
+      ],
+      locals: [],
+      templates: []
     };
   }()));
 
@@ -17376,8 +20283,8 @@ define('aeonvera/templates/events/show/discounts/index', ['exports'], function (
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -17415,8 +20322,8 @@ define('aeonvera/templates/events/show/discounts/index', ['exports'], function (
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -17457,8 +20364,8 @@ define('aeonvera/templates/events/show/discounts/index', ['exports'], function (
       var child1 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -17500,8 +20407,8 @@ define('aeonvera/templates/events/show/discounts/index', ['exports'], function (
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -17562,8 +20469,14 @@ define('aeonvera/templates/events/show/discounts/index', ['exports'], function (
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17641,8 +20554,14 @@ define('aeonvera/templates/events/show/discounts/new', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17693,8 +20612,13 @@ define('aeonvera/templates/events/show/discounts/show/edit', ['exports'], functi
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17703,7 +20627,7 @@ define('aeonvera/templates/events/show/discounts/show/edit', ['exports'], functi
           },
           "end": {
             "line": 1,
-            "column": 40
+            "column": 58
           }
         },
         "moduleName": "aeonvera/templates/events/show/discounts/show/edit.hbs"
@@ -17726,7 +20650,7 @@ define('aeonvera/templates/events/show/discounts/show/edit', ['exports'], functi
         return morphs;
       },
       statements: [
-        ["inline","event/discount/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,33],[1,38]]]]],[],[]]],["loc",[null,[1,0],[1,40]]]]
+        ["inline","event/discount/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,33],[1,38]]]]],[],[]],"parent",["subexpr","@mut",[["get","model.host",["loc",[null,[1,46],[1,56]]]]],[],[]]],["loc",[null,[1,0],[1,58]]]]
       ],
       locals: [],
       templates: []
@@ -17742,8 +20666,8 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -17753,6 +20677,44 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
             "end": {
               "line": 1,
               "column": 83
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/discounts/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 95
+            },
+            "end": {
+              "line": 1,
+              "column": 178
             }
           },
           "moduleName": "aeonvera/templates/events/show/discounts/show/index.hbs"
@@ -17777,21 +20739,21 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
         templates: []
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 336
+                "column": 431
               },
               "end": {
                 "line": 1,
-                "column": 426
+                "column": 521
               }
             },
             "moduleName": "aeonvera/templates/events/show/discounts/show/index.hbs"
@@ -17814,7 +20776,7 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
             return morphs;
           },
           statements: [
-            ["content","registration.attendeeName",["loc",[null,[1,397],[1,426]]]]
+            ["content","registration.attendeeName",["loc",[null,[1,492],[1,521]]]]
           ],
           locals: [],
           templates: []
@@ -17822,17 +20784,17 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 281
+              "column": 376
             },
             "end": {
               "line": 1,
-              "column": 627
+              "column": 722
             }
           },
           "moduleName": "aeonvera/templates/events/show/discounts/show/index.hbs"
@@ -17878,11 +20840,11 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
           return morphs;
         },
         statements: [
-          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,380],[1,395]]]]],[],0,null,["loc",[null,[1,336],[1,438]]]],
-          ["content","registration.danceOrientation",["loc",[null,[1,447],[1,480]]]],
-          ["content","registration.packageName",["loc",[null,[1,489],[1,517]]]],
-          ["content","registration.paymentStatus",["loc",[null,[1,526],[1,556]]]],
-          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,584],[1,609]]]],"LLL"],[],["loc",[null,[1,565],[1,617]]]]
+          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,475],[1,490]]]]],[],0,null,["loc",[null,[1,431],[1,533]]]],
+          ["content","registration.danceOrientation",["loc",[null,[1,542],[1,575]]]],
+          ["content","registration.packageName",["loc",[null,[1,584],[1,612]]]],
+          ["content","registration.paymentStatus",["loc",[null,[1,621],[1,651]]]],
+          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,679],[1,704]]]],"LLL"],[],["loc",[null,[1,660],[1,712]]]]
         ],
         locals: ["registration"],
         templates: [child0]
@@ -17890,8 +20852,14 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -17900,7 +20868,7 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
           },
           "end": {
             "line": 1,
-            "column": 652
+            "column": 747
           }
         },
         "moduleName": "aeonvera/templates/events/show/discounts/show/index.hbs"
@@ -17911,6 +20879,8 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
@@ -17950,20 +20920,22 @@ define('aeonvera/templates/events/show/discounts/show/index', ['exports'], funct
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(3);
+        var morphs = new Array(4);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
-        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3, 1]),0,0);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [4, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
-        ["block","link-to",["events.show.discounts.show.edit"],["classNames","button"],0,null,["loc",[null,[1,0],[1,95]]]],
-        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,119],[1,124]]]]],[],[]]],["loc",[null,[1,95],[1,126]]]],
-        ["block","each",[["get","model.registrations",["loc",[null,[1,289],[1,308]]]]],[],1,null,["loc",[null,[1,281],[1,636]]]]
+        ["block","link-to",["events.show.discounts"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,95]]]],
+        ["block","link-to",["events.show.discounts.show.edit"],["classNames","button"],1,null,["loc",[null,[1,95],[1,190]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,214],[1,219]]]]],[],[]]],["loc",[null,[1,190],[1,221]]]],
+        ["block","each",[["get","model.registrations",["loc",[null,[1,384],[1,403]]]]],[],2,null,["loc",[null,[1,376],[1,731]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
     };
   }()));
 
@@ -17975,8 +20947,14 @@ define('aeonvera/templates/events/show/discounts/show', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -18027,8 +21005,13 @@ define('aeonvera/templates/events/show/edit/customization', ['exports'], functio
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -18037,7 +21020,7 @@ define('aeonvera/templates/events/show/edit/customization', ['exports'], functio
           },
           "end": {
             "line": 1,
-            "column": 31
+            "column": 463
           }
         },
         "moduleName": "aeonvera/templates/events/show/edit/customization.hbs"
@@ -18048,15 +21031,38 @@ define('aeonvera/templates/events/show/edit/customization', ['exports'], functio
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
-        var el1 = dom.createElement("span");
-        var el2 = dom.createTextNode("edit customization");
+        var el1 = dom.createElement("form");
+        var el2 = dom.createElement("label");
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("Logo");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("label");
+        var el3 = dom.createElement("span");
+        var el4 = dom.createTextNode("Registration Email Disclaimer");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
       },
-      buildRenderNodes: function buildRenderNodes() { return []; },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var morphs = new Array(3);
+        morphs[0] = dom.createElementMorph(element0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [0]),1,1);
+        morphs[2] = dom.createMorphAt(dom.childAt(element0, [1]),1,1);
+        return morphs;
+      },
       statements: [
-
+        ["element","action",["save"],["on","submit"],["loc",[null,[1,6],[1,35]]]],
+        ["inline","file-upload",[],["url","/events/{{model.id}}/","paramNamespace","event","paramName","logo"],["loc",[null,[1,60],[1,143]]]],
+        ["inline","textarea",[],["value",["subexpr","@mut",[["get","model.registrationEmailDisclaimer",["loc",[null,[1,217],[1,250]]]]],[],[]],"rows","4","placeholder","This will appear underneath the registration confirmation email sent out to your registratints. By default, nothing other than what they register for shows up in the email."],["loc",[null,[1,200],[1,448]]]]
       ],
       locals: [],
       templates: []
@@ -18072,8 +21078,8 @@ define('aeonvera/templates/events/show/edit/housing', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -18115,56 +21121,15 @@ define('aeonvera/templates/events/show/edit/housing', ['exports'], function (exp
         templates: []
       };
     }());
-    var child1 = (function() {
-      return {
-        meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
-          "loc": {
-            "source": null,
-            "start": {
-              "line": 1,
-              "column": 211
-            },
-            "end": {
-              "line": 1,
-              "column": 360
-            }
-          },
-          "moduleName": "aeonvera/templates/events/show/edit/housing.hbs"
-        },
-        isEmpty: false,
-        arity: 0,
-        cachedFragment: null,
-        hasRendered: false,
-        buildFragment: function buildFragment(dom) {
-          var el0 = dom.createDocumentFragment();
-          var el1 = dom.createElement("label");
-          var el2 = dom.createElement("span");
-          var el3 = dom.createTextNode("Housing Nights");
-          dom.appendChild(el2, el3);
-          dom.appendChild(el1, el2);
-          var el2 = dom.createComment("");
-          dom.appendChild(el1, el2);
-          dom.appendChild(el0, el1);
-          return el0;
-        },
-        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var morphs = new Array(1);
-          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
-          return morphs;
-        },
-        statements: [
-          ["inline","input",[],["value",["subexpr","@mut",[["get","model.housingNights",["loc",[null,[1,319],[1,338]]]]],[],[]],"type","text"],["loc",[null,[1,305],[1,352]]]]
-        ],
-        locals: [],
-        templates: []
-      };
-    }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -18173,7 +21138,7 @@ define('aeonvera/templates/events/show/edit/housing', ['exports'], function (exp
           },
           "end": {
             "line": 1,
-            "column": 391
+            "column": 218
           }
         },
         "moduleName": "aeonvera/templates/events/show/edit/housing.hbs"
@@ -18187,26 +21152,22 @@ define('aeonvera/templates/events/show/edit/housing', ['exports'], function (exp
         var el1 = dom.createElement("form");
         var el2 = dom.createComment("");
         dom.appendChild(el1, el2);
-        var el2 = dom.createComment("");
-        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [0]);
-        var morphs = new Array(3);
+        var morphs = new Array(2);
         morphs[0] = dom.createElementMorph(element0);
         morphs[1] = dom.createMorphAt(element0,0,0);
-        morphs[2] = dom.createMorphAt(element0,1,1);
         return morphs;
       },
       statements: [
         ["element","action",["save"],["on","submit"],["loc",[null,[1,6],[1,35]]]],
-        ["block","error-field-wrapper",[],["field","housingStatus"],0,null,["loc",[null,[1,36],[1,211]]]],
-        ["block","error-field-wrapper",[],["errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,241],[1,247]]]]],[],[]],"field","housingNights"],1,null,["loc",[null,[1,211],[1,384]]]]
+        ["block","error-field-wrapper",[],["field","housingStatus"],0,null,["loc",[null,[1,36],[1,211]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0]
     };
   }()));
 
@@ -18219,8 +21180,8 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -18265,8 +21226,8 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -18311,8 +21272,8 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -18357,17 +21318,82 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 846
+              "column": 823
             },
             "end": {
               "line": 1,
-              "column": 1201
+              "column": 1166
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/edit/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Domain");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("div");
+          dom.setAttribute(el2,"class","row collapse");
+          var el3 = dom.createElement("div");
+          dom.setAttribute(el3,"class","columns small-8");
+          var el4 = dom.createComment("");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("div");
+          dom.setAttribute(el3,"class","columns small-4");
+          var el4 = dom.createElement("span");
+          dom.setAttribute(el4,"class","postfix");
+          var el5 = dom.createTextNode(".");
+          dom.appendChild(el4, el5);
+          var el5 = dom.createComment("");
+          dom.appendChild(el4, el5);
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [0, 1]);
+          var morphs = new Array(2);
+          morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+          morphs[1] = dom.createMorphAt(dom.childAt(element0, [1, 0]),1,1);
+          return morphs;
+        },
+        statements: [
+          ["inline","input",[],["value",["subexpr","@mut",[["get","model.domain",["loc",[null,[1,1007],[1,1019]]]]],[],[]],"placeholder","acme","type","text","required",true],["loc",[null,[1,993],[1,1066]]]],
+          ["inline","t",["domain"],[],["loc",[null,[1,1124],[1,1139]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child4 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 1213
+            },
+            "end": {
+              "line": 1,
+              "column": 1467
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/index.hbs"
@@ -18383,51 +21409,37 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
           var el3 = dom.createTextNode("Starts At");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2,"class","row");
-          var el3 = dom.createElement("div");
-          dom.setAttribute(el3,"class","small-6 columns");
-          var el4 = dom.createComment("");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("div");
-          dom.setAttribute(el3,"class","small-6 columns");
-          var el4 = dom.createComment("");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
+          var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element1 = dom.childAt(fragment, [0, 1]);
-          var morphs = new Array(2);
-          morphs[0] = dom.createMorphAt(dom.childAt(element1, [0]),0,0);
-          morphs[1] = dom.createMorphAt(dom.childAt(element1, [1]),0,0);
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
           return morphs;
         },
         statements: [
-          ["inline","date-picker",[],["date",["subexpr","@mut",[["get","startsAtDate",["loc",[null,[1,1031],[1,1043]]]]],[],[]],"valueFormat","YYYY-MM-DD","allowBlank",false],["loc",[null,[1,1012],[1,1087]]]],
-          ["inline","input",[],["type","time","placeholder","00:00","value",["subexpr","@mut",[["get","startAtTime",["loc",[null,[1,1168],[1,1179]]]]],[],[]]],["loc",[null,[1,1122],[1,1181]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.startsAt",["loc",[null,[1,1358],[1,1372]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.startsAt",["loc",[null,[1,1420],[1,1434]]]]],[],["loc",[null,[1,1415],[1,1435]]]]],[],["loc",[null,[1,1407],[1,1436]]]],"forceDateOutput",true],["loc",[null,[1,1333],[1,1459]]]]
         ],
         locals: [],
         templates: []
       };
     }());
-    var child4 = (function() {
+    var child5 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 1225
+              "column": 1491
             },
             "end": {
               "line": 1,
-              "column": 1573
+              "column": 1737
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/index.hbs"
@@ -18443,32 +21455,64 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
           var el3 = dom.createTextNode("Ends At");
           dom.appendChild(el2, el3);
           dom.appendChild(el1, el2);
-          var el2 = dom.createElement("div");
-          dom.setAttribute(el2,"class","row");
-          var el3 = dom.createElement("div");
-          dom.setAttribute(el3,"class","small-6 columns");
-          var el4 = dom.createComment("");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
-          var el3 = dom.createElement("div");
-          dom.setAttribute(el3,"class","small-6 columns");
-          var el4 = dom.createComment("");
-          dom.appendChild(el3, el4);
-          dom.appendChild(el2, el3);
+          var el2 = dom.createComment("");
           dom.appendChild(el1, el2);
           dom.appendChild(el0, el1);
           return el0;
         },
         buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-          var element0 = dom.childAt(fragment, [0, 1]);
-          var morphs = new Array(2);
-          morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
-          morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
           return morphs;
         },
         statements: [
-          ["inline","date-picker",[],["date",["subexpr","@mut",[["get","EndsAtDate",["loc",[null,[1,1406],[1,1416]]]]],[],[]],"valueFormat","YYYY-MM-DD","allowBlank",false],["loc",[null,[1,1387],[1,1460]]]],
-          ["inline","input",[],["type","time","placeholder","00:00","value",["subexpr","@mut",[["get","EndsAtTime",["loc",[null,[1,1541],[1,1551]]]]],[],[]]],["loc",[null,[1,1495],[1,1553]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.endsAt",["loc",[null,[1,1632],[1,1644]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.endsAt",["loc",[null,[1,1692],[1,1704]]]]],[],["loc",[null,[1,1687],[1,1705]]]]],[],["loc",[null,[1,1679],[1,1706]]]],"forceDateOutput",true],["loc",[null,[1,1607],[1,1729]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child6 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 1788
+            },
+            "end": {
+              "line": 1,
+              "column": 2123
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/edit/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("label");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Registration Opens At");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
+          return morphs;
+        },
+        statements: [
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.openingTier.increaseAfterDate",["loc",[null,[1,1972],[1,2007]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.openingTier.increaseAfterDate",["loc",[null,[1,2055],[1,2090]]]]],[],["loc",[null,[1,2050],[1,2091]]]]],[],["loc",[null,[1,2042],[1,2092]]]],"forceDateOutput",true],["loc",[null,[1,1947],[1,2115]]]]
         ],
         locals: [],
         templates: []
@@ -18476,8 +21520,13 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -18486,7 +21535,7 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
           },
           "end": {
             "line": 1,
-            "column": 1610
+            "column": 2160
           }
         },
         "moduleName": "aeonvera/templates/events/show/edit/index.hbs"
@@ -18509,6 +21558,8 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
         dom.setAttribute(el2,"class","row");
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","row");
@@ -18517,20 +21568,30 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var element2 = dom.childAt(fragment, [0]);
-        var element3 = dom.childAt(element2, [0]);
-        var element4 = dom.childAt(element2, [2]);
-        var morphs = new Array(6);
-        morphs[0] = dom.createElementMorph(element2);
-        morphs[1] = dom.createMorphAt(element3,0,0);
-        morphs[2] = dom.createMorphAt(element3,1,1);
-        morphs[3] = dom.createMorphAt(dom.childAt(element2, [1]),0,0);
-        morphs[4] = dom.createMorphAt(element4,0,0);
-        morphs[5] = dom.createMorphAt(element4,1,1);
+        var element1 = dom.childAt(fragment, [0]);
+        var element2 = dom.childAt(element1, [0]);
+        var element3 = dom.childAt(element1, [1]);
+        var element4 = dom.childAt(element1, [2]);
+        var morphs = new Array(8);
+        morphs[0] = dom.createElementMorph(element1);
+        morphs[1] = dom.createMorphAt(element2,0,0);
+        morphs[2] = dom.createMorphAt(element2,1,1);
+        morphs[3] = dom.createMorphAt(element3,0,0);
+        morphs[4] = dom.createMorphAt(element3,1,1);
+        morphs[5] = dom.createMorphAt(element4,0,0);
+        morphs[6] = dom.createMorphAt(element4,1,1);
+        morphs[7] = dom.createMorphAt(dom.childAt(element1, [4]),0,0);
         return morphs;
       },
       statements: [
@@ -18538,11 +21599,13 @@ define('aeonvera/templates/events/show/edit/index', ['exports'], function (expor
         ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,119],[1,125]]]]],[],[]],"field","name"],0,null,["loc",[null,[1,53],[1,283]]]],
         ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,349],[1,355]]]]],[],[]],"field","shortDescription"],1,null,["loc",[null,[1,283],[1,556]]]],
         ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,645],[1,651]]]]],[],[]],"field","location"],2,null,["loc",[null,[1,579],[1,823]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,912],[1,918]]]]],[],[]],"field","startsAt"],3,null,["loc",[null,[1,846],[1,1225]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1291],[1,1297]]]]],[],[]],"field","endsAt"],4,null,["loc",[null,[1,1225],[1,1597]]]]
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,889],[1,895]]]]],[],[]],"field","domain"],3,null,["loc",[null,[1,823],[1,1190]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1279],[1,1285]]]]],[],[]],"field","startsAt"],4,null,["loc",[null,[1,1213],[1,1491]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1557],[1,1563]]]]],[],[]],"field","endsAt"],5,null,["loc",[null,[1,1491],[1,1761]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1854],[1,1860]]]]],[],[]],"field","model.openingTier.increaseAfterDate"],6,null,["loc",[null,[1,1788],[1,2147]]]]
       ],
       locals: [],
-      templates: [child0, child1, child2, child3, child4]
+      templates: [child0, child1, child2, child3, child4, child5, child6]
     };
   }()));
 
@@ -18555,8 +21618,8 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -18565,7 +21628,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
             },
             "end": {
               "line": 1,
-              "column": 250
+              "column": 345
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/options.hbs"
@@ -18592,7 +21655,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
           return morphs;
         },
         statements: [
-          ["inline","date-time-input",[],["value",["subexpr","@mut",[["get","model.mailPaymentsEndAt",["loc",[null,[1,217],[1,240]]]]],[],[]]],["loc",[null,[1,193],[1,242]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.mailPaymentsEndAt",["loc",[null,[1,218],[1,241]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.mailPaymentsEndAt",["loc",[null,[1,289],[1,312]]]]],[],["loc",[null,[1,284],[1,313]]]]],[],["loc",[null,[1,276],[1,314]]]],"forceDateOutput",true],["loc",[null,[1,193],[1,337]]]]
         ],
         locals: [],
         templates: []
@@ -18601,17 +21664,17 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 274
+              "column": 369
             },
             "end": {
               "line": 1,
-              "column": 489
+              "column": 685
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/options.hbs"
@@ -18638,7 +21701,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
           return morphs;
         },
         statements: [
-          ["inline","date-time-input",[],["value",["subexpr","@mut",[["get","model.electronicPaymentsEndAt",["loc",[null,[1,450],[1,479]]]]],[],[]]],["loc",[null,[1,426],[1,481]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.electronicPaymentsEndAt",["loc",[null,[1,546],[1,575]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.electronicPaymentsEndAt",["loc",[null,[1,623],[1,652]]]]],[],["loc",[null,[1,618],[1,653]]]]],[],["loc",[null,[1,610],[1,654]]]],"forceDateOutput",true],["loc",[null,[1,521],[1,677]]]]
         ],
         locals: [],
         templates: []
@@ -18647,17 +21710,17 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 513
+              "column": 709
             },
             "end": {
               "line": 1,
-              "column": 694
+              "column": 980
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/options.hbs"
@@ -18684,7 +21747,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
           return morphs;
         },
         statements: [
-          ["inline","date-time-input",[],["value",["subexpr","@mut",[["get","model.refundsEndAt",["loc",[null,[1,666],[1,684]]]]],[],[]]],["loc",[null,[1,642],[1,686]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.refundsEndAt",["loc",[null,[1,863],[1,881]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.refundsEndAt",["loc",[null,[1,929],[1,947]]]]],[],["loc",[null,[1,924],[1,948]]]]],[],["loc",[null,[1,916],[1,949]]]],"forceDateOutput",true],["loc",[null,[1,838],[1,972]]]]
         ],
         locals: [],
         templates: []
@@ -18693,17 +21756,17 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 741
+              "column": 1031
             },
             "end": {
               "line": 1,
-              "column": 932
+              "column": 1315
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/options.hbs"
@@ -18730,7 +21793,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
           return morphs;
         },
         statements: [
-          ["inline","date-time-input",[],["value",["subexpr","@mut",[["get","model.shirtSalesEndAt",["loc",[null,[1,901],[1,922]]]]],[],[]]],["loc",[null,[1,877],[1,924]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.shirtSalesEndAt",["loc",[null,[1,1192],[1,1213]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.shirtSalesEndAt",["loc",[null,[1,1261],[1,1282]]]]],[],["loc",[null,[1,1256],[1,1283]]]]],[],["loc",[null,[1,1248],[1,1284]]]],"forceDateOutput",true],["loc",[null,[1,1167],[1,1307]]]]
         ],
         locals: [],
         templates: []
@@ -18739,17 +21802,17 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 956
+              "column": 1339
             },
             "end": {
               "line": 1,
-              "column": 1167
+              "column": 1649
             }
           },
           "moduleName": "aeonvera/templates/events/show/edit/options.hbs"
@@ -18776,7 +21839,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
           return morphs;
         },
         statements: [
-          ["inline","date-time-input",[],["value",["subexpr","@mut",[["get","model.showAtTheDoorPricesAt",["loc",[null,[1,1130],[1,1157]]]]],[],[]]],["loc",[null,[1,1106],[1,1159]]]]
+          ["inline","bs-datetimepicker",[],["date",["subexpr","@mut",[["get","model.showAtTheDoorPricesAt",["loc",[null,[1,1514],[1,1541]]]]],[],[]],"format","YYYY-MM-DD LT","updateDate",["subexpr","action",[["subexpr","mut",[["get","model.showAtTheDoorPricesAt",["loc",[null,[1,1589],[1,1616]]]]],[],["loc",[null,[1,1584],[1,1617]]]]],[],["loc",[null,[1,1576],[1,1618]]]],"forceDateOutput",true],["loc",[null,[1,1489],[1,1641]]]]
         ],
         locals: [],
         templates: []
@@ -18784,8 +21847,13 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "modifiers",
+          "modifiers": [
+            "action"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -18794,7 +21862,7 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
           },
           "end": {
             "line": 1,
-            "column": 1925
+            "column": 2411
           }
         },
         "moduleName": "aeonvera/templates/events/show/edit/options.hbs"
@@ -18815,12 +21883,16 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","row");
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
         var el3 = dom.createComment("");
         dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
         dom.appendChild(el1, el2);
         var el2 = dom.createElement("div");
         dom.setAttribute(el2,"class","row");
@@ -18881,8 +21953,8 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [0]);
         var element1 = dom.childAt(element0, [0]);
-        var element2 = dom.childAt(element0, [1]);
-        var element3 = dom.childAt(element0, [2]);
+        var element2 = dom.childAt(element0, [2]);
+        var element3 = dom.childAt(element0, [4]);
         var element4 = dom.childAt(element3, [0]);
         var element5 = dom.childAt(element3, [1]);
         var morphs = new Array(12);
@@ -18902,20 +21974,465 @@ define('aeonvera/templates/events/show/edit/options', ['exports'], function (exp
       },
       statements: [
         ["element","action",["save"],["on","submit"],["loc",[null,[1,6],[1,35]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-4","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,119],[1,125]]]]],[],[]],"field","mailPaymentsEndAt"],0,null,["loc",[null,[1,53],[1,274]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-4","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,340],[1,346]]]]],[],[]],"field","electronicPaymentsEndAt"],1,null,["loc",[null,[1,274],[1,513]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-4","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,579],[1,585]]]]],[],[]],"field","refundsEndAt"],2,null,["loc",[null,[1,513],[1,718]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,807],[1,813]]]]],[],[]],"field","shirtSalesEndAt"],3,null,["loc",[null,[1,741],[1,956]]]],
-        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1022],[1,1028]]]]],[],[]],"field","showAtTheDoorPricesAt"],4,null,["loc",[null,[1,956],[1,1191]]]],
-        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.allowDiscounts",["loc",[null,[1,1269],[1,1289]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1253],[1,1307]]]],
-        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.allowCombinedDiscounts",["loc",[null,[1,1357],[1,1385]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1341],[1,1403]]]],
-        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.showOnPublicCalendar",["loc",[null,[1,1462],[1,1488]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1446],[1,1506]]]],
-        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.hasVolunteers",["loc",[null,[1,1609],[1,1628]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1593],[1,1646]]]],
-        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.makeAttendeesPayFees",["loc",[null,[1,1704],[1,1730]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1688],[1,1748]]]],
-        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.acceptOnlyElectronicPayments",["loc",[null,[1,1808],[1,1842]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1792],[1,1860]]]]
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-4","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,119],[1,125]]]]],[],[]],"field","mailPaymentsEndAt"],0,null,["loc",[null,[1,53],[1,369]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-4","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,435],[1,441]]]]],[],[]],"field","electronicPaymentsEndAt"],1,null,["loc",[null,[1,369],[1,709]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-4","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,775],[1,781]]]]],[],[]],"field","refundsEndAt"],2,null,["loc",[null,[1,709],[1,1004]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1097],[1,1103]]]]],[],[]],"field","shirtSalesEndAt"],3,null,["loc",[null,[1,1031],[1,1339]]]],
+        ["block","error-field-wrapper",[],["classes","columns small-12 medium-6","errors",["subexpr","@mut",[["get","errors",["loc",[null,[1,1405],[1,1411]]]]],[],[]],"field","showAtTheDoorPricesAt"],4,null,["loc",[null,[1,1339],[1,1673]]]],
+        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.allowDiscounts",["loc",[null,[1,1755],[1,1775]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1739],[1,1793]]]],
+        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.allowCombinedDiscounts",["loc",[null,[1,1843],[1,1871]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1827],[1,1889]]]],
+        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.showOnPublicCalendar",["loc",[null,[1,1948],[1,1974]]]]],[],[]],"type","checkbox"],["loc",[null,[1,1932],[1,1992]]]],
+        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.hasVolunteers",["loc",[null,[1,2095],[1,2114]]]]],[],[]],"type","checkbox"],["loc",[null,[1,2079],[1,2132]]]],
+        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.makeAttendeesPayFees",["loc",[null,[1,2190],[1,2216]]]]],[],[]],"type","checkbox"],["loc",[null,[1,2174],[1,2234]]]],
+        ["inline","input",[],["checked",["subexpr","@mut",[["get","model.acceptOnlyElectronicPayments",["loc",[null,[1,2294],[1,2328]]]]],[],[]],"type","checkbox"],["loc",[null,[1,2278],[1,2346]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3, child4]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/edit/payment-processors/-paypal', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 445
+            },
+            "end": {
+              "line": 1,
+              "column": 489
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/edit/payment-processors/-paypal.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("0.75%");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 673
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/edit/payment-processors/-paypal.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("ul");
+        dom.setAttribute(el1,"class","pricing-table");
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","title");
+        var el3 = dom.createElement("img");
+        dom.setAttribute(el3,"src","assets/images/paypal_logo_grau.png");
+        dom.setAttribute(el3,"style","height: 54px;");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","price");
+        var el3 = dom.createElement("small");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","row");
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","medium-5 columns");
+        var el6 = dom.createElement("a");
+        dom.setAttribute(el6,"href","https://www.paypal.com/webapps/mpp/merchant-fees");
+        var el7 = dom.createElement("span");
+        var el8 = dom.createTextNode("2.9% + 30¢");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","medium-7 columns");
+        var el6 = dom.createElement("span");
+        var el7 = dom.createTextNode("per transaction to PayPal");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","bullet-item");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","row");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","medium-5 columns");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","medium-7 columns");
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("per transaction to ÆONVERA");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","cta-button");
+        var el3 = dom.createElement("a");
+        dom.setAttribute(el3,"class","button");
+        var el4 = dom.createElement("span");
+        var el5 = dom.createTextNode("Coming Soon™");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0, 2, 0, 0]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["welcome.tos"],[],0,null,["loc",[null,[1,445],[1,501]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/edit/payment-processors/-stripe', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 405
+            },
+            "end": {
+              "line": 1,
+              "column": 449
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/edit/payment-processors/-stripe.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("0.75%");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 576
+            },
+            "end": {
+              "line": 1,
+              "column": 766
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/edit/payment-processors/-stripe.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("a");
+          dom.setAttribute(el1,"class","button warning");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Remove Connection With Stripe");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element1 = dom.childAt(fragment, [0]);
+          var morphs = new Array(1);
+          morphs[0] = dom.createAttrMorph(element1, 'href');
+          return morphs;
+        },
+        statements: [
+          ["attribute","href",["concat",["https://aeonvera.com/oauth/stripe?payable_id=",["get","model.id",["loc",[null,[1,666],[1,674]]]],"&payable_type=Event"]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child2 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 766
+            },
+            "end": {
+              "line": 1,
+              "column": 916
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/edit/payment-processors/-stripe.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("a");
+          dom.setAttribute(el1,"class","button");
+          var el2 = dom.createElement("span");
+          var el3 = dom.createTextNode("Connect With Stripe");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [0]);
+          var morphs = new Array(1);
+          morphs[0] = dom.createAttrMorph(element0, 'href');
+          return morphs;
+        },
+        statements: [
+          ["attribute","href",["concat",["https://aeonvera.com/oauth/stripe/new?payable_id=",["get","model.id",["loc",[null,[1,834],[1,842]]]],"&payable_type=Event"]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 933
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/edit/payment-processors/-stripe.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("ul");
+        dom.setAttribute(el1,"class","pricing-table");
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","title");
+        var el3 = dom.createElement("img");
+        dom.setAttribute(el3,"src","assets/images/stripe-logo-light.png");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","price");
+        var el3 = dom.createElement("small");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","row");
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","medium-5 columns");
+        var el6 = dom.createElement("a");
+        dom.setAttribute(el6,"href","https://stripe.com/us/pricing");
+        var el7 = dom.createElement("span");
+        var el8 = dom.createTextNode("2.9% + 30¢");
+        dom.appendChild(el7, el8);
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("div");
+        dom.setAttribute(el5,"class","medium-7 columns");
+        var el6 = dom.createElement("span");
+        var el7 = dom.createTextNode("per transaction to Stripe");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","bullet-item");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","row");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","medium-5 columns");
+        var el5 = dom.createComment("");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","medium-7 columns");
+        var el5 = dom.createElement("span");
+        var el6 = dom.createTextNode("per transaction to ÆONVERA");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("li");
+        dom.setAttribute(el2,"class","cta-button");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element2 = dom.childAt(fragment, [0]);
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(dom.childAt(element2, [2, 0, 0]),0,0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element2, [3]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["welcome.tos"],[],0,null,["loc",[null,[1,405],[1,461]]]],
+        ["block","if",[["get","model.hasStripeIntegration",["loc",[null,[1,582],[1,608]]]]],[],1,2,["loc",[null,[1,576],[1,923]]]]
+      ],
+      locals: [],
+      templates: [child0, child1, child2]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/edit/payment-processors', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 223
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/edit/payment-processors.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","row");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","columns small-6 medium-6");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","columns small-6 medium-6");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["inline","partial",["events/show/edit/payment-processors/stripe"],[],["loc",[null,[1,55],[1,111]]]],
+        ["inline","partial",["events/show/edit/payment-processors/paypal"],[],["loc",[null,[1,155],[1,211]]]]
+      ],
+      locals: [],
+      templates: []
     };
   }()));
 
@@ -18928,8 +22445,8 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -18966,8 +22483,8 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19004,8 +22521,8 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19042,8 +22559,8 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19080,8 +22597,8 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19117,8 +22634,14 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19127,7 +22650,7 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 725
+            "column": 1022
           }
         },
         "moduleName": "aeonvera/templates/events/show/edit.hbs"
@@ -19168,11 +22691,39 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","row");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","small-12 columns");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","right");
+        var el4 = dom.createElement("ul");
+        dom.setAttribute(el4,"class","button-group");
+        var el5 = dom.createElement("li");
+        var el6 = dom.createElement("button");
+        dom.setAttribute(el6,"class","secondary");
+        var el7 = dom.createTextNode("Cancel");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("li");
+        var el6 = dom.createElement("button");
+        var el7 = dom.createTextNode("Save");
+        dom.appendChild(el6, el7);
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
         var element0 = dom.childAt(fragment, [1, 0]);
-        var morphs = new Array(7);
+        var element1 = dom.childAt(fragment, [3, 0, 0, 0]);
+        var element2 = dom.childAt(element1, [0, 0]);
+        var element3 = dom.childAt(element1, [1, 0]);
+        var morphs = new Array(11);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
         morphs[2] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
@@ -19180,8 +22731,11 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
         morphs[4] = dom.createMorphAt(dom.childAt(element0, [3]),0,0);
         morphs[5] = dom.createMorphAt(dom.childAt(element0, [4]),0,0);
         morphs[6] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[7] = dom.createElementMorph(element2);
+        morphs[8] = dom.createAttrMorph(element3, 'disabled');
+        morphs[9] = dom.createAttrMorph(element3, 'title');
+        morphs[10] = dom.createElementMorph(element3);
         dom.insertBoundary(fragment, 0);
-        dom.insertBoundary(fragment, null);
         return morphs;
       },
       statements: [
@@ -19191,7 +22745,11 @@ define('aeonvera/templates/events/show/edit', ['exports'], function (exports) {
         ["block","link-to",["events.show.edit.options"],["classNames","button secondary small"],2,null,["loc",[null,[1,325],[1,432]]]],
         ["block","link-to",["events.show.edit.customization"],["classNames","button secondary small"],3,null,["loc",[null,[1,441],[1,560]]]],
         ["block","link-to",["events.show.edit.payment-processors"],["classNames","button secondary small"],4,null,["loc",[null,[1,569],[1,698]]]],
-        ["content","outlet",["loc",[null,[1,715],[1,725]]]]
+        ["content","outlet",["loc",[null,[1,715],[1,725]]]],
+        ["element","action",["cancel"],["on","click"],["loc",[null,[1,828],[1,858]]]],
+        ["attribute","disabled",["get","isDirty",["loc",[null,[1,920],[1,927]]]]],
+        ["attribute","title",["get","submitTitle",["loc",[null,[1,938],[1,949]]]]],
+        ["element","action",["save"],["on","click"],["loc",[null,[1,952],[1,980]]]]
       ],
       locals: [],
       templates: [child0, child1, child2, child3, child4]
@@ -19207,8 +22765,8 @@ define('aeonvera/templates/events/show/housing/index', ['exports'], function (ex
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19254,8 +22812,8 @@ define('aeonvera/templates/events/show/housing/index', ['exports'], function (ex
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19300,8 +22858,14 @@ define('aeonvera/templates/events/show/housing/index', ['exports'], function (ex
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19386,8 +22950,14 @@ define('aeonvera/templates/events/show/housing/provisions/index', ['exports'], f
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19441,8 +23011,14 @@ define('aeonvera/templates/events/show/housing/requests/index', ['exports'], fun
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19496,8 +23072,13 @@ define('aeonvera/templates/events/show/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19648,8 +23229,8 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19687,8 +23268,8 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -19728,8 +23309,8 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19738,7 +23319,7 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
             },
             "end": {
               "line": 1,
-              "column": 493
+              "column": 497
             }
           },
           "moduleName": "aeonvera/templates/events/show/levels/index.hbs"
@@ -19788,7 +23369,7 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
           ["content","level.numberOfLeads",["loc",[null,[1,361],[1,384]]]],
           ["content","level.numberOfFollows",["loc",[null,[1,393],[1,418]]]],
           ["content","level.totalRegistrants",["loc",[null,[1,427],[1,453]]]],
-          ["content","level.requirement",["loc",[null,[1,462],[1,483]]]]
+          ["content","level.requirementName",["loc",[null,[1,462],[1,487]]]]
         ],
         locals: ["level"],
         templates: [child0]
@@ -19796,8 +23377,14 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19806,7 +23393,7 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
           },
           "end": {
             "line": 1,
-            "column": 518
+            "column": 522
           }
         },
         "moduleName": "aeonvera/templates/events/show/levels/index.hbs"
@@ -19864,7 +23451,7 @@ define('aeonvera/templates/events/show/levels/index', ['exports'], function (exp
       statements: [
         ["inline","page-header",[],["text","Levels / Tracks"],["loc",[null,[1,0],[1,38]]]],
         ["block","link-to",["events.show.levels.new"],["classNames","button"],0,null,["loc",[null,[1,38],[1,129]]]],
-        ["block","each",[["get","model",["loc",[null,[1,253],[1,258]]]]],[],1,null,["loc",[null,[1,245],[1,502]]]]
+        ["block","each",[["get","model",["loc",[null,[1,253],[1,258]]]]],[],1,null,["loc",[null,[1,245],[1,506]]]]
       ],
       locals: [],
       templates: [child0, child1]
@@ -19879,8 +23466,14 @@ define('aeonvera/templates/events/show/levels/new', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19931,8 +23524,13 @@ define('aeonvera/templates/events/show/levels/show/edit', ['exports'], function 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -19941,7 +23539,7 @@ define('aeonvera/templates/events/show/levels/show/edit', ['exports'], function 
           },
           "end": {
             "line": 1,
-            "column": 37
+            "column": 56
           }
         },
         "moduleName": "aeonvera/templates/events/show/levels/show/edit.hbs"
@@ -19964,7 +23562,7 @@ define('aeonvera/templates/events/show/levels/show/edit', ['exports'], function 
         return morphs;
       },
       statements: [
-        ["inline","event/level/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,30],[1,35]]]]],[],[]]],["loc",[null,[1,0],[1,37]]]]
+        ["inline","event/level/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,30],[1,35]]]]],[],[]],"parent",["subexpr","@mut",[["get","model.event",["loc",[null,[1,43],[1,54]]]]],[],[]]],["loc",[null,[1,0],[1,56]]]]
       ],
       locals: [],
       templates: []
@@ -19980,8 +23578,8 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -19991,6 +23589,44 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
             "end": {
               "line": 1,
               "column": 80
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/levels/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 92
+            },
+            "end": {
+              "line": 1,
+              "column": 172
             }
           },
           "moduleName": "aeonvera/templates/events/show/levels/show/index.hbs"
@@ -20015,21 +23651,21 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
         templates: []
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 330
+                "column": 422
               },
               "end": {
                 "line": 1,
-                "column": 420
+                "column": 512
               }
             },
             "moduleName": "aeonvera/templates/events/show/levels/show/index.hbs"
@@ -20052,7 +23688,7 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
             return morphs;
           },
           statements: [
-            ["content","registration.attendeeName",["loc",[null,[1,391],[1,420]]]]
+            ["content","registration.attendeeName",["loc",[null,[1,483],[1,512]]]]
           ],
           locals: [],
           templates: []
@@ -20060,17 +23696,17 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 275
+              "column": 367
             },
             "end": {
               "line": 1,
-              "column": 621
+              "column": 713
             }
           },
           "moduleName": "aeonvera/templates/events/show/levels/show/index.hbs"
@@ -20116,11 +23752,11 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
           return morphs;
         },
         statements: [
-          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,374],[1,389]]]]],[],0,null,["loc",[null,[1,330],[1,432]]]],
-          ["content","registration.danceOrientation",["loc",[null,[1,441],[1,474]]]],
-          ["content","registration.packageName",["loc",[null,[1,483],[1,511]]]],
-          ["content","registration.paymentStatus",["loc",[null,[1,520],[1,550]]]],
-          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,578],[1,603]]]],"LLL"],[],["loc",[null,[1,559],[1,611]]]]
+          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,466],[1,481]]]]],[],0,null,["loc",[null,[1,422],[1,524]]]],
+          ["content","registration.danceOrientation",["loc",[null,[1,533],[1,566]]]],
+          ["content","registration.packageName",["loc",[null,[1,575],[1,603]]]],
+          ["content","registration.paymentStatus",["loc",[null,[1,612],[1,642]]]],
+          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,670],[1,695]]]],"LLL"],[],["loc",[null,[1,651],[1,703]]]]
         ],
         locals: ["registration"],
         templates: [child0]
@@ -20128,8 +23764,14 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -20138,7 +23780,7 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
           },
           "end": {
             "line": 1,
-            "column": 646
+            "column": 738
           }
         },
         "moduleName": "aeonvera/templates/events/show/levels/show/index.hbs"
@@ -20149,6 +23791,8 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
@@ -20188,20 +23832,22 @@ define('aeonvera/templates/events/show/levels/show/index', ['exports'], function
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(3);
+        var morphs = new Array(4);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
-        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3, 1]),0,0);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [4, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
-        ["block","link-to",["events.show.levels.show.edit"],["classNames","button"],0,null,["loc",[null,[1,0],[1,92]]]],
-        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,116],[1,121]]]]],[],[]]],["loc",[null,[1,92],[1,123]]]],
-        ["block","each",[["get","model.registrations",["loc",[null,[1,283],[1,302]]]]],[],1,null,["loc",[null,[1,275],[1,630]]]]
+        ["block","link-to",["events.show.levels"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,92]]]],
+        ["block","link-to",["events.show.levels.show.edit"],["classNames","button"],1,null,["loc",[null,[1,92],[1,184]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,208],[1,213]]]]],[],[]]],["loc",[null,[1,184],[1,215]]]],
+        ["block","each",[["get","model.registrations",["loc",[null,[1,375],[1,394]]]]],[],2,null,["loc",[null,[1,367],[1,722]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
     };
   }()));
 
@@ -20213,8 +23859,14 @@ define('aeonvera/templates/events/show/levels/show', ['exports'], function (expo
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -20266,8 +23918,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20304,8 +23956,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20342,8 +23994,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20380,8 +24032,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20418,8 +24070,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20456,8 +24108,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child5 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20494,8 +24146,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child6 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20532,8 +24184,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child7 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20570,8 +24222,8 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     var child8 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20607,8 +24259,14 @@ define('aeonvera/templates/events/show/manage', ['exports'], function (exports) 
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -20765,8 +24423,8 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20804,17 +24462,59 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 658
+                "column": 429
               },
               "end": {
                 "line": 1,
-                "column": 740
+                "column": 496
+              }
+            },
+            "moduleName": "aeonvera/templates/events/show/packages/index.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createComment("");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+            dom.insertBoundary(fragment, 0);
+            dom.insertBoundary(fragment, null);
+            return morphs;
+          },
+          statements: [
+            ["content","package.name",["loc",[null,[1,480],[1,496]]]]
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      var child1 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 721
+              },
+              "end": {
+                "line": 1,
+                "column": 803
               }
             },
             "moduleName": "aeonvera/templates/events/show/packages/index.hbs"
@@ -20837,26 +24537,26 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
             return morphs;
           },
           statements: [
-            ["inline","date-with-format",[["get","package.expiresAt",["loc",[null,[1,710],[1,727]]]],"LLL"],[],["loc",[null,[1,691],[1,735]]]]
+            ["inline","date-with-format",[["get","package.expiresAt",["loc",[null,[1,773],[1,790]]]],"LLL"],[],["loc",[null,[1,754],[1,798]]]]
           ],
           locals: [],
           templates: []
         };
       }());
-      var child1 = (function() {
+      var child2 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 740
+                "column": 803
               },
               "end": {
                 "line": 1,
-                "column": 757
+                "column": 820
               }
             },
             "moduleName": "aeonvera/templates/events/show/packages/index.hbs"
@@ -20881,8 +24581,8 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -20891,7 +24591,7 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
             },
             "end": {
               "line": 1,
-              "column": 769
+              "column": 832
             }
           },
           "moduleName": "aeonvera/templates/events/show/packages/index.hbs"
@@ -20950,23 +24650,29 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
           return morphs;
         },
         statements: [
-          ["content","package.name",["loc",[null,[1,429],[1,445]]]],
-          ["content","package.numberOfLeads",["loc",[null,[1,454],[1,479]]]],
-          ["content","package.numberOfFollows",["loc",[null,[1,488],[1,515]]]],
-          ["content","package.totalRegistrants",["loc",[null,[1,524],[1,552]]]],
-          ["content","package.currentPrice",["loc",[null,[1,561],[1,585]]]],
-          ["content","package.attendeeLimit",["loc",[null,[1,594],[1,619]]]],
-          ["content","package.requiresTrack",["loc",[null,[1,628],[1,653]]]],
-          ["block","if",[["get","package.hasExpiration",["loc",[null,[1,664],[1,685]]]]],[],0,1,["loc",[null,[1,658],[1,764]]]]
+          ["block","link-to",["events.show.packages.show",["get","package.id",["loc",[null,[1,468],[1,478]]]]],[],0,null,["loc",[null,[1,429],[1,508]]]],
+          ["content","package.numberOfLeads",["loc",[null,[1,517],[1,542]]]],
+          ["content","package.numberOfFollows",["loc",[null,[1,551],[1,578]]]],
+          ["content","package.totalRegistrants",["loc",[null,[1,587],[1,615]]]],
+          ["content","package.currentPrice",["loc",[null,[1,624],[1,648]]]],
+          ["content","package.attendeeLimit",["loc",[null,[1,657],[1,682]]]],
+          ["content","package.requiresTrack",["loc",[null,[1,691],[1,716]]]],
+          ["block","if",[["get","package.hasExpiration",["loc",[null,[1,727],[1,748]]]]],[],1,2,["loc",[null,[1,721],[1,827]]]]
         ],
         locals: ["package"],
-        templates: [child0, child1]
+        templates: [child0, child1, child2]
       };
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -20975,7 +24681,7 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
           },
           "end": {
             "line": 1,
-            "column": 794
+            "column": 857
           }
         },
         "moduleName": "aeonvera/templates/events/show/packages/index.hbs"
@@ -21050,7 +24756,7 @@ define('aeonvera/templates/events/show/packages/index', ['exports'], function (e
         ["inline","page-header",[],["text","Packages"],["loc",[null,[1,0],[1,31]]]],
         ["block","link-to",["events.show.packages.new"],["classNames","button"],0,null,["loc",[null,[1,31],[1,126]]]],
         ["inline","tool-tip",[],["message","This is calculated based on the initial price and the teir scheme."],["loc",[null,[1,218],[1,307]]]],
-        ["block","each",[["get","model",["loc",[null,[1,401],[1,406]]]]],[],1,null,["loc",[null,[1,393],[1,778]]]]
+        ["block","each",[["get","model",["loc",[null,[1,401],[1,406]]]]],[],1,null,["loc",[null,[1,393],[1,841]]]]
       ],
       locals: [],
       templates: [child0, child1]
@@ -21065,8 +24771,14 @@ define('aeonvera/templates/events/show/packages/new', ['exports'], function (exp
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21117,8 +24829,13 @@ define('aeonvera/templates/events/show/packages/show/edit', ['exports'], functio
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21166,8 +24883,8 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -21177,6 +24894,44 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
             "end": {
               "line": 1,
               "column": 82
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/packages/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 94
+            },
+            "end": {
+              "line": 1,
+              "column": 176
             }
           },
           "moduleName": "aeonvera/templates/events/show/packages/show/index.hbs"
@@ -21201,21 +24956,21 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
         templates: []
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 334
+                "column": 428
               },
               "end": {
                 "line": 1,
-                "column": 424
+                "column": 518
               }
             },
             "moduleName": "aeonvera/templates/events/show/packages/show/index.hbs"
@@ -21238,7 +24993,7 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
             return morphs;
           },
           statements: [
-            ["content","registration.attendeeName",["loc",[null,[1,395],[1,424]]]]
+            ["content","registration.attendeeName",["loc",[null,[1,489],[1,518]]]]
           ],
           locals: [],
           templates: []
@@ -21246,17 +25001,17 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 279
+              "column": 373
             },
             "end": {
               "line": 1,
-              "column": 625
+              "column": 719
             }
           },
           "moduleName": "aeonvera/templates/events/show/packages/show/index.hbs"
@@ -21302,11 +25057,11 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
           return morphs;
         },
         statements: [
-          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,378],[1,393]]]]],[],0,null,["loc",[null,[1,334],[1,436]]]],
-          ["content","registration.danceOrientation",["loc",[null,[1,445],[1,478]]]],
-          ["content","registration.packageName",["loc",[null,[1,487],[1,515]]]],
-          ["content","registration.paymentStatus",["loc",[null,[1,524],[1,554]]]],
-          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,582],[1,607]]]],"LLL"],[],["loc",[null,[1,563],[1,615]]]]
+          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,472],[1,487]]]]],[],0,null,["loc",[null,[1,428],[1,530]]]],
+          ["content","registration.danceOrientation",["loc",[null,[1,539],[1,572]]]],
+          ["content","registration.packageName",["loc",[null,[1,581],[1,609]]]],
+          ["content","registration.paymentStatus",["loc",[null,[1,618],[1,648]]]],
+          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,676],[1,701]]]],"LLL"],[],["loc",[null,[1,657],[1,709]]]]
         ],
         locals: ["registration"],
         templates: [child0]
@@ -21314,8 +25069,14 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21324,7 +25085,7 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
           },
           "end": {
             "line": 1,
-            "column": 650
+            "column": 744
           }
         },
         "moduleName": "aeonvera/templates/events/show/packages/show/index.hbs"
@@ -21335,6 +25096,8 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
@@ -21374,20 +25137,22 @@ define('aeonvera/templates/events/show/packages/show/index', ['exports'], functi
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(3);
+        var morphs = new Array(4);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
-        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3, 1]),0,0);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [4, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
-        ["block","link-to",["events.show.packages.show.edit"],["classNames","button"],0,null,["loc",[null,[1,0],[1,94]]]],
-        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,118],[1,123]]]]],[],[]]],["loc",[null,[1,94],[1,125]]]],
-        ["block","each",[["get","model.registrations",["loc",[null,[1,287],[1,306]]]]],[],1,null,["loc",[null,[1,279],[1,634]]]]
+        ["block","link-to",["events.show.packages"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,94]]]],
+        ["block","link-to",["events.show.packages.show.edit"],["classNames","button"],1,null,["loc",[null,[1,94],[1,188]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,212],[1,217]]]]],[],[]]],["loc",[null,[1,188],[1,219]]]],
+        ["block","each",[["get","model.registrations",["loc",[null,[1,381],[1,400]]]]],[],2,null,["loc",[null,[1,373],[1,728]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
     };
   }()));
 
@@ -21399,8 +25164,14 @@ define('aeonvera/templates/events/show/packages/show', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21453,8 +25224,8 @@ define('aeonvera/templates/events/show/pricing-tiers/index', ['exports'], functi
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -21489,8 +25260,8 @@ define('aeonvera/templates/events/show/pricing-tiers/index', ['exports'], functi
       var child1 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -21531,8 +25302,8 @@ define('aeonvera/templates/events/show/pricing-tiers/index', ['exports'], functi
       var child2 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -21572,8 +25343,8 @@ define('aeonvera/templates/events/show/pricing-tiers/index', ['exports'], functi
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -21640,8 +25411,14 @@ define('aeonvera/templates/events/show/pricing-tiers/index', ['exports'], functi
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21756,8 +25533,14 @@ define('aeonvera/templates/events/show/pricing-tiers/new', ['exports'], function
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21808,8 +25591,13 @@ define('aeonvera/templates/events/show/pricing-tiers/show/edit', ['exports'], fu
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -21857,8 +25645,8 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -21868,6 +25656,44 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
             "end": {
               "line": 1,
               "column": 87
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/pricing-tiers/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 99
+            },
+            "end": {
+              "line": 1,
+              "column": 186
             }
           },
           "moduleName": "aeonvera/templates/events/show/pricing-tiers/show/index.hbs"
@@ -21892,21 +25718,21 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
         templates: []
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 342
+                "column": 441
               },
               "end": {
                 "line": 1,
-                "column": 432
+                "column": 531
               }
             },
             "moduleName": "aeonvera/templates/events/show/pricing-tiers/show/index.hbs"
@@ -21929,7 +25755,7 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
             return morphs;
           },
           statements: [
-            ["content","registration.attendeeName",["loc",[null,[1,403],[1,432]]]]
+            ["content","registration.attendeeName",["loc",[null,[1,502],[1,531]]]]
           ],
           locals: [],
           templates: []
@@ -21937,17 +25763,17 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 287
+              "column": 386
             },
             "end": {
               "line": 1,
-              "column": 633
+              "column": 732
             }
           },
           "moduleName": "aeonvera/templates/events/show/pricing-tiers/show/index.hbs"
@@ -21993,11 +25819,11 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
           return morphs;
         },
         statements: [
-          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,386],[1,401]]]]],[],0,null,["loc",[null,[1,342],[1,444]]]],
-          ["content","registration.danceOrientation",["loc",[null,[1,453],[1,486]]]],
-          ["content","registration.packageName",["loc",[null,[1,495],[1,523]]]],
-          ["content","registration.paymentStatus",["loc",[null,[1,532],[1,562]]]],
-          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,590],[1,615]]]],"LLL"],[],["loc",[null,[1,571],[1,623]]]]
+          ["block","link-to",["events.show.registrations.show",["get","registration.id",["loc",[null,[1,485],[1,500]]]]],[],0,null,["loc",[null,[1,441],[1,543]]]],
+          ["content","registration.danceOrientation",["loc",[null,[1,552],[1,585]]]],
+          ["content","registration.packageName",["loc",[null,[1,594],[1,622]]]],
+          ["content","registration.paymentStatus",["loc",[null,[1,631],[1,661]]]],
+          ["inline","date-with-format",[["get","registration.registeredAt",["loc",[null,[1,689],[1,714]]]],"LLL"],[],["loc",[null,[1,670],[1,722]]]]
         ],
         locals: ["registration"],
         templates: [child0]
@@ -22005,8 +25831,14 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -22015,7 +25847,7 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
           },
           "end": {
             "line": 1,
-            "column": 658
+            "column": 757
           }
         },
         "moduleName": "aeonvera/templates/events/show/pricing-tiers/show/index.hbs"
@@ -22026,6 +25858,8 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
@@ -22065,20 +25899,22 @@ define('aeonvera/templates/events/show/pricing-tiers/show/index', ['exports'], f
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(3);
+        var morphs = new Array(4);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
         morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
-        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3, 1]),0,0);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[3] = dom.createMorphAt(dom.childAt(fragment, [4, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
-        ["block","link-to",["events.show.pricing-tiers.show.edit"],["classNames","button"],0,null,["loc",[null,[1,0],[1,99]]]],
-        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,123],[1,128]]]]],[],[]]],["loc",[null,[1,99],[1,130]]]],
-        ["block","each",[["get","model.registrations",["loc",[null,[1,295],[1,314]]]]],[],1,null,["loc",[null,[1,287],[1,642]]]]
+        ["block","link-to",["events.show.pricing-tiers"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,99]]]],
+        ["block","link-to",["events.show.pricing-tiers.show.edit"],["classNames","button"],1,null,["loc",[null,[1,99],[1,198]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,222],[1,227]]]]],[],[]]],["loc",[null,[1,198],[1,229]]]],
+        ["block","each",[["get","model.registrations",["loc",[null,[1,394],[1,413]]]]],[],2,null,["loc",[null,[1,386],[1,741]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
     };
   }()));
 
@@ -22090,8 +25926,14 @@ define('aeonvera/templates/events/show/pricing-tiers/show', ['exports'], functio
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -22141,21 +25983,59 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
 
   exports['default'] = Ember.HTMLBars.template((function() {
     var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 30
+            },
+            "end": {
+              "line": 1,
+              "column": 111
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("New Raffle");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
       var child0 = (function() {
         var child0 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
                   "line": 1,
-                  "column": 251
+                  "column": 276
                 },
                 "end": {
                   "line": 1,
-                  "column": 302
+                  "column": 340
                 }
               },
               "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
@@ -22178,7 +26058,7 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
               return morphs;
             },
             statements: [
-              ["content","raffle.winner",["loc",[null,[1,285],[1,302]]]]
+              ["content","raffle.name",["loc",[null,[1,325],[1,340]]]]
             ],
             locals: [],
             templates: []
@@ -22187,17 +26067,59 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
         var child1 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
                   "line": 1,
-                  "column": 302
+                  "column": 405
                 },
                 "end": {
                   "line": 1,
-                  "column": 335
+                  "column": 456
+                }
+              },
+              "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createComment("");
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+              dom.insertBoundary(fragment, 0);
+              dom.insertBoundary(fragment, null);
+              return morphs;
+            },
+            statements: [
+              ["content","raffle.winner",["loc",[null,[1,439],[1,456]]]]
+            ],
+            locals: [],
+            templates: []
+          };
+        }());
+        var child2 = (function() {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 1,
+                  "column": 456
+                },
+                "end": {
+                  "line": 1,
+                  "column": 489
                 }
               },
               "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
@@ -22222,17 +26144,17 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
                 "line": 1,
-                "column": 148
+                "column": 241
               },
               "end": {
                 "line": 1,
-                "column": 352
+                "column": 506
               }
             },
             "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
@@ -22268,27 +26190,27 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
             return morphs;
           },
           statements: [
-            ["content","raffle.name",["loc",[null,[1,183],[1,198]]]],
-            ["content","raffle.numberOfPurchasedTickets",["loc",[null,[1,207],[1,242]]]],
-            ["block","if",[["get","raffle.winnerHasBeenChosen",["loc",[null,[1,257],[1,283]]]]],[],0,1,["loc",[null,[1,251],[1,342]]]]
+            ["block","link-to",["events.show.raffles.show",["get","raffle.id",["loc",[null,[1,314],[1,323]]]]],[],0,null,["loc",[null,[1,276],[1,352]]]],
+            ["content","raffle.numberOfPurchasedTickets",["loc",[null,[1,361],[1,396]]]],
+            ["block","if",[["get","raffle.winnerHasBeenChosen",["loc",[null,[1,411],[1,437]]]]],[],1,2,["loc",[null,[1,405],[1,496]]]]
           ],
           locals: ["raffle"],
-          templates: [child0, child1]
+          templates: [child0, child1, child2]
         };
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 122
+              "column": 215
             },
             "end": {
               "line": 1,
-              "column": 361
+              "column": 515
             }
           },
           "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
@@ -22311,26 +26233,26 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
           return morphs;
         },
         statements: [
-          ["block","each",[["get","model",["loc",[null,[1,156],[1,161]]]]],[],0,null,["loc",[null,[1,148],[1,361]]]]
+          ["block","each",[["get","model",["loc",[null,[1,249],[1,254]]]]],[],0,null,["loc",[null,[1,241],[1,515]]]]
         ],
         locals: [],
         templates: [child0]
       };
     }());
-    var child1 = (function() {
+    var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
               "line": 1,
-              "column": 361
+              "column": 515
             },
             "end": {
               "line": 1,
-              "column": 424
+              "column": 578
             }
           },
           "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
@@ -22360,8 +26282,14 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -22370,7 +26298,7 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
           },
           "end": {
             "line": 1,
-            "column": 447
+            "column": 601
           }
         },
         "moduleName": "aeonvera/templates/events/show/raffles/index.hbs"
@@ -22381,6 +26309,8 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
       hasRendered: false,
       buildFragment: function buildFragment(dom) {
         var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
         var el1 = dom.createComment("");
         dom.appendChild(el0, el1);
         var el1 = dom.createElement("table");
@@ -22408,18 +26338,1176 @@ define('aeonvera/templates/events/show/raffles/index', ['exports'], function (ex
         return el0;
       },
       buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
-        var morphs = new Array(2);
+        var morphs = new Array(3);
         morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
-        morphs[1] = dom.createMorphAt(dom.childAt(fragment, [1, 1]),0,0);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [2, 1]),0,0);
         dom.insertBoundary(fragment, 0);
         return morphs;
       },
       statements: [
         ["inline","page-header",[],["text","Raffles"],["loc",[null,[1,0],[1,30]]]],
-        ["block","if",[["subexpr","is-present",[["get","model",["loc",[null,[1,140],[1,145]]]]],[],["loc",[null,[1,128],[1,146]]]]],[],0,1,["loc",[null,[1,122],[1,431]]]]
+        ["block","link-to",["events.show.raffles.new"],["classNames","button"],0,null,["loc",[null,[1,30],[1,123]]]],
+        ["block","if",[["subexpr","is-present",[["get","model",["loc",[null,[1,233],[1,238]]]]],[],["loc",[null,[1,221],[1,239]]]]],[],1,2,["loc",[null,[1,215],[1,585]]]]
       ],
       locals: [],
-      templates: [child0, child1]
+      templates: [child0, child1, child2]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/new', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 71
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/new.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","New Raffle"],["loc",[null,[1,0],[1,33]]]],
+        ["inline","event/raffle/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,64],[1,69]]]]],[],[]]],["loc",[null,[1,33],[1,71]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/show/edit', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 38
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/show/edit.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","event/raffle/edit-form",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,31],[1,36]]]]],[],[]]],["loc",[null,[1,0],[1,38]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/show/index', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 81
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 93
+            },
+            "end": {
+              "line": 1,
+              "column": 174
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Edit");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child2 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 225
+            },
+            "end": {
+              "line": 1,
+              "column": 417
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          dom.setAttribute(el1,"class","button success");
+          var el2 = dom.createTextNode("Winner: ");
+          dom.appendChild(el1, el2);
+          var el2 = dom.createComment("");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          var el1 = dom.createElement("span");
+          dom.setAttribute(el1,"class","button warning");
+          var el2 = dom.createTextNode("Choose a Different Winner");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element1 = dom.childAt(fragment, [1]);
+          var morphs = new Array(2);
+          morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
+          morphs[1] = dom.createElementMorph(element1);
+          return morphs;
+        },
+        statements: [
+          ["content","model.winner",["loc",[null,[1,295],[1,312]]]],
+          ["element","action",["chooseWinner"],["on","click"],["loc",[null,[1,325],[1,361]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child3 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 417
+            },
+            "end": {
+              "line": 1,
+              "column": 466
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          dom.setAttribute(el1,"class","button");
+          var el2 = dom.createTextNode("Choose Winner");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child4 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 489
+            },
+            "end": {
+              "line": 1,
+              "column": 601
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Configure Ticket Options ");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child5 = (function() {
+      var child0 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 721
+              },
+              "end": {
+                "line": 1,
+                "column": 868
+              }
+            },
+            "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+          },
+          isEmpty: false,
+          arity: 1,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("tr");
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element0 = dom.childAt(fragment, [0]);
+            var morphs = new Array(2);
+            morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+            morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+            return morphs;
+          },
+          statements: [
+            ["content","purchaser.numberOfTicketsPurchased",["loc",[null,[1,776],[1,814]]]],
+            ["inline","attendance-link",[],["model",["subexpr","@mut",[["get","purchaser",["loc",[null,[1,847],[1,856]]]]],[],[]]],["loc",[null,[1,823],[1,858]]]]
+          ],
+          locals: ["purchaser"],
+          templates: []
+        };
+      }());
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 695
+            },
+            "end": {
+              "line": 1,
+              "column": 877
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["block","each",[["get","model.ticketPurchasers",["loc",[null,[1,729],[1,751]]]]],[],0,null,["loc",[null,[1,721],[1,877]]]]
+        ],
+        locals: [],
+        templates: [child0]
+      };
+    }());
+    var child6 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 877
+            },
+            "end": {
+              "line": 1,
+              "column": 947
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("tr");
+          var el2 = dom.createElement("td");
+          dom.setAttribute(el2,"colspan","2");
+          var el3 = dom.createTextNode("No one has purchased any tickets");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 970
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/show/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("br");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Tickets");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Number of Tickets");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Purchaser");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("tbody");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(6);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        morphs[2] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[3] = dom.createMorphAt(fragment,5,5,contextualElement);
+        morphs[4] = dom.createMorphAt(fragment,7,7,contextualElement);
+        morphs[5] = dom.createMorphAt(dom.childAt(fragment, [8, 1]),0,0);
+        dom.insertBoundary(fragment, 0);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["events.show.raffles"],["classNames","button secondary"],0,null,["loc",[null,[1,0],[1,93]]]],
+        ["block","link-to",["events.show.raffles.show.edit"],["classNames","button"],1,null,["loc",[null,[1,93],[1,186]]]],
+        ["inline","delete-undelete",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,210],[1,215]]]]],[],[]]],["loc",[null,[1,186],[1,217]]]],
+        ["block","if",[["get","model.winnerHasBeenChosen",["loc",[null,[1,231],[1,256]]]]],[],2,3,["loc",[null,[1,225],[1,473]]]],
+        ["block","link-to",["events.show.raffles.show.raffle-tickets"],["classNames","button"],4,null,["loc",[null,[1,489],[1,613]]]],
+        ["block","if",[["subexpr","is-present",[["get","model",["loc",[null,[1,713],[1,718]]]]],[],["loc",[null,[1,701],[1,719]]]]],[],5,6,["loc",[null,[1,695],[1,954]]]]
+      ],
+      locals: [],
+      templates: [child0, child1, child2, child3, child4, child5, child6]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/show/raffle-tickets/index', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 40
+            },
+            "end": {
+              "line": 1,
+              "column": 148
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("New Ticket Option");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child1 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 160
+            },
+            "end": {
+              "line": 1,
+              "column": 256
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("span");
+          var el2 = dom.createTextNode("Back to Raffle");
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    var child2 = (function() {
+      var child0 = (function() {
+        var child0 = (function() {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 1,
+                  "column": 402
+                },
+                "end": {
+                  "line": 1,
+                  "column": 520
+                }
+              },
+              "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createElement("span");
+              var el2 = dom.createComment("");
+              dom.appendChild(el1, el2);
+              var el2 = dom.createTextNode(" Ticket(s)");
+              dom.appendChild(el1, el2);
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+              var morphs = new Array(1);
+              morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+              return morphs;
+            },
+            statements: [
+              ["content","ticket.numberOfTickets",["loc",[null,[1,477],[1,503]]]]
+            ],
+            locals: [],
+            templates: []
+          };
+        }());
+        var child1 = (function() {
+          return {
+            meta: {
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
+              "loc": {
+                "source": null,
+                "start": {
+                  "line": 1,
+                  "column": 541
+                },
+                "end": {
+                  "line": 1,
+                  "column": 653
+                }
+              },
+              "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+            },
+            isEmpty: false,
+            arity: 0,
+            cachedFragment: null,
+            hasRendered: false,
+            buildFragment: function buildFragment(dom) {
+              var el0 = dom.createDocumentFragment();
+              var el1 = dom.createElement("span");
+              var el2 = dom.createTextNode("View");
+              dom.appendChild(el1, el2);
+              dom.appendChild(el0, el1);
+              return el0;
+            },
+            buildRenderNodes: function buildRenderNodes() { return []; },
+            statements: [
+
+            ],
+            locals: [],
+            templates: []
+          };
+        }());
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 367
+              },
+              "end": {
+                "line": 1,
+                "column": 675
+              }
+            },
+            "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+          },
+          isEmpty: false,
+          arity: 1,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("tr");
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            var el2 = dom.createElement("td");
+            var el3 = dom.createComment("");
+            dom.appendChild(el2, el3);
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element0 = dom.childAt(fragment, [0]);
+            var morphs = new Array(2);
+            morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+            morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+            return morphs;
+          },
+          statements: [
+            ["block","link-to",["events.show.raffles.show.raffle-tickets.show",["get","ticket.id",["loc",[null,[1,460],[1,469]]]]],[],0,null,["loc",[null,[1,402],[1,532]]]],
+            ["block","link-to",["events.show.raffles.show.raffle-tickets.show",["get","ticket.id",["loc",[null,[1,599],[1,608]]]]],["classNames","button small"],1,null,["loc",[null,[1,541],[1,665]]]]
+          ],
+          locals: ["ticket"],
+          templates: [child0, child1]
+        };
+      }());
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 341
+            },
+            "end": {
+              "line": 1,
+              "column": 684
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["block","each",[["get","model",["loc",[null,[1,375],[1,380]]]]],[],0,null,["loc",[null,[1,367],[1,684]]]]
+        ],
+        locals: [],
+        templates: [child0]
+      };
+    }());
+    var child3 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 684
+            },
+            "end": {
+              "line": 1,
+              "column": 831
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("tr");
+          var el2 = dom.createElement("td");
+          dom.setAttribute(el2,"colspan","2");
+          var el3 = dom.createTextNode("There are no ticket options. You must have at least one ticket option for people to particpate in the raffle.");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes() { return []; },
+        statements: [
+
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 854
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h3");
+        var el2 = dom.createTextNode("Configure Raffle Ticket Options");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Number of Tickets");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("tbody");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(fragment,1,1,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,2,2,contextualElement);
+        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3, 1]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["block","link-to",["events.show.raffles.show.raffle-tickets.new"],["classNames","button"],0,null,["loc",[null,[1,40],[1,160]]]],
+        ["block","link-to",["events.show.raffles.show"],["classNames","button secondary"],1,null,["loc",[null,[1,160],[1,268]]]],
+        ["block","if",[["subexpr","is-present",[["get","model",["loc",[null,[1,359],[1,364]]]]],[],["loc",[null,[1,347],[1,365]]]]],[],2,3,["loc",[null,[1,341],[1,838]]]]
+      ],
+      locals: [],
+      templates: [child0, child1, child2, child3]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/show/raffle-tickets/new', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "empty-body"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 0
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/new.hbs"
+      },
+      isEmpty: true,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes() { return []; },
+      statements: [
+
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/show/raffle-tickets/show', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 236
+            },
+            "end": {
+              "line": 1,
+              "column": 392
+            }
+          },
+          "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/show.hbs"
+        },
+        isEmpty: false,
+        arity: 1,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("tr");
+          var el2 = dom.createElement("td");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          var el2 = dom.createElement("td");
+          var el3 = dom.createComment("");
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element0 = dom.childAt(fragment, [0]);
+          var morphs = new Array(2);
+          morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+          morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+          return morphs;
+        },
+        statements: [
+          ["inline","attendance-link",[],["model",["subexpr","@mut",[["get","attendance",["loc",[null,[1,311],[1,321]]]]],[],[]]],["loc",[null,[1,287],[1,323]]]],
+          ["inline","date-with-format",[["get","attendance.registeredAt",["loc",[null,[1,351],[1,374]]]],"LLL"],[],["loc",[null,[1,332],[1,382]]]]
+        ],
+        locals: ["attendance"],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 409
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/show/raffle-tickets/show.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h4");
+        var el2 = dom.createTextNode("Ticket Option (Worth ");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createTextNode(" Ticket(s)) ");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("strong");
+        var el2 = dom.createTextNode("People who have bought this ticket option:");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("table");
+        var el2 = dom.createElement("thead");
+        var el3 = dom.createElement("tr");
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Name");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("th");
+        var el5 = dom.createTextNode("Registration Date");
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(3);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),1,1);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        morphs[2] = dom.createMorphAt(dom.childAt(fragment, [3]),1,1);
+        return morphs;
+      },
+      statements: [
+        ["content","model.numberOfTickets",["loc",[null,[1,25],[1,50]]]],
+        ["inline","event/edit-raffle-ticket",[],["model",["subexpr","@mut",[["get","model",["loc",[null,[1,100],[1,105]]]]],[],[]]],["loc",[null,[1,67],[1,107]]]],
+        ["block","each",[["get","model.attendances",["loc",[null,[1,244],[1,261]]]]],[],0,null,["loc",[null,[1,236],[1,401]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
+define('aeonvera/templates/events/show/raffles/show', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 41
+          }
+        },
+        "moduleName": "aeonvera/templates/events/show/raffles/show.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text",["subexpr","@mut",[["get","model.name",["loc",[null,[1,19],[1,29]]]]],[],[]]],["loc",[null,[1,0],[1,31]]]],
+        ["content","outlet",["loc",[null,[1,31],[1,41]]]]
+      ],
+      locals: [],
+      templates: []
     };
   }()));
 
@@ -22434,8 +27522,8 @@ define('aeonvera/templates/events/show/registrations/index', ['exports'], functi
         var child0 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -22475,8 +27563,8 @@ define('aeonvera/templates/events/show/registrations/index', ['exports'], functi
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -22549,8 +27637,8 @@ define('aeonvera/templates/events/show/registrations/index', ['exports'], functi
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -22591,8 +27679,8 @@ define('aeonvera/templates/events/show/registrations/index', ['exports'], functi
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -22631,8 +27719,14 @@ define('aeonvera/templates/events/show/registrations/index', ['exports'], functi
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -22712,8 +27806,13 @@ define('aeonvera/templates/events/show/registrations/show', ['exports'], functio
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -22760,8 +27859,13 @@ define('aeonvera/templates/events/show/registrations', ['exports'], function (ex
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -22809,8 +27913,8 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -22871,8 +27975,13 @@ define('aeonvera/templates/events/show/revenue', ['exports'], function (exports)
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23052,8 +28161,8 @@ define('aeonvera/templates/events/show/shirts/index', ['exports'], function (exp
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -23121,8 +28230,8 @@ define('aeonvera/templates/events/show/shirts/index', ['exports'], function (exp
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -23163,8 +28272,8 @@ define('aeonvera/templates/events/show/shirts/index', ['exports'], function (exp
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -23203,8 +28312,14 @@ define('aeonvera/templates/events/show/shirts/index', ['exports'], function (exp
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23283,8 +28398,8 @@ define('aeonvera/templates/events/show/unpaid-registrations', ['exports'], funct
         var child0 = (function() {
           return {
             meta: {
-              "topLevel": null,
-              "revision": "Ember@2.1.1",
+              "fragmentReason": false,
+              "revision": "Ember@2.3.0-beta.3",
               "loc": {
                 "source": null,
                 "start": {
@@ -23324,8 +28439,8 @@ define('aeonvera/templates/events/show/unpaid-registrations', ['exports'], funct
         }());
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -23398,8 +28513,8 @@ define('aeonvera/templates/events/show/unpaid-registrations', ['exports'], funct
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -23440,8 +28555,8 @@ define('aeonvera/templates/events/show/unpaid-registrations', ['exports'], funct
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -23480,8 +28595,14 @@ define('aeonvera/templates/events/show/unpaid-registrations', ['exports'], funct
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23561,8 +28682,14 @@ define('aeonvera/templates/events/show/volunteers/index', ['exports'], function 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23616,8 +28743,13 @@ define('aeonvera/templates/events', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23626,7 +28758,7 @@ define('aeonvera/templates/events', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 247
+            "column": 262
           }
         },
         "moduleName": "aeonvera/templates/events.hbs"
@@ -23644,7 +28776,7 @@ define('aeonvera/templates/events', ['exports'], function (exports) {
         var el1 = dom.createElement("div");
         dom.setAttribute(el1,"class","row full-width");
         var el2 = dom.createElement("div");
-        dom.setAttribute(el2,"class","large-3 medium-4 columns");
+        dom.setAttribute(el2,"class","large-3 medium-4 columns padding-left-0");
         var el3 = dom.createElement("div");
         dom.setAttribute(el3,"class","sidebar");
         var el4 = dom.createElement("nav");
@@ -23672,8 +28804,8 @@ define('aeonvera/templates/events', ['exports'], function (exports) {
         return morphs;
       },
       statements: [
-        ["inline","component",[["get","sidebar",["loc",[null,[1,144],[1,151]]]]],["model",["subexpr","@mut",[["get","data",["loc",[null,[1,158],[1,162]]]]],[],[]]],["loc",[null,[1,132],[1,164]]]],
-        ["content","outlet",["loc",[null,[1,225],[1,235]]]]
+        ["inline","component",[["get","sidebar",["loc",[null,[1,159],[1,166]]]]],["model",["subexpr","@mut",[["get","data",["loc",[null,[1,173],[1,177]]]]],[],[]]],["loc",[null,[1,147],[1,179]]]],
+        ["content","outlet",["loc",[null,[1,240],[1,250]]]]
       ],
       locals: [],
       templates: []
@@ -23688,8 +28820,10 @@ define('aeonvera/templates/loading', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23743,8 +28877,13 @@ define('aeonvera/templates/login', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23801,6 +28940,558 @@ define('aeonvera/templates/login', ['exports'], function (exports) {
   }()));
 
 });
+define('aeonvera/templates/my-communities/index', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      var child0 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 230
+              },
+              "end": {
+                "line": 1,
+                "column": 324
+              }
+            },
+            "moduleName": "aeonvera/templates/my-communities/index.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("span");
+            dom.setAttribute(el1,"class","icon-thumbnail right");
+            var el2 = dom.createComment("");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var morphs = new Array(1);
+            morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+            return morphs;
+          },
+          statements: [
+            ["inline","fa-icon",["globe"],[],["loc",[null,[1,298],[1,317]]]]
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      var child1 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 324
+              },
+              "end": {
+                "line": 1,
+                "column": 386
+              }
+            },
+            "moduleName": "aeonvera/templates/my-communities/index.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("img");
+            dom.setAttribute(el1,"class","right");
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+            var element0 = dom.childAt(fragment, [0]);
+            var morphs = new Array(1);
+            morphs[0] = dom.createAttrMorph(element0, 'src');
+            return morphs;
+          },
+          statements: [
+            ["attribute","src",["concat",[["get","community.logo_url_thumb",["loc",[null,[1,344],[1,368]]]]]]]
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      var child2 = (function() {
+        return {
+          meta: {
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
+            "loc": {
+              "source": null,
+              "start": {
+                "line": 1,
+                "column": 521
+              },
+              "end": {
+                "line": 1,
+                "column": 609
+              }
+            },
+            "moduleName": "aeonvera/templates/my-communities/index.hbs"
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createElement("span");
+            var el2 = dom.createTextNode("Manage");
+            dom.appendChild(el1, el2);
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() { return []; },
+          statements: [
+
+          ],
+          locals: [],
+          templates: []
+        };
+      }());
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 70
+            },
+            "end": {
+              "line": 1,
+              "column": 639
+            }
+          },
+          "moduleName": "aeonvera/templates/my-communities/index.hbs"
+        },
+        isEmpty: false,
+        arity: 1,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createElement("table");
+          dom.setAttribute(el1,"class","no-border center-margin");
+          var el2 = dom.createElement("tr");
+          var el3 = dom.createElement("td");
+          var el4 = dom.createElement("a");
+          var el5 = dom.createElement("div");
+          dom.setAttribute(el5,"class","row");
+          var el6 = dom.createElement("div");
+          dom.setAttribute(el6,"class","columns small-2 medium-4");
+          var el7 = dom.createComment("");
+          dom.appendChild(el6, el7);
+          dom.appendChild(el5, el6);
+          var el6 = dom.createElement("div");
+          dom.setAttribute(el6,"class","columns small-10 medium-8");
+          var el7 = dom.createElement("h3");
+          var el8 = dom.createComment("");
+          dom.appendChild(el7, el8);
+          dom.appendChild(el6, el7);
+          var el7 = dom.createElement("h6");
+          var el8 = dom.createComment("");
+          dom.appendChild(el7, el8);
+          dom.appendChild(el6, el7);
+          dom.appendChild(el5, el6);
+          dom.appendChild(el4, el5);
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          var el3 = dom.createElement("td");
+          var el4 = dom.createComment("");
+          dom.appendChild(el3, el4);
+          dom.appendChild(el2, el3);
+          dom.appendChild(el1, el2);
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var element1 = dom.childAt(fragment, [0, 0]);
+          var element2 = dom.childAt(element1, [0, 0]);
+          var element3 = dom.childAt(element2, [0]);
+          var element4 = dom.childAt(element3, [1]);
+          var morphs = new Array(5);
+          morphs[0] = dom.createAttrMorph(element2, 'href');
+          morphs[1] = dom.createMorphAt(dom.childAt(element3, [0]),0,0);
+          morphs[2] = dom.createMorphAt(dom.childAt(element4, [0]),0,0);
+          morphs[3] = dom.createMorphAt(dom.childAt(element4, [1]),0,0);
+          morphs[4] = dom.createMorphAt(dom.childAt(element1, [1]),0,0);
+          return morphs;
+        },
+        statements: [
+          ["attribute","href",["concat",[["get","community.url",["loc",[null,[1,158],[1,171]]]]]]],
+          ["block","if",[["get","community.logo_is_missing",["loc",[null,[1,236],[1,261]]]]],[],0,1,["loc",[null,[1,230],[1,393]]]],
+          ["content","community.name",["loc",[null,[1,442],[1,460]]]],
+          ["content","community.location",["loc",[null,[1,469],[1,491]]]],
+          ["block","link-to",["my-communities.manage",["get","community.id",["loc",[null,[1,556],[1,568]]]]],["classNames","button"],2,null,["loc",[null,[1,521],[1,621]]]]
+        ],
+        locals: ["community"],
+        templates: [child0, child1, child2]
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 648
+          }
+        },
+        "moduleName": "aeonvera/templates/my-communities/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","center-margin");
+        var el2 = dom.createComment("");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(dom.childAt(fragment, [0]),0,0);
+        morphs[1] = dom.createMorphAt(fragment,1,1,contextualElement);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["inline","page-header",[],["text","My Communities"],["loc",[null,[1,27],[1,64]]]],
+        ["block","each",[["get","model",["loc",[null,[1,78],[1,83]]]]],[],0,null,["loc",[null,[1,70],[1,648]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
+define('aeonvera/templates/my-communities/manage/index', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 690
+          }
+        },
+        "moduleName": "aeonvera/templates/my-communities/manage/index.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("h3");
+        var el2 = dom.createTextNode("Recent Registrations");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","row");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","medium-3 columns");
+        var el3 = dom.createElement("label");
+        dom.setAttribute(el3,"class","text-center");
+        var el4 = dom.createTextNode("Over the past month");
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("hr");
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","row");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","small-12 columns text-center");
+        var el5 = dom.createElement("label");
+        var el6 = dom.createTextNode("Net Received");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h3");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","row");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","small-6 columns text-center");
+        var el5 = dom.createElement("label");
+        var el6 = dom.createTextNode("Revenue");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h4");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","small-6 columns text-center");
+        var el5 = dom.createElement("label");
+        var el6 = dom.createTextNode("Unpaid");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h4");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","row");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","small-6 columns text-center");
+        var el5 = dom.createElement("label");
+        var el6 = dom.createTextNode("New Memberships");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        var el5 = dom.createElement("h4");
+        var el6 = dom.createComment("");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","medium-9 columns");
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [1, 0]);
+        var element1 = dom.childAt(element0, [3]);
+        var morphs = new Array(4);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [2, 0, 1]),0,0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element1, [0, 1]),0,0);
+        morphs[2] = dom.createMorphAt(dom.childAt(element1, [1, 1]),0,0);
+        morphs[3] = dom.createMorphAt(dom.childAt(element0, [4, 0, 1]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["content","model.netReceivedPastMonth",["loc",[null,[1,224],[1,254]]]],
+        ["content","model.revenuePastMonth",["loc",[null,[1,355],[1,381]]]],
+        ["content","model.unpaidPastMonth",["loc",[null,[1,458],[1,483]]]],
+        ["content","model.newMembershipsPastMonth",["loc",[null,[1,592],[1,625]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
+define('aeonvera/templates/my-communities/manage', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    var child0 = (function() {
+      return {
+        meta: {
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
+          "loc": {
+            "source": null,
+            "start": {
+              "line": 1,
+              "column": 81
+            },
+            "end": {
+              "line": 1,
+              "column": 143
+            }
+          },
+          "moduleName": "aeonvera/templates/my-communities/manage.hbs"
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment("");
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [
+          ["inline","sidebar/community-sidebar",[],["model",["subexpr","@mut",[["get","data",["loc",[null,[1,137],[1,141]]]]],[],[]]],["loc",[null,[1,103],[1,143]]]]
+        ],
+        locals: [],
+        templates: []
+      };
+    }());
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 231
+          }
+        },
+        "moduleName": "aeonvera/templates/my-communities/manage.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createElement("div");
+        dom.setAttribute(el1,"class","row full-width");
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","large-3 medium-4 columns padding-left-0");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","large-9 medium-8 columns");
+        var el3 = dom.createComment("");
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var element0 = dom.childAt(fragment, [0]);
+        var morphs = new Array(2);
+        morphs[0] = dom.createMorphAt(dom.childAt(element0, [0]),0,0);
+        morphs[1] = dom.createMorphAt(dom.childAt(element0, [1]),0,0);
+        return morphs;
+      },
+      statements: [
+        ["block","sidebar-container",[],[],0,null,["loc",[null,[1,81],[1,165]]]],
+        ["content","outlet",["loc",[null,[1,209],[1,219]]]]
+      ],
+      locals: [],
+      templates: [child0]
+    };
+  }()));
+
+});
+define('aeonvera/templates/my-communities', ['exports'], function (exports) {
+
+  'use strict';
+
+  exports['default'] = Ember.HTMLBars.template((function() {
+    return {
+      meta: {
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
+        "loc": {
+          "source": null,
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 10
+          }
+        },
+        "moduleName": "aeonvera/templates/my-communities.hbs"
+      },
+      isEmpty: false,
+      arity: 0,
+      cachedFragment: null,
+      hasRendered: false,
+      buildFragment: function buildFragment(dom) {
+        var el0 = dom.createDocumentFragment();
+        var el1 = dom.createComment("");
+        dom.appendChild(el0, el1);
+        return el0;
+      },
+      buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+        var morphs = new Array(1);
+        morphs[0] = dom.createMorphAt(fragment,0,0,contextualElement);
+        dom.insertBoundary(fragment, 0);
+        dom.insertBoundary(fragment, null);
+        return morphs;
+      },
+      statements: [
+        ["content","outlet",["loc",[null,[1,0],[1,10]]]]
+      ],
+      locals: [],
+      templates: []
+    };
+  }()));
+
+});
 define('aeonvera/templates/not-found', ['exports'], function (exports) {
 
   'use strict';
@@ -23808,8 +29499,13 @@ define('aeonvera/templates/not-found', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23875,8 +29571,14 @@ define('aeonvera/templates/password-reset/index', ['exports'], function (exports
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23931,8 +29633,14 @@ define('aeonvera/templates/password-reset/success', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type",
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -23986,8 +29694,13 @@ define('aeonvera/templates/password-reset', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -24060,8 +29773,13 @@ define('aeonvera/templates/register', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -24103,8 +29821,8 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -24145,8 +29863,8 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -24186,8 +29904,8 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": false,
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -24196,7 +29914,7 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
           },
           "end": {
             "line": 1,
-            "column": 614
+            "column": 801
           }
         },
         "moduleName": "aeonvera/templates/shared/footer.hbs"
@@ -24264,6 +29982,26 @@ define('aeonvera/templates/shared/footer', ['exports'], function (exports) {
         dom.appendChild(el3, el4);
         dom.appendChild(el2, el3);
         dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("br");
+        dom.appendChild(el1, el2);
+        var el2 = dom.createElement("div");
+        dom.setAttribute(el2,"class","row");
+        var el3 = dom.createElement("div");
+        dom.setAttribute(el3,"class","small-12 columns");
+        var el4 = dom.createElement("div");
+        dom.setAttribute(el4,"class","right");
+        var el5 = dom.createElement("a");
+        dom.setAttribute(el5,"href","#");
+        dom.setAttribute(el5,"data-reveal-id","donate-price-pick-modal");
+        dom.setAttribute(el5,"class","button tiny success");
+        var el6 = dom.createTextNode("Donate    ");
+        dom.appendChild(el5, el6);
+        dom.appendChild(el4, el5);
+        dom.appendChild(el3, el4);
+        dom.appendChild(el2, el3);
+        dom.appendChild(el1, el2);
         dom.appendChild(el0, el1);
         return el0;
       },
@@ -24306,8 +30044,8 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
       var child0 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -24344,8 +30082,8 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
       var child1 = (function() {
         return {
           meta: {
-            "topLevel": null,
-            "revision": "Ember@2.1.1",
+            "fragmentReason": false,
+            "revision": "Ember@2.3.0-beta.3",
             "loc": {
               "source": null,
               "start": {
@@ -24385,8 +30123,8 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
       }());
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -24453,8 +30191,8 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -24490,8 +30228,10 @@ define('aeonvera/templates/upcoming-events', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -24577,8 +30317,8 @@ define('aeonvera/templates/user/edit', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -24621,8 +30361,13 @@ define('aeonvera/templates/user/edit', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -24860,8 +30605,13 @@ define('aeonvera/templates/welcome/about', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25015,8 +30765,13 @@ define('aeonvera/templates/welcome/faq', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25367,8 +31122,10 @@ define('aeonvera/templates/welcome/features/at-the-door', ['exports'], function 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25517,8 +31274,10 @@ define('aeonvera/templates/welcome/features/discounts-and-tiers', ['exports'], f
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25590,8 +31349,10 @@ define('aeonvera/templates/welcome/features/housing', ['exports'], function (exp
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25670,8 +31431,10 @@ define('aeonvera/templates/welcome/features/inventory', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25744,8 +31507,10 @@ define('aeonvera/templates/welcome/features/registration', ['exports'], function
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25873,8 +31638,10 @@ define('aeonvera/templates/welcome/features/reporting', ['exports'], function (e
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -25992,8 +31759,14 @@ define('aeonvera/templates/welcome/features', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -26087,8 +31860,10 @@ define('aeonvera/templates/welcome/get-started', ['exports'], function (exports)
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -26144,8 +31919,8 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -26186,8 +31961,8 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -26228,8 +32003,8 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -26297,8 +32072,8 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child3 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -26339,8 +32114,8 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child4 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -26381,8 +32156,8 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     var child5 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -26422,8 +32197,14 @@ define('aeonvera/templates/welcome/index', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -26620,8 +32401,13 @@ define('aeonvera/templates/welcome/opensource', ['exports'], function (exports) 
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -26837,8 +32623,10 @@ define('aeonvera/templates/welcome/pricing/free-or-not', ['exports'], function (
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -26943,8 +32731,10 @@ define('aeonvera/templates/welcome/pricing/pricing-features', ['exports'], funct
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "triple-curlies"
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27072,8 +32862,14 @@ define('aeonvera/templates/welcome/pricing', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes",
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27154,8 +32950,13 @@ define('aeonvera/templates/welcome/privacy', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27525,8 +33326,13 @@ define('aeonvera/templates/welcome/tos/index', ['exports'], function (exports) {
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": null,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "wrong-type"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27574,8 +33380,8 @@ define('aeonvera/templates/welcome/tos/non-organizers', ['exports'], function (e
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -27609,8 +33415,13 @@ define('aeonvera/templates/welcome/tos/non-organizers', ['exports'], function (e
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27671,8 +33482,13 @@ define('aeonvera/templates/welcome/tos/organizers', ['exports'], function (expor
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27793,8 +33609,13 @@ define('aeonvera/templates/welcome/tos/updates', ['exports'], function (exports)
   exports['default'] = Ember.HTMLBars.template((function() {
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -27855,8 +33676,8 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     var child0 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -27891,8 +33712,8 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     var child1 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -27927,8 +33748,8 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     var child2 = (function() {
       return {
         meta: {
-          "topLevel": null,
-          "revision": "Ember@2.1.1",
+          "fragmentReason": false,
+          "revision": "Ember@2.3.0-beta.3",
           "loc": {
             "source": null,
             "start": {
@@ -27962,8 +33783,13 @@ define('aeonvera/templates/welcome/tos', ['exports'], function (exports) {
     }());
     return {
       meta: {
-        "topLevel": false,
-        "revision": "Ember@2.1.1",
+        "fragmentReason": {
+          "name": "missing-wrapper",
+          "problems": [
+            "multiple-nodes"
+          ]
+        },
+        "revision": "Ember@2.3.0-beta.3",
         "loc": {
           "source": null,
           "start": {
@@ -28105,6 +33931,17 @@ define('aeonvera/tests/authorizers/application.jshint', function () {
   });
 
 });
+define('aeonvera/tests/components/attendance-link.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components');
+  QUnit.test('components/attendance-link.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/attendance-link.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/components/attendance-list.jshint', function () {
 
   'use strict';
@@ -28113,17 +33950,6 @@ define('aeonvera/tests/components/attendance-list.jshint', function () {
   QUnit.test('components/attendance-list.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'components/attendance-list.js should pass jshint.'); 
-  });
-
-});
-define('aeonvera/tests/components/date-time-input.jshint', function () {
-
-  'use strict';
-
-  QUnit.module('JSHint - components');
-  QUnit.test('components/date-time-input.js should pass jshint', function(assert) { 
-    assert.expect(1);
-    assert.ok(true, 'components/date-time-input.js should pass jshint.'); 
   });
 
 });
@@ -28138,6 +33964,17 @@ define('aeonvera/tests/components/delete-undelete.jshint', function () {
   });
 
 });
+define('aeonvera/tests/components/donate-to-aeonvera.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components');
+  QUnit.test('components/donate-to-aeonvera.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/donate-to-aeonvera.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/components/error-field-wrapper.jshint', function () {
 
   'use strict';
@@ -28149,6 +33986,17 @@ define('aeonvera/tests/components/error-field-wrapper.jshint', function () {
   });
 
 });
+define('aeonvera/tests/components/event/custom-field/edit-form.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components/event/custom-field');
+  QUnit.test('components/event/custom-field/edit-form.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/event/custom-field/edit-form.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/components/event/discount/edit-form.jshint', function () {
 
   'use strict';
@@ -28157,6 +34005,17 @@ define('aeonvera/tests/components/event/discount/edit-form.jshint', function () 
   QUnit.test('components/event/discount/edit-form.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'components/event/discount/edit-form.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/components/event/edit-raffle-ticket.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components/event');
+  QUnit.test('components/event/edit-raffle-ticket.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/event/edit-raffle-ticket.js should pass jshint.'); 
   });
 
 });
@@ -28204,6 +34063,17 @@ define('aeonvera/tests/components/event/pricing-tier/edit-form.jshint', function
   });
 
 });
+define('aeonvera/tests/components/event/raffle/edit-form.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components/event/raffle');
+  QUnit.test('components/event/raffle/edit-form.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/event/raffle/edit-form.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/components/event-at-the-door/checkin-attendance.jshint', function () {
 
   'use strict';
@@ -28223,6 +34093,17 @@ define('aeonvera/tests/components/event-at-the-door/checkin-list.jshint', functi
   QUnit.test('components/event-at-the-door/checkin-list.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'components/event-at-the-door/checkin-list.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/components/file-upload.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components');
+  QUnit.test('components/file-upload.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/file-upload.js should pass jshint.'); 
   });
 
 });
@@ -28556,6 +34437,17 @@ define('aeonvera/tests/components/registrant-summary.jshint', function () {
   });
 
 });
+define('aeonvera/tests/components/sidebar/community-sidebar.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - components/sidebar');
+  QUnit.test('components/sidebar/community-sidebar.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'components/sidebar/community-sidebar.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/components/sidebar/dashboard-sidebar.jshint', function () {
 
   'use strict';
@@ -28688,6 +34580,17 @@ define('aeonvera/tests/controllers/events/index.jshint', function () {
   });
 
 });
+define('aeonvera/tests/controllers/events/show/edit.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - controllers/events/show');
+  QUnit.test('controllers/events/show/edit.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'controllers/events/show/edit.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/controllers/events/show/pricing-tiers/index.jshint', function () {
 
   'use strict';
@@ -28699,6 +34602,17 @@ define('aeonvera/tests/controllers/events/show/pricing-tiers/index.jshint', func
   });
 
 });
+define('aeonvera/tests/controllers/events/show/raffles/show/index.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - controllers/events/show/raffles/show');
+  QUnit.test('controllers/events/show/raffles/show/index.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'controllers/events/show/raffles/show/index.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/controllers/events/show/revenue.jshint', function () {
 
   'use strict';
@@ -28707,6 +34621,17 @@ define('aeonvera/tests/controllers/events/show/revenue.jshint', function () {
   QUnit.test('controllers/events/show/revenue.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'controllers/events/show/revenue.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/controllers/my-communities/manage.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - controllers/my-communities');
+  QUnit.test('controllers/my-communities/manage.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'controllers/my-communities/manage.js should pass jshint.'); 
   });
 
 });
@@ -29031,6 +34956,162 @@ define('aeonvera/tests/initializers/model-extensions.jshint', function () {
   });
 
 });
+define('aeonvera/tests/integration/components/attendance-link-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('attendance-link', 'Integration | Component | attendance link', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 19
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'attendance-link', ['loc', [null, [1, 0], [1, 19]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.3.0-beta.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'attendance-link', [], [], 0, null, ['loc', [null, [2, 4], [4, 24]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('aeonvera/tests/integration/components/attendance-link-test.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - integration/components');
+  QUnit.test('integration/components/attendance-link-test.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'integration/components/attendance-link-test.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/integration/components/date-time-input-test', ['ember-qunit'], function (ember_qunit) {
 
   'use strict';
@@ -29041,13 +35122,16 @@ define('aeonvera/tests/integration/components/date-time-input-test', ['ember-qun
 
   ember_qunit.test('Creates the text fields', function (assert) {
     var timeAsString = 'Thu Dec 10 2015 09:24:21 GMT-0500 (Eastern Standard Time)';
-    this.set('time', timeAsString);
+    this.set('time', new Date(timeAsString));
 
     this.render(Ember.HTMLBars.template((function () {
       return {
         meta: {
-          'topLevel': null,
-          'revision': 'Ember@2.1.1',
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
           'loc': {
             'source': null,
             'start': {
@@ -29089,7 +35173,7 @@ define('aeonvera/tests/integration/components/date-time-input-test', ['ember-qun
     assert.equal(fields.length, 2);
 
     var expectedDate = '10 December, 2015'; //moment(this.get('time'), 'YYYY-MM-DD');
-    var expectedTime = '09:24:21'; //moment(this.get('time'), 'HH:mm:ss');
+    var expectedTime = '9:24 AM'; //moment(this.get('time'), 'HH:mm:ss');
     var actualDate = $(fields[0]).val();
     var actualTime = $(fields[1]).val();
 
@@ -29106,6 +35190,630 @@ define('aeonvera/tests/integration/components/date-time-input-test.jshint', func
   QUnit.test('integration/components/date-time-input-test.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'integration/components/date-time-input-test.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/integration/components/donate-to-aeonvera-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('donate-to-aeonvera', 'Integration | Component | donate to aeonvera', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 22
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'donate-to-aeonvera', ['loc', [null, [1, 0], [1, 22]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.3.0-beta.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'donate-to-aeonvera', [], [], 0, null, ['loc', [null, [2, 4], [4, 27]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('aeonvera/tests/integration/components/donate-to-aeonvera-test.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - integration/components');
+  QUnit.test('integration/components/donate-to-aeonvera-test.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'integration/components/donate-to-aeonvera-test.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/integration/components/event/edit-raffle-ticket-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('event/edit-raffle-ticket', 'Integration | Component | event/edit raffle ticket', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 28
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'event/edit-raffle-ticket', ['loc', [null, [1, 0], [1, 28]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.3.0-beta.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'event/edit-raffle-ticket', [], [], 0, null, ['loc', [null, [2, 4], [4, 33]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('aeonvera/tests/integration/components/event/edit-raffle-ticket-test.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/event');
+  QUnit.test('integration/components/event/edit-raffle-ticket-test.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'integration/components/event/edit-raffle-ticket-test.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/integration/components/file-upload-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('file-upload', 'Integration | Component | file upload', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 15
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'file-upload', ['loc', [null, [1, 0], [1, 15]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.3.0-beta.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'file-upload', [], [], 0, null, ['loc', [null, [2, 4], [4, 20]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('aeonvera/tests/integration/components/file-upload-test.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - integration/components');
+  QUnit.test('integration/components/file-upload-test.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'integration/components/file-upload-test.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/integration/components/sidebar/community-sidebar-test', ['ember-qunit'], function (ember_qunit) {
+
+  'use strict';
+
+  ember_qunit.moduleForComponent('sidebar/community-sidebar', 'Integration | Component | sidebar/community sidebar', {
+    integration: true
+  });
+
+  ember_qunit.test('it renders', function (assert) {
+    assert.expect(2);
+
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template((function () {
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 1,
+              'column': 29
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 0, 0, contextualElement);
+          dom.insertBoundary(fragment, 0);
+          dom.insertBoundary(fragment, null);
+          return morphs;
+        },
+        statements: [['content', 'sidebar/community-sidebar', ['loc', [null, [1, 0], [1, 29]]]]],
+        locals: [],
+        templates: []
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template((function () {
+      var child0 = (function () {
+        return {
+          meta: {
+            'fragmentReason': false,
+            'revision': 'Ember@2.3.0-beta.3',
+            'loc': {
+              'source': null,
+              'start': {
+                'line': 2,
+                'column': 4
+              },
+              'end': {
+                'line': 4,
+                'column': 4
+              }
+            }
+          },
+          isEmpty: false,
+          arity: 0,
+          cachedFragment: null,
+          hasRendered: false,
+          buildFragment: function buildFragment(dom) {
+            var el0 = dom.createDocumentFragment();
+            var el1 = dom.createTextNode('      template block text\n');
+            dom.appendChild(el0, el1);
+            return el0;
+          },
+          buildRenderNodes: function buildRenderNodes() {
+            return [];
+          },
+          statements: [],
+          locals: [],
+          templates: []
+        };
+      })();
+
+      return {
+        meta: {
+          'fragmentReason': {
+            'name': 'missing-wrapper',
+            'problems': ['wrong-type']
+          },
+          'revision': 'Ember@2.3.0-beta.3',
+          'loc': {
+            'source': null,
+            'start': {
+              'line': 1,
+              'column': 0
+            },
+            'end': {
+              'line': 5,
+              'column': 2
+            }
+          }
+        },
+        isEmpty: false,
+        arity: 0,
+        cachedFragment: null,
+        hasRendered: false,
+        buildFragment: function buildFragment(dom) {
+          var el0 = dom.createDocumentFragment();
+          var el1 = dom.createTextNode('\n');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createComment('');
+          dom.appendChild(el0, el1);
+          var el1 = dom.createTextNode('  ');
+          dom.appendChild(el0, el1);
+          return el0;
+        },
+        buildRenderNodes: function buildRenderNodes(dom, fragment, contextualElement) {
+          var morphs = new Array(1);
+          morphs[0] = dom.createMorphAt(fragment, 1, 1, contextualElement);
+          return morphs;
+        },
+        statements: [['block', 'sidebar/community-sidebar', [], [], 0, null, ['loc', [null, [2, 4], [4, 34]]]]],
+        locals: [],
+        templates: [child0]
+      };
+    })()));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+
+});
+define('aeonvera/tests/integration/components/sidebar/community-sidebar-test.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - integration/components/sidebar');
+  QUnit.test('integration/components/sidebar/community-sidebar-test.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'integration/components/sidebar/community-sidebar-test.js should pass jshint.'); 
   });
 
 });
@@ -29237,7 +35945,7 @@ define('aeonvera/tests/mixins/routes/crud/events/index.jshint', function () {
   QUnit.module('JSHint - mixins/routes/crud/events');
   QUnit.test('mixins/routes/crud/events/index.js should pass jshint', function(assert) { 
     assert.expect(1);
-    assert.ok(true, 'mixins/routes/crud/events/index.js should pass jshint.'); 
+    assert.ok(false, 'mixins/routes/crud/events/index.js should pass jshint.\nmixins/routes/crud/events/index.js: line 13, col 34, Missing semicolon.\n\n1 error'); 
   });
 
 });
@@ -29516,6 +36224,28 @@ define('aeonvera/tests/models/order.jshint', function () {
   });
 
 });
+define('aeonvera/tests/models/organization-summary.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - models');
+  QUnit.test('models/organization-summary.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'models/organization-summary.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/models/organization.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - models');
+  QUnit.test('models/organization.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'models/organization.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/models/package.jshint', function () {
 
   'use strict';
@@ -29535,6 +36265,17 @@ define('aeonvera/tests/models/pricing-tier.jshint', function () {
   QUnit.test('models/pricing-tier.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'models/pricing-tier.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/models/raffle-ticket-purchaser.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - models');
+  QUnit.test('models/raffle-ticket-purchaser.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'models/raffle-ticket-purchaser.js should pass jshint.'); 
   });
 
 });
@@ -30011,6 +36752,17 @@ define('aeonvera/tests/routes/events/show/edit/index.jshint', function () {
   });
 
 });
+define('aeonvera/tests/routes/events/show/edit/payment-processors.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/edit');
+  QUnit.test('routes/events/show/edit/payment-processors.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/edit/payment-processors.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/routes/events/show/edit.jshint', function () {
 
   'use strict';
@@ -30018,7 +36770,7 @@ define('aeonvera/tests/routes/events/show/edit.jshint', function () {
   QUnit.module('JSHint - routes/events/show');
   QUnit.test('routes/events/show/edit.js should pass jshint', function(assert) { 
     assert.expect(1);
-    assert.ok(true, 'routes/events/show/edit.js should pass jshint.'); 
+    assert.ok(false, 'routes/events/show/edit.js should pass jshint.\nroutes/events/show/edit.js: line 8, col 22, Missing semicolon.\n\n1 error'); 
   });
 
 });
@@ -30253,6 +37005,105 @@ define('aeonvera/tests/routes/events/show/raffles/index.jshint', function () {
   });
 
 });
+define('aeonvera/tests/routes/events/show/raffles/new.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles');
+  QUnit.test('routes/events/show/raffles/new.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/new.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/edit.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show');
+  QUnit.test('routes/events/show/raffles/show/edit.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/edit.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/index.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show');
+  QUnit.test('routes/events/show/raffles/show/index.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/index.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/raffle-tickets/index.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show/raffle-tickets');
+  QUnit.test('routes/events/show/raffles/show/raffle-tickets/index.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/raffle-tickets/index.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/raffle-tickets/new.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show/raffle-tickets');
+  QUnit.test('routes/events/show/raffles/show/raffle-tickets/new.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/raffle-tickets/new.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/raffle-tickets/show/edit.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show/raffle-tickets/show');
+  QUnit.test('routes/events/show/raffles/show/raffle-tickets/show/edit.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/raffle-tickets/show/edit.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/raffle-tickets/show/index.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show/raffle-tickets/show');
+  QUnit.test('routes/events/show/raffles/show/raffle-tickets/show/index.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/raffle-tickets/show/index.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show/raffle-tickets/show.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles/show/raffle-tickets');
+  QUnit.test('routes/events/show/raffles/show/raffle-tickets/show.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show/raffle-tickets/show.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/events/show/raffles/show.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/events/show/raffles');
+  QUnit.test('routes/events/show/raffles/show.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/events/show/raffles/show.js should pass jshint.'); 
+  });
+
+});
 define('aeonvera/tests/routes/events/show/registrations/show.jshint', function () {
 
   'use strict';
@@ -30437,6 +37288,28 @@ define('aeonvera/tests/routes/logout.jshint', function () {
   QUnit.test('routes/logout.js should pass jshint', function(assert) { 
     assert.expect(1);
     assert.ok(true, 'routes/logout.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/my-communities/index.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/my-communities');
+  QUnit.test('routes/my-communities/index.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/my-communities/index.js should pass jshint.'); 
+  });
+
+});
+define('aeonvera/tests/routes/my-communities/manage.jshint', function () {
+
+  'use strict';
+
+  QUnit.module('JSHint - routes/my-communities');
+  QUnit.test('routes/my-communities/manage.js should pass jshint', function(assert) { 
+    assert.expect(1);
+    assert.ok(true, 'routes/my-communities/manage.js should pass jshint.'); 
   });
 
 });
@@ -30730,7 +37603,7 @@ catch(err) {
 if (runningTests) {
   require("aeonvera/tests/test-helper");
 } else {
-  require("aeonvera/app")["default"].create({"LOG_TRANSITIONS":true,"LOG_TRANSITIONS_INTERNAL":true,"name":"aeonvera","version":"0.1.0.bc633ffe"});
+  require("aeonvera/app")["default"].create({"LOG_TRANSITIONS":true,"name":"aeonvera","version":"0.1.0.b6404a41"});
 }
 
 /* jshint ignore:end */

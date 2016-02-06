@@ -13,6 +13,12 @@ class LineItem < ActiveRecord::Base
     foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
 
   has_many :order_line_items, as: :line_item
+  # TODO: figure how to get this to evaluate upon
+  # inheritance
+  # has_many :order_line_items, -> {
+  #   where(line_item_type: self.name)
+  # }, foreign_key: :line_item_id
+
 
   has_many :attendance_line_items
   has_many :attendances,

@@ -10,6 +10,10 @@ class LineItem::MembershipOption < LineItem
   has_many :renewals, class_name: "::MembershipRenewal"
   has_many :members, through: :renewals, source: :user
 
+  has_many :order_line_items, -> {
+    where(line_item_type: LineItem::MembershipOption.name)
+  }, foreign_key: :line_item_id
+
   validates :name, presence: true
   validates :duration_amount, presence: true
   validates :duration_unit, presence: true
