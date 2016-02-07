@@ -23,7 +23,10 @@ AeonVera::Application.routes.draw do
     resources :communities # public
     resources :organizations # managing
     resources :organization_summaries, only: [:show] # overview
-    resources :organization_attendances 
+    resources :organization_attendances
+    resources :lessons
+    resources :dances
+    resources :membership_options
 
     # per event
     # ideally this stuff would be nested under events
