@@ -9,7 +9,8 @@ class Api::LessonsController < Api::EventResourceController
     params
       .require(:data)
       .require(:attributes)
-      .permit(:name, :price,)  end
+      .permit(:name, :price)
+    end
 
   def create_line_item_params
     create_params_with(update_line_item_params, host: true)
