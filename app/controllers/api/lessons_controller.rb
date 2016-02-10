@@ -1,4 +1,15 @@
 class Api::LessonsController < Api::EventResourceController
+
+  def index
+    model = operation_class.new(current_user, params, index_params).run
+    render json: model, include: params[:include], each_serializer: LineItem::LessonSerializer
+  end
+
+  def show
+    model = operation_class.new(current_user, params, show_params).run
+    render json: model, include: params[:include], serializer: LineItem::LessonSerializer
+  end
+
   private
 
   def index_params
