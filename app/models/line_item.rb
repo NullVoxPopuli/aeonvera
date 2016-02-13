@@ -5,7 +5,8 @@ class LineItem < ActiveRecord::Base
   include HasMetadata
 
   belongs_to :host, polymorphic: true
-
+  # TODO:
+  # belongs_to :reference, polymorphic: true
   belongs_to :organization, class_name: Organization.name,
     foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
 
