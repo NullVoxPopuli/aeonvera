@@ -5,7 +5,7 @@ class Api::HostsController < APIController
   end
 
   def show
-    render json: host_from_subdomain, serializer: each_serializer
+    render json: host_from_subdomain, include: params[:include], serializer: each_serializer
   end
 
   private
@@ -22,7 +22,7 @@ class Api::HostsController < APIController
     klass = host_from_subdomain.class
 
     if klass == Event
-      EventSerializer
+      RegisterEventSerializer
     else
       CommunitySerializer
     end

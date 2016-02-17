@@ -1,4 +1,3 @@
-# object is actually an Organization in this serializer
 class EventSerializer < ActiveModel::Serializer
 
   attributes :id, :name,
@@ -25,6 +24,9 @@ class EventSerializer < ActiveModel::Serializer
     belongs_to :opening_tier, serializer: OpeningTierSerializer
     has_many :pricing_tiers
     has_many :integrations
+    has_many :packages
+    has_many :levels
+    has_many :competitions
 
     def has_stripe_integration
       object.integrations[:stripe].present?

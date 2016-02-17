@@ -8,7 +8,7 @@ class PackageSerializer < ActiveModel::Serializer
     :event_id,
     :ignore_pricing_tiers,
     :number_of_leads,
-    :number_of_follows
+    :number_of_follows, :current_price
 
   belongs_to :event
 
