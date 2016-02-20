@@ -2,7 +2,7 @@
 # membership option, user, and expiration
 class MembershipSerializer < ActiveModel::Serializer
   type 'memberships'
-  attributes :id, :start_date, :expires_at, :expired?, :duration
+  attributes :id, :start_date, :expires_at, :expired, :duration
 
   belongs_to :membership_option
   class LineItem::MembershipOptionSerializer < LineItemSerializer
@@ -22,5 +22,9 @@ class MembershipSerializer < ActiveModel::Serializer
   # fake the id, since this is a join table
   def id
     "#{object.user_id}.#{object.membership_option_id}"
+  end
+
+  def expired
+    object.expired?
   end
 end
