@@ -26,6 +26,7 @@ AeonVera::Application.routes.draw do
     resources :organization_attendances
     resources :lessons
     resources :dances
+    resources :memberships
     resources :membership_options
 
     # per event
@@ -148,10 +149,6 @@ AeonVera::Application.routes.draw do
     get '/', to: redirect('/upcoming-events?error=subdomain not found'), subdomain_failure: true
 
   end
-
-  # authenticated :user do
-  #   root to: "home#welcome", as: "authenticated_root"
-  # end
 
   get 'users' => redirect("/")
 
