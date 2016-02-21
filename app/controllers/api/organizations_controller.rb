@@ -7,7 +7,7 @@ class Api::OrganizationsController < APIController
   end
 
   def show
-    render json: model
+    render json: model, include: params[:include]
   end
 
   def create
