@@ -1,6 +1,4 @@
 class Api::UsersController < Api::ResourceController
-  include SkinnyControllers::Diet
-
   before_filter :must_be_logged_in, except: :create
 
   def show

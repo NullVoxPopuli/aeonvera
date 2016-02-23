@@ -1,6 +1,4 @@
 class Api::EventsController < Api::ResourceController
-  include SkinnyControllers::Diet
-
   def index; show; end
 
   private

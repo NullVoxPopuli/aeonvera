@@ -1,5 +1,4 @@
 class Api::RaffleTicketsController < Api::ResourceController
-  include SkinnyControllers::Diet
   self.model_class = LineItem::RaffleTicket
 
   def index

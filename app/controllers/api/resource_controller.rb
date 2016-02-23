@@ -1,4 +1,6 @@
 class Api::ResourceController < APIController
+  include SkinnyControllers::Diet
+
   def index
     render json: model, include: params[:include]
   end

@@ -1,6 +1,4 @@
 class Api::LevelsController < Api::EventResourceController
-  include SkinnyControllers::Diet
-
   private
 
   def update_level_params

@@ -1,6 +1,4 @@
 class Api::RafflesController < Api::EventResourceController
-  include SkinnyControllers::Diet
-
   def update
     if must_choose_new_winner?
       model.choose_winner!

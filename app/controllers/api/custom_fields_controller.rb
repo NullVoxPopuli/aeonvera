@@ -1,6 +1,4 @@
 class Api::CustomFieldsController < Api::EventResourceController
-  include SkinnyControllers::Diet
-
   private
 
   def update_custom_field_params

@@ -1,6 +1,4 @@
 class Api::DiscountsController < Api::ResourceController
-  include SkinnyControllers::Diet
-
   private
 
   def update_discount_params

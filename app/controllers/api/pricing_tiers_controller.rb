@@ -1,6 +1,4 @@
 class Api::PricingTiersController < Api::EventResourceController
-  include SkinnyControllers::Diet
-
   private
 
   # The fields are named different on teh server than the client
