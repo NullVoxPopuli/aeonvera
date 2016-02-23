@@ -1,4 +1,4 @@
-module MembershipOperations
+module MembershipRenewalOperations
   class ReadAll < SkinnyControllers::Operation::Base
 
     def run
@@ -10,12 +10,13 @@ module MembershipOperations
 
     def organization
       id = params[:organization_id]
+      # TODO: verify that the organization can be managed by current_user
       Organization.find(id)
-      # TODO use a the OrganizationOperation to verify the Organization
     end
 
     def renewals
-      organization.membership_options.includes(renewals: [:user, :membership_option]).map(&:renewals).flatten
+      options = organization.membership_options.includes(renewals: [:user, :membership_option])
+      options.map(&:renewals).flatten
     end
 
     def latest_renewals

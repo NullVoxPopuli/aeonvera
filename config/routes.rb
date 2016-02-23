@@ -27,7 +27,7 @@ AeonVera::Application.routes.draw do
     resources :lessons
     resources :dances
     resources :members # list of users
-    resources :memberships # membership_renewals TODO: RENAME
+    resources :membership_renewals
     resources :membership_options
 
     # per event

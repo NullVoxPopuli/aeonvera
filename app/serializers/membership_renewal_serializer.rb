@@ -1,7 +1,4 @@
-# These are membership renewals, so that we have access to the
-# membership option, user, and expiration
-class MembershipSerializer < ActiveModel::Serializer
-  type 'memberships'
+class MembershipRenewalSerializer < ActiveModel::Serializer
   attributes :id, :start_date, :expires_at, :expired, :duration
 
   belongs_to :membership_option

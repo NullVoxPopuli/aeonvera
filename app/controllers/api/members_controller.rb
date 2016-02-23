@@ -2,7 +2,7 @@ class Api::MembersController < APIController
 
   def index
     search = User.ransack(search_params)
-    render json: search.results, each_serializer: MembershipSerializer::MemberSerializer
+    render json: search.result, each_serializer: MembershipRenewalSerializer::MemberSerializer
   end
 
   def index_params
