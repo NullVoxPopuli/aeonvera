@@ -1,4 +1,5 @@
 class Api::LessonsController < Api::EventResourceController
+  include SkinnyControllers::Diet
 
   def index
     model = operation_class.new(current_user, params, index_params).run

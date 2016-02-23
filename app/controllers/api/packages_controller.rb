@@ -1,4 +1,6 @@
 class Api::PackagesController < Api::EventResourceController
+  include SkinnyControllers::Diet
+
   private
 
   def update_package_params

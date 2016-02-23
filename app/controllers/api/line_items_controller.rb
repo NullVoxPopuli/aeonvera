@@ -1,4 +1,6 @@
 class Api::LineItemsController < Api::EventResourceController
+  include SkinnyControllers::Diet
+
   private
 
   def update_line_item_params

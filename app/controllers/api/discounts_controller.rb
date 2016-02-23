@@ -1,4 +1,5 @@
 class Api::DiscountsController < Api::ResourceController
+  include SkinnyControllers::Diet
 
   private
 
