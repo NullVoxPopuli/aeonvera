@@ -16,19 +16,19 @@ class Api::MembershipRenewalsController < Api::ResourceController
 
     relationships = data.require(:relationships)
 
-    user_id = relationships
+    user = relationships
       .require(:member)
       .require(:data)
       .permit(:id)
 
-    membership_option_id = relationships
+    membership_option = relationships
       .require(:membership_option)
       .require(:data)
       .permit(:id)
 
     attributes.merge(
-      user_id: user_id,
-      membership_option_id: membership_option_id)
+      user_id: user[:id],
+      membership_option_id: membership_option[:id])
   end
 
 end
