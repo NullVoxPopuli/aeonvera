@@ -10,24 +10,29 @@ class CommunitySerializer < ActiveModel::Serializer
     :logo_url_thumb, :logo_url_medium, :logo_url
 
 
+  has_many :lessons
   has_many :membership_options, serializer: MembershipOptionSerializer
   has_many :membership_discounts, serializer: MembershipDiscountSerializer
 
-    def url
-      object.link
-    end
+  def lessons
+    object.available_lessons
+  end
 
-    def logo_url_thumb
-      object.logo.url(:thumb)
-    end
+  def url
+    object.link
+  end
 
-    def logo_url_medium
-      object.logo.url(:medium)
-    end
+  def logo_url_thumb
+    object.logo.url(:thumb)
+  end
 
-    def logo_url
-      object.logo.url(:original)
-    end
+  def logo_url_medium
+    object.logo.url(:medium)
+  end
+
+  def logo_url
+    object.logo.url(:original)
+  end
 
 
 end

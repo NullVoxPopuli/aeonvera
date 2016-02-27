@@ -27,6 +27,14 @@ class EventSerializer < ActiveModel::Serializer
     has_many :packages
     has_many :levels
     has_many :competitions
+    has_many :line_items
+    has_many :active_line_items
+    has_many :shirts, serializer: ShirtSerializer
+    has_many :attendances, serializer: AttendanceSerializer
+
+    def active_line_items
+      object.line_items.active
+    end
 
     def has_stripe_integration
       object.integrations[:stripe].present?
