@@ -4,7 +4,7 @@ class Api::UsersController < Api::ResourceController
   def show
     # this should never return any other user
     # there is no multi-user management.
-    render json: current_user
+    render json: current_user, include: params[:include]
   end
 
   private

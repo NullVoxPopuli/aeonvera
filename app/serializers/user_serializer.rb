@@ -9,8 +9,14 @@ class UserSerializer < ActiveModel::Serializer
     :unconfirmed_email,
     :time_zone
 
+    has_many :membership_renewals
+
     def id
       # they don't need to know their ID
       0
+    end
+
+    def membership_renewals
+      object.renewals
     end
 end
