@@ -11,6 +11,7 @@ class CommunitySerializer < ActiveModel::Serializer
 
 
   has_many :lessons
+  has_many :integrations
   has_many :membership_options, serializer: MembershipOptionSerializer
   has_many :membership_discounts, serializer: MembershipDiscountSerializer
 
