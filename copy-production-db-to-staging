@@ -1,0 +1,2 @@
+heroku pg:copy aeonvera::DATABASE_URL DATABASE_URL -a aeonvera-staging
+
