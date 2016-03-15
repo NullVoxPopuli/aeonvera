@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-describe Api::CommunitiesController do
+describe Api::OrganizationsController do
 
   context 'index' do
-    it 'returns all of the communities' do
+    it 'returns all of the organizations' do
       create(:organization)
       create(:organization)
       create(:organization)
