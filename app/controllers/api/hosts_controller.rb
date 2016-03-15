@@ -24,7 +24,7 @@ class Api::HostsController < APIController
     if klass == Event
       RegisterEventSerializer
     else
-      CommunitySerializer
+      OrganizationSerializer
     end
   end
 

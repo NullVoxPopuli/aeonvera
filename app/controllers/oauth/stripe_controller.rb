@@ -9,6 +9,14 @@ class Oauth::StripeController < OauthController
     redirect_to self.authorize_url
   end
 
+  def create
+    data = self.identify
+    # store access code in integration
+    @payable.integrations[Integration::STRIPE] = data
+
+    render json: @payable.integrations[Integration::STRIPE]
+  end
+
   # post to get access code
   def authorize
     data = self.identify
@@ -18,9 +26,8 @@ class Oauth::StripeController < OauthController
     flash[:notice] = "Stripe has been successfully connected. You may now begin taking payments."
     if @payable.is_a?(Event)
       redirect_to "/events/#{@payable.id}/edit/payment-processors"
-      # redirect_to hosted_event_payment_processors_path(@payable)
     else
-      redirect_to organization_payment_processors_path(@payable)
+      redirect_to "my-communities/#{payable.id}/manage/payment-processors"
     end
   end
 
@@ -31,9 +38,9 @@ class Oauth::StripeController < OauthController
     end
 
     if @payable.is_a?(Event)
-      redirect_to hosted_event_payment_processors_path(@payable)
+      redirect_to "/events/#{@payable.id}/edit/payment-processors"
     else
-      redirect_to organization_payment_processors_path(@payable)
+      redirect_to "my-communities/#{payable.id}/manage/payment-processors"
     end
   end
 

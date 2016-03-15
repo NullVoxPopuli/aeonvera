@@ -74,10 +74,9 @@ AeonVera::Application.routes.draw do
   end
 
   namespace :oauth do
-    get 'stripe/new', to: "stripe#new"
+    resources :stripe
     get 'stripe/authorize', to: 'stripe#authorize'
     post 'stripe/webhook', to: 'stripe#webhook'
-    delete 'stripe/', to: 'stripe#destroy'
   end
 
   resources :orders do

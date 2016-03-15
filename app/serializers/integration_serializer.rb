@@ -5,16 +5,17 @@ class IntegrationSerializer < ActiveModel::Serializer
     :name, :owner_id, :owner_type,
     :publishable_key
 
+  belongs_to :owner
 
-    def name
-      object.kind
-    end
+  def name
+    object.kind
+  end
 
-    def publishable_key
-      if object.kind == Integration::STRIPE
-        return object.config[:stripe_publishable_key]
-      end
+  def publishable_key
+    if object.kind == Integration::STRIPE
+      return object.config[:stripe_publishable_key]
     end
+  end
 
 
 
