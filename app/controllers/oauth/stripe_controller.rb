@@ -9,6 +9,10 @@ class Oauth::StripeController < OauthController
     redirect_to self.authorize_url
   end
 
+  def show
+    redirect_to self.authorize_url
+  end
+
   def create
     data = self.identify
     # store access code in integration
