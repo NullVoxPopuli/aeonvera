@@ -1,7 +1,7 @@
 class MarketingController < ActionController::Base
   def index
     # get ember from redis
-    ember_index = APICache.store.get('aeonvera:index:default')
+    ember_index = APICache.store.get('aeonvera:index:current-content')
 
     unless ember_index
       puts 'Keys in the store:'
