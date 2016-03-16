@@ -13,6 +13,10 @@ class Integration < ActiveRecord::Base
   STRIPE = "stripe"
   PAYPAL = "paypal"
 
+  validates :kind, presence: true
+  validates :owner, presence: true
+
+
   # allows public access to attr_encrypted (which is protected)
   # this is required for migration :(
   def self.encrypted(*args)
