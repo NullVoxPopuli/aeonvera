@@ -1,0 +1,19 @@
+- event = attendance.host
+- show_net_received = local_assigns.try(:[], :net_received) || false
+
+= render partial: '/orders/summary_table', locals: local_assigns.merge(show_net_received: show_net_received, event: event)
+
+| Prices as of:&nbsp;
+= order.created_at.to_s(:long)
+
+- if buttons
+  - if event.has_payment_processor?
+    - if (not attendance.owes_nothing?)
+      -if !event.over?
+        = render partial: '/orders/payment_button', locals: { order: order, attendance: @attendance }
+
+    - else
+      | You are Registered!
+  - else
+    | You are Registered!
+    | * Amount owed to be collected upon arrival

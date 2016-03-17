@@ -1,0 +1,44 @@
+| Item                                        Price
+- order.line_items.each do |line_item|
+  - item = line_item.line_item
+  = item.class.name.titleize.gsub("Line Item/", "")
+  - if item.is_a?(Discount) and item.kind == Discount::PERCENT_OFF
+    = item.code
+    = item.display_value
+  - else
+    - if item.is_a?(LineItem::Shirt)
+      = line_item.name
+      |  - 
+      = shirt_with_size_and_quantity_summary(line_item, attendance: attendance)
+    - elsif line_item.quantity > 1
+      = "#{line_item.quantity} x #{line_item.name}"
+    - elsif item.is_a?(Competition)
+      - competition_response = order.attendance.competition_responses.where(competition_id: item.id).first
+      - if item.requires_orientation?
+        = "#{item.name}: #{competition_response.try(:dance_orientation)}"
+      - elsif item.requires_partner?
+        = "#{item.name} w/ #{competition_response.try(:partner_name)}"
+      - else
+        = item.name
+    - else
+      = line_item.name
+
+    - if item.is_a?(LineItem::Shirt)
+      = order.attendance.total_cost_for_selected_shirt(item.id)
+    - else
+      = number_to_currency line_item.total
+
+- total = order.total
+- sub_total = order.sub_total
+- if order.should_apply_fee?
+    Processing Fee
+    = number_to_currency(total - sub_total)
+
+| Total
+= number_to_currency order.total
+- if order.paid?
+  = "Paid #{number_to_currency(order.paid_amount)} on #{order.updated_at.to_s(:short)} via #{order.payment_method}"
+  - if show_net_received
+    = "Net Received: #{number_to_currency(order.net_received)}"
+    = what_is_this_stripe_fee_tooltip("Fees: ")
+    = number_to_currency(order.total_fee_amount)
