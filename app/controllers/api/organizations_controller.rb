@@ -3,7 +3,13 @@ class Api::OrganizationsController < APIController
 
   def index
     # TODO: add a `self.parent = :method` to SkinnyControllers
-    render json: model, include: params[:include]
+    if params[:mine]
+      organizations = current_user.organizations
+      render json: organizations, inclrude: params[:include]
+    else
+      render json: model, include: params[:include]
+    end
+
   end
 
   def show
