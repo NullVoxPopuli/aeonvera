@@ -1,12 +1,26 @@
 module HasDomain
   extend ActiveSupport::Concern
 
+  DOMAIN_BLACKLIST = [
+    'welcome', 'user',
+    'events', 'organizations', 'communities',
+    'login', 'logout', 'signup',
+    'donation-thankyou',
+    'password-reset',
+    'dance-event', 'dance-community',
+    'dashboard',
+    'orders',
+    'event-at-the-door',
+    'hosted-events', 'upcoming-events',
+    'register'
+  ]
+
   included do
 
     alias_attribute :subdomain, :domain
 
     validate :domain_is_unique
-    validates :domain, presence: true
+    validates :domain, presence: true, exclusion: { in: DOMAIN_BLACKLIST }
 
     before_save { |event|
       text = (event.domain || event.name)
