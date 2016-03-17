@@ -18,7 +18,11 @@ class Api::OrdersController < APIController
   end
 
   def create
-    render json: model
+    if model.errors.present?
+      render json: model.errors.to_json_api, status: 422
+    else
+      render json: model
+    end
   end
 
   def update
@@ -42,6 +46,10 @@ class Api::OrdersController < APIController
   def load_integration
     @integration = (@host || @event).integrations[Integration::STRIPE]
     raise "Stripe not connected to #{@host.name}" unless @integration
+  end
+
+  def create_order_params
+    ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
   end
 
   def order_params

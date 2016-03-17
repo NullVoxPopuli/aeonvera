@@ -90,9 +90,9 @@ AeonVera::Application.configure do
 
   ActionMailer::Base.smtp_settings = {
     :port =>           '587',
-    :address =>        'smtp.mailgun.org',
-    :user_name =>      ENV['MAILGUN_USERNAME'],
-    :password =>       ENV['MAILGUN_PASSWORD'],
+    :address =>        'smtp.sparkpostmail.com',
+    :user_name =>      ENV['SPARKPOST_USERNAME'],
+    :password =>       ENV['SPARKPOST_PASSWORD'],
     :domain =>         'aeonvera.com',
     :authentication => :plain
   }

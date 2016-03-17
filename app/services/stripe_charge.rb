@@ -40,7 +40,10 @@ module StripeCharge
     rescue Stripe::CardError => e
       # The card has been declined
       order.errors.add(:base, e.message)
+    rescue Stripe::InvalidRequestError => e
+      order.errors.add(:base, e.message)
     end
+
 
     order
   end
