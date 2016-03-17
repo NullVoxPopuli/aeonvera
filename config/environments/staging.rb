@@ -66,10 +66,10 @@ AeonVera::Application.configure do
 
   ActionMailer::Base.smtp_settings = {
     :port =>           '587',
-    :address =>        'smtp.mandrillapp.com',
-    :user_name =>      ENV['MANDRILL_USERNAME'],
-    :password =>       ENV['MANDRILL_APIKEY'],
-    :domain =>         'aeonvera.com',
+    :address =>        'smtp.mailgun.org',
+    :user_name =>      ENV['MAILGUN_USERNAME'],
+    :password =>       ENV['MAILGUN_PASSWORD'],
+    :domain =>         'aeonvera-staging.work',
     :authentication => :plain
   }
   ActionMailer::Base.delivery_method = :smtp
