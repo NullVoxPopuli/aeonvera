@@ -17,6 +17,8 @@ class Order < ActiveRecord::Base
     class_name: "OrderLineItem",
     dependent: :destroy
 
+  accepts_nested_attributes_for :line_items
+
   scope :unpaid, -> { where(paid: false) }
   scope :paid, -> {where(paid: true)}
   scope :created_after, ->(time){ where("orders.created_at > ?", time) }

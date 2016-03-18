@@ -48,9 +48,10 @@ class Api::OrdersController < APIController
     raise "Stripe not connected to #{@host.name}" unless @integration
   end
 
-  def create_order_params
-    ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
-  end
+  # this should be the only non JSON API request in the whole app
+  # def create_order_params
+  #   ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
+  # end
 
   def order_params
     params[:order].try(:permit, :paid_amount, :payment_method, :attendance_id)

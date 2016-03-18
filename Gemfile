@@ -28,10 +28,6 @@ gem 'lazy_crud'
 # request response helpers
 gem 'responders'
 
-# Permissions / Authorization
-gem "authorizable", github: "NullVoxPopuli/authorizable"
-
-
 # error capturing
 gem 'rollbar', '~> 2.5.0'
 
