@@ -5,8 +5,13 @@ class OrganizationSerializer < ActiveModel::Serializer
     :logo_file_name, :logo_content_type,
     :logo_file_size, :logo_updated_at,
     :logo_url_thumb, :logo_url_medium, :logo_url,
-    :has_stripe_integration
+    :has_stripe_integration,
+    :make_attendees_pay_fees,
+    :accept_only_electronic_payments
 
+  def accept_only_electronic_payments
+    true
+  end
 
   has_many :lessons
   has_many :integrations

@@ -7,6 +7,16 @@ describe Event do
     end
   end
 
+  describe 'validation' do
+    describe 'domain' do
+      it 'cannot be a blacklisted word' do
+        event = build(:event, domain: 'hosted-events')
+        expect(event.valid?).to eq false
+        expect(event.errors.keys).to include(:domain)
+      end
+    end
+  end
+
   describe :is_accessible_to? do
     let(:event){ create_event }
 

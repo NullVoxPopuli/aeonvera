@@ -13,7 +13,7 @@ class UserSerializer < ActiveModel::Serializer
 
     def id
       # they don't need to know their ID
-      0
+      'current-user'
     end
 
     def membership_renewals
