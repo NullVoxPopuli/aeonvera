@@ -1,4 +1,5 @@
-class Api::UsersController < Api::ResourceController
+class Api::UsersController < APIController
+  include SkinnyControllers::Diet
   before_filter :must_be_logged_in, except: :create
 
   def show
@@ -6,26 +7,4 @@ class Api::UsersController < Api::ResourceController
     # there is no multi-user management.
     render json: current_user, include: params[:include]
   end
-
-  private
-
-  def update_user_params
-    user_params.merge(
-      current_password: params[:user].try(:[], :current_password)
-    )
-  end
-
-  def user_params
-    params[:user].permit(
-      :first_name, :last_name,
-      :email,
-      :password,
-      :password_confirmation,
-      :time_zone
-      # don't worry about null / '' fields
-      # all fields on a user are required,
-      # yet the password fields are optional
-    ).select{ |k, v| v.present? }
-  end
-
 end

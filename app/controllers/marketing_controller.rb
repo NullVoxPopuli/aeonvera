@@ -4,8 +4,6 @@ class MarketingController < ActionController::Base
     ember_index = APICache.store.get('aeonvera:index:current-content')
 
     unless ember_index
-      puts 'Keys in the store:'
-      puts APICache.store.keys
       raise StandardError.new("Ember not deployed!!!")
     end
 

@@ -7,8 +7,8 @@ AeonVera::Application.routes.draw do
     devise_for :users, skip: :sessions,
       controllers: {
         passwords: 'api/users/passwords',
-        confirmations: "confirmations" ,
-        registrations: "users/registrations",
+        confirmations: "confirmations",
+        registrations: "api/users/registrations"
       }
 
     # for both events and communities
@@ -52,6 +52,7 @@ AeonVera::Application.routes.draw do
     resources :pricing_tiers
     resources :raffles
     resources :raffle_tickets
+    resources :raffle_ticket_purchasers
     resources :custom_fields
     resources :chart_data
     get '/chart_infos/:id', to: 'chart_data#show'
@@ -91,14 +92,12 @@ AeonVera::Application.routes.draw do
 
   get 'users' => redirect("/")
 
-  devise_for :users, controllers: {
-    confirmations: "confirmations" ,
-    registrations: "users/registrations",
-    sessions: 'sessions'
-  } do
+  resources :payments
+  devise_for :users#
+  devise_scope :user do
+    resources :confirmations
   end
 
-  resources :payments
 
   namespace :auth do
     get "paypal/callback", to: "paypal#callback"
