@@ -4,11 +4,16 @@ AeonVera::Application.routes.draw do
   # this should also enable the creation of
   # native mobile apps for android / iphone / whatever
   namespace :api, defaults: { format: :json } do
-    devise_for :users, skip: :sessions,
+    devise_for :users,# skip: :sessions,
       controllers: {
+        # password resets
         passwords: 'api/users/passwords',
+        # email confirmations
         confirmations: "confirmations",
-        registrations: "api/users/registrations"
+        # creating new account
+        registrations: "api/users/registrations",
+        # logging in
+        sessions: "api/users/sessions"
       }
 
     # for both events and communities
@@ -93,9 +98,9 @@ AeonVera::Application.routes.draw do
   get 'users' => redirect("/")
 
   resources :payments
-  devise_for :users#
+  devise_for :users
   devise_scope :user do
-    resources :confirmations
+    resources :confirmations # confirming email
   end
 
 
