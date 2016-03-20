@@ -2,15 +2,7 @@ class Api::OrdersController < APIController
   include SkinnyControllers::Diet
 
   def index
-    # TODO: How do i differentiate between types of orders?
-    # A User should be able to:
-    # - view all of their orders
-    # - view all orders of an event they are helping organize
-    # - view all orders of a community they help run
-    # TODO: add those 3 checks to the policy for this action
-    search = model.ransack(params[:q]).result(distinct: true)
-      .includes(:user, :host, attendance: [:attendee], line_items: [:line_item])
-    render json: search, include: params[:include]
+    render json: model, include: params[:include]
   end
 
   def show

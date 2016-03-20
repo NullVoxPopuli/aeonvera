@@ -12,7 +12,8 @@ class UserSerializer < ActiveModel::Serializer
     has_many :membership_renewals
 
     def id
-      # they don't need to know their ID
+      # this is to make looking up the current user in the
+      # ember store easy
       'current-user'
     end
 
