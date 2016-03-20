@@ -20,7 +20,7 @@ describe AttendanceMailer do
       emails = ActionMailer::Base.deliveries
 
       expect(emails.count).to eq 1
-      expect(emails.first.body.raw_source).to include("disclaimer!")
+      expect(emails.first.body.parts.first.body.raw_source).to include("disclaimer!")
 
     end
 
