@@ -4,10 +4,17 @@ module OrderOperations
     def run
       if allowed?
         update
+
+        # if model.errors.blank?
+        #   AttendanceMailer.payment_received_email(order: model).deliver_now
+        # end
+
       else
         # TODO: how to send error?
         raise 'not authorized'
       end
+
+      model
     end
 
     def update
@@ -16,39 +23,56 @@ module OrderOperations
       stripe_params = params[:stripe]
 
       if order_params[:payment_method] != Payable::Methods::STRIPE
-        order.check_number = order_params[:check_number]
+        model.check_number = order_params[:check_number]
 
-        order.paid = true
-        order.paid_amount = order_params[:paid_amount]
-        order.net_amount_received = order.paid_amount
-        order.total_fee_amount = 0
+        model.paid = true
+        model.paid_amount = order_params[:paid_amount]
+        model.net_amount_received = order.paid_amount
+        model.total_fee_amount = 0
+        model.save if order.errors.full_messages.empty?
       else
-        order = update_stripe(order, stripe_params)
+        # if this succeeds, the order will be saved
+        update_stripe
       end
-
-      order.save if order.errors.full_messages.empty?
-
-      order
     end
 
-    def update_stripe(order, stripe_params)
-      integration = order.host.integrations[Integration::STRIPE]
+    def update_stripe
+      # get the stripe credentials
+      integration = model.host.integrations[Integration::STRIPE]
+      access_token = integration.config['access_token']
+      checkout_token = params_for_action[:checkoutToken]
+      absorb_fees = !model.host.make_attendees_pay_fees?
 
-      if stripe_params[:checkout_token].present?
-        # absorbing fees should only be at the door.
-        # TODO: find a way to verify if an order update is coming from a payment from pre-registraiton
-        #       or if it is coming from at the door
-        order = StripeCharge.charge_card!(
-          stripe_params[:checkout_token],
-          stripe_params[:checkout_email],
-          absorb_fees: true,
-          secret_key: integration.config[:access_token],
-          order: order)
-      else
-        order.errors.add(:base, "No Stripe Information Found")
+      # hopefully this never happens... but we want specific errors
+      # just in case
+      check_required_information(checkout_token, integration, access_token)
+      return if model.errors.present?
+
+      # charge the card.
+      # this will add errors to the model if something
+      # goes wrong with the charge process
+      # NOTE: if this succeeds, the order is saved
+      charge_card!(
+        checkout_token,
+        user_email,
+        absorb_fees: absorb_fees,
+        secret_key: access_token,
+        order: model
+      )
+    end
+
+    def check_required_information(checkout_token, integration, access_token)
+      unless checkout_token.present?
+        model.errors.add(:base, 'No Stripe Checkout Information Found')
       end
 
-      order
+      unless integration.present?
+        model.errors.add(:base, 'No Stripe Integration Present')
+      end
+
+      unless access_token.present?
+        model.errors.add(:base, 'No Stripe Access Token Present')
+      end
     end
   end
 end

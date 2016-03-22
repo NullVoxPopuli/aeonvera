@@ -24,10 +24,7 @@ class Api::OrdersController < APIController
   private
 
   def update_order_params
-    {
-      stripe: stripe_params,
-      order: all_order_params
-    }
+    ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
   end
 
   def order_where_params
@@ -35,36 +32,12 @@ class Api::OrdersController < APIController
     params.slice(*keys).symbolize_keys
   end
 
-  def load_integration
-    @integration = (@host || @event).integrations[Integration::STRIPE]
-    raise "Stripe not connected to #{@host.name}" unless @integration
+  def create_order_params
+    ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
   end
-
-  # this should be the only non JSON API request in the whole app
-  # def create_order_params
-  #   ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
-  # end
 
   def order_params
     params[:order].try(:permit, :paid_amount, :payment_method, :attendance_id)
-  end
-
-  def all_order_params
-    params[:order].permit(
-      :paid_amount, :payment_method, :check_number, :stripe_data, :attendance_id
-    )
-  end
-
-  def stripe_params
-    params[:order].permit(
-      :checkout_token, :checkout_email
-    )
-  end
-
-  def find_host_params
-    o_params = params[:order]
-    params[:host_id] = o_params[:host_id]
-    params[:host_type] = o_params[:host_type]
   end
 
 end
