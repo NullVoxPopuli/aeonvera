@@ -27,9 +27,9 @@ module OrderOperations
 
         model.paid = true
         model.paid_amount = params_for_action[:paid_amount]
-        model.net_amount_received = order.paid_amount
+        model.net_amount_received = model.paid_amount
         model.total_fee_amount = 0
-        model.save if order.errors.full_messages.empty?
+        model.save if model.errors.full_messages.empty?
       else
         # if this succeeds, the order will be saved
         update_stripe

@@ -44,8 +44,8 @@ describe OrderOperations do
       it 'can be saved' do
         user = create(:user)
         host = create(:organization)
-        operation = OrderOperations::Create.new(user, {})
-        operation.build_order(host, [])
+        operation = OrderOperations::Create.new(user, { payment_method: Payable::Methods::STRIPE })
+        operation.build_order(host)
 
         expect{ operation.save_order }.to change(Order, :count).by 1
       end
@@ -54,8 +54,9 @@ describe OrderOperations do
         user = create(:user)
         host = create(:organization)
         item = create(:lesson, host: host)
-        operation = OrderOperations::Create.new(user, {})
-        operation.build_order(host, [{
+        operation = OrderOperations::Create.new(user, { payment_method: Payable::Methods::STRIPE })
+        operation.build_order(host)
+        operation.build_items([{
           lineItemId: item.id,
           lineItemType: item.class.name,
           price: 4,
@@ -69,8 +70,9 @@ describe OrderOperations do
         user = create(:user)
         host = create(:organization)
         item = create(:lesson, host: host)
-        operation = OrderOperations::Create.new(user, {})
-        operation.build_order(host, [{
+        operation = OrderOperations::Create.new(user, { payment_method: Payable::Methods::STRIPE })
+        operation.build_order(host)
+        operation.build_items([{
           lineItemId: item.id,
           lineItemType: item.class.name,
           price: 4,
@@ -103,7 +105,9 @@ describe OrderOperations do
       end
 
       it 'calls update' do
-        operation = OrderOperations::Update.new(nil, {})
+        @event = event = create_event
+        @order = create(:order, host: event)
+        operation = OrderOperations::Update.new(nil, {id: @order.id})
         allow(operation).to receive(:allowed?){ true }
         expect(operation).to receive(:update)
 
@@ -129,14 +133,10 @@ describe OrderOperations do
 
         @params = {
           id: @order.id,
-          order: {
-            payment_method: Payable::Methods::STRIPE,
-            paid_amount: 13.37
-          },
-          stripe: {
-            checkout_token: stripe_helper.generate_card_token,
-            checkout_email: 'test@test.com'
-          }
+          payment_method: Payable::Methods::STRIPE,
+          paid_amount: 13.37,
+          checkout_token: stripe_helper.generate_card_token,
+          checkout_email: 'test@test.com'
         }
 
         @operation = OrderOperations::Update.new(event.hosted_by, @params)
@@ -144,8 +144,8 @@ describe OrderOperations do
 
       context 'for a check' do
         before(:each) do
-          @params[:order][:payment_method] = Payable::Methods::CHECK
-          @params[:order][:check_number] = @check_number = '1245'
+          @params[:payment_method] = Payable::Methods::CHECK
+          @params[:check_number] = @check_number = '1245'
         end
 
         it 'sets the check number' do
@@ -157,7 +157,7 @@ describe OrderOperations do
           order = @operation.run
 
           expect(order.paid).to be_truthy
-          expect(order.paid_amount).to eq @params[:order][:paid_amount]
+          expect(order.paid_amount).to eq @params[:paid_amount]
           expect(order.net_amount_received).to eq order.paid_amount
           expect(order.total_fee_amount).to eq 0
           expect(order.errors).to be_empty
@@ -168,7 +168,7 @@ describe OrderOperations do
 
         context 'errors' do
           it 'when no checkout token is provided' do
-            @params[:stripe].delete(:checkout_token)
+            @params.delete(:checkout_token)
             order = @operation.run
             expect(order.errors).to be_present
           end
