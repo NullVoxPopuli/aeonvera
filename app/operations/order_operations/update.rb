@@ -5,9 +5,9 @@ module OrderOperations
       if allowed?
         update
 
-        # if model.errors.blank?
-        #   AttendanceMailer.payment_received_email(order: model).deliver_now
-        # end
+        if model.errors.blank? && model.paid_changed? && model.paid?
+          AttendanceMailer.payment_received_email(order: model).deliver_now
+        end
 
       else
         # TODO: how to send error?
@@ -18,15 +18,15 @@ module OrderOperations
     end
 
     def update
-      order = model
-      order_params = params[:order]
-      stripe_params = params[:stripe]
+      payment_method = params_for_action[:payment_method]
 
-      if order_params[:payment_method] != Payable::Methods::STRIPE
-        model.check_number = order_params[:check_number]
+      model.payment_method = payment_method
+
+      if payment_method != Payable::Methods::STRIPE
+        model.check_number = params_for_action[:check_number]
 
         model.paid = true
-        model.paid_amount = order_params[:paid_amount]
+        model.paid_amount = params_for_action[:paid_amount]
         model.net_amount_received = order.paid_amount
         model.total_fee_amount = 0
         model.save if order.errors.full_messages.empty?
@@ -38,9 +38,9 @@ module OrderOperations
 
     def update_stripe
       # get the stripe credentials
+      checkout_token, checkout_email = params_for_action.values_at(:checkout_token, :checkout_email)
       integration = model.host.integrations[Integration::STRIPE]
       access_token = integration.config['access_token']
-      checkout_token = params_for_action[:checkoutToken]
       absorb_fees = !model.host.make_attendees_pay_fees?
 
       # hopefully this never happens... but we want specific errors
@@ -52,9 +52,9 @@ module OrderOperations
       # this will add errors to the model if something
       # goes wrong with the charge process
       # NOTE: if this succeeds, the order is saved
-      charge_card!(
+      StripeCharge.charge_card!(
         checkout_token,
-        user_email,
+        checkout_email,
         absorb_fees: absorb_fees,
         secret_key: access_token,
         order: model

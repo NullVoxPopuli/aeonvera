@@ -6,25 +6,32 @@ class Api::OrdersController < APIController
   end
 
   def show
-    render json: model
+    render json: model, include: params[:include]
   end
 
   def create
     if model.errors.present?
       render json: model.errors.to_json_api, status: 422
     else
-      render json: model
+      render json: model, include: 'order_line_items'
     end
   end
 
   def update
-    render json: model
+    if model.errors.present?
+      render json: model.errors.to_json_api, status: 422
+    else
+      render json: model, include: 'order_line_items'
+    end
   end
 
   private
 
   def update_order_params
-    ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
+    params
+      .require(:data)
+      .require(:attributes)
+      .permit(:payment_method, :checkout_token, :checkout_email, :check_number)
   end
 
   def order_where_params
@@ -33,11 +40,7 @@ class Api::OrdersController < APIController
   end
 
   def create_order_params
-    ActiveModelSerializers::Deserialization.jsonapi_parse(params, polymorphic: [:host])
-  end
-
-  def order_params
-    params[:order].try(:permit, :paid_amount, :payment_method, :attendance_id)
+    params
   end
 
 end

@@ -10,6 +10,7 @@ class OrderSerializer < ActiveModel::Serializer
     :total_in_cents
 
   has_many :order_line_items
+  belongs_to :host
 
   def order_line_items
     object.line_items

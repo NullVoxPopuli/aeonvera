@@ -11,6 +11,8 @@ class Order < ActiveRecord::Base
 
 
   belongs_to :attendance
+  # A user is always going to be the person paying.
+  # and should always be the same as the user that attendance is attached to.
   belongs_to :user
 
   has_many :line_items,
