@@ -3,10 +3,15 @@ module OrderOperations
 
     def run
       if allowed?
+        original_paid_status = model.paid?
+
         update
 
-        if model.errors.blank? && model.paid_changed? && model.paid?
-          AttendanceMailer.payment_received_email(order: model).deliver_now
+        paid_changed = original_paid_status != model.paid?
+
+        binding.pry
+        if model.errors.blank? && paid_changed && model.paid?
+          OrderMailer.receipt(for_order: model).deliver_now
         end
 
       else

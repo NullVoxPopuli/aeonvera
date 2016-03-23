@@ -117,6 +117,20 @@ describe OrderOperations do
       it 'is not allowed' do
         skip('what conditions can an order not be updated?')
       end
+
+      it 'sends an email' do
+        @event = event = create_event
+        @order = create(:order, host: event, paid: false)
+        @order.add(create(:package, event: event))
+        @order.save
+        expect(@order.paid).to eq false
+        operation = OrderOperations::Update.new(nil, {id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10})
+
+        expect{
+            operation.run
+        }.to change(ActionMailer::Base.deliveries, :count).by 1
+
+      end
     end
 
     context 'update' do
