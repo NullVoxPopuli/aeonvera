@@ -17,13 +17,7 @@ module OrderOperations
     # crappy custom JS, cause JSON API doesn't yet have a good way
     # to support creating multiple related records at once. :-(
     def create!
-      # regular order params
-      params_for_order = params_for_action[:order]
-      # for some reason this is a hash trying to be an array (with indicies)
-      params_for_items = params_for_action[:orderLineItems].values
-
       host_id, host_type = params_for_order.values_at(:hostId, :hostType)
-      user_email = params_for_action[:userEmail]
 
       # get the event / organization that this order ties to
       host = host_from(host_id, host_type)
@@ -61,8 +55,8 @@ module OrderOperations
         # TODO: assign attendance
       )
 
-      @model.buyer_email = params_for_action[:userEmail] if params_for_action[:userEmail]
-      @model.buyer_name = params_for_action[:userName] if params_for_action[:userName]
+      @model.buyer_email = params_for_order[:userEmail] if params_for_order[:userEmail]
+      @model.buyer_name = params_for_order[:userName] if params_for_order[:userName]
     end
 
     # Each Entry looks like this:
@@ -97,9 +91,9 @@ module OrderOperations
         )
 
         if item.valid?
-           @model.line_items << item
+          @model.line_items << item
         else
-           @model.errors.add(:base, item.errors.full_messages.to_s)
+          @model.errors.add(:base, item.errors.full_messages.to_s)
         end
       end
     end
@@ -110,6 +104,14 @@ module OrderOperations
       else
         Event.find(id)
       end
+    end
+
+    def params_for_order
+      @params_for_order ||= params_for_action[:order].dup
+    end
+
+    def params_for_items
+      @params_for_items ||= params_for_action[:orderLineItems].values
     end
   end
 

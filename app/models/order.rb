@@ -30,18 +30,17 @@ class Order < ActiveRecord::Base
   scope :created_after, ->(time){ where("orders.created_at > ?", time) }
   scope :created_before, ->(time){ where("orders.created_at < ?", time) }
 
-  after_save do |instance|
-    instance.process_membership
-    instance.apply_membership_discount
-    true
-  end
+
+  validates :buyer_email, presence: true
+  validates :buyer_name, preserce: true
+
 
   before_save do |instance|
     instance.check_paid_status
-    true
     # before filter must return true to continue saving.
     # the above two checks do not halt saving, nor do they
     # create a bad state
+    true
   end
 
   def is_accessible_to?(someone)
