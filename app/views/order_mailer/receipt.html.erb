@@ -1,0 +1,17 @@
+<%= content_for :header do %>
+  <%= @host.name %>
+<% end %>
+
+<%= @buyer_name %>, <br>
+Your payment to <%= @host.name %> has been received. <br>
+<br>
+<h3>
+  Order Summary
+</h3>
+<%= render partial: "order_summary", locals: { order: @order } %>
+<br>
+<br>
+If you have any questions about <%= @host.name %>,
+feel free to email the organizers.
+<br>
+<br>

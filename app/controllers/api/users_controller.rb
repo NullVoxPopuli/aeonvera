@@ -7,11 +7,6 @@ class Api::UsersController < Api::ResourceController
     render json: current_user, include: params[:include]
   end
 
-  def create
-    raise 'no'
-  end
-
-
   private
 
   def update_user_params

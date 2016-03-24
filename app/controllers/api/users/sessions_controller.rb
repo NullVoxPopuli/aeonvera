@@ -8,17 +8,17 @@ class Api::Users::SessionsController < Devise::SessionsController
   # designed for API Authentication
   #
   # instead of returning the current user,
-  # we want to return the auth token.
   # the auth token and email will be passed on every request,
+  # we want to return the auth token.
   # and the user will be authorized based on the validitity
   # of the token and email pair.
   #
   # HTTPS required :-)
   def create
-    resource = User.find_by_email(params[:user][:email])
+    resource = User.find_by_email(params[:email])
     return invalid_login_attempt unless resource
 
-    success = resource.valid_password?(params[:user][:password])
+    success = resource.valid_password?(params[:password])
 
     if success
       sign_in("user", resource)
@@ -26,10 +26,6 @@ class Api::Users::SessionsController < Devise::SessionsController
     end
 
     invalid_login_attempt
-  end
-
-  def destroy
-    sign_out(resource_name)
   end
 
   protected

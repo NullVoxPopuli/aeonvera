@@ -1,0 +1,51 @@
+table width="100%"
+  thead
+    tr
+      th
+      th Item
+      th Quantity
+      th Price
+  tbody
+    - order.line_items.each do |order_line_item|
+      - item = order_line_item.line_item
+      tr
+        td = item.class.name.titleize.gsub("Line Item/", "")
+        - if item.is_a?(Discount) and item.kind == Discount::PERCENT_OFF
+          td = item.code
+          td = item.display_value
+        - else
+          td
+            - if item.is_a?(Competition)
+              - competition_response = order.attendance.competition_responses.where(competition_id: item.id).first
+              - if item.requires_orientation?
+                = "#{item.name}: #{competition_response.try(:dance_orientation)}"
+              - elsif item.requires_partner?
+                = "#{item.name} w/ #{competition_response.try(:partner_name)}"
+              - else
+                = item.name
+            - else
+              = item.name
+              
+            td = order_line_item.quantity
+            td = number_to_currency order_line_item.total
+
+    - if order.total_fee_amount > 0
+      tr
+        td
+        td Processing Fee
+        td = number_to_currency order.total_fee_amount
+    tr
+      - total = order.total
+      td
+      td Total
+      td = number_to_currency order.total
+    - if order.paid?
+      tr
+        td.order-payment-status data-paid="#{order.paid}" colspan="3"
+          - paid_at = order.payment_received_at || order.updated_at
+          = "Paid #{number_to_currency(order.paid_amount)} on #{paid_at.to_s(:short)} via #{order.payment_method}"
+
+.right
+  span
+    | Prices as of:&nbsp;
+    = order.created_at.to_s(:long)

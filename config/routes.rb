@@ -71,12 +71,12 @@ AeonVera::Application.routes.draw do
     end
 
     # user specific info
-    resources :orders
+    resources :orders, except: [:destroy]
     resources :registrations
 
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
-    resources :users
+    resources :users, only: [:show, :update, :destroy]
   end
 
   namespace :oauth do

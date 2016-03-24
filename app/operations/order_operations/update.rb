@@ -9,7 +9,6 @@ module OrderOperations
 
         paid_changed = original_paid_status != model.paid?
 
-        binding.pry
         if model.errors.blank? && paid_changed && model.paid?
           OrderMailer.receipt(for_order: model).deliver_now
         end

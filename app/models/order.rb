@@ -1,4 +1,8 @@
 class Order < ActiveRecord::Base
+  # Active Metadata keys:
+  # - email
+  # - user
+  # - details
   include HasMetadata
   include StripePaymentHandler
   include Payable
@@ -48,10 +52,34 @@ class Order < ActiveRecord::Base
     false
   end
 
-  # DEPRECATED: Was for use with PayPal's API
-  def set_payment_token(token)
-    self.payment_token = token
-    self.save
+  def buyer_name
+    name_from_metadata || attendance.try(:attendee_name) || user.name
+  end
+
+  def buyer_email
+    email_from_metadata || attendance.try(:attendee_email) || user.email
+  end
+
+  # TODO: do I want these to actually be fields?
+  #
+  # This is an optional field, the email is normally retrieved from the user
+  def buyer_email=(email)
+    self.metadata['email'] = email
+  end
+
+  # TODO: do I want these to actually be fields?
+  #
+  # This is an optional field, the email is normally retrieved from the user
+  def buyer_name=(name)
+    self.metadata['name'] = name
+  end
+
+  def email_from_metadata
+    self.metadata['email']
+  end
+
+  def name_from_metadata
+    self.metadata['name']
   end
 
   # short hand for setting a field on the metadata
@@ -73,16 +101,8 @@ class Order < ActiveRecord::Base
     self.save
   end
 
-  def self.paypal_fees(orders)
-    (orders.count * (0.3)) + orders.map{|o|
-      o.total * 0.029
-    }.inject(:+).to_f
-  end
-
-
   # ideally, this is ran upon successful payment
   def set_net_amount_received_and_fees
-
     if self.payment_method == Payable::Methods::STRIPE || self.payment_method == Payable::Methods::CREDIT
       set_net_amount_received_and_fees_from_stripe
     end
@@ -118,15 +138,12 @@ class Order < ActiveRecord::Base
     elsif self.paid_amount.nil?
       # money is owed, the order has not been paid
       self.paid = false
-
     end
-
 
     if self.paid == true && paid_amount == nil && self.total == 0.0
       self.paid = false
     end
   end
-
 
   def belongs_to_organization?
     host_type == Organization.name

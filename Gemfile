@@ -45,8 +45,6 @@ gem "api_cache", github: "NullVoxPopuli/api_cache"
 
 # User Authentication and management
 gem "devise"
-gem 'omniauth'
-gem 'omniauth-openid', :git => 'git://github.com/intridea/omniauth-openid.git'
 
 # Allows the use of decorators
 # https://github.com/drapergem/draper

@@ -1,5 +1,6 @@
 class Api::OrdersController < APIController
   include SkinnyControllers::Diet
+  before_filter :must_be_logged_in, only: [:index]
 
   def index
     render json: model, include: params[:include]

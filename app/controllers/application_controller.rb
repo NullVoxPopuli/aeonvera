@@ -6,9 +6,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   skip_before_filter :verify_authenticity_token
 
-
-  before_filter :check_subdomain
-
   # optional
   before_action :authenticate_user_from_token!, except: [:sign_in, :sign_up, :assum_control]
 
@@ -16,10 +13,6 @@ class ApplicationController < ActionController::Base
   before_filter :authenticate_user!, except: [:sign_in, :sign_up, :assume_control]
 
   before_action :set_time_zone
-
-  before_action :subdomain_failure?
-
-  helper_method :current_domain
 
   # # Receives the redirect request from the admin Assume Control link.
   # def assume_control

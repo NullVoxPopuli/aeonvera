@@ -1,5 +1,6 @@
 class Api::OrganizationsController < APIController
   include SkinnyControllers::Diet
+  before_filter :must_be_logged_in, except: [:index]
 
   def index
     # TODO: add a `self.parent = :method` to SkinnyControllers

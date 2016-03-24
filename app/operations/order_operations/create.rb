@@ -36,7 +36,6 @@ module OrderOperations
       else
         @model.paid = true
         @model.payment_method = Payable::Methods::CASH
-
       end
 
       return if @model.errors.present?
@@ -61,6 +60,9 @@ module OrderOperations
         user: current_user,
         # TODO: assign attendance
       )
+
+      @model.buyer_email = params_for_action[:userEmail] if params_for_action[:userEmail]
+      @model.buyer_name = params_for_action[:userName] if params_for_action[:userName]
     end
 
     # Each Entry looks like this:
