@@ -44,7 +44,7 @@ describe OrderOperations do
       it 'can be saved' do
         user = create(:user)
         host = create(:organization)
-        operation = OrderOperations::Create.new(user, { payment_method: Payable::Methods::STRIPE })
+        operation = OrderOperations::Create.new(user, { order: {payment_method: Payable::Methods::STRIPE }})
         operation.build_order(host)
 
         expect{ operation.save_order }.to change(Order, :count).by 1
@@ -54,7 +54,7 @@ describe OrderOperations do
         user = create(:user)
         host = create(:organization)
         item = create(:lesson, host: host)
-        operation = OrderOperations::Create.new(user, { payment_method: Payable::Methods::STRIPE })
+        operation = OrderOperations::Create.new(user, { order: { payment_method: Payable::Methods::STRIPE }})
         operation.build_order(host)
         operation.build_items([{
           lineItemId: item.id,
@@ -70,7 +70,7 @@ describe OrderOperations do
         user = create(:user)
         host = create(:organization)
         item = create(:lesson, host: host)
-        operation = OrderOperations::Create.new(user, { payment_method: Payable::Methods::STRIPE })
+        operation = OrderOperations::Create.new(user, { order: { payment_method: Payable::Methods::STRIPE }})
         operation.build_order(host)
         operation.build_items([{
           lineItemId: item.id,

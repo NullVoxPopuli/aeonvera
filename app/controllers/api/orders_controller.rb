@@ -14,7 +14,7 @@ class Api::OrdersController < APIController
     if model.errors.present?
       render json: model.errors.to_json_api, status: 422
     else
-      render json: model, include: 'order_line_items'
+      render json: model, include: 'order_line_items.line_items'
     end
   end
 
@@ -22,7 +22,7 @@ class Api::OrdersController < APIController
     if model.errors.present?
       render json: model.errors.to_json_api, status: 422
     else
-      render json: model, include: 'order_line_items'
+      render json: model, include: 'order_line_items.line_items'
     end
   end
 

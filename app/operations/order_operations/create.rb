@@ -55,8 +55,8 @@ module OrderOperations
         # TODO: assign attendance
       )
 
-      @model.buyer_email = params_for_order[:userEmail] if params_for_order[:userEmail]
-      @model.buyer_name = params_for_order[:userName] if params_for_order[:userName]
+      @model.buyer_email = params_for_order[:userEmail] if params_for_order[:userEmail].present?
+      @model.buyer_name = params_for_order[:userName] if params_for_order[:userName].present?
     end
 
     # Each Entry looks like this:
@@ -107,7 +107,7 @@ module OrderOperations
     end
 
     def params_for_order
-      @params_for_order ||= params_for_action[:order].dup
+      @params_for_order ||= params_for_action[:order]
     end
 
     def params_for_items

@@ -32,7 +32,7 @@ class Order < ActiveRecord::Base
 
 
   validates :buyer_email, presence: true
-  validates :buyer_name, preserce: true
+  validates :buyer_name, presence: true
 
 
   before_save do |instance|
@@ -52,11 +52,11 @@ class Order < ActiveRecord::Base
   end
 
   def buyer_name
-    name_from_metadata || attendance.try(:attendee_name) || user.name
+    name_from_metadata || attendance.try(:attendee_name) || user.try(:name)
   end
 
   def buyer_email
-    email_from_metadata || attendance.try(:attendee_email) || user.email
+    email_from_metadata || attendance.try(:attendee_email) || user.try(:email)
   end
 
   # TODO: do I want these to actually be fields?

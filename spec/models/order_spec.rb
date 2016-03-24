@@ -2,6 +2,66 @@ require 'spec_helper'
 
 describe Order do
 
+  describe 'validations' do
+    describe 'buyer_email' do
+      it 'is invalid with no email' do
+        o = create(:order)
+        o.user = nil
+        expect(o).to_not be_valid
+        expect(o.errors.keys).to include(:buyer_email)
+      end
+
+      it 'is present in the metadata' do
+        o = create(:order)
+        o.buyer_email = 'email@email.email'
+        expect(o).to be_valid
+        expect(o.errors.keys).to_not include(:buyer_email)
+      end
+
+      it 'is on the attendance' do
+        o = create(:order, attendance: create(:attendance))
+        expect(o).to be_valid
+        expect(o.errors.keys).to_not include(:buyer_email)
+      end
+
+      it 'is on the user' do
+        o = create(:order, user: create(:user))
+        expect(o).to be_valid
+        expect(o.errors.keys).to_not include(:buyer_email)
+      end
+    end
+
+    describe 'buyer_name' do
+      it 'is invalid with no user name' do
+        o = create(:order)
+        o.user = nil
+        expect(o).to_not be_valid
+        expect(o.errors.keys).to include(:buyer_name)
+      end
+
+
+      it 'is present in the metadata' do
+        o = create(:order)
+        o.buyer_name = 'test test'
+        expect(o).to be_valid
+        expect(o.errors.keys).to_not include(:buyer_name)
+      end
+
+      it 'is on the attendance' do
+        o = create(:order, attendance: create(:attendance))
+        expect(o).to be_valid
+        expect(o.errors.keys).to_not include(:buyer_name)
+      end
+
+      it 'is on the user' do
+        o = create(:order, user: create(:user))
+        expect(o).to be_valid
+        expect(o.errors.keys).to_not include(:buyer_name)
+      end
+    end
+  end
+
+
   describe "#before_create" do
 
     it "payer_id is not set" do
@@ -62,6 +122,8 @@ describe Order do
       allow(o).to receive(:total){ 10 }
       o.payment_method = Payable::Methods::STRIPE
       o.paid = true
+      o.buyer_email = 'a@a.a'
+      o.buyer_name = 'test test'
       paid_amount = nil
       o.save
 
