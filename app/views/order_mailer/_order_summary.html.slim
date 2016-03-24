@@ -29,7 +29,7 @@ table width="100%"
             td = order_line_item.quantity
             td = number_to_currency order_line_item.total
 
-    - if order.total_fee_amount > 0
+    - if order.host.make_attendees_pay_fees? && order.total_fee_amount > 0
       tr
         td
         td Processing Fee

@@ -1,8 +1,4 @@
 class OrderMailer < ApplicationMailer
-  default from: APPLICATION_CONFIG['support_email']
-  # add_template_helper RegisterHelper
-  layout "email"
-
   def receipt(for_order: nil)
     @order = for_order
     @host = @order.host
