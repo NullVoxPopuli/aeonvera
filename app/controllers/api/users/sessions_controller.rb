@@ -8,8 +8,8 @@ class Api::Users::SessionsController < Devise::SessionsController
   # designed for API Authentication
   #
   # instead of returning the current user,
-  # the auth token and email will be passed on every request,
   # we want to return the auth token.
+  # the auth token and email will be passed on every request,
   # and the user will be authorized based on the validitity
   # of the token and email pair.
   #
