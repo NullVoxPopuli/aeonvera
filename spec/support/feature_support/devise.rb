@@ -16,7 +16,8 @@ def login_through_api(user = @user)
   @user = user
 
   # Authorization and Accept grabbed from Ember
-  request.headers["Authorization"] = "Token token=\"#{user.authentication_token}\", email=\"#{user.email}\""
+  # request.headers["Authorization"] = "Token token=\"#{user.authentication_token}\", email=\"#{user.email}\""
+  request.headers["Authorization"] = "Bearer #{user.authentication_token}"
   request.headers['ACCEPT'] = 'application/vnd.api+json'
   #request.headers['Content-Type'] = 'application/vnd.api+json'
 end

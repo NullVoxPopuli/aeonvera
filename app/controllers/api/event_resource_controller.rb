@@ -1,4 +1,5 @@
 class Api::EventResourceController < Api::ResourceController
+  before_filter :must_be_logged_in, except: [:index]
 
   def index
     model = operation_class.new(current_user, params, index_params).run

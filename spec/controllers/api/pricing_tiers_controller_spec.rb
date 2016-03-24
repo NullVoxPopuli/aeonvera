@@ -28,6 +28,8 @@ describe Api::PricingTiersController, type: :controller do
 
   context 'show' do
     it 'returns details about a pricing_tier' do
+      login_through_api
+
       event = create_event
       pricing_tier = create(:pricing_tier, event: event)
       create(:pricing_tier, event: event)
