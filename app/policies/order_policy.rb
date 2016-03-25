@@ -8,6 +8,17 @@ class OrderPolicy < SkinnyControllers::Policy::Base
     owner? || is_from_an_owned_event?
   end
 
+  # This is allowed when:
+  # - a user owns the order
+  # - the unique unauth-token is present
+  # - an event / organization is modifying the order
+  #
+  # I don't know if I want ordinary collaborators editing orders
+  def modify?
+    # TODO: also check for unauth token
+    owner? || is_from_an_owned_event?
+  end
+
   private
 
   def owner?

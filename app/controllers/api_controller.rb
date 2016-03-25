@@ -10,6 +10,15 @@
   before_filter :authenticate_user_from_token!
   before_action :set_time_zone
 
+  protected
+
+  def render_model(include_param = nil)
+    if model.errors.present?
+      render json: model.errors.to_json_api, status: 422
+    else
+      render json: model, include: include_param
+    end
+  end
 
   def must_be_logged_in
     unless current_user

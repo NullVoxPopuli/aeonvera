@@ -4,8 +4,6 @@ module OrderOperations
   # This does not charge a credit card. That is what Update is for.
   #
   class Create < SkinnyControllers::Operation::Base
-    include StripeCharge
-
     def run
       # when is creating an order ever not allowed?
       # - I'm sure the organizers would always be happy to take money
@@ -24,17 +22,18 @@ module OrderOperations
 
       build_order(host)
       build_items(params_for_items)
+      assign_default_payment_method
 
+      save_order unless @model.errors.present?
+    end
+
+    def assign_default_payment_method
       if @model.sub_total > 0
         @model.payment_method = Payable::Methods::STRIPE
       else
         @model.paid = true
         @model.payment_method = Payable::Methods::CASH
       end
-
-      return if @model.errors.present?
-
-      save_order
     end
 
     def save_order
