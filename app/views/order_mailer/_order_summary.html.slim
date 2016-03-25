@@ -37,11 +37,12 @@ table width="100%"
     tr
       - total = order.total
       td
+      td
       td Total
       td = number_to_currency order.total
     - if order.paid?
       tr
-        td.order-payment-status data-paid="#{order.paid}" colspan="3"
+        td.order-payment-status data-paid="#{order.paid}" colspan="4"
           - paid_at = order.payment_received_at || order.updated_at
           = "Paid #{number_to_currency(order.paid_amount)} on #{paid_at.to_s(:short)} via #{order.payment_method}"
 
