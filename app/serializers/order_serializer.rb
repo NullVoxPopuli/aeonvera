@@ -8,6 +8,7 @@ class OrderSerializer < ActiveModel::Serializer
     :created_at, :user_email, :user_name,
     :payment_received_at,
     :total_in_cents
+    # never render the payment_token
 
   has_many :order_line_items
   belongs_to :host
@@ -22,12 +23,11 @@ class OrderSerializer < ActiveModel::Serializer
   end
 
   def user_email
-    # will also check meta data in case of non-user-bount attendance
-    object.user.try(:email) || object.attendance.try(:attendee_email)
+    object.buyer_email
   end
 
   def user_name
-    object.user.try(:name) || object.attendance.try(:attendee_name)
+    object.buyer_name
   end
 
   def host_name

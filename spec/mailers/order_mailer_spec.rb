@@ -40,4 +40,15 @@ RSpec.describe OrderMailer, type: :mailer do
     expect(body).to include("Processing Fee")
   end
 
+  it 'shows the payment token when present' do
+    token = 'abctoken'
+    o = create(:order, user: @user, payment_token: token)
+    ActionMailer::Base.deliveries.clear
+    OrderMailer.receipt(for_order: o).deliver_now
+    email = ActionMailer::Base.deliveries.first
+    body = email.body.raw_source
+
+    expect(body).to include(token)
+  end
+
 end

@@ -2,7 +2,7 @@ module OrderOperations
   class Update < SkinnyControllers::Operation::Base
 
     def run
-      if allowed?
+      if allowed_to_update?
         original_paid_status = model.paid?
 
         update
@@ -19,6 +19,14 @@ module OrderOperations
       end
 
       model
+    end
+
+    def allowed_to_update?
+      # need to check if this token is present in the params
+      unloggedin_token = params[:order][:paymentToken]
+      actual_token = model.payment_token
+
+      allowed? || unloggedin_token == actual_token
     end
 
     def update

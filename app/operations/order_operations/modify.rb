@@ -13,15 +13,29 @@ module OrderOperations
   # which order line items are being added, which are being removed,
   # and which are being modified.
   class Modify < SkinnyControllers::Operation::Base
+    include Helpers
 
     def run
-      modify!
+      modify! if alloed_to_modify?
 
       model
     end
 
     def modify!
-      # TODO: abstract common logic out of create into a module to include here
+      # nothing on the actual order object itself can change in this step
+      
+
+      # next, figure out how to determine what was added and what was removed
+      binding.pry
+      2+2
+    end
+
+    def allowed_to_modify?
+      # need to check if this token is present in the params
+      unloggedin_token = params[:order][:paymentToken]
+      actual_token = model.payment_token
+
+      allowed? || unloggedin_token == actual_token
     end
 
   end

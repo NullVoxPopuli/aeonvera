@@ -10,6 +10,8 @@ Your payment to <%= @host.name %> has been received. <br>
 </h3>
 <%= render partial: "order_summary", locals: { order: @order } %>
 <br>
+You may view your order at any time <a href='<%= @order_url %>'>at this URL</a>.
+<br>
 <br>
 If you have any questions about <%= @host.name %>,
 feel free to email the organizers.

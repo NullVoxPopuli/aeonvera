@@ -4,6 +4,8 @@ module OrderOperations
   # This does not charge a credit card. That is what Update is for.
   #
   class Create < SkinnyControllers::Operation::Base
+    include Helpers
+
     def run
       # when is creating an order ever not allowed?
       # - I'm sure the organizers would always be happy to take money
@@ -15,10 +17,8 @@ module OrderOperations
     # crappy custom JS, cause JSON API doesn't yet have a good way
     # to support creating multiple related records at once. :-(
     def create!
-      host_id, host_type = params_for_order.values_at(:hostId, :hostType)
-
       # get the event / organization that this order ties to
-      host = host_from(host_id, host_type)
+      host = host_from_params
 
       build_order(host)
       build_items(params_for_items)
@@ -36,13 +36,6 @@ module OrderOperations
       end
     end
 
-    def save_order
-      ActiveRecord::Base.transaction do
-        @model.save
-        @model.line_items.map(&:save)
-      end
-    end
-
     def build_order(host)
       # build out the order
       @model = Order.new(
@@ -54,6 +47,10 @@ module OrderOperations
         # TODO: assign attendance
       )
 
+      # the payment token is used for people who aren't logged in.
+      # In order to update / pay for an order, you must either
+      # be the owner, or have this token in the URL
+      @model.payment_token = params[:order][:paymentToken] unless @model.user
       @model.buyer_email = params_for_order[:userEmail] if params_for_order[:userEmail].present?
       @model.buyer_name = params_for_order[:userName] if params_for_order[:userName].present?
     end
@@ -96,22 +93,5 @@ module OrderOperations
         end
       end
     end
-
-    def host_from(id, host_type)
-      if host_type.downcase.include?('organization')
-        Organization.find(id)
-      else
-        Event.find(id)
-      end
-    end
-
-    def params_for_order
-      @params_for_order ||= params_for_action[:order]
-    end
-
-    def params_for_items
-      @params_for_items ||= params_for_action[:orderLineItems].values
-    end
   end
-
 end
