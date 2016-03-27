@@ -5,6 +5,7 @@ module OrderOperations
   #
   class Create < SkinnyControllers::Operation::Base
     include Helpers
+    include ItemBuilder
 
     def run
       # when is creating an order ever not allowed?
@@ -53,45 +54,6 @@ module OrderOperations
       @model.payment_token = params[:order][:paymentToken] unless @model.user
       @model.buyer_email = params_for_order[:userEmail] if params_for_order[:userEmail].present?
       @model.buyer_name = params_for_order[:userName] if params_for_order[:userName].present?
-    end
-
-    # Each Entry looks like this:
-    #
-    #   {"quantity"=>"1",
-    #  "price"=>"45",
-    #  "partnerName"=>"",
-    #  "danceOrientation"=>"",
-    #  "size"=>"",
-    #  "lineItem"=>"123",
-    #  "order"=>"",
-    #  "lineItemId"=>"123",
-    #  "lineItemType"=>"OrderLineItem"}
-    #
-    # This is just straight from ember
-    #
-    # @param [Array] params_for_items a list of orderLineItem param entries
-    def build_items(params_for_items)
-      params_for_items.each do |item_data|
-        id = item_data[:lineItemId]
-        kind = item_data[:lineItemType]
-        if kind != MembershipDiscount.name && kind != Package.name
-          kind = kind.include?("LineItem") ? kind : "LineItem::#{kind}"
-        end
-
-        item = OrderLineItem.new(
-          line_item_id: id,
-          line_item_type: kind,
-          price: item_data[:price],
-          quantity: item_data[:quantity],
-          order: @model
-        )
-
-        if item.valid?
-          @model.line_items << item
-        else
-          @model.errors.add(:base, item.errors.full_messages.to_s)
-        end
-      end
     end
   end
 end

@@ -22,12 +22,16 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   private
 
   def owner?
-    object.user_id == user.id
+    object.user_id == user_id
   end
 
   # this covers both event and community
   def is_from_an_owned_event?
-    object.host.user.id == user.id
+    object.host.user.id == user_id
+  end
+
+  def user_id
+    user&.id
   end
 
 end

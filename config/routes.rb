@@ -71,7 +71,11 @@ AeonVera::Application.routes.draw do
     end
 
     # user specific info
-    resources :orders, except: [:destroy]
+    resources :orders, except: [:destroy] do
+      member do
+        put :modify
+      end
+    end
     resources :registrations
 
     # for new user creation / registration / signing up

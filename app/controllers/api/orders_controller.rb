@@ -28,6 +28,7 @@ class Api::OrdersController < APIController
   # which order line items are being added, which are being removed,
   # and which are being modified.
   def modify
+    @model = OrderOperations::Modify.new(current_user, params, params).run
     render_model('order_line_items.line_item')
   end
 

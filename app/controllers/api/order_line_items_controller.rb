@@ -24,6 +24,10 @@ class Api::OrderLineItemsController < APIController
     # respond_with @order_line_item
   end
 
+  def destroy
+    render json: model
+  end
+
   private
 
   def handle_competition
