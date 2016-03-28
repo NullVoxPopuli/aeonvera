@@ -97,6 +97,7 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
           else
             quantity = total_quantity_for_line_item(item_datas, id)
 
+            # make sure the quantity matches
             if order_line_item.quantity != quantity && id.to_i != 51
               # it looks like, when this happens, we ignore it, and use the order
               # as the single source of truth
@@ -107,7 +108,6 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
             end
           end
 
-          # make sure the quantity matches
 
         end
       end
@@ -115,10 +115,10 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
   end
 
   def down
-
+    # ha
   end
 
-  # helpers
+  # helpers - removed from attendance.rb
 
   def shirt_data(a)
     a.metadata_safe['shirts']

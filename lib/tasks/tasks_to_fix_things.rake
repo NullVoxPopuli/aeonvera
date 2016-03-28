@@ -47,6 +47,7 @@ namespace :fix do
     end
 
     def fix(h)
+      puts 'fixing: ' + h.id.to_s + ' from:  ' + h.try(:host).try(:name)
       attendance = h.attendance
       if attendance.present?
         fix_housing(h, attendance)
