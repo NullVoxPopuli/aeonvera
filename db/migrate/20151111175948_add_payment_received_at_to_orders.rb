@@ -14,7 +14,7 @@ class AddPaymentReceivedAtToOrders < ActiveRecord::Migration
         order.payment_received_at = order.updated_at
       end
 
-      order.save_without_timestamping
+      order.save_without_timestamping(validate: false)
     end
   end
 

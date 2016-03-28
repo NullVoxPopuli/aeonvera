@@ -13,12 +13,12 @@ class ActiveRecord::Base
 	# Thread safe approach to disabling timestamp updates.
 	# Useful when we need to modify data without altering updated_at.
 	# http://blog.bigbinary.com/2009/01/21/override-automatic-timestamp-in-activerecord-rails.html
-	def save_without_timestamping
+	def save_without_timestamping(options = {})
 		class << self
 			def record_timestamps; false; end
 		end
 
-		save!
+		save(options)
 
 		class << self
 			remove_method :record_timestamps

@@ -2,7 +2,7 @@ class AddColumnsToOrderLineItems < ActiveRecord::Migration
   def change
     change_table(:order_line_items) do |t|
       # shirts / other
-      t.string :shirt_size
+      t.string :size
       t.string :color
 
       # competitions
