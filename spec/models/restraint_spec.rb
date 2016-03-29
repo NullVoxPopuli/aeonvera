@@ -30,12 +30,18 @@ describe Restraint do
     it 'is applied to the assigned package' do
       @attendance.package = package
       @attendance.save!
-      @order = @attendance.new_order
+      @order = create(:order,
+        attendance: @attendance,
+        host: event,
+        user: @attendance.attendee
+      )
 
+      @order.add(package)
       # add discount to order
       @order.add(discount)
 
       # verify
+      @order.reload
       actual = @order.total
       expected = 0
       expect(actual).to eq expected
@@ -44,18 +50,20 @@ describe Restraint do
     it 'is applied to an order without the assigned package' do
       @attendance.package = wrong_package = create(:package, initial_price: 34)
       @attendance.save!
-      @order = @attendance.new_order
+      @order = create(:order,
+        attendance: @attendance,
+        host: event,
+        user: @attendance.attendee
+      )
 
-      # add discount to order
+      @order.add(wrong_package)
       @order.add(discount)
 
-      discounts = @order.line_items.select{ |l|
-        l.line_item_type == Discount.name
-      }
-
+      discounts = @order.line_items.where(line_item_type: Discount.name)
       expect(discounts).to be_empty
 
       # verify
+      @order.reload
       actual = @order.total
       expected = wrong_package.initial_price
       expect(actual).to eq expected
@@ -64,8 +72,12 @@ describe Restraint do
     it 'is only applied to the assigned package' do
       @attendance.package = package
       @attendance.save!
-      @order = @attendance.new_order
-
+      @order = create(:order,
+        attendance: @attendance,
+        host: event,
+        user: @attendance.attendee
+      )
+      @order.add(package)
       # add other stuff
       competition = create(:competition, event: event)
       @order.add(competition)
