@@ -1,14 +1,11 @@
 class Api::CompetitionsController < APIController
   include SkinnyControllers::Diet
+
   def index
-    # operation = Operations::Competition::Read.new(current_user, params)
-    # render json: operation.run
-    render json: model
+    render json: model, include: 'order_line_items.attendance'
   end
 
   def show
-    # operation = Operations::Competition::Read.new(current_user, params)
-    # render json: operation.run
     render json: model
   end
 
