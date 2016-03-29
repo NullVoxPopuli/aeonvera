@@ -12,6 +12,7 @@ class OrderSerializer < ActiveModel::Serializer
 
   has_many :order_line_items
   belongs_to :host
+  belongs_to :attendance
 
   def order_line_items
     object.line_items

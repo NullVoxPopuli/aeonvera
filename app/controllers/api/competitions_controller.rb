@@ -6,7 +6,9 @@ class Api::CompetitionsController < APIController
   end
 
   def show
-    render json: model
+    respond_to do |format|
+      format.json { render json: model, include: params[:include] }
+    end
   end
 
 end
