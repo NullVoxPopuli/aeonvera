@@ -8,6 +8,7 @@ class OrderSerializer < ActiveModel::Serializer
     :created_at, :user_email, :user_name,
     :payment_received_at,
     :total_in_cents
+
     # never render the payment_token
 
   has_many :order_line_items
