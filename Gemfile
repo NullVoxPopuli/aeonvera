@@ -13,9 +13,8 @@ gem 'activerecord-session_store'
 # for cross-origin resource sharing
 gem 'rack-cors', :require => 'rack/cors'
 # JSON serialization
-# gem "active_model_serializers", path: "/media/Ubuntu-Data/Development/active_model_serializers"
-gem "active_model_serializers", github: "rails-api/active_model_serializers", branch: "master"
-# gem "active_model_serializers", github: "rails-api/active_model_serializers"
+# gem "active_model_serializers", github: "rails-api/active_model_serializers", branch: "master"
+gem "active_model_serializers", github: "NullVoxPopuli/active_model_serializers", branch: 'deserialization-error-with-no-attributes'
 
 # controllers, chill out!
 gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_controllers'
