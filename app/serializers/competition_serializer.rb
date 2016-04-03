@@ -1,12 +1,6 @@
 class CompetitionSerializer < ActiveModel::Serializer
-
-  attributes :id, :name,
-    :initial_price, :at_the_door_price, :current_price,
-    :kind, :kind_name,
-    :requires_orientation, :requires_partner,
-    :event_id,
-    :number_of_follows, :number_of_leads,
-    :number_of_registrants
+  include PublicAttributes::CompetitionAttributes
+  attributes :number_of_follows, :number_of_leads, :number_of_registrants
 
   # this mess is for getting the minimum data for a competition overview. gross.
   class OrderLineItemSerializer < ::OrderLineItemSerializer
@@ -70,13 +64,5 @@ class CompetitionSerializer < ActiveModel::Serializer
     order_line_items_with_attendances
       .where(dance_orientation: Attendance::FOLLOW)
       .count
-  end
-
-  def requires_orientation
-    object.requires_orientation?
-  end
-
-  def requires_partner
-    object.requires_partner?
   end
 end

@@ -50,7 +50,10 @@ AeonVera::Application.routes.draw do
     resources :competitions
     resources :competition_responses
     resources :line_items
-    resources :order_line_items
+    # create/update is handled by orders' create/update
+    # TODO: this kinda sucks, find a better way.
+    # see UI code for why.
+    resources :order_line_items, ecept: [:create, :update]
     resources :shirts
     resources :packages
     resources :discounts

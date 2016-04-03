@@ -1,14 +1,15 @@
-class RegisterEventSerializer < EventSerializer
-  class PackageSerializer < ActiveModel::Serializer
-      attributes :id, :name,
-        :initial_price, :at_the_door_price,
-        :attendee_limit,
-        :expires_at,
-        :requires_track,
-        :event_id,
-        :ignore_pricing_tiers,
-        :current_price
+class RegisterEventSerializer < ActiveModel::Serializer
+  include PublicAttributes::EventAttributes
 
-      belongs_to :event
+  class PackageSerializer < ActiveModel::Serializer
+    include PublicAttributes::PackageAttributes
+  end
+
+  class CompetitionSerializer < ActiveModel::Serializer
+    include PublicAttributes::CompetitionAttributes
+  end
+
+  class LevelSerializer < ActiveModel::Serializer
+    include PublicAttributes::LevelAttributes
   end
 end
