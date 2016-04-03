@@ -12,4 +12,14 @@ class RegisterEventSerializer < ActiveModel::Serializer
   class LevelSerializer < ActiveModel::Serializer
     include PublicAttributes::LevelAttributes
   end
+
+  class PricingTierSerializer < ActiveModel::Serializer
+    include PublicAttributes::PricingTierAttributes
+  end
+
+  class OpeningTierSerializer < PricingTierSerializer
+    type 'opening_tier'
+  end
+
+
 end
