@@ -2,7 +2,7 @@ class Api::CompetitionsController < APIController
   include SkinnyControllers::Diet
 
   def index
-    render json: model, include: 'order_line_items.attendance'
+    render json: model, include: 'order_line_items.order.attendance'
   end
 
   def show
