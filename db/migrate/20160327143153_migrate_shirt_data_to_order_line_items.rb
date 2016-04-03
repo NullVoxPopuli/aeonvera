@@ -45,12 +45,6 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
         current_total = order.total
 
         order.line_items.each do |order_line_item|
-          ap 'order line item'
-          ap '----------------------------------------------'
-          ap order_line_item
-          ap '----------------------------------------------'
-
-
           id = order_line_item.line_item_id
           kind = order_line_item.line_item_type
           total_price = order_line_item.price * order_line_item.quantity
@@ -79,13 +73,11 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
               next unless item_quantity.present?
               next unless item_quantity.to_i > 0
 
-              ap size_data
               attributes = order_line_item.attributes.select{ |k,v| k != 'id' }
               new_item = order.line_items.build(attributes)
               new_item.size = size
               new_item.quantity = size_data['quantity']
               new_item.price = order_line_item.price
-              ap new_item
               new_item.save_without_timestamping
             end
 
@@ -101,10 +93,6 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
             if order_line_item.quantity != quantity && id.to_i != 51
               # it looks like, when this happens, we ignore it, and use the order
               # as the single source of truth
-              ap item_datas
-              ap "quantity mismatch id: #{order.id} - #{quantity} vs #{order_line_item.quantity}\n"
-              binding.pry
-              2+2
             end
           end
 

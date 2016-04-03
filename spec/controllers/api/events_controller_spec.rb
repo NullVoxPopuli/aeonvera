@@ -35,7 +35,6 @@ RSpec.describe Api::EventsController, type: :controller do
 
         expect {
           post :create, json_api
-          ap JSON.parse(response.body)
         }.to change(Event, :count)
       end
 

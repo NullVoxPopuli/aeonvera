@@ -17,7 +17,6 @@ class MigrateCompetitionResponsesToOrderLineItems < ActiveRecord::Migration
           order_line_item.partner_name = partner_name
           order_line_item.dance_orientation = dance_orientation
 
-          ap order_line_item
           order_line_item.save_without_timestamping
         end
       end
