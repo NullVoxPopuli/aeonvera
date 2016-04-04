@@ -28,7 +28,7 @@ gem 'lazy_crud'
 gem 'responders'
 
 # error capturing
-gem 'rollbar', '~> 2.5.0'
+gem 'rollbar'
 
 # app performance monitoring
 gem "newrelic_rpm"
