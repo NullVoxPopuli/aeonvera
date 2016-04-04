@@ -1,14 +1,4 @@
 GIT
-  remote: git://github.com/NullVoxPopuli/active_model_serializers.git
-  revision: af1bc9953ac2ca66837907f335807d925c7ea138
-  branch: deserialization-error-with-no-attributes
-  specs:
-    active_model_serializers (0.10.0.rc4)
-      actionpack (>= 4.0)
-      activemodel (>= 4.0)
-      railties (>= 4.0)
-
-GIT
   remote: git://github.com/NullVoxPopuli/api_cache.git
   revision: 4a26abe74da2e77d41d02b8d031ed1e8c260dc16
   specs:
@@ -22,6 +12,16 @@ GIT
       multi_json (~> 1.0)
       uuidtools (~> 2.1)
       xml-simple
+
+GIT
+  remote: git://github.com/rails-api/active_model_serializers.git
+  revision: d30aa4c44fe004821be49d3427b56973f95c4984
+  branch: master
+  specs:
+    active_model_serializers (0.10.0.rc4)
+      actionpack (>= 4.0)
+      activemodel (>= 4.0)
+      railties (>= 4.0)
 
 GIT
   remote: git://github.com/thoughtbot/factory_girl.git
