@@ -15,7 +15,6 @@ class LineItemSerializer < ActiveModel::Serializer
     :picture_url
 
 
-  # belongs_to :reference, polymorphic: true
   belongs_to :host
 
 
