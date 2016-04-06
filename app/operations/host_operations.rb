@@ -1,7 +1,7 @@
 module HostOperations
   class Read < SkinnyControllers::Operation::Base
     def run
-      model # always allowed, never restricted
+      model if allowed?
     end
 
     # Needs to be overridden, because a 'host' can be either

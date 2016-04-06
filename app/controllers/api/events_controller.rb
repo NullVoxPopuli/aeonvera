@@ -4,22 +4,25 @@ class Api::EventsController < Api::ResourceController
   private
 
   def update_event_params
-    params
-      .require(:data)
-      .require(:attributes)
-      .permit(
-        :name, :short_description, :domain,
-        :starts_at, :ends_at,
-        :mail_payments_end_at, :electronic_payments_end_at,
-        :refunds_end_at, :has_volunteers,
-        :volunteer_description,
-        :housing_status, :housing_nights,
-        :allow_discounts, :shirt_sales_end_at,
-        :show_at_the_door_prices_at, :allow_combined_discounts,
-        :location, :show_on_public_calendar,
-        :make_attendees_pay_fees, :accept_only_electronic_payments,
-        :logo,
-        :registration_email_disclaimer)
+    result = ActiveModelSerializers::Deserialization
+      .jsonapi_parse(params,
+        only: [
+          'name', 'short-description', 'domain',
+          'starts-at', 'ends-at',
+          'mail-payments-end-at', 'electronic-payments-end-at',
+          'refunds-end-at', 'has-volunteers',
+          'volunteer-description',
+          'housing-status', 'housing-nights',
+          'allow-discounts', 'shirt-sales-end-at',
+          'show-at-the-door-prices-at', 'allow-combined-discounts',
+          'location', 'show-on-public-calendar',
+          'make-attendees-pay-fees', 'accept-only-electronic-payments',
+          'logo',
+          'registration-email-disclaimer'
+      ])
+
+    ap result
+    result
   end
 
   def create_event_params

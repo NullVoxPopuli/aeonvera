@@ -1,10 +1,13 @@
 class Api::HostsController < APIController
 
+  # TODO: is this ever used?
   def index
     render json: [host_from_subdomain], each_serializer: each_serializer
   end
 
   def show
+    return render json: {}, status: 404 unless host_from_subdomain
+
     render json: host_from_subdomain, include: params[:include], serializer: each_serializer
   end
 
