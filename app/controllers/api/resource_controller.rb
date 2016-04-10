@@ -11,7 +11,7 @@ class Api::ResourceController < APIController
 
   def create
     if model.errors.present?
-      render json: model.errors.to_json_api, status: 422
+      render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     else
       render json: model
     end

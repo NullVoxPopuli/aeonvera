@@ -7,6 +7,12 @@ class Competition < ActiveRecord::Base
 
 	has_many :order_line_items, as: :line_item
 
+	validates :kind, presence: true
+	validates :name, presence: true
+	validates :initial_price, presence: true
+	validates :at_the_door_price, presence: true
+	validates :event, presence: true
+
 	SOLO_JAZZ = 0
 	JACK_AND_JILL = 1
 	STRICTLY = 2
