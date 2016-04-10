@@ -66,7 +66,9 @@ module OrderOperations
       items.each do |item_data|
         id = item_data[:lineItemId]
         kind = item_data[:lineItemType]
-        if kind != MembershipDiscount.name && kind != Package.name
+
+        non_line_items = [MembershipDiscount.name, Package.name, Competition.name]
+        if !non_line_items.include?(kind)
           kind = kind.include?("LineItem") ? kind : "LineItem::#{kind}"
         end
 

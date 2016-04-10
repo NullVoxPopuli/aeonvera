@@ -7,7 +7,6 @@ class Api::HostsController < APIController
 
   def show
     return render json: {}, status: 404 unless host_from_subdomain
-
     render json: host_from_subdomain, include: params[:include], serializer: each_serializer
   end
 
