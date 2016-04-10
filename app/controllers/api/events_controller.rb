@@ -21,7 +21,6 @@ class Api::EventsController < Api::ResourceController
           'registration-email-disclaimer'
       ])
 
-    ap result
     result
   end
 

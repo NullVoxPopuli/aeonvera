@@ -4,6 +4,8 @@ class PackageSerializer < ActiveModel::Serializer
   attributes :number_of_leads, :number_of_follows
 
   belongs_to :event
+  has_many :attendances
+
 
   def number_of_leads
     object.attendances.leads.count
