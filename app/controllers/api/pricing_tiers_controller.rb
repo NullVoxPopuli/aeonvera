@@ -3,15 +3,13 @@ class Api::PricingTiersController < Api::EventResourceController
 
   # The fields are named different on teh server than the client
   def update_pricing_tier_params
-    rp = params.require(:data)
-      .require(:attributes)
-      .permit(:increase_by_dollars, :date, :registrants)
+    rp = ActiveModelSerializers::Deserialization
+      .jsonapi_parse(params, only: [:increase_by_dollars, :date, :registrants])
 
-
-      rp[:increase_by_dollars] = rp[:increase_by] unless rp[:increase_by_dollars]
-      rp[:date] = rp[:increase_after_date] unless rp[:date]
-      rp[:registrants] = rp[:increase_after_total_registrants] unless rp[:date]
-      rp
+    rp[:increase_by_dollars] = rp[:increase_by] unless rp[:increase_by_dollars]
+    rp[:date] = rp[:increase_after_date] unless rp[:date]
+    rp[:registrants] = rp[:increase_after_total_registrants] unless rp[:date]
+    rp
   end
 
   def create_pricing_tier_params
