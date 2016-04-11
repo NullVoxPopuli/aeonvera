@@ -1,14 +1,4 @@
 GIT
-  remote: git://github.com/NullVoxPopuli/active_model_serializers.git
-  revision: 4c534e28890f0078b6ae8714cab1c516f1d8e283
-  branch: underscored_keys_support_for_deserialization
-  specs:
-    active_model_serializers (0.10.0.rc5)
-      actionpack (>= 4.0)
-      activemodel (>= 4.0)
-      railties (>= 4.0)
-
-GIT
   remote: git://github.com/NullVoxPopuli/api_cache.git
   revision: 4a26abe74da2e77d41d02b8d031ed1e8c260dc16
   specs:
@@ -29,6 +19,16 @@ GIT
   specs:
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
+
+GIT
+  remote: https://github.com/NullVoxPopuli/active_model_serializers.git
+  revision: 019ce559614ec047b42ca23bb5e0cb5887e00714
+  branch: underscored_keys_support_for_deserialization
+  specs:
+    active_model_serializers (0.10.0.rc5)
+      actionpack (>= 4.0)
+      activemodel (>= 4.0)
+      railties (>= 4.0)
 
 GEM
   remote: https://rubygems.org/

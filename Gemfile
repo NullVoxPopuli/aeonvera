@@ -15,7 +15,7 @@ gem 'rack-cors', :require => 'rack/cors'
 # JSON serialization
 # gem "active_model_serializers", github: "rails-api/active_model_serializers"
 # gem "active_model_serializers", github: "rails-api/active_model_serializers", tag: 'v0.10.0.rc4'
-gem "active_model_serializers", github: "NullVoxPopuli/active_model_serializers", branch: 'underscored_keys_support_for_deserialization'
+gem "active_model_serializers", git: "https://github.com/NullVoxPopuli/active_model_serializers.git", branch: 'underscored_keys_support_for_deserialization'
 
 # controllers, chill out!
 gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_controllers'
