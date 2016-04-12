@@ -5,7 +5,8 @@ class AttendanceSerializer < ActiveModel::Serializer
     :amount_owed, :amount_paid, :registered_at,
     :checked_in_at, :is_checked_in,
     :package_name, :level_name,
-    :event_id, :level_id
+    :event_id, :level_id,
+    :interested_in_volunteering
 
   has_many :orders
 
