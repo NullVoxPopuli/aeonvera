@@ -38,7 +38,7 @@ describe Api::PricingTiersController, type: :controller do
       json = JSON.parse(response.body)
       data = json['data']
 
-      expect(data['attributes']['increase_by']).to eq pricing_tier.increase_by_dollars.to_s
+      expect(data['attributes']['increase-by']).to eq pricing_tier.increase_by_dollars.to_s
 
     end
   end

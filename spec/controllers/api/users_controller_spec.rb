@@ -30,7 +30,7 @@ describe Api::UsersController, type: :controller do
       first = user.first_name + ' updated'
       patch :update,  { id: user.id, user: { first_name: first, current_password: user.password } }
       json = JSON.parse(response.body)
-      first_name_field = json['data']['attributes']['first_name']
+      first_name_field = json['data']['attributes']['first-name']
 
       expect(first_name_field).to eq first
     end
