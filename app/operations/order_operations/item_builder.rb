@@ -51,6 +51,9 @@ module OrderOperations
           line_item_type: kind,
           price: data[:price],
           quantity: data[:quantity],
+          partner_name: data[:partnerName],
+          dance_orientation: data[:danceOrientation],
+          size: data[:size],
           order: @model
         )
 
