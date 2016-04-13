@@ -50,14 +50,11 @@ module AeonVera
     # config.i18n.default_locale = :de
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
 
-    # PayPal::SDK::Core::Config.load('spec/config/paypal.yml',  ENV['RACK_ENV'] || 'development')
-
     config.autoload_paths += [config.root.join('lib')]
 
     config.generators do |g|
       g.test_framework :rspec
     end
-
 
     config.paperclip_defaults = {
       storage: :s3,
@@ -70,24 +67,14 @@ module AeonVera
       url: ":s3_domain_url"
     }
 
-
-    # config.middleware.use ExceptionNotification::Rack,
-    #   email: {
-    #     email_prefix: "[#{Rails.env}] AeonVera: ",
-    #     sender_address: 'support@aeonvera.com',
-    #     exception_recipients: ['preston@aeonvera.com']
-    #   }
-
-    # if Rails.env.devoplement?
-      config.middleware.insert_before 0, "Rack::Cors" do
-        allow do
-          origins "*"
-          resource "*",
-            :headers => :any,
-            :methods => [:get, :post, :patch, :delete, :put, :options, :head],
-            :credentials => true
-        end
-      # end
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins "*"
+        resource "*",
+          :headers => :any,
+          :methods => [:get, :post, :patch, :delete, :put, :options, :head],
+          :credentials => true
+      end
     end
   end
 end

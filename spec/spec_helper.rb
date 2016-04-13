@@ -49,6 +49,9 @@ if ENV['SQL']
 end
 
 
+puts "!Env: #{Rails.env}:#{ENV["RAILS_ENV"]}"
+
+
 RSpec.configure do |config|
 
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added

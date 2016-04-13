@@ -22,7 +22,12 @@ AeonVera::Application.configure do
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = true
-  config.assets.debug = true
+  config.assets.compile = true
+  config.assets.compress = false
+  config.assets.debug = false
+  config.assets.digest = false
+
+
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
@@ -36,7 +41,4 @@ AeonVera::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
-
-  config.after_initialize do
-  end
 end
