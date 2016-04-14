@@ -24,6 +24,7 @@ module PublicAttributes
         :ask_if_leading_or_following
 
       belongs_to :opening_tier, serializer: OpeningTierSerializer
+      belongs_to :current_tier
       has_many :pricing_tiers
       has_many :integrations
       has_many :packages

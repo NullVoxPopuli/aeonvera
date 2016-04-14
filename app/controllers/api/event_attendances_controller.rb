@@ -21,7 +21,7 @@ class Api::EventAttendancesController < APIController
   def show
     return render_attendance_for_event if requesting_attendance_for_event?
 
-    render json: model
+    render json: model, include: params[:include]
   end
 
   def create

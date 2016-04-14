@@ -6,7 +6,8 @@ class AttendanceSerializer < ActiveModel::Serializer
     :checked_in_at, :is_checked_in,
     :package_name, :level_name,
     :event_id, :level_id,
-    :interested_in_volunteering
+    :interested_in_volunteering,
+    :city, :state, :zip, :phone_number
 
   has_many :orders
   belongs_to :host

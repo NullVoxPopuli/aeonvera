@@ -46,7 +46,7 @@ module EventAttendanceOperations
       @deserialized_params ||= jsonapi_parse(
         params,
         only: [
-          :package, :level, :host, :attendee,
+          :package, :level, :host, :attendee, :pricing_tier,
           :phone_number, :interested_in_volunteering,
           :city, :state, :zip,
           :dance_orientation,
