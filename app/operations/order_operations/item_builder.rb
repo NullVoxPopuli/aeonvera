@@ -40,6 +40,7 @@ module OrderOperations
 
         item.update(
           quantity: data[:quantity],
+          # TODO: partner, orientation, size, price
         )
       end
     end
@@ -51,8 +52,8 @@ module OrderOperations
           line_item_type: kind,
           price: data[:price],
           quantity: data[:quantity],
-          partner_name: data[:partnerName],
-          dance_orientation: data[:danceOrientation],
+          partner_name: data[:partner_name],
+          dance_orientation: data[:dance_orientation],
           size: data[:size],
           order: @model
         )
@@ -67,13 +68,10 @@ module OrderOperations
 
     def create_or_update(items, &block)
       items.each do |item_data|
-        id = item_data[:lineItemId]
-        kind = item_data[:lineItemType]
+        id = item_data[:line_item_id]
+        kind = item_data[:line_item_type]
 
-        non_line_items = [MembershipDiscount.name, Package.name, Competition.name]
-        if !non_line_items.include?(kind)
-          kind = kind.include?("LineItem") ? kind : "LineItem::#{kind}"
-        end
+        kind = ember_type_to_rails(kind)
 
         yield(id, kind, item_data)
       end

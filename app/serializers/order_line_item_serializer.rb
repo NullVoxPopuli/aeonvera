@@ -7,7 +7,6 @@ class OrderLineItemSerializer < ActiveModel::Serializer
     attributes :id, :name
   end
 
-
   belongs_to :line_item, serializer: OrderLineItemSerializer::LineItemSerializer
   belongs_to :order
 end

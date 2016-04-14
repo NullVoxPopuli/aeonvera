@@ -52,6 +52,9 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    active_model_serializers-jsonapi_embedded_records_deserializer (0.1.1)
+      active_model_serializers
+      railties (>= 4.0)
     activejob (4.2.6)
       activesupport (= 4.2.6)
       globalid (>= 0.3.0)
@@ -398,6 +401,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers!
+  active_model_serializers-jsonapi_embedded_records_deserializer
   activerecord-session_store
   api_cache!
   attr_encrypted

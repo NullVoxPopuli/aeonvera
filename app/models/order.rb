@@ -23,7 +23,11 @@ class Order < ActiveRecord::Base
     class_name: "OrderLineItem",
     dependent: :destroy
 
+  has_many :order_line_items, dependent: :destroy
+
   accepts_nested_attributes_for :line_items
+  accepts_nested_attributes_for :order_line_items
+  accepts_nested_attributes_for :attendance
 
   scope :unpaid, -> { where(paid: false) }
   scope :paid, -> {where(paid: true)}
@@ -33,6 +37,8 @@ class Order < ActiveRecord::Base
 
   validates :buyer_email, presence: true
   validates :buyer_name, presence: true
+  validates :host, presence: true
+  validates :attendance, presence: true, if: 'host_type=="Event"'
 
 
   before_save do |instance|
