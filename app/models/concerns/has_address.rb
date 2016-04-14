@@ -11,6 +11,36 @@ module HasAddress
     self.metadata["address"]["city"] = city
   end
 
+  def city
+    address['city']
+  end
+
+  def city=(name)
+    self.metadata ||= {}
+    self.metadata['address'] ||= {}
+    self.metadata['address']['city'] = name
+  end
+
+
+  def state
+    address['state']
+  end
+
+  def state=(name)
+    self.metadata ||= {}
+    self.metadata['address'] ||= {}
+    self.metadata['address']['state'] = name
+  end
+
+  def zip
+    address['zip']
+  end
+
+  def zip=(name)
+    self.metadata ||= {}
+    self.metadata['address'] ||= {}
+    self.metadata['address']['zip'] = name
+  end
 
   private
 

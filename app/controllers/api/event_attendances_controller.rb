@@ -1,7 +1,7 @@
 class Api::EventAttendancesController < APIController
   include SkinnyControllers::Diet
   include EventLoader
-  self.model_class = Attendance
+  self.model_class = EventAttendance
 
   def index
     return render_attendance_for_event if requesting_attendance_for_event?
@@ -22,6 +22,10 @@ class Api::EventAttendancesController < APIController
     return render_attendance_for_event if requesting_attendance_for_event?
 
     render json: model
+  end
+
+  def create
+    render_model
   end
 
   private

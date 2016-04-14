@@ -2,6 +2,7 @@ class EventAttendance < Attendance
   include ::EventItemHelpers
   include AttendanceDownloadableData
 
+
   belongs_to :event, class_name: Event.name,
    foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
 
@@ -57,7 +58,7 @@ class EventAttendance < Attendance
   scope :providing_housing, ->{ where(providing_housing: true) }
   scope :volunteers, ->{ where(interested_in_volunteering: true) }
 
-  validates :pricing_tier, presence: true
+  # validates :pricing_tier, presence: true
   validates :event, presence: true
   # validates :attendee, presence: true
   validates :package, presence: true
@@ -97,6 +98,15 @@ class EventAttendance < Attendance
 
   def providing_housing_data
     metadata_safe["providing_housing"]
+  end
+
+  def phone_number
+    metadata_safe['phone_number']
+  end
+
+  def phone_number=(phone)
+    self.metadata ||= {} # TODO: why isn't this done on initialize?
+    self.metadata['phone_number'] = phone
   end
 
   private

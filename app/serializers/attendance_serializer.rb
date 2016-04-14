@@ -9,6 +9,8 @@ class AttendanceSerializer < ActiveModel::Serializer
     :interested_in_volunteering
 
   has_many :orders
+  belongs_to :host
+  belongs_to :attendee
 
   def amount_paid
     object.paid_amount

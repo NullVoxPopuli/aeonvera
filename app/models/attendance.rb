@@ -187,7 +187,7 @@ class Attendance < ActiveRecord::Base
     if orders.present?
       orders.map{|o| o.paid? ? 0 : o.total }.inject(&:+)
     else
-      total_cost
+      0 # no orders
     end
   end
 
