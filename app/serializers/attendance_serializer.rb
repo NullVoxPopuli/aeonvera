@@ -12,6 +12,8 @@ class AttendanceSerializer < ActiveModel::Serializer
   has_many :orders
   belongs_to :host
   belongs_to :attendee
+  belongs_to :package
+  belongs_to :level
 
   def amount_paid
     object.paid_amount

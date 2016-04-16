@@ -6,6 +6,7 @@ module OrderOperations
   class Create < SkinnyControllers::Operation::Base
     include Helpers
     include ItemBuilder
+    include HelperOperations::Helpers
 
     def run
       # when is creating an order ever not allowed?
@@ -19,20 +20,9 @@ module OrderOperations
     # to support creating multiple related records at once. :-(
     def create!
       # get the event / organization that this order ties to
-      host = host_from_params
-
-      # fill out the attendance if it exists
-      # this includes setting:
-      # - package id
-      # - level id
-      # - host
-      # - attendee / current_user
-      # - pricing tier?
-      # - needs_housing if housing_request is present (legacy)
-      # - providing_housing if housing_provision is present (legacy)
-      build_attendance(host)
+      host = host_from_params(params_from_deserialization)
       build_order(host)
-      build_items(params_for_items)
+      build_items(order_line_items_params)
       assign_default_payment_method
 
       # TODO: verify all the bits are a part of the host
@@ -58,16 +48,6 @@ module OrderOperations
       end
     end
 
-    def build_attendance(host)
-      if attendance_params.present?
-        @attendance = host.attendances.new(
-          attendance_params.merge(
-            package_id: package_id_from_data,
-          )
-        )
-      end
-    end
-
     def build_order(host)
       # build out the order
       @model = Order.new(
@@ -84,8 +64,8 @@ module OrderOperations
       # In order to update / pay for an order, you must either
       # be the owner, or have this token in the URL
       @model.payment_token = params[:order][:payment_token] unless @model.user
-      @model.buyer_email = params_for_order[:user_email] if params_for_order[:user_email].present?
-      @model.buyer_name = params_for_order[:user_name] if params_for_order[:user_name].present?
+      @model.buyer_email = order_params[:user_email] if order_params[:user_email].present?
+      @model.buyer_name = order_params[:user_name] if order_params[:user_name].present?
     end
   end
 end

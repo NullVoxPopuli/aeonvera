@@ -28,6 +28,10 @@ class Api::EventAttendancesController < APIController
     render_model
   end
 
+  def update
+    render_model
+  end
+
   private
 
   def requesting_attendance_for_event?
