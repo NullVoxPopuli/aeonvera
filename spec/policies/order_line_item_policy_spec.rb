@@ -4,7 +4,7 @@ describe OrderLineItemPolicy do
   let(:by_owner){
     ->(method, paid = false){
       event = create(:event)
-      order = create(:order, host: event)
+      order = create(:order, host: event, attendance: create(:attendance))
       order.paid = paid
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       policy = OrderLineItemPolicy.new(order_item.order.user, order_item)
@@ -15,7 +15,7 @@ describe OrderLineItemPolicy do
   let(:by_event_owner){
     ->(method, paid = false){
       event = create(:event)
-      order = create(:order, host: event)
+      order = create(:order, host: event, attendance: create(:attendance))
       order.paid = paid
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       policy = OrderLineItemPolicy.new(event.hosted_by, order_item)
@@ -26,7 +26,7 @@ describe OrderLineItemPolicy do
   let(:by_a_stranger){
     ->(method){
       event = create(:event)
-      order = create(:order, host: event)
+      order = create(:order, host: event, attendance: create(:attendance))
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       policy = OrderLineItemPolicy.new(create(:user), order_item)
       policy.send(method)

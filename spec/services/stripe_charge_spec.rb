@@ -11,7 +11,7 @@ describe StripeCharge do
       @event = event = create_event
       package = create(:package, event: event)
       integration = create_integration(owner: event)
-      order = create(:order, host: event)
+      order = create(:order, host: event, attendance: create(:attendance, event: event))
       order.add(package)
 
       token = stripe_helper.generate_card_token

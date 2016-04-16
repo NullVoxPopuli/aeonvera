@@ -3,12 +3,15 @@ require 'spec_helper'
 describe OrderOperations do
 
   context 'Update' do
+    let(:event){ create_event }
+    let(:attendance){ create(:attendance, event: event) }
+
     context 'run' do
       it 'is not allowed' do
-        event = create_event
         order = create(:order,
           host: event,
           user: nil,
+          attendance: attendance,
           payment_token: nil,
           metadata: { name: 'a', email: 'a'})
         operation = OrderOperations::Update.new(nil, {
@@ -20,10 +23,10 @@ describe OrderOperations do
       end
 
       it 'is allowed' do
-        event = create_event
         order = create(:order,
           host: event,
           user: nil,
+          attendance: attendance,
           payment_token: '123',
           payment_method: 'Stripe',
           metadata: { name: 'a', email: 'a'})
@@ -36,8 +39,7 @@ describe OrderOperations do
       end
 
       it 'calls update' do
-        @event = event = create_event
-        @order = create(:order, host: event)
+        @order = create(:order, host: event, attendance: attendance)
         operation = OrderOperations::Update.new(nil, {id: @order.id})
         allow(operation).to receive(:allowed?){ true }
         expect(operation).to receive(:update)
@@ -50,8 +52,7 @@ describe OrderOperations do
       end
 
       it 'sends an email' do
-        @event = event = create_event
-        @order = create(:order, host: event, paid: false)
+        @order = create(:order, host: event, paid: false, attendance: attendance)
         @order.add(create(:package, event: event))
         @order.save
         expect(@order.paid).to eq false
@@ -70,10 +71,9 @@ describe OrderOperations do
       after { StripeMock.stop }
 
       before(:each) do
-        @event = event = create_event
         package = create(:package, event: event)
         integration = create_integration(owner: event)
-        @order = create(:order, host: event)
+        @order = create(:order, host: event, attendance: attendance)
         @order.add(package)
 
         @params = {

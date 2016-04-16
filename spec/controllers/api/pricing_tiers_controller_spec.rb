@@ -49,7 +49,17 @@ describe Api::PricingTiersController, type: :controller do
       event = create(:event, user: user)
       pricing_tier = create(:pricing_tier, event: event)
 
-      json_api = {id: pricing_tier.id, "data":{"id":"#{pricing_tier.id}","attributes":{"number_of_leads":28,"number_of_follows":26,"increase_by_dollars": 321,"requirement":1},"type":"pricing_tiers"}}
+      json_api = {
+        id: pricing_tier.id,
+        "data":{
+          "id":"#{pricing_tier.id}",
+          "attributes":{
+            "number_of_leads":28,
+            "number_of_follows":26,
+            "increase_by_dollars": 321,
+            "requirement":1
+          },
+          "type":"pricing_tiers"}}
 
       patch :update, json_api
 

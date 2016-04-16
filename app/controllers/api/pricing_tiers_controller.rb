@@ -9,10 +9,13 @@ class Api::PricingTiersController < Api::EventResourceController
         :date, :increase_after_date,
         :registrants, :increase_by])
 
+    # This is gross
     rp[:increase_by_dollars] = rp[:increase_by] unless rp[:increase_by_dollars]
     rp[:date] = rp[:increase_after_date] unless rp[:date]
     rp[:registrants] = rp[:increase_after_total_registrants] unless rp[:date]
-    rp.slice(*PricingTier.columns.map(&:name))
+    # This is gross
+    rp.slice(*PricingTier.columns.map(&:name).map(&:to_sym))
+    # Maybe think about naming the fields in ember-land the same as in rails
   end
 
   def create_pricing_tier_params

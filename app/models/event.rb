@@ -22,6 +22,8 @@ class Event < ActiveRecord::Base
     -> { where(attending: true).order("attendances.created_at DESC") },
     as: :host, class_name: "EventAttendance"
 
+  alias_method :event_attendances, :attendances
+
   has_many :cancelled_attendances,
     -> { where(attending: false).order("attendances.created_at DESC") },
     as: :host, class_name: "EventAttendance"

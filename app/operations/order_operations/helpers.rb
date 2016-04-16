@@ -65,7 +65,11 @@ module OrderOperations
 
     def ember_type_to_rails(key)
       key = key.singularize.camelize
-      non_line_items = [MembershipDiscount.name, Package.name, Competition.name, Event.name]
+      
+      non_line_items = [
+        MembershipDiscount.name, Package.name, Competition.name,
+        Event.name, Organization.name]
+
       if !non_line_items.include?(key)
         key = key.include?("LineItem") ? key : "LineItem::#{key}"
       end

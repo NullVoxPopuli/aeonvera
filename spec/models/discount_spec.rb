@@ -15,7 +15,8 @@ describe Discount do
 
     it 'calculates based on orders' do
       d = create(:discount, event: create(:event))
-      create(:order_line_item, line_item: d)
+			o = create(:order, event: d.event, attendance: create(:attendance, event: d.event))
+      create(:order_line_item, line_item: d, order: o)
 
       expect(d.times_used).to eq 1
     end

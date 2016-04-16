@@ -5,14 +5,14 @@ describe Order do
   describe 'validations' do
     describe 'buyer_email' do
       it 'is invalid with no email' do
-        o = create(:order)
+        o = create(:order, host: create(:organization))
         o.user = nil
         expect(o).to_not be_valid
         expect(o.errors.keys).to include(:buyer_email)
       end
 
       it 'is present in the metadata' do
-        o = create(:order)
+        o = create(:order, host: create(:organization))
         o.buyer_email = 'email@email.email'
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_email)
@@ -25,7 +25,7 @@ describe Order do
       end
 
       it 'is on the user' do
-        o = create(:order, user: create(:user))
+        o = create(:order, user: create(:user), host: create(:organization))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_email)
       end
@@ -33,7 +33,7 @@ describe Order do
 
     describe 'buyer_name' do
       it 'is invalid with no user name' do
-        o = create(:order)
+        o = create(:order, host: create(:organization))
         o.user = nil
         expect(o).to_not be_valid
         expect(o.errors.keys).to include(:buyer_name)
@@ -41,7 +41,7 @@ describe Order do
 
 
       it 'is present in the metadata' do
-        o = create(:order)
+        o = create(:order, host: create(:organization))
         o.buyer_name = 'test test'
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_name)
@@ -54,7 +54,7 @@ describe Order do
       end
 
       it 'is on the user' do
-        o = create(:order, user: create(:user))
+        o = create(:order, user: create(:user), host: create(:organization))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_name)
       end
@@ -66,12 +66,15 @@ describe Order do
 
     it "payer_id is not set" do
       Order.any_instance.stub(:total).and_return(1.00)
-      o = create(:order)
+      o = create(:order, host: create(:organization))
       o.payer_id.should_not == "0"
     end
 
     context "total is not 0" do
-      let(:order){Order.any_instance.stub(:total).and_return(1.0); create(:order)}
+      let(:order){
+        Order.any_instance.stub(:total).and_return(1.0)
+        create(:order, host: create(:organization))
+      }
 
       it "is not paid after creation" do
         order.paid?.should == false
@@ -81,7 +84,7 @@ describe Order do
 
     context "total is 0" do
       it "is paid afetr creation" do
-        order = build(:order)
+        order = build(:order, host: create(:organization))
         allow(order).to receive(:total){ 0.0 }
         order.save
         order.paid?.should == true
@@ -119,6 +122,7 @@ describe Order do
   describe '#check_stripe_validity' do
     it 'is invalid (somehow)' do
       o = Order.new
+      o.host = create(:organization)
       allow(o).to receive(:total){ 10 }
       o.payment_method = Payable::Methods::STRIPE
       o.paid = true

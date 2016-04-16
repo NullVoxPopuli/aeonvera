@@ -41,8 +41,8 @@ describe OrderOperations do
         operation = OrderOperations::Create.new(user, { order: { payment_method: Payable::Methods::STRIPE }})
         operation.build_order(host)
         operation.build_items([{
-          lineItemId: item.id,
-          lineItemType: item.class.name,
+          line_item_id: item.id,
+          line_item_type: item.class.name,
           price: 4,
           quantity: 1
         }])
@@ -57,8 +57,8 @@ describe OrderOperations do
         operation = OrderOperations::Create.new(user, { order: { payment_method: Payable::Methods::STRIPE }})
         operation.build_order(host)
         operation.build_items([{
-          lineItemId: item.id,
-          lineItemType: item.class.name,
+          line_item_id: item.id,
+          line_item_type: item.class.name,
           price: 4,
           quantity: 1
         }])
