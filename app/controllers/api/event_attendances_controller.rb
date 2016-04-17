@@ -43,7 +43,7 @@ class Api::EventAttendancesController < APIController
     attendance = current_user.attendance_for_event(e)
 
     if attendance
-      include_paths = 'orders,housing_request,housing_provision'
+      include_paths = 'package,level,pricing_tier,attendee,unpaid_order.order_line_items.line_item'
       render json: attendance, include: include_paths, serializer: EventAttendanceSerializer
     else
       render json: {}, status: 404

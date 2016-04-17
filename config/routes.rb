@@ -17,7 +17,7 @@ AeonVera::Application.routes.draw do
       }
 
     # for both events and communities
-    resources :integrations
+    resources :integrations, except: [:update, :index]
 
     # Various Event information / summaries
     resources :registered_events # personally registured events for current user

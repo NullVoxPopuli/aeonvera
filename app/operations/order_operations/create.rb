@@ -19,9 +19,10 @@ module OrderOperations
     # crappy custom JS, cause JSON API doesn't yet have a good way
     # to support creating multiple related records at once. :-(
     def create!
+      ap params_from_deserialization
       # get the event / organization that this order ties to
-      host = host_from_params(params_from_deserialization)
-      build_order(host)
+      @host = host_from_params(params_from_deserialization)
+      build_order
       build_items(order_line_items_params)
       assign_default_payment_method
 
@@ -48,15 +49,15 @@ module OrderOperations
       end
     end
 
-    def build_order(host)
+    def build_order(host = @host)
       # build out the order
       @model = Order.new(
         host: host,
-        attendance: @attendance, # nil or will be set
+        attendance: attendance, # nil or will be set
         # a user is alwoys going to be the person paying.
         # if an attendance is passed, use the user from
         # that attendance.
-        user: @attendance.try(:attendee) || current_user,
+        user: attendance.try(:attendee) || current_user,
         # TODO: assign attendance
       )
 
@@ -66,6 +67,12 @@ module OrderOperations
       @model.payment_token = params[:order][:payment_token] unless @model.user
       @model.buyer_email = order_params[:user_email] if order_params[:user_email].present?
       @model.buyer_name = order_params[:user_name] if order_params[:user_name].present?
+    end
+
+    def attendance
+      @attendance ||= if id = order_params[:attendance_id]
+        @host.attendances.find(id)
+      end
     end
   end
 end
