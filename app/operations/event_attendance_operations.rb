@@ -27,39 +27,15 @@ module EventAttendanceOperations
     include HelperOperations::Helpers
 
     def run
-     create!
-     model
+      host = host_from_params(params_for_action)
+      @model = host.attendances.new(params_for_action)
+      # TODO: if we are setting the attendee if, make sure the current_user
+      # has permission to do so
+      @model.attendee = current_user unless params_for_action[:attendee_id]
+      # TODO: verify level and package belong to the event
+      @model.save
+      @model
     end
-
-    def create!
-      host = host_from_params(deserialized_params)
-     @model = host.attendances.new(deserialized_params)
-     # TODO: if we are setting the attendee if, make sure the current_user
-     # has permission to do so
-     @model.attendee = current_user unless deserialized_params[:attendee_id]
-     # TODO: verify level and package belong to the event
-     @model.save
-     @model
-    end
-
-    def deserialized_params
-      @deserialized_params ||= jsonapi_parse(
-        params,
-        only: [
-          :package, :level, :host, :attendee, :pricing_tier,
-          :phone_number, :interested_in_volunteering,
-          :city, :state, :zip,
-          :dance_orientation,
-          :housing_request_attributes,
-          :housing_provision_attributes
-        ],
-        embedded: [
-          :housing_request,
-          :housing_provision
-        ],
-        polymorphic: [:host])
-    end
-
   end
   #
   # # EventAttendancesController#index

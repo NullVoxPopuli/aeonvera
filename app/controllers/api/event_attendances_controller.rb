@@ -34,6 +34,41 @@ class Api::EventAttendancesController < APIController
 
   private
 
+  def create_event_attendance_params
+    ActiveModelSerializers::Deserialization.jsonapi_parse(
+      params,
+      only: [
+        :package, :level, :host, :attendee, :pricing_tier,
+        :phone_number, :interested_in_volunteering,
+        :city, :state, :zip,
+        :dance_orientation,
+        :housing_request_attributes,
+        :housing_provision_attributes
+      ],
+      embedded: [
+        :housing_request,
+        :housing_provision
+      ],
+      polymorphic: [:host])
+  end
+
+  def update_event_attendance_params
+    ActiveModelSerializers::Deserialization.jsonapi_parse(
+      params,
+      only: [
+        :package, :level, :attendee, :pricing_tier,
+        :phone_number, :interested_in_volunteering,
+        :city, :state, :zip,
+        :dance_orientation,
+        :housing_request_attributes,
+        :housing_provision_attributes
+      ],
+      embedded: [
+        :housing_request,
+        :housing_provision
+      ])
+  end
+
   def requesting_attendance_for_event?
     params[:current_user] && params[:event_id]
   end
