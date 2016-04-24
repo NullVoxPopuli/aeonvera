@@ -39,7 +39,8 @@ class Api::EventAttendancesController < APIController
       params,
       embedded: [
         :housing_request,
-        :housing_provision
+        :housing_provision,
+        :custom_field_responses
       ],
       polymorphic: [:host])
   end
@@ -67,7 +68,8 @@ class Api::EventAttendancesController < APIController
         :housing_capacity, :number_of_showers, :can_provide_transportation,
         :transportation_capacity, :preferred_gender_to_host,
         :has_pets, :smokes, :notes
-      ]
+      ],
+      custom_field_responses_attributes: [:value, :custom_field_id]
     )
   end
 
