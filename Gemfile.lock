@@ -52,9 +52,6 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    active_model_serializers-jsonapi_embedded_records_deserializer (0.1.1)
-      active_model_serializers
-      railties (>= 4.0)
     activejob (4.2.6)
       activesupport (= 4.2.6)
       globalid (>= 0.3.0)
@@ -94,8 +91,7 @@ GEM
       debug_inspector (>= 0.0.1)
     blankslate (3.1.3)
     builder (3.2.2)
-    byebug (4.0.5)
-      columnize (= 0.9.0)
+    byebug (8.2.4)
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -113,7 +109,7 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     codeclimate-test-reporter (0.4.7)
       simplecov (>= 0.7.1, < 1.0.0)
-    coderay (1.1.0)
+    coderay (1.1.1)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -121,7 +117,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.9.1.1)
-    columnize (0.9.0)
     concurrent-ruby (1.0.1)
     css_parser (1.3.6)
       addressable
@@ -233,12 +228,12 @@ GEM
       websocket-driver (>= 0.2.0)
     polyamorous (1.2.0)
       activerecord (>= 3.0)
-    pry (0.10.1)
+    pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    pry-byebug (3.1.0)
-      byebug (~> 4.0)
+    pry-byebug (3.3.0)
+      byebug (~> 8.0)
       pry (~> 0.10)
     puma (2.11.2)
       rack (>= 1.1, < 2.0)
@@ -401,7 +396,6 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers!
-  active_model_serializers-jsonapi_embedded_records_deserializer
   activerecord-session_store
   api_cache!
   attr_encrypted

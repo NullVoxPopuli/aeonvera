@@ -1,9 +1,0 @@
-p#notice = notice
-
-h1 = @package.name
-
-= link_to 'Edit Package', edit_hosted_event_package_path(@event.id, @package), :class => "button primary"
-| &nbsp;
-= link_to 'Back', hosted_event_packages_path(@event.id), :class => "button"
-
-= render partial: "/hosted_events/attendances/attendances", locals: { subject: @package }

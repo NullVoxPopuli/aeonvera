@@ -1,6 +1,0 @@
-h1 = @level.name
-= link_to 'Edit Level', edit_hosted_event_level_path(event_id: @event.id, id: @level), :class => "button small"
-| &nbsp;
-= link_to 'Back', hosted_event_levels_path(event_id: @event.id), :class => "button small"
-
-= render partial: "/hosted_events/attendances/attendances", locals: { subject: @level }

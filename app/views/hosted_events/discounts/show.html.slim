@@ -1,8 +1,0 @@
-h1 = @discount.name
-
-= link_to 'Edit', edit_hosted_event_discount_path(@event, @discount), :class => "btn btn-primary"
-| &nbsp;
-= link_to 'Back', hosted_event_discounts_path, :class => "btn btn-primary"
-
-
-= render partial: "/hosted_events/attendances/attendances", locals: { subject: @discount }

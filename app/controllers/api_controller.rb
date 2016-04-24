@@ -10,11 +10,14 @@
   before_filter :authenticate_user_from_token!
   before_action :set_time_zone
 
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+
+
   protected
 
   def render_model(include_param = nil)
     if model.errors.present?
-      render json: model.errors.to_json_api, status: 422
+      render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     else
       render json: model, include: include_param
     end
@@ -33,5 +36,22 @@
         }, status: 401
       return false
     end
+  end
+
+  def not_found
+    render json: {
+        jsonapi: { version: '1.0' },
+        errors: [
+          {
+            id: params[:id],
+            code: 404,
+            title: 'not-found',
+            detail: "Resource not found",
+            meta: {
+              params: params
+            }
+          }
+        ]
+      }, status: 404
   end
 end

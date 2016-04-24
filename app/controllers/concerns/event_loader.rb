@@ -18,15 +18,8 @@ module EventLoader
       begin
         @event = current_user.collaborated_events.find(id)
       rescue ActiveRecord::RecordNotFound => e
-        # check if we are on a subdomain, registering for the event
-        begin
-          if Subdomain.matches?(request)
-            @event = Event.find_by_domain(request.subdomain)
-          end
-        rescue ActiveRecord::RecordNotFound => e
-          # user has nothing to do with the requested event
-          redirect_to action: "index"
-        end
+        # user has nothing to do with the requested event
+        redirect_to action: "index"
       end
     end
 

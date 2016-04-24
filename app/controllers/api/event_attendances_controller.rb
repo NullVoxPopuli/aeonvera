@@ -34,17 +34,9 @@ class Api::EventAttendancesController < APIController
 
   private
 
-  def create_event_attendance_params
+  def deserialized_params
     ActiveModelSerializers::Deserialization.jsonapi_parse(
       params,
-      only: [
-        :package, :level, :host, :attendee, :pricing_tier,
-        :phone_number, :interested_in_volunteering,
-        :city, :state, :zip,
-        :dance_orientation,
-        :housing_request_attributes,
-        :housing_provision_attributes
-      ],
       embedded: [
         :housing_request,
         :housing_provision
@@ -52,21 +44,36 @@ class Api::EventAttendancesController < APIController
       polymorphic: [:host])
   end
 
-  def update_event_attendance_params
-    ActiveModelSerializers::Deserialization.jsonapi_parse(
-      params,
-      only: [
-        :package, :level, :attendee, :pricing_tier,
-        :phone_number, :interested_in_volunteering,
-        :city, :state, :zip,
-        :dance_orientation,
-        :housing_request_attributes,
-        :housing_provision_attributes
+  def create_event_attendance_params
+    whitelister = ActionController::Parameters.new(deserialized_params)
+    whitelister.permit(
+      # Attendance Attributes
+      :phone_number, :interested_in_volunteering,
+      :city, :state, :zip,
+      :dance_orientation,
+
+      # Relationships
+      :package_id, :level_id, :attendee_id, :pricing_tier_id,
+      :host_id, :host_type,
+
+      housing_request_attributes: [
+        :need_transportation, :can_provide_transportation,
+        :transportation_capacity,
+        :allergic_to_pets, :allergic_to_smoke, :other_allergies,
+        :preferred_gender_to_house_with, :notes,
+        :requested_roommates => [], :unwanted_roommates => [],
       ],
-      embedded: [
-        :housing_request,
-        :housing_provision
-      ])
+      housing_provision_attributes: [
+        :housing_capacity, :number_of_showers, :can_provide_transportation,
+        :transportation_capacity, :preferred_gender_to_host,
+        :has_pets, :smokes, :notes
+      ]
+    )
+  end
+
+  def update_event_attendance_params
+    blacklisted = [:host_id, :host_type]
+    create_event_attendance_params.reject{ |k, v| blacklisted.include?(k) }
   end
 
   def requesting_attendance_for_event?

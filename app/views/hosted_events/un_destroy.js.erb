@@ -1,4 +1,0 @@
-var unDeletedEventID = <%= @event.id %>;
-var eventHTML = "<%=j render partial: "hosted_event_row", locals: { event: @event } %>";
-
-$("tr[data-id=" + deletedEventID + "]").replaceWith(eventHTML);

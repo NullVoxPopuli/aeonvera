@@ -18,6 +18,7 @@ class HousingRequest < ActiveRecord::Base
   # alias so that we can use proper english
   alias_attribute :needs_transportation, :need_transportation
 
+  validates :transportation_capacity, presence: true
 
   # for CSV output
   csv_with_columns [

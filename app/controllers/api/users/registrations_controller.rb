@@ -7,7 +7,7 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
   def respond_with(obj, *args)
     if obj.errors.present?
-      render json: obj.errors.to_json_api, status: 422
+      render json: obj, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     else
       render json: obj
     end

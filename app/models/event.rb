@@ -223,7 +223,11 @@ class Event < ActiveRecord::Base
 
   # a higher level of access
   def is_accessible_as_collaborator?(user)
+    return false unless user
+    return true if self.hosted_by == user
+    return true if user.collaborated_event_ids.include?(self.id)
 
+    false
   end
 
 end

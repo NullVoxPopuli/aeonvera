@@ -1,6 +1,0 @@
-h1 = @line_item.name
-= link_to 'Edit Item', edit_hosted_event_line_item_path(event_id: @event.id, id: @line_item), :class => "button small"
-| &nbsp;
-= link_to 'Back', hosted_event_line_item_path(event_id: @event.id), :class => "button small"
-
-= render partial: "/hosted_events/attendances/attendances", locals: { subject: @line_item }

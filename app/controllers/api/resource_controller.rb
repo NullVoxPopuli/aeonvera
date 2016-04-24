@@ -10,19 +10,11 @@ class Api::ResourceController < APIController
   end
 
   def create
-    if model.errors.present?
-      render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
-    else
-      render json: model
-    end
+    render_model
   end
 
   def update
-    if model.errors.present?
-      render json: model.errors.to_json_api, status: 422
-    else
-      render json: model
-    end
+    render_model
   end
 
   def destroy

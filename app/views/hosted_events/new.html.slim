@@ -1,6 +1,0 @@
-- content_for :stylesheets do
-	= stylesheet_link_tag "hosted_events"
-
-h1 New event
-= form_for(@event, url: hosted_events_path(@event), html: { :class => "" }) do |f|
-	== render partial: 'form', locals: { f: f }

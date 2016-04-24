@@ -53,9 +53,9 @@ module HasAddress
       errors.add("address", "must have a state")
     end
 
-    unless address["zip"].present?
-      errors.add("address", "must have a zip code")
-    end
+    # unless address["zip"].present?
+    #   errors.add("address", "must have a zip code")
+    # end
   end
 
 

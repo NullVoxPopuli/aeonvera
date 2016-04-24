@@ -19,7 +19,6 @@ module OrderOperations
     # crappy custom JS, cause JSON API doesn't yet have a good way
     # to support creating multiple related records at once. :-(
     def create!
-      ap params_from_deserialization
       # get the event / organization that this order ties to
       @host = host_from_params(params_from_deserialization)
       build_order
