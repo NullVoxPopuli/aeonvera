@@ -27,7 +27,6 @@ module EventAttendanceOperations
     include HelperOperations::Helpers
 
     def run
-      ap params_for_action
       host = host_from_params(params_for_action)
       @model = host.attendances.new(params_for_action)
       # TODO: if we are setting the attendee if, make sure the current_user

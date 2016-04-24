@@ -31,6 +31,7 @@ module PublicAttributes
       has_many :levels
       has_many :competitions
       has_many :line_items
+      has_many :custom_fields
       has_many :shirts, serializer: ShirtSerializer
     end
 
