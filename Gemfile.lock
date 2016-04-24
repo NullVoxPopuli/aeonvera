@@ -14,21 +14,20 @@ GIT
       xml-simple
 
 GIT
-  remote: git://github.com/thoughtbot/factory_girl.git
-  revision: 03786660edbe4e028a292d19f7956f8dd0c89347
-  specs:
-    factory_girl (4.5.0)
-      activesupport (>= 3.0.0)
-
-GIT
-  remote: https://github.com/NullVoxPopuli/active_model_serializers.git
-  revision: 019ce559614ec047b42ca23bb5e0cb5887e00714
-  branch: underscored_keys_support_for_deserialization
+  remote: git://github.com/rails-api/active_model_serializers.git
+  revision: bade0f2dd61196fb33774828d7615d14a93ac9c0
   specs:
     active_model_serializers (0.10.0.rc5)
       actionpack (>= 4.0)
       activemodel (>= 4.0)
       railties (>= 4.0)
+
+GIT
+  remote: git://github.com/thoughtbot/factory_girl.git
+  revision: 03786660edbe4e028a292d19f7956f8dd0c89347
+  specs:
+    factory_girl (4.5.0)
+      activesupport (>= 3.0.0)
 
 GEM
   remote: https://rubygems.org/

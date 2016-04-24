@@ -16,30 +16,14 @@ module ActiveModelSerializers::Adapter::JsonApi::Deserialization
       attributes['id'] = primary_data['id'] if primary_data['id']
       relationships = primary_data['relationships'] || {}
 
-      attributes = transform_keys(attributes, options)
-      relationships = transform_keys(relationships, options)
-
-      attributes = filter_fields(attributes, options)
-      relationships = filter_fields(relationships, options)
-
+      filter_fields(attributes, options)
+      filter_fields(relationships, options)
 
       hash = {}
       hash.merge!(parse_attributes(attributes, options))
       hash.merge!(parse_relationships(relationships, options))
 
       hash
-    end
-
-    def filter_fields(fields, options)
-      if (only = options[:only])
-        only = Array(only).map { |o| o.to_s.underscore }
-        fields.select { |k, _v| only.include?(k) }
-      elsif (except = options[:except])
-        except = Array(except).map { |o| o.to_s.underscore }
-        fields.reject { |k, _v| except.include?(k) }
-      else
-        fields
-      end
     end
 
     # https://github.com/spieker/active_model_serializers-jsonapi_embedded_records_deserializer/blob/master/lib/active_model_serializers/jsonapi_embedded_records_deserializer.rb
@@ -72,16 +56,4 @@ module ActiveModelSerializers::Adapter::JsonApi::Deserialization
       { "#{assoc_name}_attributes".to_sym => data }
     end
   end
-end
-
-module ActiveModelSerializers
-
-  module Deserialization
-    module_function
-
-    def jsonapi_parse(*args)
-      Adapter::JsonApi::Deserialization.parse(*args)
-    end
-  end
-
 end
