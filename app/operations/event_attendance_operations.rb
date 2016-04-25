@@ -37,7 +37,7 @@ module EventAttendanceOperations
       @model
     end
   end
-  #
+
   # # EventAttendancesController#index
   # class ReadAll < SkinnyControllers::Operation::Base
   #   def run
@@ -45,21 +45,21 @@ module EventAttendanceOperations
   #     model if allowed?
   #   end
   # end
-  #
+
   # # EventAttendancesController#show
   # class Read < SkinnyControllers::Operation::Base
   #   def run
   #     model if allowed?
   #   end
   # end
-  #
-  # # EventAttendancesController#update
-  # class Update < SkinnyControllers::Operation::Base
-  #   def run
-  #     model.update(model_params) if allowed?
-  #   end
-  # end
-  #
+
+  # EventAttendancesController#update
+  class Update < SkinnyControllers::Operation::Base
+    def run
+      model.update(params_for_action) if allowed?
+    end
+  end
+
   # # EventAttendancesController#destroy
   # class Delete < SkinnyControllers::Operation::Base
   #   def run

@@ -14,44 +14,62 @@ class Api::OrdersController < APIController
     render_model('order_line_items.line_item')
   end
 
-  # slightly different from update, in that it, like create,
-  # doesn't take a JSON API formatted set of parameters.
-  #
-  # This is triggered by:
-  # PUT /api/orders/:id/modify
-  #
-  # If someone wants to change their order after clicking checkout
-  # (and thus the order is created), they click the back button to
-  # edit can may perform whatever edits.
-  #
-  # This will get sligtly complicated, as it will need to detect
-  # which order line items are being added, which are being removed,
-  # and which are being modified.
-  def modify
-    @model = OrderOperations::Modify.new(current_user, params, params).run
-    render_model('order_line_items.line_item')
-  end
-
   def update
     render_model('order_line_items.line_item')
   end
 
   private
 
-  def update_order_params
-    params
-      .require(:data)
-      .require(:attributes)
-      .permit(:payment_method, :checkout_token, :checkout_email, :check_number)
+  def deserialized_params
+    ActiveModelSerializers::Deserialization.jsonapi_parse(
+      params,
+      embedded: [:order_line_items],
+      polymorphic: [:line_item, :host])
   end
 
+  def create_order_params
+    whitelister = ActionController::Parameters.new(deserialized_params)
+    whitelisted = whitelister.permit(
+      :attendance_id, :host_id, :host_type, :payment_method,
+      :user_email, :user_name,
+
+      order_line_items_attributes: [
+        :line_item_id, :line_item_type,
+        :price, :quantity,
+        :partner_name, :dance_orientation, :size
+      ]
+    )
+
+    EmberTypeInflector.to_rails(whitelisted)
+  end
+
+  def update_order_params
+    whitelister = ActionController::Parameters.new(deserialized_params)
+    whitelisted = whitelister.permit(
+      :attendance_id, :host_id, :host_type, :payment_method,
+      :user_email, :user_name,
+
+      # specifically for payment
+      # the presence of these keys determines if we are paying or
+      # just updating the order / order-line-item data
+      :payment_method, :checkout_token, :checkout_email, :check_number,
+
+      # This is for when a user isn't logged in.
+      :payment_token,
+
+      order_line_items_attributes: [
+        :line_item_id, :line_item_type,
+        :price, :quantity,
+        :partner_name, :dance_orientation, :size
+      ]
+    )
+
+    EmberTypeInflector.to_rails(whitelisted)
+  end
+
+  # TODO: is this used anywhere?
   def order_where_params
     keys = (Order.column_names & params.keys)
     params.slice(*keys).symbolize_keys
   end
-
-  def create_order_params
-    params
-  end
-
 end

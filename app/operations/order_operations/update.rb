@@ -4,16 +4,8 @@ module OrderOperations
 
     def run
       if allowed_to_update?
-        original_paid_status = model.paid?
-
-        update
-
-        paid_changed = original_paid_status != model.paid?
-
-        if model.errors.blank? && paid_changed && model.paid?
-          OrderMailer.receipt(for_order: model).deliver_now
-        end
-
+        pay if is_paying?
+        modify if is_updating?
       else
         # TODO: how to send error?
         raise 'not authorized'
@@ -21,6 +13,35 @@ module OrderOperations
 
       model
     end
+
+    private
+
+    def is_paying?
+      params_for_action[:checkout_token].present?
+    end
+
+    def is_updating?
+      !is_paying?
+    end
+
+
+    def pay
+      original_paid_status = model.paid?
+
+      update
+
+      paid_changed = original_paid_status != model.paid?
+
+      if model.errors.blank? && paid_changed && model.paid?
+        OrderMailer.receipt(for_order: model).deliver_now
+      end
+    end
+
+    def modify
+      build_items(params_for_action)
+      save_order unless @model.errors.present?
+    end
+
 
     def update
       payment_method = params_for_action[:payment_method]

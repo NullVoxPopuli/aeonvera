@@ -21,9 +21,9 @@ class Order < ActiveRecord::Base
 
   has_many :line_items,
     class_name: "OrderLineItem",
-    dependent: :destroy
+    dependent: :destroy, inverse_of: :order
 
-  has_many :order_line_items, dependent: :destroy
+  has_many :order_line_items, dependent: :destroy, inverse_of: :order
 
   accepts_nested_attributes_for :line_items
   accepts_nested_attributes_for :order_line_items

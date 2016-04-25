@@ -160,7 +160,7 @@ module Payable
       remaining_discounts << discount
     }
 
-    self.line_items.each do |line_item|
+    order_line_items.each do |line_item|
       if (object = line_item.line_item).is_a?(Discount)
         amount = amount_after_discount(
           amount,
@@ -168,21 +168,6 @@ module Payable
           order_line_item: line_item,
           discounts_to_apply_at_end: discounts_to_apply_at_end
         )
-      elsif (object = line_item.line_item).is_a?(LineItem::Shirt)
-        # shirts can have different prices per size.
-        # hopefully this will become easier to manage when
-        # an attendance has shirt option responses, rather than shirts
-        begin
-          shirt_amount = self.attendance.total_cost_for_selected_shirt(object.id)
-          shirt_amount = (line_item.price * line_item.quantity) if shirt_amount == 0
-
-          amount += shirt_amount
-        rescue
-          # this is a horrible way do to logic flow...
-          # either the attendance doesn't exist, or this is part of the new flow
-          # of shirts
-          amount += (line_item.price * line_item.quantity)
-        end
       else
         amount += (line_item.price * line_item.quantity)
       end

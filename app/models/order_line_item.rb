@@ -1,5 +1,5 @@
 class OrderLineItem < ActiveRecord::Base
-  belongs_to :order
+  belongs_to :order, inverse_of: :order_line_items
   # { with_deleted }
   # TODO BUG: https://github.com/rails/rails/pull/16531
   belongs_to :line_item, ->{ unscope(where: :deleted_at) }, polymorphic: true

@@ -1,85 +1,127 @@
 require 'spec_helper'
 
-describe OrderOperations do
+describe OrderOperations::Create do
+  let(:klass){ OrderOperations::Create }
+    # This is only for the parameter mapping
+    let(:controller){ Api::OrdersController.new }
 
-  context 'Create' do
-    context 'run' do
-      it 'sends a payment received email' do
+    let(:user){ create(:user) }
+    let(:event){ create(:event) }
+    let(:package){ create(:package, event: event) }
+    let(:attendance){ create(:attendance, host: event, package: package, attendee: user) }
 
-      end
 
-      it 'has errors' do
+    context 'with a package and competition' do
+      let(:competition){ create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
 
-      end
-    end
+      let(:basic_params){
+        {"data"=>{
+          "attributes"=>{
+            "host-name"=>nil, "host-url"=>nil, "created-at"=>nil, "payment-received-at"=>nil, "paid-amount"=>nil, "net-amount-received"=>nil, "total-fee-amount"=>nil, "payment-method"=>nil, "payment-token"=>nil, "check-number"=>nil, "paid"=>false, "total-in-cents"=>nil,
+            "user-email"=>"someone@test.com", "user-name"=>" ", "checkout-token"=>nil, "checkout-email"=>nil},
+          "relationships"=>{
+            "host"=>{"data"=>{"type"=>"events", "id"=>event.id}},
+            "order-line-items"=>{"data"=>[
+              {
+                "attributes"=>{"quantity"=>1, "price"=>package.current_price, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                "relationships"=>{
+                  "line-item"=>{"data"=>{"type"=>"packages", "id"=>package.id}},
+                  "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
+                "type"=>"order-line-items"},
+              {
+                "attributes"=>{"quantity"=>1, "price"=>competition.current_price, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                "relationships"=>{
+                  "line-item"=>{"data"=>{"type"=>"competitions", "id"=>competition.id}},
+                  "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
+                "type"=>"order-line-items"},
+                ]},
+            "attendance"=>{"data"=>{"type"=>"event-attendances", "id"=>attendance.id}},
+            "user"=>{"data"=>{"type"=>"users", "id"=>"current-user"}}}, "type"=>"orders"},
+            "order"=>{}}
+      }
 
-    context 'build_order' do
-      it 'has a validation error on an item' do
+      before(:each) do
+        allow(controller).to receive(:params){ basic_params }
+        params_for_action = controller.send(:create_order_params)
 
+        @operation = klass.new(user, basic_params, params_for_action)
       end
 
       it 'is valid' do
+        model = @operation.run
+        expect(model.errors.full_messages).to be_empty
+      end
 
+      it 'creates an order' do
+        expect{
+          @operation.run
+        }.to change(Order, :count).by(1)
+      end
+
+      it 'creates order line items' do
+        expect{
+          @operation.run
+        }.to change(OrderLineItem, :count).by(2)
+      end
+
+      it 'defaults to the stripe payment method' do
+        model = @operation.run
+        expect(model.payment_method).to eq Payable::Methods::STRIPE
+      end
+
+      it 'has a subtotal equal to the sum of the line items' do
+        model = @operation.run
+        expected = package.current_price + competition.current_price
+        expect(model.sub_total).to eq expected
       end
 
     end
 
-    context 'save_order' do
-      it 'can be saved' do
-        user = create(:user)
-        host = create(:organization)
-        operation = OrderOperations::Create.new(user, { order: {payment_method: Payable::Methods::STRIPE }})
-        operation.build_order(host)
 
-        expect{ operation.save_order }.to change(Order, :count).by 1
-      end
+    context 'the total is 0 dollas' do
+      let(:basic_params){
+        {"data"=>{
+          "attributes"=>{
+            "host-name"=>nil, "host-url"=>nil, "created-at"=>nil, "payment-received-at"=>nil, "paid-amount"=>nil, "net-amount-received"=>nil, "total-fee-amount"=>nil, "payment-method"=>nil, "payment-token"=>nil, "check-number"=>nil, "paid"=>false, "total-in-cents"=>nil,
+            "user-email"=>"someone@test.com", "user-name"=>" ", "checkout-token"=>nil, "checkout-email"=>nil},
+          "relationships"=>{
+            "host"=>{"data"=>{"type"=>"events", "id"=>event.id}},
+            "order-line-items"=>{"data"=>[
+              {
+                "attributes"=>{"quantity"=>1, "price"=>0, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                "relationships"=>{
+                  "line-item"=>{"data"=>{"type"=>"packages", "id"=>package.id}},
+                  "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
+                "type"=>"order-line-items"},
+                ]},
+            "attendance"=>{"data"=>{"type"=>"event-attendances", "id"=>attendance.id}},
+            "user"=>{"data"=>{"type"=>"users", "id"=>"current-user"}}}, "type"=>"orders"},
+            "order"=>{}}
+      }
 
-      it 'is valid' do
-        user = create(:user)
-        host = create(:organization)
-        item = create(:lesson, host: host)
-        operation = OrderOperations::Create.new(user, { order: { payment_method: Payable::Methods::STRIPE }})
-        operation.build_order(host)
-        operation.build_items([{
-          line_item_id: item.id,
-          line_item_type: item.class.name,
-          price: 4,
-          quantity: 1
-        }])
+      before(:each) do
+        allow(controller).to receive(:params){ basic_params }
+        params_for_action = controller.send(:create_order_params)
 
-        expect(operation.model.errors.full_messages).to be_empty
-      end
-
-      it 'can save the relationships as well' do
-        user = create(:user)
-        host = create(:organization)
-        item = create(:lesson, host: host)
-        operation = OrderOperations::Create.new(user, { order: { payment_method: Payable::Methods::STRIPE }})
-        operation.build_order(host)
-        operation.build_items([{
-          line_item_id: item.id,
-          line_item_type: item.class.name,
-          price: 4,
-          quantity: 1
-        }])
-
-        expect{ operation.save_order }.to change(OrderLineItem, :count).by 1
-      end
-    end
-
-    context 'create!' do
-      it 'builds an order' do
-
+        @operation = klass.new(user, basic_params, params_for_action)
       end
 
       it 'marks as paid when the sub total is 0' do
-
+        model = @operation.run
+        expect(model.sub_total).to eq 0
+        expect(model.paid).to eq true
       end
 
-      it 'charges the credit card' do
-        # TODO: remember StripeMock
+      it 'marks the payment method as cash' do
+        model = @operation.run
+        expect(model.payment_method).to eq Payable::Methods::CASH
       end
     end
-  end
+
+
+    it 'charges the credit card' do
+      # TODO: remember StripeMock
+    end
+
 
 end

@@ -1,8 +1,12 @@
 require 'spec_helper'
 
-describe OrderOperations do
+describe OrderOperations::Update do
+  let(:klass){ OrderOperations::Update }
+  # This is only for the parameter mapping
+  let(:controller){ Api::OrdersController.new }
+  let(:user){ create(:user) }
 
-  context 'Update' do
+  context 'with the intent to pay' do
     let(:event){ create_event }
     let(:attendance){ create(:attendance, event: event) }
 
@@ -53,8 +57,10 @@ describe OrderOperations do
 
       it 'sends an email' do
         @order = create(:order, host: event, paid: false, attendance: attendance)
-        @order.add(create(:package, event: event))
+        package = create(:package, event: event)
+        @order.order_line_items.create(line_item: package, price: package.current_price, quantity: 1)
         @order.save
+
         expect(@order.paid).to eq false
         operation = OrderOperations::Update.new(nil, {id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10})
 
@@ -135,5 +141,72 @@ describe OrderOperations do
 
 
   end
+
+  context 'editing the contents of the order' do
+    let(:event){ create(:event) }
+    let(:package){ create(:package, event: event) }
+    let(:competition){ create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
+    let(:attendance){ create(:attendance, host: event, package: package, attendee: user) }
+
+    let(:order){ create(:order, host: event, user: user, attendance: attendance) }
+    let(:item1){ create(:order_line_item, order: order, line_item: package, price: package.current_price, quantity: 1) }
+    let(:item2){ create(:order_line_item, order: order, line_item: competition, price: competition.current_price, quantity: 1) }
+
+    it 'adds an order line item' do
+
+    end
+
+    it 'removes an order line item' do
+
+    end
+
+    context 'updates an existing line item' do
+      let(:params){
+        {
+          "data"=>{
+            "id"=>order.id,
+            "attributes"=>{"host-name"=>"SwingIN 2015", "host-url"=>"//swingin2015.swing.vhost", "created-at"=>"2016-04-25T00:21:05.276Z", "payment-received-at"=>nil, "paid-amount"=>nil, "net-amount-received"=>0, "total-fee-amount"=>0, "payment-method"=>"Stripe", "payment-token"=>nil, "check-number"=>nil, "paid"=>false, "total-in-cents"=>7843.75, "user-email"=>"preston@aeonvera.com", "user-name"=>"Preston Sego", "checkout-token"=>nil, "checkout-email"=>"preston@aeonvera.com"},
+            "relationships"=>{
+              "host"=>{"data"=>{"type"=>"events", "id"=>event.id}},
+              "order-line-items"=>{"data"=>[
+                {"id"=>item1.id,
+                  "attributes"=>{"quantity"=>1, "price"=>item1.price, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                  "relationships"=>{"line-item"=>{"data"=>{"type"=>"line-items", "id"=>package.id}},
+                  "order"=>{"data"=>{"type"=>"orders", "id"=>order.id}}}, "type"=>"order-line-items"},
+                {"id"=>"3317",
+                  "attributes"=>{"quantity"=>1, "price"=>item2.price, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                  "relationships"=>{"line-item"=>{"data"=>{"type"=>"line-items", "id"=>competition.id}},
+                  "order"=>{"data"=>{"type"=>"orders", "id"=>order.id}}}, "type"=>"order-line-items"}]},
+              "attendance"=>{"data" => nil}},
+            "type"=>"orders"},
+          "id"=>order.id,
+          "order"=>{}}.with_indifferent_access
+      }
+
+      before(:each) do
+        allow(controller).to receive(:params){ params }
+        @params_for_action = controller.send(:update_order_params)
+      end
+
+      it 'the number of order line items remain the same' do
+        operation = klass.new(user, params, @params_for_action)
+        expect(order.order_line_items.count).to eq 2
+
+        model = operation.run
+        expect(model.order_line_items.count).to eq 2
+      end
+
+      it 'updates an order line item' do
+        params_for_action[:order_line_items_attributes][0][:quantity] = 2
+        operation = klass.new(user, params, @params_for_action)
+
+        old_total = order.sub_total
+        model = operation.run
+        new_sub_total = model.sub_total
+        expect(new_sub_total - old_total).to eq competition.current_price
+      end
+    end
+  end
+
 
 end

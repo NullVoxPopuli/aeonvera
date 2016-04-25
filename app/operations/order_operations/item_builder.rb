@@ -3,7 +3,7 @@ module OrderOperations
 
     def allowed_to_update?
       # need to check if this token is present in the params
-      unloggedin_token = params.try(:[], :order).try(:[], :paymentToken)
+      unloggedin_token = params_for_action[:payment_token]
       actual_token = model.payment_token
 
       allowed? || unloggedin_token == actual_token
@@ -25,6 +25,8 @@ module OrderOperations
     #
     # @param [Array] params_for_items a list of orderLineItem param entries
     def build_items(params_for_items)
+      # TODO: RESUME HERE IN THE MORNING
+      binding.pry
       existing_items = params_for_items.select{ |i| i[:id].present? }
       new_items = params_for_items.select{ |i| i[:id].blank? }
 
