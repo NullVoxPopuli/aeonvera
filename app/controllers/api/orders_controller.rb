@@ -58,7 +58,7 @@ class Api::OrdersController < APIController
       :payment_token,
 
       order_line_items_attributes: [
-        :line_item_id, :line_item_type,
+        :id, :line_item_id, :line_item_type,
         :price, :quantity,
         :partner_name, :dance_orientation, :size
       ]

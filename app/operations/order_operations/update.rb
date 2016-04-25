@@ -38,8 +38,8 @@ module OrderOperations
     end
 
     def modify
-      build_items(params_for_action)
-      save_order unless @model.errors.present?
+      build_items
+      model.save
     end
 
 
@@ -51,10 +51,10 @@ module OrderOperations
       if payment_method != Payable::Methods::STRIPE
         model.check_number = params_for_action[:check_number]
 
-        model.paid = true
-        model.paid_amount = params_for_action[:paid_amount]
+        model.paid                = true
+        model.paid_amount         = params_for_action[:paid_amount]
         model.net_amount_received = model.paid_amount
-        model.total_fee_amount = 0
+        model.total_fee_amount    = 0
         model.save if model.errors.full_messages.empty?
       else
         # if this succeeds, the order will be saved
