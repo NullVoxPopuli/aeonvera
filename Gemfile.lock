@@ -140,11 +140,6 @@ GEM
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
-    draper (1.4.0)
-      actionpack (>= 3.0)
-      activemodel (>= 3.0)
-      activesupport (>= 3.0)
-      request_store (~> 1.0)
     encryptor (1.3.0)
     erubis (2.7.0)
     execjs (2.5.2)
@@ -169,9 +164,6 @@ GEM
       domain_name (~> 0.5)
     i18n (0.7.0)
     ice_cube (0.12.1)
-    jbuilder (1.5.3)
-      activesupport (>= 3.0.0)
-      multi_json (>= 1.2.0)
     jimson-temp (0.9.5)
       blankslate (>= 3.1.2)
       multi_json (~> 1.0)
@@ -180,11 +172,6 @@ GEM
     jquery-rails (3.1.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    jquery-turbolinks (2.1.0)
-      railties (>= 3.1.0)
-      turbolinks
-    jquery-ui-rails (5.0.3)
-      railties (>= 3.2.16)
     json (1.8.3)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -210,7 +197,8 @@ GEM
     newrelic_rpm (3.11.2.286)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
-    nprogress-rails (0.1.6.6)
+    non-stupid-digest-assets (1.0.8)
+      sprockets (>= 2.0)
     orm_adapter (0.5.0)
     paperclip (4.3.0)
       activemodel (>= 3.2.0)
@@ -291,7 +279,6 @@ GEM
       rails (>= 3.2)
       sass-rails (>= 3.1)
     redis (3.2.1)
-    request_store (1.1.0)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
     rest-client (1.8.0)
@@ -343,8 +330,6 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    select2-rails (3.5.9.3)
-      thor (~> 0.14)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -381,8 +366,6 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    turbolinks (2.5.3)
-      coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.1)
@@ -417,13 +400,11 @@ DEPENDENCIES
   capybara
   capybara-webkit (~> 1.4.0)
   codeclimate-test-reporter
-  coffee-rails
   database_cleaner
   date_time_attribute
   date_validator
   delorean
   devise
-  draper (~> 1.0)
   factory_girl!
   factory_girl_rails
   font-awesome-rails
@@ -432,16 +413,12 @@ DEPENDENCIES
   fuubar
   html2slim
   i18n
-  jbuilder (~> 1.2)
-  jquery-rails
-  jquery-turbolinks
-  jquery-ui-rails
   launchy
   lazy_crud
   mail
   metahash-rb
   newrelic_rpm
-  nprogress-rails
+  non-stupid-digest-assets
   paperclip
   paranoia (~> 2.0)
   paypal-sdk-rest!
@@ -465,14 +442,12 @@ DEPENDENCIES
   sass (~> 3.3.14)
   sass-rails
   sdoc
-  select2-rails
   simplecov
   skinny_controllers
   slim-rails
   sqlite3
   stripe
   stripe-ruby-mock (~> 2.2.1)
-  turbolinks
   uglifier
 
 BUNDLED WITH

@@ -25,9 +25,11 @@ AeonVera::Application.configure do
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
-  config.assets.debug = true
+  config.assets.debug = false
+  config.assets.compile = true
+  config.serve_static_files = false
 
-  config.action_mailer.default_url_options = { :host => 'swing.vhost' }
+  config.action_mailer.default_url_options = { host: 'swing.vhost' }
 
   config.action_mailer.perform_deliveries = true
   # instructions: http://mailcatcher.me/
@@ -36,7 +38,7 @@ AeonVera::Application.configure do
   # mailcatcher (in any terminal)
   # browser -> localhost:1080
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+  config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
   Mail.defaults do
     delivery_method ActionMailer::Base.delivery_method, ActionMailer::Base.smtp_settings
   end

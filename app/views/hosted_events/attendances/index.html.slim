@@ -1,6 +1,0 @@
-- content_for :list_buttons do
-
-  = download_button hosted_event_attendances_path(@event, format: "csv")
-  = link_to "Print Checkin List", print_checkin_hosted_event_attendances_path(@event), :class => 'button small'
-
-= render partial: "/hosted_events/attendances/attendances", locals: { subject: @event,  title: "Attendances for #{@event.name}"}

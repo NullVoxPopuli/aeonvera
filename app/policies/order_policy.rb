@@ -14,9 +14,13 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   # - an event / organization is modifying the order
   #
   # I don't know if I want ordinary collaborators editing orders
-  def modify?
+  def update?
     # TODO: also check for unauth token
     owner? || is_from_an_owned_event?
+  end
+
+  def delete?
+    !object.paid && owner?
   end
 
   private
@@ -33,5 +37,4 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   def user_id
     user&.id
   end
-
 end

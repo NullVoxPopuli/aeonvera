@@ -1,7 +1,0 @@
-= content_for :content do
-  .shell
-    = yield
-    - if current_user && current_user.is_a_manager_of?(current_organization)
-      div style="position: absolute; bottom: 0;"
-        = link_to "Manage #{current_organization.name}", organization_path(current_organization, subdomain: false), class: 'button'
-= render file: "layouts/application"

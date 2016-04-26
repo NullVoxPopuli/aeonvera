@@ -1,6 +1,0 @@
-h3
-	| Edit Registration for
-	= current_event.name
-
-= form_for(@attendance, url: register_path(@attendance.id), as: :attendance) do |f|
-	= render partial: "form", locals: { f: f }

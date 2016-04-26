@@ -46,26 +46,9 @@ module Payable
   #   {name: "Shirt", quantity: 1, price: 7}
   # ]
 
-  def fee
+  def application_fee
     self.total * 0.0075 # 0.75%
   end
-
-  def add(object, quantity: 1, price: nil)
-
-    if object.is_a?(Discount)
-      return false unless eligible_for_discount?
-      return false unless discount_is_eligible?(object)
-    end
-
-    if already_exists?(object)
-      if is_an_item_with_quantity?(object)
-        increment_quantity_of_line_item_matching(object)
-      end
-    else
-      create_line_item(object, quantity: quantity, price: price)
-    end
-  end
-
 
   # check if the discount is allowed for this order
   def discount_is_eligible?(object)
@@ -115,14 +98,6 @@ module Payable
     self.line_items.select{|line_item|
       line_item.line_item_type == Discount.name
     }.count > 0
-  end
-
-  def increment_quantity_of_line_item_matching(object)
-    # find existing line item with same id and type
-    line_item = line_item_matching(object)
-    # increment quantity and save
-    line_item.quantity += 1
-    line_item.save
   end
 
   def already_exists?(object)
@@ -186,23 +161,20 @@ module Payable
      self.payment_method == Payable::Methods::PAYPAL)
   end
 
+  def calculated_price(charge_fees: true)
+    absorb_fees = !charge_fees
+    PriceCalculator.calculate_for_sub_total(sub_total, absorb_fees: absorb_fees)
+  end
+
   # when absorb_fees is false, it defaults to should_apply_fee
   # this kind of a hacky way to get around the varying prices at the door.
   # everything is just easier when organizers don't do 'convinience fees'.
   # it'ls also better for morale to not charge extra fees.
   def total(absorb_fees: false)
-    sub = sub_total
-    total = sub
+    charge_fee = !absorb_fees && should_apply_fee?
+    calculated = calculated_price(charge_fees: charge_fee)
 
-    # optionally make the registrant pay more
-    if !absorb_fees && should_apply_fee?
-        total_fee_percentage = 0.029 # Stripe
-        total_fee_percentage += 0.0075 unless host.beta?
-
-        total = (sub + 0.3) / (1 - total_fee_percentage).round(2)
-    end
-
-    total
+    calculated[:total]
   end
 
   def net_received

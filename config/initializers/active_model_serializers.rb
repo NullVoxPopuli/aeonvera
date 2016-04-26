@@ -3,27 +3,8 @@ ActiveModel::Serializer.config.adapter = :json_api
 # Blegh...............
 module ActiveModelSerializers::Adapter::JsonApi::Deserialization
   class << self
-    def parse(document, options = {})
-      document = document.dup.permit!.to_h if document.is_a?(ActionController::Parameters)
-
-      # validate_payload(document) do |invalid_document, reason|
-      #   yield invalid_document, reason if block_given?
-      #   return {}
-      # end
-
-      primary_data = document['data']
-      attributes = primary_data['attributes'] || {}
-      attributes['id'] = primary_data['id'] if primary_data['id']
-      relationships = primary_data['relationships'] || {}
-
-      filter_fields(attributes, options)
-      filter_fields(relationships, options)
-
-      hash = {}
-      hash.merge!(parse_attributes(attributes, options))
-      hash.merge!(parse_relationships(relationships, options))
-
-      hash
+    def validate_payload(document, &block)
+      true
     end
 
     # https://github.com/spieker/active_model_serializers-jsonapi_embedded_records_deserializer/blob/master/lib/active_model_serializers/jsonapi_embedded_records_deserializer.rb

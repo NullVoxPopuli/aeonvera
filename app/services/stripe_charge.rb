@@ -32,7 +32,7 @@ module StripeCharge
       }
 
       if !beta
-        chargeData[:application_fee] = to_cents(order.fee)
+        chargeData[:application_fee] = to_cents(order.application_fee)
       end
 
       charge = Stripe::Charge.create(chargeData, secret_key)

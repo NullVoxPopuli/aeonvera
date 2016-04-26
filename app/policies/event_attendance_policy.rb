@@ -1,5 +1,4 @@
 class EventAttendancePolicy < SkinnyControllers::Policy::Base
-
   # Below are all the available permissions. Each permission corresponds
   # to an action in the controller.
   # Default functionality is to return true (allow) -- so the methods
@@ -41,6 +40,4 @@ class EventAttendancePolicy < SkinnyControllers::Policy::Base
   def is_collaborator?
     object.host.is_accessible_as_collaborator?(user)
   end
-
-
 end

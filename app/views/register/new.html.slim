@@ -1,7 +1,0 @@
-h2.hide-for-small = current_event.name
-h3.show-for-small = current_event.name
-h6 = current_event.short_description
-
-
-= form_for(@attendance, url: register_index_path, as: :attendance) do |f|
-	= render partial: "form", locals: { f: f }

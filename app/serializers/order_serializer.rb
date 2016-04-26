@@ -22,7 +22,7 @@ class OrderSerializer < ActiveModel::Serializer
 
   def total_in_cents
     # convert from dollars to cents
-    object.total * 100
+    (object.total * 100).to_i
   end
 
   def user_email

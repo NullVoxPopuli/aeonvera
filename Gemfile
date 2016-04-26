@@ -48,9 +48,6 @@ gem "api_cache", github: "NullVoxPopuli/api_cache"
 # User Authentication and management
 gem "devise"
 
-# Allows the use of decorators
-# https://github.com/drapergem/draper
-gem 'draper', '~> 1.0'
 # soft deletion
 gem "paranoia", "~> 2.0"
 
@@ -86,30 +83,12 @@ gem 'sass-rails'
 gem 'foundation-rails'
 gem "font-awesome-rails"
 gem 'uglifier'#, '>= 1.3.0'
-gem 'coffee-rails'#, '~> 4.0.0'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
-gem 'jquery-turbolinks'
-
-# Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-
-# Form Helpers
-gem 'select2-rails'
-
-###########
-# Extras
-###########
-gem 'nprogress-rails'
+gem "non-stupid-digest-assets"
 
 #########
 # Templating
 #########
 gem "slim-rails"
-
-
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
 
 
 group :doc do

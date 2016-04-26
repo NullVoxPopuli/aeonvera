@@ -25,7 +25,7 @@ class Api::EventAttendancesController < APIController
   end
 
   def create
-    render_model
+    render_model('housing_request,housing_provision,custom_field_responses')
   end
 
   def update

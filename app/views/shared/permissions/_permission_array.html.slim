@@ -1,6 +1,0 @@
-- DefaultPermissions::PERMISSIONS.keys.sort.each do |permission|
-  - next if DefaultPermissions.is_access?(permission)
-  - if DefaultPermissions.should_render?(permission, @event, user)
-    = form.check_box permission, {checked: source[permission.to_s]}
-    = form.label permission, DefaultPermissions.name_for(permission)
-    br

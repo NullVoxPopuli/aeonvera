@@ -26,20 +26,6 @@ describe Payable do
     @payment = create(:order, event: @event, attendance: @attendance)
   end
 
-  context "increment_quantity_of_line_item_matching" do
-    before(:each) do
-      @one = order_line_item
-      @one.save
-      @line_item = @payment.add(@one)
-    end
-
-    it 'increments the quantity' do
-      expect{
-        @payment.add(@one)
-      }.to change(@line_item, :quantity).by 1
-    end
-  end
-
   context "already_exists?" do
 
     before(:each) do
@@ -48,7 +34,7 @@ describe Payable do
     end
 
     it 'already includes a discount' do
-      @payment.add(@discount)
+      add_to_order(@payment, @discount)
       expect(@payment.already_exists?(@discount)).to be_truthy
     end
 
@@ -63,16 +49,10 @@ describe Payable do
       @one = order_line_item
       @one.save
 
-      @payment.add(@one)
+      add_to_order(@payment, @one)
     end
 
     it "retrieves the first line item" do
-      line_item = @payment.line_item_matching(@one).line_item
-      expect(line_item).to eq @one
-    end
-
-    it "adding two of the same still returns the first line item" do
-      @payment.add(@one)
       line_item = @payment.line_item_matching(@one).line_item
       expect(line_item).to eq @one
     end
@@ -84,50 +64,40 @@ describe Payable do
       discount = create(:discount, event: @event, value: 100, kind: Discount::PERCENT_OFF)
       order = create(:order, event: @event, attendance: @attendance)
 
-      order.add(package)
-      order.add(discount)
+      add_to_order(order, package)
+      add_to_order(order, discount)
 
       expect(order.sub_total).to eq 0
       expect(order.total).to eq 0
-      expect(order.fee).to eq 0
+      expect(order.application_fee).to eq 0
     end
 
     it 'totals when the package has a value of 0' do
       package = create(:package, event: @event, initial_price: 0, at_the_door_price: 0)
       friday_dance = create(:line_item, event: @event, price: 25)
-      order = create(:order, event: @event, attendance: @attendance)
+      order = Order.new(host: @event, attendance: @attendance)
+      add_to_order(order, package)
+      add_to_order(order, friday_dance)
 
-      order.add(package)
-      order.add(friday_dance)
-
-      order.sub_total
       expect(order.payment_method).to eq "Cash"
       expect(order.sub_total).to eq 25
-      expect(order.fee.round(2)).to eq 0.19 # not applied
+      expect(order.application_fee.round(2)).to eq 0.19 # not applied
       expect(order.total).to eq 25
     end
 
     it "totals everything" do
-      item1 = order_line_item
-      item2 = order_line_item
-      item1.save
-      item2.save
-      @payment.add(item1)
-      @payment.add(item2, quantity: 2)
+      add_to_order(@payment, order_line_item)
+      add_to_order(@payment, order_line_item, quantity: 2)
 
       expect(@payment.total).to eq 15
     end
 
     it "has a discount" do
-      item1 = order_line_item
-      item2 = order_line_item
-      item1.save
-      item2.save
-      @payment.add(item1)
-      @payment.add(item2, quantity: 2)
+      add_to_order(@payment, order_line_item)
+      add_to_order(@payment, order_line_item, quantity: 2)
 
       discount = create(:discount, event: @event, value: 10, kind: Discount::DOLLARS_OFF)
-      @payment.add(discount)
+      add_to_order(@payment, discount)
 
       expect(@payment.total).to eq 5
     end
@@ -135,8 +105,10 @@ describe Payable do
     it 'never has a negative total' do
       discount = Discount.new(event: @event, name: 'test', value: 10000)
       discount.save
-      @payment.add(order_line_item)
-      @payment.add(discount)
+
+      add_to_order(@payment, order_line_item)
+      add_to_order(@payment, discount)
+
       expect(@payment.total).to eq 0
     end
   end
@@ -187,17 +159,17 @@ describe Payable do
 
     it "is the most expensive teir" do
       @payment.stub(:total).and_return(150)
-      @payment.fee.should == 150 * 0.0075
+      @payment.application_fee.should == 150 * 0.0075
     end
 
     it "is the middle teir" do
       @payment.stub(:total).and_return(25)
-      @payment.fee.should == 25 * 0.0075
+      @payment.application_fee.should == 25 * 0.0075
     end
 
     it "is the lowest teir" do
       @payment.stub(:total).and_return(10)
-      @payment.fee.should == 10 * 0.0075
+      @payment.application_fee.should == 10 * 0.0075
     end
 
   end
