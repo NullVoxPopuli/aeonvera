@@ -1,7 +1,5 @@
 module OrderOperations
   class Update < SkinnyControllers::Operation::Base
-    include ItemBuilder
-
     def run
       if allowed_to_update?
         pay if is_paying?
@@ -15,6 +13,14 @@ module OrderOperations
     end
 
     private
+
+    def allowed_to_update?
+      # need to check if this token is present in the params
+      unloggedin_token = params_for_action[:payment_token]
+      actual_token = model.payment_token
+
+      allowed? || unloggedin_token == actual_token
+    end
 
     def is_paying?
       params_for_action[:checkout_token].present?
@@ -38,7 +44,6 @@ module OrderOperations
     end
 
     def modify
-      build_items
       model.save
     end
 

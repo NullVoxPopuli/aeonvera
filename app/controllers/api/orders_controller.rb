@@ -55,13 +55,7 @@ class Api::OrdersController < APIController
       :payment_method, :checkout_token, :checkout_email, :check_number,
 
       # This is for when a user isn't logged in.
-      :payment_token,
-
-      order_line_items_attributes: [
-        :id, :line_item_id, :line_item_type,
-        :price, :quantity,
-        :partner_name, :dance_orientation, :size
-      ]
+      :payment_token
     )
 
     EmberTypeInflector.to_rails(whitelisted)

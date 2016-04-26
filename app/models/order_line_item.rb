@@ -5,6 +5,7 @@ class OrderLineItem < ActiveRecord::Base
   belongs_to :line_item, ->{ unscope(where: :deleted_at) }, polymorphic: true
 
   validates :line_item, presence: true
+  validates :line_item, host_matches: { with_host: 'order.host' }
   validates :order, presence: true
   validates :price, presence: true
   validates :quantity, presence: true

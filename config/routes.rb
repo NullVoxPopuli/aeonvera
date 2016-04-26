@@ -53,7 +53,7 @@ AeonVera::Application.routes.draw do
     # create/update is handled by orders' create/update
     # TODO: this kinda sucks, find a better way.
     # see UI code for why.
-    resources :order_line_items, ecept: [:create, :update]
+    resources :order_line_items
     resources :shirts
     resources :packages
     resources :discounts

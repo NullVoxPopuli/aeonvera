@@ -9,7 +9,6 @@ class Order < ActiveRecord::Base
   include OrderMembership
 
   belongs_to :host, polymorphic: true
-
 	belongs_to :event, class_name: Event.name,
 	 foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
 
@@ -39,7 +38,6 @@ class Order < ActiveRecord::Base
   validates :buyer_name, presence: true
   validates :host, presence: true
   validates :attendance, presence: true, if: 'host_type=="Event"'
-
 
   before_save do |instance|
     instance.check_paid_status

@@ -144,6 +144,8 @@ group :development, :development_public, :development_remote, :test do
   gem 'quiet_assets'
   # fast web server
   gem 'puma'
+  # linting
+  gem 'rubocop'
 end
 
 

@@ -29,7 +29,7 @@ class Api::EventAttendancesController < APIController
   end
 
   def update
-    render_model
+    render_model('housing_request,housing_provision,custom_field_responses')
   end
 
   private
@@ -74,8 +74,16 @@ class Api::EventAttendancesController < APIController
   end
 
   def update_event_attendance_params
-    blacklisted = [:host_id, :host_type]
-    create_event_attendance_params.reject{ |k, v| blacklisted.include?(k) }
+    whitelister = ActionController::Parameters.new(deserialized_params)
+    whitelister.permit(
+      # Attendance Attributes
+      :phone_number, :interested_in_volunteering,
+      :city, :state, :zip,
+      :dance_orientation,
+
+      # Relationships
+      :package_id, :level_id
+    )
   end
 
   def requesting_attendance_for_event?

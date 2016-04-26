@@ -57,6 +57,7 @@ module EventAttendanceOperations
   class Update < SkinnyControllers::Operation::Base
     def run
       model.update(params_for_action) if allowed?
+      model
     end
   end
 

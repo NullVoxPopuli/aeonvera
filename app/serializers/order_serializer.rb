@@ -2,15 +2,15 @@ class OrderSerializer < ActiveModel::Serializer
   type 'order'
 
   attributes :id,
-    :host_id, :host_type,
-    :paid_amount, :net_amount_received, :total_fee_amount,
-    :paid, :payment_method,
-    :host_name, :host_url,
-    :created_at, :user_email, :user_name,
-    :payment_received_at,
-    :total_in_cents
+             :host_id, :host_type,
+             :paid_amount, :net_amount_received, :total_fee_amount,
+             :paid, :payment_method,
+             :host_name, :host_url,
+             :created_at, :user_email, :user_name,
+             :payment_received_at,
+             :total_in_cents
 
-    # never render the payment_token
+  # never render the payment_token
 
   has_many :order_line_items
   belongs_to :host
@@ -48,6 +48,4 @@ class OrderSerializer < ActiveModel::Serializer
   def host_url
     object.host.url
   end
-
-
 end

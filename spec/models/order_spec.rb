@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Order do
 
   describe 'validations' do
+
     describe 'buyer_email' do
       it 'is invalid with no email' do
         o = create(:order, host: create(:organization))
