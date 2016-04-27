@@ -62,7 +62,7 @@ class EventAttendance < Attendance
   validates :event, presence: true
   # validates :attendee, presence: true
   validates :package, presence: true
-  validates :dance_orientation, presence: true
+  validates :dance_orientation, presence: true, if: ->(a){ a.event.ask_if_leading_or_following? }
   validates :level, presence: true, if: Proc.new {|a| (p = a.package) && p.requires_track? }
   validate :has_address, if: Proc.new {|a| !(a.event.present? && event.started?)}
   validate :has_phone_number, if: Proc.new { |a| a.interested_in_volunteering? }
