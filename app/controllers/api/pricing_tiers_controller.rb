@@ -1,13 +1,18 @@
 class Api::PricingTiersController < Api::EventResourceController
   private
 
+  def deserialized_params
+    ActiveModelSerializers::Deserialization
+      .jsonapi_parse(params)
+  end
+
   # The fields are named different on teh server than the client
   def update_pricing_tier_params
-    rp = ActiveModelSerializers::Deserialization
-      .jsonapi_parse(params, only: [
-        :increase_by_dollars,
-        :date, :increase_after_date,
-        :registrants, :increase_by])
+    whitelister = ActionController::Parameters.new(deserialized_params)
+    rp = whitelister.permit(
+      :increase_by_dollars,
+      :date, :increase_after_date,
+      :registrants, :increase_by)
 
     # This is gross
     rp[:increase_by_dollars] = rp[:increase_by] unless rp[:increase_by_dollars]
