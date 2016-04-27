@@ -3,7 +3,7 @@ module OrganizationLoader
     id = (id or params[:organization_id] or params[:id])
     begin
       @organization = current_user.organizations.find(id)
-    rescue ActiveRecord::RecordNotFound => e
+    rescue
       begin
         @organization = current_user.collaborated_organizations.find(id)
       rescue ActiveRecord::RecordNotFound => e

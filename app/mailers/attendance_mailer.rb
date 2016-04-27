@@ -1,6 +1,4 @@
 class AttendanceMailer < ActionMailer::Base
-  add_template_helper(RegisterHelper)
-
   default from: APPLICATION_CONFIG["support_email"]
 
   layout "email"

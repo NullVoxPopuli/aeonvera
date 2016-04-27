@@ -2,7 +2,7 @@
 
 - if [Payable::Methods::STRIPE, Payable::Methods::PAYPAL].include?(order.payment_method)
   - if event.has_payment_processor?(Integration::STRIPE)
-    = form_tag(payments_path(host_id: attendance.host.id, host_type: attendance.host.class.name, order_id: order.id)) do
+    = form_tag(payments_path(host_id: attendance.host.id, host_type: attendance.host.class.name, order_id: order.id)) do      
       = stripe_checkout_script(event.name, order.total)
 span.small
   span<> Paying with:
