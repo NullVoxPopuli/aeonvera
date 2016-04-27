@@ -1,1 +1,1 @@
-rake db:drop; heroku pg:pull DATABASE_URL aeonvera_development --app aeonvera; rake db:migrate
+rake db:drop; PGUSER=lprestonsegoiii PGPASSWORD=1234 heroku pg:pull DATABASE_URL aeonvera_development --app aeonvera; rake db:migrate

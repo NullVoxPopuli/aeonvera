@@ -22,20 +22,18 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
     sign_up_params.merge(update_params)
   end
 
+  def deserialized_params
+    ActiveModelSerializers::Deserialization.jsonapi_parse(params)
+  end
+
   def sign_up_params
-    params
-      .require(:data)
-      .require(:attributes)
-      .permit(
+    whitelister = ActionController::Parameters.new(deserialized_params)
+    whitelister.permit(
         :first_name, :last_name,
         :email,
         :password,
         :password_confirmation,
-        :time_zone
-        # don't worry about null / '' fields
-        # all fields on a user are required,
-        # yet the password fields are optional
-      ).select{ |k, v| v.present? }
+        :time_zone)
   end
 
 end
