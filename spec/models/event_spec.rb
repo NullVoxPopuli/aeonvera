@@ -1,6 +1,18 @@
 require "spec_helper"
 
 describe Event do
+  describe '#url' do
+    it 'is no longer a subdomain' do
+      event = Event.new(subdomain: 'test123')
+      expect(event.url).to end_with('test123')
+    end
+
+    it 'starts with the domain' do
+      event = Event.new(subdomain: 'test123')
+      expect(event.url).to start_with '//' + APPLICATION_CONFIG[:domain][Rails.env]
+    end
+  end
+
   context "aggregates" do
     context "#shirts_sold" do
 

@@ -30,7 +30,8 @@ module HasDomain
   end
 
   def url
-    "//#{subdomain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
+    # "//#{subdomain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
+    "//#{APPLICATION_CONFIG[:domain][Rails.env]}/#{subdomain}"
   end
 
   private

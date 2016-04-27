@@ -7,13 +7,9 @@ class Api::IntegrationsController < Api::ResourceController
   end
 
   def create_integration_params
-    ap deserialized_params
     whitelister = ActionController::Parameters.new(deserialized_params)
     whitelisted = whitelister.permit(
       :authorization_code, :kind, :owner_id, :owner_type)
-
-    ap whitelisted
-    ap EmberTypeInflector.to_rails(whitelisted)
 
     type = whitelisted[:owner_type]
     type = type.include?('event') ? 'Event' : 'Organization'
