@@ -7,14 +7,8 @@ module OrganizationLoader
       begin
         @organization = current_user.collaborated_organizations.find(id)
       rescue ActiveRecord::RecordNotFound => e
-        begin
-          if Subdomain.matches?(request)
-            @organization = Organization.find_by_domain(request.subdomain)
-          end
-        rescue ActiveRecord::RecordNotFound => e
-          # user has nothing to do with the requested event
-          redirect_to action: "index"
-        end
+        # user has nothing to do with the requested event
+        redirect_to action: "index"
       end
     end
 

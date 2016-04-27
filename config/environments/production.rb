@@ -80,10 +80,6 @@ AeonVera::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-
-  # error and issue reporting to github
-  config.middleware.use('PartyFoul::Middleware')
-
   config.action_mailer.default_url_options = { :host => 'aeonvera.com' }
 
   config.roadie.provider = Roadie::FilesystemProvider.new('/assets', Rails.root.join('public', 'assets'))
