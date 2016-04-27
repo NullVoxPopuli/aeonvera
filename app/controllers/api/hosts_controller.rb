@@ -45,7 +45,7 @@ class Api::HostsController < APIController
   # (though, the TOS to say that registration information is exposed
   #  to event organizers.)
   def include_string
-    klass = host_from_subdomain
+    klass = host_from_subdomain.class
     SHARED_RELATIONSHIPS + (
       if klass == Organization
         ORGANIZATION_RELATIONSHIPS

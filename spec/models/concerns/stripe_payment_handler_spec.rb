@@ -92,7 +92,7 @@ describe StripePaymentHandler do
       expect(o.paid_amount).to eq 57.60
       expect(o.net_amount_received).to eq 55.20
       expect(o.total_fee_amount).to eq 2.40
-
+      expect(o.payment_received_at).to eq Time.at(1439853046)
     end
 
   end

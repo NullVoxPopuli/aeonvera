@@ -6,7 +6,7 @@ class Api::HousingProvisionsController < Api::EventResourceController
       params, polymorphic: [:attendance])
   end
 
-  def update_housing_request_params
+  def update_housing_provision_params
     whitelister = ActionController::Parameters.new(deserialized_params)
     whitelister.permit(
       :housing_capacity, :number_of_showers, :can_provide_transportation,
@@ -15,7 +15,7 @@ class Api::HousingProvisionsController < Api::EventResourceController
     )
   end
 
-  def create_housing_request_params
+  def create_housing_provision_params
     whitelister = ActionController::Parameters.new(deserialized_params)
     whitelister.permit(
       :housing_capacity, :number_of_showers, :can_provide_transportation,

@@ -2,6 +2,7 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
 
   # move shirt data from attendance metadata and from the AttendanceLineItem to the order_line_items
   def up
+    OrderLineItem.reset_column_information
     Attendance.all.each do |a|
       # these are existing order_line_items that corespond to shirts
       ordered_shirts = a.ordered_shirts

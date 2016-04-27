@@ -15,6 +15,7 @@ class Integration < ActiveRecord::Base
 
   validates :kind, presence: true
   validates :owner, presence: true
+  validate :validate_publishable_key
 
 
   # allows public access to attr_encrypted (which is protected)
@@ -25,5 +26,14 @@ class Integration < ActiveRecord::Base
 
   def self.options
     attr_encrypted_options
+  end
+
+  private
+
+  def validate_publishable_key
+    if kind == Integration::STRIPE
+      key = config.try(:[], 'stripe_publishable_key')
+      return !!key
+    end
   end
 end

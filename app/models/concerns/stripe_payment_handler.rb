@@ -1,5 +1,6 @@
 # TODO: make the payment handlers polymorphic,
 # separate classes, but not models
+# TODO: service?
 module StripePaymentHandler
   extend ActiveSupport::Concern
 
@@ -9,7 +10,13 @@ module StripePaymentHandler
     # off of the data on set by this call .
     # charge object is stored in metadata under the
     # 'details' key.
-    self.set_payment_details(JSON.parse(charge.to_json))
+    # TODO: why is this being converted to and from JSON?
+    json = JSON.parse(charge.to_json)
+    self.set_payment_details(json)
+
+    if timeNum = json['created']
+      self.payment_received_at = Time.at(timeNum)
+    end
 
     self.paid = charge.paid
     self.payment_method = Payable::Methods::STRIPE

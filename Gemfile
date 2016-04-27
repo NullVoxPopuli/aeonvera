@@ -83,7 +83,7 @@ gem 'sass-rails'
 gem 'foundation-rails'
 gem "font-awesome-rails"
 gem 'uglifier'#, '>= 1.3.0'
-gem "non-stupid-digest-assets"
+gem 'sprockets-rails', '2.3.3'
 
 #########
 # Templating

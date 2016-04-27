@@ -9,7 +9,7 @@ class IntegrationSerializer < ActiveModel::Serializer
 
   def publishable_key
     if object.kind == Integration::STRIPE
-      return object.config['stripe_publishable_key']
+      return object.config.try(:[], 'stripe_publishable_key')
     end
   end
 

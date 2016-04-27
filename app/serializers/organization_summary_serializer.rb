@@ -7,10 +7,10 @@ class OrganizationSummarySerializer < ActiveModel::Serializer
     :unpaid_past_month, :new_memberships_past_month,
     :logo_url_thumb
 
-  has_many :attendances
+  has_many :orders
 
   def attendances
-    object.attendances.limit(5)
+    object.orders.limit(5)
   end
 
   def logo_url_thumb
