@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-# ruby (ENV['RUBY_VERSION'] || '2.3.0')
+ruby '2.3.0'
+
 ##########
 # Core
 ##########
