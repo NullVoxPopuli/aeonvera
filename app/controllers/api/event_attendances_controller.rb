@@ -3,6 +3,8 @@ class Api::EventAttendancesController < APIController
   include EventLoader
   self.model_class = EventAttendance
 
+  before_filter :must_be_logged_in
+
   def index
     return render_attendance_for_event if requesting_attendance_for_event?
 
