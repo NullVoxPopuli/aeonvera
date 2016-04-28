@@ -19,6 +19,7 @@ module EmberTypeInflector
   end
 
   def ember_type_to_rails(key)
+    return unless key
     key = key.underscore.classify
 
     non_line_items = [

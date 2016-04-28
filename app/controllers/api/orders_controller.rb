@@ -32,6 +32,7 @@ class Api::OrdersController < APIController
     whitelisted = whitelister.permit(
       :attendance_id, :host_id, :host_type, :payment_method,
       :user_email, :user_name,
+      :payment_token,
 
       order_line_items_attributes: [
         :line_item_id, :line_item_type,

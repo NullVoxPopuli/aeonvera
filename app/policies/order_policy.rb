@@ -35,6 +35,6 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   end
 
   def user_id
-    user&.id
+    user.is_a?(User) && user.id
   end
 end
