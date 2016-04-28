@@ -38,12 +38,14 @@
     end
   end
 
-  def not_found
+  def not_found(id_key = nil)
+    id = params[:id]
+    id = params[id_key] || params[:id] if id_key
     render json: {
         jsonapi: { version: '1.0' },
         errors: [
           {
-            id: params[:id],
+            id: id,
             code: 404,
             title: 'not-found',
             detail: "Resource not found",

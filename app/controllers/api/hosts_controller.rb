@@ -3,19 +3,24 @@ class Api::HostsController < APIController
   EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions'.freeze
   ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'.freeze
 
+  before_action :ensure_host
+
   # TODO: is this ever used?
   def index
     render json: [host_from_subdomain], each_serializer: each_serializer
   end
 
   def show
-    return render json: {}, status: 404 unless host_from_subdomain
     render json: host_from_subdomain,
            include: include_string,
            serializer: each_serializer
   end
 
   private
+
+  def ensure_host
+    not_found(:subdomain) unless host_from_subdomain
+  end
 
   def host_from_subdomain
     @host ||= HostOperations::Read.new(current_user, host_params).run

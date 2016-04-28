@@ -12,9 +12,19 @@ describe Api::HostsController, type: :controller do
       expect(data.count).to eq 1
       expect(data.first['attributes']['domain']).to include(event.subdomain)
     end
+
+    it 'is not found' do
+      get :index, subdomain: 'whatever'
+      expect(response.status).to eq 404
+    end
   end
 
   context 'show' do
+    it 'is not found' do
+      get :show, id: 'whatever', subdomain: 'whatever'
+      expect(response.status).to eq 404
+    end
+
     it 'returns the host for the subdomain' do
       event = create_event
       get :show, id: 0, subdomain: event.subdomain
