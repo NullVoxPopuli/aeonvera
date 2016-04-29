@@ -48,20 +48,20 @@ describe Restraint do
     it 'is applied to an order without the assigned package' do
       @attendance.package = wrong_package = create(:package, initial_price: 34, event: event)
       @attendance.save!
-      @order = create(:order,
+      order = create(:order,
         attendance: @attendance,
         host: event,
         user: @attendance.attendee
       )
 
-      add_to_order(@order, wrong_package)
-      oli = add_to_order(@order, discount)
-
-      discounts = @order.line_items.where(line_item_type: Discount.name)
-      expect(discounts).to be_empty
+      add_to_order(order, wrong_package)
+      oli = add_to_order(order, discount)
+      expect(oli).to_not be_valid
+      remove_invalid_items(order) # simulate not saving
+      expect(order.order_line_items.count).to eq 1
 
       # verify
-      actual = @order.total
+      actual = order.total
       expected = wrong_package.initial_price
       expect(actual).to eq expected
     end

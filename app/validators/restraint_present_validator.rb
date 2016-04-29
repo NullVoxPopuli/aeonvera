@@ -7,6 +7,8 @@ class RestraintPresentValidator < ActiveModel::EachValidator
     order = record.order
     line_item = record.line_item
 
+    # restraint.restrictable == line_item
+    # restraint.dependable == what is constraining
     restraints = line_item.try(:restraints)
 
     if restraints.present?
@@ -18,7 +20,9 @@ class RestraintPresentValidator < ActiveModel::EachValidator
         end
       end
 
-      record.errors.add(attribute, "#{attribute}'s constraint does not exist in the order")
+      unless constrained_object_present
+        record.errors.add(attribute, "#{attribute}'s constraint does not exist in the order")
+      end
     end
   end
 

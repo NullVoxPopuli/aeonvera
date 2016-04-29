@@ -135,7 +135,8 @@ module Payable
       remaining_discounts << discount
     }
 
-    order_line_items.each do |line_item|
+    valid_order_line_items = order_line_items.select{|o| o.valid? }
+    valid_order_line_items.each do |line_item|
       if (object = line_item.line_item).is_a?(Discount)
         amount = amount_after_discount(
           amount,

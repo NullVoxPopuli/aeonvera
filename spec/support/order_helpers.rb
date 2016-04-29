@@ -8,6 +8,14 @@ def add_to_order(order, line_item, quantity: 1, price: 0)
     price: price,
     quantity: quantity)
 
-  order.order_line_items << oli if oli.valid?
+  order.order_line_items << oli
   oli
+end
+
+# simulates not saving
+def remove_invalid_items(order)
+  items = order.order_line_items
+  items = items.select{ |o| !o.valid? }
+
+  order.order_line_items.delete(items)
 end

@@ -42,15 +42,6 @@ describe OrderOperations::Update do
         operation.run
       end
 
-      it 'calls update' do
-        @order = create(:order, host: event, attendance: attendance)
-        operation = OrderOperations::Update.new(nil, {id: @order.id})
-        allow(operation).to receive(:allowed?){ true }
-        expect(operation).to receive(:update)
-
-        operation.run
-      end
-
       it 'is not allowed' do
         skip('what conditions can an order not be updated?')
       end
@@ -62,10 +53,15 @@ describe OrderOperations::Update do
         @order.save
 
         expect(@order.paid).to eq false
-        operation = OrderOperations::Update.new(nil, {id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10})
+        operation = OrderOperations::Update.new(nil, {
+          id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10,
+          checkout_token: 'cash' # doesn't super matter, cause the control flow is based
+          # on the payment_method (which is an actual property)
+        })
+        expect(operation).to receive(:pay).and_call_original
 
         expect{
-            operation.run
+            model = operation.run
         }.to change(ActionMailer::Base.deliveries, :count).by 1
 
       end
@@ -80,7 +76,7 @@ describe OrderOperations::Update do
         package = create(:package, event: event)
         integration = create_integration(owner: event)
         @order = create(:order, host: event, attendance: attendance)
-        @order.add(package)
+        add_to_order(@order, package)
 
         @params = {
           id: @order.id,
@@ -117,11 +113,13 @@ describe OrderOperations::Update do
 
       context 'for a stripe order' do
 
-        context 'errors' do
+        context 'only updates the model' do
           it 'when no checkout token is provided' do
             @params.delete(:checkout_token)
-            order = @operation.run
-            expect(order.errors).to be_present
+
+            expect(@operation).to_not receive(:pay)
+            expect(@operation).to receive(:modify)
+            @operation.run
           end
 
           it 'when the stripe charge fails' do
