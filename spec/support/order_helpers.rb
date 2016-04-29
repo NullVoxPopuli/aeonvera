@@ -8,5 +8,6 @@ def add_to_order(order, line_item, quantity: 1, price: 0)
     price: price,
     quantity: quantity)
 
-  order.order_line_items << oli
+  order.order_line_items << oli if oli.valid?
+  oli
 end

@@ -6,7 +6,7 @@ describe Restraint do
     let(:event){ create(:event) }
     let(:package){ create(:package, event: event) }
     let(:discount){
-      create(:discount, event: event,
+      create(:discount, host: event,
       kind: Discount::PERCENT_OFF, value: 100 )
     }
 
@@ -36,19 +36,17 @@ describe Restraint do
         user: @attendance.attendee
       )
 
-      @order.add(package)
-      # add discount to order
-      @order.add(discount)
+      add_to_order(@order, package)
+      add_to_order(@order, discount)
 
       # verify
-      @order.reload
       actual = @order.total
       expected = 0
       expect(actual).to eq expected
     end
 
     it 'is applied to an order without the assigned package' do
-      @attendance.package = wrong_package = create(:package, initial_price: 34)
+      @attendance.package = wrong_package = create(:package, initial_price: 34, event: event)
       @attendance.save!
       @order = create(:order,
         attendance: @attendance,
@@ -56,14 +54,14 @@ describe Restraint do
         user: @attendance.attendee
       )
 
-      @order.add(wrong_package)
-      @order.add(discount)
+      add_to_order(@order, wrong_package)
+      oli = add_to_order(@order, discount)
+      expect(oli).to be_valid
 
       discounts = @order.line_items.where(line_item_type: Discount.name)
       expect(discounts).to be_empty
 
       # verify
-      @order.reload
       actual = @order.total
       expected = wrong_package.initial_price
       expect(actual).to eq expected
@@ -77,13 +75,14 @@ describe Restraint do
         host: event,
         user: @attendance.attendee
       )
-      @order.add(package)
+
+      add_to_order(@order, package)
       # add other stuff
-      competition = create(:competition, event: event)
-      @order.add(competition)
+      competition = create(:competition, event: event, kind: Competition::SOLO_JAZZ)
+      oli = add_to_order(@order, competition)
 
       # add discount to order
-      @order.add(discount)
+      add_to_order(@order, discount, price: 0 - package.current_price)
 
       # verify
       actual = @order.total
