@@ -95,7 +95,7 @@ module Payable
   end
 
   def already_has_discount?
-    self.line_items.select{|line_item|
+    order_line_items.select{|line_item|
       line_item.line_item_type == Discount.name
     }.count > 0
   end
@@ -105,7 +105,7 @@ module Payable
   end
 
   def line_item_matching(object)
-    self.line_items.select{|line_item|
+    order_line_items.select{|line_item|
       line_item.line_item_id == object.id &&
       line_item.line_item_type == object.class.name
     }.first
