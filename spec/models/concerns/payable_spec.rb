@@ -23,13 +23,13 @@ describe Payable do
     @event = create(:event, make_attendees_pay_fees: false)
     @attendance = create(:attendance, event: @event)
     @attendance.save!
-    @payment = create(:order, event: @event, attendance: @attendance)
+    @payment = create(:order, host: @event, attendance: @attendance)
   end
 
   context "already_exists?" do
 
     before(:each) do
-      @discount = Discount.new(event: @event, name: 'test', value: 3)
+      @discount = Discount.new(host: @event, name: 'test', value: 3)
       @discount.save
     end
 
@@ -61,8 +61,8 @@ describe Payable do
   context "total" do
     it 'is zero when the subtotal is zero' do
       package = create(:package, event: @event)
-      discount = create(:discount, event: @event, value: 100, kind: Discount::PERCENT_OFF)
-      order = create(:order, event: @event, attendance: @attendance)
+      discount = create(:discount, host: @event, value: 100, kind: Discount::PERCENT_OFF)
+      order = create(:order, host: @event, attendance: @attendance)
 
       add_to_order(order, package)
       add_to_order(order, discount)
@@ -96,14 +96,14 @@ describe Payable do
       add_to_order(@payment, order_line_item)
       add_to_order(@payment, order_line_item, quantity: 2)
 
-      discount = create(:discount, event: @event, value: 10, kind: Discount::DOLLARS_OFF)
+      discount = create(:discount, host: @event, value: 10, kind: Discount::DOLLARS_OFF)
       add_to_order(@payment, discount)
 
       expect(@payment.total).to eq 5
     end
 
     it 'never has a negative total' do
-      discount = Discount.new(event: @event, name: 'test', value: 10000)
+      discount = Discount.new(host: @event, name: 'test', value: 10000)
       discount.save
 
       add_to_order(@payment, order_line_item)
