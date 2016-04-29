@@ -56,7 +56,6 @@ describe Restraint do
 
       add_to_order(@order, wrong_package)
       oli = add_to_order(@order, discount)
-      expect(oli).to be_valid
 
       discounts = @order.line_items.where(line_item_type: Discount.name)
       expect(discounts).to be_empty
