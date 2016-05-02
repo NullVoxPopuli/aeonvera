@@ -18,7 +18,6 @@ describe 'Subdomains not allowed', type: :request do
     end
 
     it 'removes the path' do
-      pending('currently, ember handles this, but how do we do it in rails?')
       get "http://subdomain3.#{domain}/this/does/not/matter"
       expect(response.status).to eq 302
       expect(response.location).to eq "http://#{domain}/subdomain3/"
@@ -29,5 +28,4 @@ describe 'Subdomains not allowed', type: :request do
       expect(response.status).to_not eq 302
     end
   end
-
 end

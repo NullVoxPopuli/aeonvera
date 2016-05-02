@@ -13,14 +13,19 @@ class MarketingController < ActionController::Base
   private
 
   def redirect_if_subdomain
-    domain = APPLICATION_CONFIG['domain'][Rails.env]
-    url = request.url
-    protocol, url = request.url.split('://')
-    subdomain = url.sub('.' + domain, '').sub('/', '')
-
-    if subdomain != 'www'
-      redirect_to "#{protocol}://#{domain}/#{subdomain}/"
+    unless request.subdomain.include? 'www'
+      redirect_to redirect_url_for(request.url)
     end
+  end
+
+  def current_domain
+    APPLICATION_CONFIG['domain'][Rails.env]
+  end
+
+  def redirect_url_for(url, domain = current_domain)
+    protocol, url = url.split('://')
+    subdomain, path = url.split('.' + domain)
+    "#{protocol}://#{domain}/#{subdomain}/"
   end
 
 end
