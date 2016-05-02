@@ -12,7 +12,12 @@
 
  ------------------------------
 
-[![Build Status](https://travis-ci.org/NullVoxPopuli/aeonvera.svg)](https://travis-ci.org/NullVoxPopuli/aeonvera)
+| Branch | Build Status |
+| --- | ---- |
+| master | [![Build Status](https://travis-ci.org/NullVoxPopuli/aeonvera.svg)](https://travis-ci.org/NullVoxPopuli/aeonvera) |
+| production | [![Build Status](https://travis-ci.org/NullVoxPopuli/aeonvera.svg?branch=production)](https://travis-ci.org/NullVoxPopuli/aeonvera) |
+  
+Quality:  
 [![Code Climate](https://codeclimate.com/github/NullVoxPopuli/aeonvera/badges/gpa.svg)](https://codeclimate.com/github/NullVoxPopuli/aeonvera)
 [![codebeat badge](https://codebeat.co/badges/371b7d4d-64fe-4375-8e0b-4a505ee2b2ea)](https://codebeat.co/projects/github-com-nullvoxpopuli-aeonvera)
 [![Test Coverage](https://codeclimate.com/github/NullVoxPopuli/aeonvera/badges/coverage.svg)](https://codeclimate.com/github/NullVoxPopuli/aeonvera/coverage)
