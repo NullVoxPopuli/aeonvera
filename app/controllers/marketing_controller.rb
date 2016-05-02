@@ -14,7 +14,8 @@ class MarketingController < ActionController::Base
 
   def redirect_if_subdomain
     unless request.subdomain.include? 'www'
-      redirect_to redirect_url_for(request.url)
+      url = redirect_url_for(request.url)
+      redirect_to url if url
     end
   end
 
@@ -24,7 +25,15 @@ class MarketingController < ActionController::Base
 
   def redirect_url_for(url, domain = current_domain)
     protocol, url = url.split('://')
+
+    if url.nil?
+      url = protocol
+      protocol = 'https'
+    end
+
+    return if url.starts_with?(domain)
     subdomain, path = url.split('.' + domain)
+
     "#{protocol}://#{domain}/#{subdomain}/"
   end
 

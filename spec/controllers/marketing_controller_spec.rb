@@ -13,11 +13,28 @@ describe MarketingController do
 
       context env_name do
 
-
         it 'redirects' do
           requested_url = "https://subdomain1.#{domain}"
           result = controller.send(:redirect_url_for, requested_url, domain)
           expect(result).to eq "https://#{domain}/subdomain1/"
+        end
+
+        it 'works without a protocol' do
+          requested_url = "subdomain2.#{domain}"
+          result = controller.send(:redirect_url_for, requested_url, domain)
+          expect(result).to eq "https://#{domain}/subdomain2/"
+        end
+
+        it 'does nothing when there is no subdomain' do
+          requested_url = "http://#{domain}"
+          result = controller.send(:redirect_url_for, requested_url, domain)
+          expect(result).to eq nil
+        end
+
+        it 'does nothing when there is a path and no subdomain' do
+          requested_url = "http://#{domain}/path/to/something"
+          result = controller.send(:redirect_url_for, requested_url, domain)
+          expect(result).to eq nil
         end
 
         it 'respects the protocol' do

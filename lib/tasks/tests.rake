@@ -11,11 +11,13 @@ if !(Rails.env.production? || Rails.env.staging?)
 
       task.pattern = [
         'spec/controllers/api',
+        'spec/controllers/marketing_controller_spec.rb',
         'spec/mailers',
         'spec/models',
         'spec/operations',
         'spec/policies',
-        'spec/services'
+        'spec/services',
+        'spec/requests'
       ]
     end
 
