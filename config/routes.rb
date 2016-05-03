@@ -93,19 +93,9 @@ AeonVera::Application.routes.draw do
     post 'stripe/webhook', to: 'stripe#webhook'
   end
 
-  resources :orders do
-    collection do
-      get :paid
-      get :cancelled
-      get :cancel
-      get :ipn
-    end
-  end
-
 
   get 'users' => redirect("/")
 
-  resources :payments
   devise_for :users
   devise_scope :user do
     resources :confirmations # confirming email
