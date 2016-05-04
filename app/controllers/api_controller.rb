@@ -12,7 +12,6 @@
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
-
   protected
 
   def render_model(include_param = nil)
@@ -21,6 +20,26 @@
     else
       render json: model, include: include_param
     end
+  end
+
+  def deserialize_params(polymorphic: [], embedded: [])
+    ActiveModelSerializers::Deserialization
+      .jsonapi_parse(params, embedded: embedded, polymorphic: polymorphic)
+  end
+
+  # wrapper around normal strong parameters that includes Deserialization
+  # for JSON API parameters.
+  # all parameters hitting this controller should be JSON API formatted.
+  def whitelistable_params(polymorphic: [], embedded: [])
+    deserialized = deserialize_params(
+      polymorphic: polymorphic,
+      embedded: embedded
+    )
+
+    whitelister = ActionController::Parameters.new(deserialized)
+    whitelister = yield(whitelister) if block_given?
+
+    EmberTypeInflector.to_rails(whitelister)
   end
 
   def must_be_logged_in

@@ -28,7 +28,7 @@ describe Api::UsersController, type: :controller do
       force_login(user)
 
       first = user.first_name + ' updated'
-      patch :update,  { id: user.id, user: { first_name: first, current_password: user.password } }
+      patch :update,  { id: user.id, data: { attributes: { first_name: first, current_password: user.password } } }
       json = JSON.parse(response.body)
       first_name_field = json['data']['attributes']['first-name']
 
@@ -37,7 +37,7 @@ describe Api::UsersController, type: :controller do
 
     it 'user is not logged in' do
       first = user.first_name + ' updated'
-      patch :update,  { id: user.id, user: { first_name: first, current_password: user.password } }
+      patch :update,  { id: user.id, data: { attributes: { first_name: first, current_password: user.password } } }
       json = JSON.parse(response.body)
 
       expect(json['errors']).to be_present
@@ -47,7 +47,7 @@ describe Api::UsersController, type: :controller do
       force_login(user)
 
       expect{
-        patch :update,  { id: user.id, user: { password: 'wutwutwut', password_confirmation: 'wutwutwut' } }
+        patch :update,  { id: user.id, data: { attributes: { password: 'wutwutwut', password_confirmation: 'wutwutwut' } } }
       }.to_not change(User.find(user.id), :encrypted_password)
     end
 
@@ -55,7 +55,7 @@ describe Api::UsersController, type: :controller do
       force_login(user)
       old_password = user.encrypted_password
 
-      patch :update,  { id: user.id, user: { password: 'wutwutwut', password_confirmation: 'wutwutwut', current_password: user.password } }
+      patch :update,  { id: user.id, data: { attributes: { password: 'wutwutwut', password_confirmation: 'wutwutwut', current_password: user.password } } }
 
       new_password = user.reload.encrypted_password
 

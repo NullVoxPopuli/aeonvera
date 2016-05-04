@@ -10,21 +10,33 @@ class Api::UsersController < Api::ResourceController
   private
 
   def update_user_params
-    user_params.merge(
-      current_password: params[:user].try(:[], :current_password)
+    whitelisted_params_helper(
+      :first_name, :last_name,
+      :email,
+      :password,
+      :password_confirmation,
+      :time_zone,
+      :current_password
     )
   end
 
   def user_params
-    params[:user].permit(
+    whitelisted_params_helper(
       :first_name, :last_name,
       :email,
       :password,
       :password_confirmation,
       :time_zone
-      # don't worry about null / '' fields
-      # all fields on a user are required,
-      # yet the password fields are optional
-    ).select{ |k, v| v.present? }
+    )
+  end
+
+  def whitelisted_params_helper(*list)
+    allowed_params = whitelistable_params do |whitelister|
+      whitelister.permit(list)
+    end
+    # don't worry about null / '' fields
+    # all fields on a user are required,
+    # yet the password fields are optional
+    allowed_params.select { |_, v| v.present? }
   end
 end
