@@ -96,7 +96,7 @@ AeonVera::Application.routes.draw do
 
   get 'users' => redirect("/")
 
-  devise_for :users
+  devise_for :users, skip: [:sessions]
   devise_scope :user do
     resources :confirmations # confirming email
   end
