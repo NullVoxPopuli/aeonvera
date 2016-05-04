@@ -20,5 +20,4 @@ class Api::ResourceController < APIController
   def destroy
     render json: model
   end
-
 end

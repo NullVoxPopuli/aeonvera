@@ -1,15 +1,15 @@
 module UserOperations
   class Update < SkinnyControllers::Operation::Base
     def run
-      return unless allowed?
-      model.update_with_password(model_params)
-      model
+      return unless allowed_for?(current_user)
+      current_user.update_with_password(model_params)
+      current_user
     end
   end
 
   class Delete < SkinnyControllers::Operation::Base
     def run
-      if allowed?
+      if allowed_for?(current_user)
         # TODO: maybe provide a link to the registered events
         # so that they can cancel if they *really* want to cancel their account.
         # alternatively, just change the wording to 'deactivate', and change the

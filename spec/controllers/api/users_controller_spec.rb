@@ -28,7 +28,7 @@ describe Api::UsersController, type: :controller do
       force_login(user)
 
       first = user.first_name + ' updated'
-      patch :update,  { id: user.id, data: { attributes: { first_name: first, current_password: user.password } } }
+      patch :update,  { id: 'current-user', data: { attributes: { first_name: first, current_password: user.password } } }
       json = JSON.parse(response.body)
       first_name_field = json['data']['attributes']['first-name']
 
@@ -49,6 +49,17 @@ describe Api::UsersController, type: :controller do
       expect{
         patch :update,  { id: user.id, data: { attributes: { password: 'wutwutwut', password_confirmation: 'wutwutwut' } } }
       }.to_not change(User.find(user.id), :encrypted_password)
+    end
+
+    it 'ignores the id when a different id is passed' do
+      force_login(user)
+
+      first = user.first_name + ' updated'
+      patch :update,  { id: user.id + 1, data: { attributes: { first_name: first, current_password: user.password } } }
+      json = JSON.parse(response.body)
+      first_name_field = json['data']['attributes']['first-name']
+
+      expect(first_name_field).to eq first
     end
 
     it 'updates password' do
