@@ -1,40 +1,11 @@
+# Main entry point to the app / ember
 class MarketingController < ActionController::Base
-  before_action :redirect_if_subdomain
-
   def index
     # get ember from redis
     ember_index = APICache.store.get('aeonvera:index:current-content')
 
-    raise StandardError.new('Ember not deployed!!!') unless ember_index
+    raise StandardError, 'Ember not deployed!!!' unless ember_index
 
     render inline: ember_index
   end
-
-  private
-
-  def redirect_if_subdomain
-    unless request.subdomain.include? 'www'
-      url = redirect_url_for(request.url)
-      redirect_to url if url
-    end
-  end
-
-  def current_domain
-    APPLICATION_CONFIG['domain'][Rails.env]
-  end
-
-  def redirect_url_for(url, domain = current_domain)
-    protocol, url = url.split('://')
-
-    if url.nil?
-      url = protocol
-      protocol = 'https'
-    end
-
-    return if url.starts_with?(domain)
-    subdomain, path = url.split('.' + domain)
-
-    "#{protocol}://#{domain}/#{subdomain}/"
-  end
-
 end

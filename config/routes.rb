@@ -1,5 +1,12 @@
 AeonVera::Application.routes.draw do
 
+  constraints(Subdomain) do
+     match '(*any)' => redirect { |params, request|
+      url = request.url
+      new_url = Subdomain.redirect_url_for(url)
+     }, via: [:get]
+   end
+
   # for our frontend ui.
   # this should also enable the creation of
   # native mobile apps for android / iphone / whatever

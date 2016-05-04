@@ -14,46 +14,6 @@ class ApplicationController < ActionController::Base
 
   before_action :set_time_zone
 
-  # # Receives the redirect request from the admin Assume Control link.
-  # def assume_control
-  #   user_id = Cache.get(params[:token])
-  #
-  #   if user_id.blank?
-  #     flash[:alert] = "User not found or token expired."
-  #     return redirect_to(root_url)
-  #   end
-  #
-  #   begin
-  #     user = User.find(user_id)
-  #   rescue => e
-  #     flash[:alert] = "User not found."
-  #     return redirect_to(root_url)
-  #   end
-  #
-  #   sign_in(user, :bypass => true)
-  #
-  #   flash[:notice] = "You are now #{user.name}."
-  #
-  #   return redirect_to(root_url)
-  # end
-
-  def back
-    url = request.referer
-    # ensure previous URL is not the current URL
-    if url && url.include?(APPLICATION_CONFIG['domain'][Rails.env])
-      url = url.gsub(/\/([^\/]+)\/?$/, '')
-    end
-
-    url = url || root_url
-    # ensure route exists
-    unless RouteRecognizer.is_route?(url)
-      url = root_url
-    end
-
-    redirect_to url
-  end
-
-
   protected
 
   def devise_parameter_sanitizer
@@ -62,15 +22,6 @@ class ApplicationController < ActionController::Base
     else
       super
     end
-  end
-
-  # pulls all routes that are scoped to subdomains
-  # @return [Array] list of routes defined on the subdomains
-  def self.subdomain_routes
-    @subdomain_routes ||= Rails.application.routes.routes.select{ |route|
-      constraints = route.app.try(:constraints)
-      constraints.try(:include?, Subdomain)
-    }
   end
 
   private
