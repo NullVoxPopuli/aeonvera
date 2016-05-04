@@ -102,11 +102,16 @@ AeonVera::Application.routes.draw do
 
 
   get 'users' => redirect("/")
+  get 'confirmations/:id', to: 'users/confirmations#show'
+  post 'confirmations', to: 'users/confirmations#create'
 
-  devise_for :users, skip: [:sessions]
-  devise_scope :user do
-    resources :confirmations # confirming email
-  end
+  # namespace :users do
+  #   resources :confirmations, controller: 'users/confirmations'
+  # end
+  #
+  # devise_for :users, skip: [:sessions], controllers: {
+  #   confirmations: "users/confirmations"
+  # }
 
 
   namespace :auth do
