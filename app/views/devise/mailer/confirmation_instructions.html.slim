@@ -1,0 +1,14 @@
+= content_for :header do
+  | Confirm Your Email
+= content_for :body do
+  p = "Welcome #{@resource.name}!"
+  p You can confirm your account email through the link below:
+  - domain = APPLICATION_CONFIG['domain'][Rails.env]
+  - protocol = Rails.env.development? ? 'http://' : 'https://'
+  - path = '/confirmation?confirmation_token=' + @resource.confirmation_token
+  - url = protocol + domain + path
+  p = link_to 'Confirm my account', url
+  p If you need to, you can review the <%= link_to "Terms of Service", terms_of_service_url %>
+  br
+  
+= render file: "/layouts/email"

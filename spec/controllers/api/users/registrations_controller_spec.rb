@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Api::Users::RegistrationsController, type: :controller do
   before(:each) do
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env["devise.mapping"] = Devise.mappings[:api_user]
     ActiveModel::Serializer.config.adapter = ActiveModel::Serializer::Adapter::JsonApi
   end
 

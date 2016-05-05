@@ -1,11 +1,13 @@
+# frozen_string_literal: true
 # this class overrides some things from devise in order to
 # make it JSON API compliant
 #
 # see: https://github.com/plataformatec/devise/blob/master/app/controllers/devise/registrations_controller.rb
 class Api::Users::RegistrationsController < Devise::RegistrationsController
+  # skip_before_filter :authenticate_user!
   protected
 
-  def respond_with(obj, *args)
+  def respond_with(obj, *_args)
     if obj.errors.present?
       render json: obj, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     else
@@ -15,9 +17,9 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
 
   def account_update_params
     update_params = params
-      .require(:data)
-      .require(:attributes)
-      .permit(:current_password)
+                    .require(:data)
+                    .require(:attributes)
+                    .permit(:current_password)
 
     sign_up_params.merge(update_params)
   end
@@ -29,11 +31,10 @@ class Api::Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     whitelister = ActionController::Parameters.new(deserialized_params)
     whitelister.permit(
-        :first_name, :last_name,
-        :email,
-        :password,
-        :password_confirmation,
-        :time_zone)
+      :first_name, :last_name,
+      :email,
+      :password,
+      :password_confirmation,
+      :time_zone)
   end
-
 end

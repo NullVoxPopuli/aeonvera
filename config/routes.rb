@@ -11,17 +11,6 @@ AeonVera::Application.routes.draw do
   # this should also enable the creation of
   # native mobile apps for android / iphone / whatever
   namespace :api, defaults: { format: :json } do
-    devise_for :users,# skip: :sessions,
-      controllers: {
-        # password resets
-        passwords: 'api/users/passwords',
-        # email confirmations
-        confirmations: "confirmations",
-        # creating new account
-        registrations: "api/users/registrations",
-        # logging in
-        sessions: "api/users/sessions"
-      }
 
     # for both events and communities
     resources :integrations, except: [:update, :index]
@@ -87,11 +76,31 @@ AeonVera::Application.routes.draw do
         put :modify
       end
     end
+
+    devise_scope :api_user do
+      get '/confirmation', to: 'users/confirmations#show'
+      post '/confirmation', to: 'users/confirmations#create'
+    end
+
     resources :registrations
 
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
     resources :users, only: [:show, :update, :destroy]
+
+    devise_for :users,# skip: :sessions,
+      controllers: {
+        # password resets
+        passwords: 'api/users/passwords',
+        # email confirmations
+        confirmations: "api/users/confirmations",
+        # creating new account
+        registrations: "api/users/registrations",
+        # logging in
+        sessions: "api/users/sessions"
+      }
+
+
   end
 
   namespace :oauth do
@@ -101,18 +110,9 @@ AeonVera::Application.routes.draw do
   end
 
 
-  get 'users' => redirect("/")
-
-  devise_for :users, skip: [:sessions]
-  devise_scope :user do
-    resources :confirmations # confirming email
-  end
-
-
   namespace :auth do
     get "paypal/callback", to: "paypal#callback"
   end
-
 
   # legacy routes
   get "/terms_of_service", to: redirect("welcome/tos")
