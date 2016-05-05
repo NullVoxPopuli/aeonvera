@@ -120,8 +120,6 @@ group :development, :development_public, :development_remote, :test do
   gem "formatted_rails_logger"
   # managing and traversing time in specs
   gem 'delorean'
-  # keeps asset requests out of the logs
-  gem 'quiet_assets'
   # fast web server
   gem 'puma'
   # linting

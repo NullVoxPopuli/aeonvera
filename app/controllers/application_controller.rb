@@ -5,13 +5,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   skip_before_filter :verify_authenticity_token
-
-  # optional
-  before_action :authenticate_user_from_token!, except: [:sign_in, :sign_up, :assum_control]
-
-  # regular auth method
-  before_filter :authenticate_user!, except: [:sign_in, :sign_up, :assume_control]
-
   before_action :set_time_zone
 
   protected
