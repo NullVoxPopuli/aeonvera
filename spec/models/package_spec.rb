@@ -38,11 +38,15 @@ describe Package do
 
     it 'does not change if the tiers are not yet eligible' do
       event.attendances.destroy_all
-      tier = create(:pricing_tier, date: 19.days.from_now, event: event)
-      tier2 = create(:pricing_tier, registrants: 10, event: event)
 
-      expect(event.current_tier).to eq event.opening_tier
-      expect(package.current_price).to eq package.initial_price
+      # The Delorean replicates a long lasting issue that Travis discovered
+      Delorean.time_travel_to(10.days.from_now) do
+        tier = create(:pricing_tier, date: 19.days.from_now, event: event)
+        tier2 = create(:pricing_tier, registrants: 10, event: event, date: nil)
+
+        expect(event.current_tier).to eq event.opening_tier
+        expect(package.current_price).to eq package.initial_price
+      end
     end
 
     it 'changes base on two tiers' do

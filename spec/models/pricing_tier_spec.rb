@@ -158,24 +158,27 @@ describe PricingTier do
       end
 
       it 'calculates with multiple total number tiers' do
-        pt2 = create(:pricing_tier, event: event, registrants: 20)
-        pt3 = create(:pricing_tier, event: event, registrants: 40)
+        # The Delorean replicates a long lasting issue that Travis discovered
+        Delorean.time_travel_to(10.days.from_now) do
+          pt2 = create(:pricing_tier, event: event, registrants: 20, date: nil)
+          pt3 = create(:pricing_tier, event: event, registrants: 40, date: nil)
 
-        20.times do
-          create(:attendance, event: event)
+          20.times do
+            create(:attendance, event: event)
+          end
+
+          expect(pt.should_apply_amount?).to eq true
+          expect(pt2.should_apply_amount?).to eq true
+          expect(pt3.should_apply_amount?).to eq false
+
+          expect(event.current_tier).to eq pt2
+
+          # pt3 should not be recognized yet
+          result = package.current_price
+          expect(result).to eq (
+            package.initial_price + pt.increase_by_dollars + pt2.increase_by_dollars
+          )
         end
-
-        expect(pt.should_apply_amount?).to eq true
-        expect(pt2.should_apply_amount?).to eq true
-        expect(pt3.should_apply_amount?).to eq false
-
-        expect(event.current_tier).to eq pt2
-
-        # pt3 should not be recognized yet
-        result = package.current_price
-        expect(result).to eq (
-          package.initial_price + pt.increase_by_dollars + pt2.increase_by_dollars
-        )
       end
     end
 
@@ -236,7 +239,7 @@ describe PricingTier do
         pt.registrants = 10
         pt.save
         pt2 = create(:pricing_tier, event: event, date: Date.today - 30.days)
-        
+
         11.times do
           create(:attendance, event: event)
         end
