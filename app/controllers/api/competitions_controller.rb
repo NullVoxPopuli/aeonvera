@@ -7,18 +7,18 @@ class Api::CompetitionsController < Api::EventResourceController
   private
 
   def update_competition_params
-    ActiveModelSerializers::Deserialization
-      .jsonapi_parse(params, only: [
-        :name, :initial_price, :at_the_door_price, :kind
-      ])
+    whitelistable_params do |whitelister|
+      whitelister.permit(
+        :name, :initial_price, :at_the_door_price, :kind)
+    end
   end
 
   def create_competition_params
-    ActiveModelSerializers::Deserialization
-      .jsonapi_parse(params, only: [
+    whitelistable_params do |whitelister|
+      whitelister.permit(
         :name, :initial_price,
-        :at_the_door_price, :kind, :event
-      ])
+        :at_the_door_price, :kind, :event_id)
+    end
   end
 
 end

@@ -15,19 +15,8 @@ module EventLoader
       @event = current_user.hosted_events.find(id)
     rescue ActiveRecord::RecordNotFound => e
       # user is not hosting the requested event
-      begin
-        @event = current_user.collaborated_events.find(id)
-      rescue ActiveRecord::RecordNotFound => e
-        # user has nothing to do with the requested event
-        redirect_to action: "index"
-      end
+      @event = current_user.collaborated_events.find(id)
     end
-
-    unless @event
-      flash[:error] = "Event Not Found"
-      redirect_to root_path
-    end
-
   end
 
   def current_event
