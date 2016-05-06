@@ -80,13 +80,10 @@ AeonVera::Application.routes.draw do
     devise_scope :api_user do
       get '/confirmation', to: 'users/confirmations#show'
       post '/confirmation', to: 'users/confirmations#create'
+      # put '/users/passwords', to: 'users/passwords#update'
     end
 
     resources :registrations
-
-    # for new user creation / registration / signing up
-    put '/users/', to: 'users#create'
-    resources :users, only: [:show, :update, :destroy]
 
     devise_for :users,# skip: :sessions,
       controllers: {
@@ -99,6 +96,10 @@ AeonVera::Application.routes.draw do
         # logging in
         sessions: "api/users/sessions"
       }
+
+    # for new user creation / registration / signing up
+    put '/users/', to: 'users#create'
+    resources :users, only: [:show, :update, :destroy]
 
 
   end

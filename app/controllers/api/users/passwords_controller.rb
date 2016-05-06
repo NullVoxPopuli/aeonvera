@@ -1,4 +1,5 @@
 class Api::Users::PasswordsController < Devise::PasswordsController
+  # include DeviseOverrides
   respond_to :html, :json
 
   prepend_before_filter :logout, only: :edit
