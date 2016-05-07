@@ -20,6 +20,29 @@ def current_user
   controller.current_user
 end
 
+def json_api_create_with(klass, params)
+  # TODO write helper to convert to hyphenated
+  expect{
+    post :create, params
+  }.to change(klass, :count).by(1)
+
+  json = JSON.parse(response.body)
+  data = json['data']
+  attributes = data['attributes']
+
+  yield(json, attributes)
+end
+
+def json_api_update_with(obj, params)
+  # TODO write helper to convert to hyphenated
+  patch :update, params
+
+  json = JSON.parse(response.body)
+  data = json['data']
+  attributes = data['attributes']
+
+  yield(json, attributes)
+end
 
 def create_event
   event = create(:event)

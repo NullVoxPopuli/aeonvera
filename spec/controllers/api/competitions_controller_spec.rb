@@ -51,12 +51,10 @@ RSpec.describe Api::CompetitionsController, type: :controller do
           }
         }
 
-        patch :update, json_api
+        json_api_update_with(@competition, json_api) do | _json, attributes |
+          expect(attributes['initial-price']).to eq new_price.to_s
+        end
 
-        json = JSON.parse(response.body)
-        data = json['data']
-        attributes = data['attributes']
-        expect(attributes['initial-price']).to eq new_price.to_s
         expect(Competition.find(@competition.id).initial_price).to eq new_price
       end
     end
@@ -71,10 +69,10 @@ RSpec.describe Api::CompetitionsController, type: :controller do
         json_api = {
           "data" => {
             "attributes" => {
-              "initial_price": 9,
+              "initial-price": 9,
               "name" => "new comp",
               "kind" => 1,
-              "at_the_door_price" => 10
+              "at-the-door-price" => 10
             },
             "relationships" => {
               "event" => {
@@ -88,17 +86,12 @@ RSpec.describe Api::CompetitionsController, type: :controller do
           }
         }
 
-        expect{
-          post :create, json_api
-        }.to change(Competition, :count).by(1)
-
-        json = JSON.parse(response.body)
-        data = json['data']
-        attributes = data['attributes']
-        expect(attributes['initial-price']).to eq "9.0"
-        expect(attributes['name']).to eq 'new comp'
-        expect(attributes['kind']).to eq 1
-        expect(attributes['at-the-door-price']).to eq "10.0"
+        json_api_create_with(Competition, json_api) do | _json, attributes |
+          expect(attributes['initial-price']).to eq "9.0"
+          expect(attributes['name']).to eq 'new comp'
+          expect(attributes['kind']).to eq 1
+          expect(attributes['at-the-door-price']).to eq "10.0"
+        end
       end
     end
   end
