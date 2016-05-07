@@ -1,3 +1,13 @@
+def json_api_data
+  json = JSON.parse(response.body)
+  data = json['data']
+end
+
+def json_api_included
+  json = JSON.parse(response.body)
+  data = json['included']
+end
+
 def json_api_create_with(klass, params)
   params = ActiveModelSerializers::KeyTransform.dash(params)
 
@@ -6,6 +16,7 @@ def json_api_create_with(klass, params)
   json = JSON.parse(response.body)
   data = json['data']
   attributes = data['attributes']
+  relationships = data['relationships'] || {}
   return yield(json, attributes) if block_given?
 
   # auto compare attributes
@@ -21,6 +32,37 @@ def json_api_create_with(klass, params)
     end
 
     expect(actual).to eq value
+  end
+
+  created_object = klass.find(data['id'])
+  expect(created_object).to be_present
+
+  # auto compare relationships
+  given_relationships = params[:data][:relationships]
+  given_relationships.each do |relationship_name, reldata|
+    relationship_id = reldata[:data][:id].to_s
+    relationship_type = reldata[:data][:type]
+
+    # don't check the response relationships if we don't have any
+    next unless relationships.present?
+
+    actual_relationship = relationships[relationship_name.to_s]
+    # this relationship is not rendered
+    next unless actual_relationship
+
+    id = actual_relationship['data']['id'].to_s
+    type = actual_relationship['data']['type']
+
+    expect(id).to eq relationship_id
+    expect(type).to eq relationship_type
+
+    # check the saved relationships
+    # rails_relationship_name = relationship_type.underscore.singularize
+    # actual_relationship = created_object.send(rails_relationship_name)
+    # # how do we verify a has_many relationship?
+    # unless actual_relationship.responds_to?(:each)
+    #   expect(actual_relationship.id).to eq relationship_id
+    # end
   end
 end
 

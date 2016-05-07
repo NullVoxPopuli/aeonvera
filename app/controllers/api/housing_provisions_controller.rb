@@ -1,28 +1,25 @@
 class Api::HousingProvisionsController < Api::EventResourceController
   private
 
-  def deserialized_params
-    ActiveModelSerializers::Deserialization.jsonapi_parse(
-      params, polymorphic: [:attendance])
-  end
-
   def update_housing_provision_params
-    whitelister = ActionController::Parameters.new(deserialized_params)
-    whitelister.permit(
-      :housing_capacity, :number_of_showers, :can_provide_transportation,
-      :transportation_capacity, :preferred_gender_to_host,
-      :has_pets, :smokes, :notes
-    )
+    whitelistable_params(polymorphic: [:attendance, :host]) do |whitelister|
+      whitelister.permit(
+        :housing_capacity, :number_of_showers, :can_provide_transportation,
+        :transportation_capacity, :preferred_gender_to_host,
+        :has_pets, :smokes, :notes
+      )
+    end
   end
 
   def create_housing_provision_params
-    whitelister = ActionController::Parameters.new(deserialized_params)
-    whitelister.permit(
-      :housing_capacity, :number_of_showers, :can_provide_transportation,
-      :transportation_capacity, :preferred_gender_to_host,
-      :has_pets, :smokes, :notes,
-      :attendance_id, :attendance_type,
-      :host_id, :host_type
-    )
+    whitelistable_params(polymorphic: [:attendance, :host]) do |whitelister|
+      whitelister.permit(
+        :housing_capacity, :number_of_showers, :can_provide_transportation,
+        :transportation_capacity, :preferred_gender_to_host,
+        :has_pets, :smokes, :notes,
+        :attendance_id, :attendance_type,
+        :host_id, :host_type
+      )
+    end
   end
 end

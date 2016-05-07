@@ -8,4 +8,6 @@ class HousingRequestSerializer < ActiveModel::Serializer
              :attendance_id, :attendance_type,
              :host_id, :host_type,
              :housing_provision_id
+
+  belongs_to :host
 end

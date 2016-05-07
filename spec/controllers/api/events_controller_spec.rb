@@ -15,8 +15,8 @@ RSpec.describe Api::EventsController, type: :controller do
     end
 
     context "#create" do
-      let(:pricing_tier){ build(:pricing_tier) }
       let(:event){ build(:event) }
+      let(:pricing_tier){ build(:pricing_tier) }
       let(:valid_attributes){
         attrs = event.attributes.merge(opening_tier_attributes: pricing_tier.attributes)
         attrs.delete(:hosted_by_id)
@@ -24,7 +24,7 @@ RSpec.describe Api::EventsController, type: :controller do
       }
 
       it "creates an event" do
-        skip('need to figure out how to send opening tier data')
+        # skip('need to figure out how to send opening tier data')
 
         json_api = {
           "data" => {
@@ -39,7 +39,6 @@ RSpec.describe Api::EventsController, type: :controller do
       end
 
       it "creates the initial pricieng tier" do
-        skip('need to figure out how to send opening tier data')
 
         json_api = {
           "data" => {
@@ -56,7 +55,6 @@ RSpec.describe Api::EventsController, type: :controller do
       end
 
       it "event is assigned to the current user" do
-        skip('need to figure out how to send opening tier data')
 
         json_api = {
           "data" => {

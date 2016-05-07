@@ -10,6 +10,7 @@ module EventOperations
       return unless allowed?
       @model = model_class.new(model_params)
       @model.hosted_by = current_user
+      @model.opening_tier.event = @model
       @model.save
       @model
     end

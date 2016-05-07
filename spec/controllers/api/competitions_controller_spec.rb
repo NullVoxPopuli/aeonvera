@@ -87,5 +87,4 @@ RSpec.describe Api::CompetitionsController, type: :controller do
       end
     end
   end
-
 end
