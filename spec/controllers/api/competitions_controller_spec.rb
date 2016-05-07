@@ -44,17 +44,14 @@ RSpec.describe Api::CompetitionsController, type: :controller do
         new_price = @competition.initial_price + 10
         json_api = {
           id: @competition.id,
-          "data" => {
-            "id" => @competition.id,
-            "attributes" => { "initial_price": new_price },
-            "type" => "competitions"
+          data: {
+            type: 'competitions',
+            id: @competition.id,
+            attributes: { initial_price: new_price.to_s }
           }
         }
 
-        json_api_update_with(@competition, json_api) do | _json, attributes |
-          expect(attributes['initial-price']).to eq new_price.to_s
-        end
-
+        json_api_update_with(@competition, json_api)
         expect(Competition.find(@competition.id).initial_price).to eq new_price
       end
     end
@@ -67,31 +64,26 @@ RSpec.describe Api::CompetitionsController, type: :controller do
 
       it 'creates a new competition' do
         json_api = {
-          "data" => {
-            "attributes" => {
-              "initial-price": 9,
-              "name" => "new comp",
-              "kind" => 1,
-              "at-the-door-price" => 10
+          data: {
+            type: 'competitions',
+            attributes: {
+              initial_price: '9.0',
+              name: 'new comp',
+              kind: 1,
+              at_the_door_price: '10.0'
             },
-            "relationships" => {
-              "event" => {
-                'data' => {
-                  "id" => @event.id,
-                  "type" => "events"
+            relationships: {
+              event: {
+                data: {
+                  id: @event.id,
+                  type: 'events'
                 }
               }
-            },
-            "type" => "competitions"
+            }
           }
         }
 
-        json_api_create_with(Competition, json_api) do | _json, attributes |
-          expect(attributes['initial-price']).to eq "9.0"
-          expect(attributes['name']).to eq 'new comp'
-          expect(attributes['kind']).to eq 1
-          expect(attributes['at-the-door-price']).to eq "10.0"
-        end
+        json_api_create_with(Competition, json_api)
       end
     end
   end
