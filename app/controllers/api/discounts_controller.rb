@@ -2,24 +2,21 @@ class Api::DiscountsController < Api::ResourceController
   private
 
   def update_discount_params
-    ActiveModelSerializers::Deserialization
-      .jsonapi_parse(params, only: [
+    whitelistable_params do |whitelister|
+      whitelister.permit(
         :code, :amount, :kind,
         :requires_student_id,
-        :allowed_number_of_uses
-      ])
+        :allowed_number_of_uses)
+    end
   end
 
   def create_discount_params
-    result = ActiveModelSerializers::Deserialization
-      .jsonapi_parse(params, only: [
+    whitelistable_params(polymorphic: [:host]) do |whitelister|
+      whitelister.permit(
         :code, :amount, :kind,
         :requires_student_id,
         :allowed_number_of_uses,
-        :host
-      ], polymorphic: [:host])
-    # types come in as ember lowercase and plural
-    result[:host_type] = result[:host_type].classify
-    result
+        :host_id, :host_type)
+    end
   end
 end
