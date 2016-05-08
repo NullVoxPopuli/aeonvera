@@ -7,6 +7,12 @@ class Api::UsersController < Api::ResourceController
     render json: current_user, include: params[:include]
   end
 
+  def destroy
+    super
+
+    AccountMailer.account_cancelled(model).deliver_now
+  end
+
   private
 
   def update_user_params
