@@ -1,7 +1,7 @@
  class APIController < ActionController::Base
   include CommonApplicationController
-
   respond_to :json
+  before_action :set_default_response_format
   protect_from_forgery with: :null_session
 
   skip_before_filter :verify_authenticity_token
@@ -74,5 +74,9 @@
           }
         ]
       }, status: 404
+  end
+
+  def set_default_response_format
+    request.format = :json unless params[:format]
   end
 end
