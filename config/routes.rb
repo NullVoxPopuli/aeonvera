@@ -80,7 +80,6 @@ AeonVera::Application.routes.draw do
     devise_scope :api_user do
       get '/confirmation', to: 'users/confirmations#show'
       post '/confirmation', to: 'users/confirmations#create'
-      # put '/users/passwords', to: 'users/passwords#update'
     end
 
     resources :registrations

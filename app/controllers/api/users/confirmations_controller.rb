@@ -1,5 +1,6 @@
 class Api::Users::ConfirmationsController < Devise::ConfirmationsController
   include DeviseOverrides
+  respond_to :html, :json
 
   # POST /resource/confirmation
   def create

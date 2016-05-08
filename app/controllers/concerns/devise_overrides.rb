@@ -8,4 +8,8 @@ module DeviseOverrides
       render json: obj
     end
   end
+
+  def respond_with_navigational(*args)
+    respond_with(*args)
+  end
 end

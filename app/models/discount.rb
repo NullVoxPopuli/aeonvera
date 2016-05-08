@@ -6,6 +6,7 @@ class Discount < ActiveRecord::Base
 
   include SoftDeletable
   include Purchasable
+  include CSVOutput
 
   belongs_to :host, polymorphic: true
 

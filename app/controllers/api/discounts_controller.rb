@@ -1,4 +1,4 @@
-class Api::DiscountsController < Api::ResourceController
+class Api::DiscountsController < Api::EventResourceController
   private
 
   def update_discount_params

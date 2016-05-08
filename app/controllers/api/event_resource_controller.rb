@@ -3,7 +3,11 @@ class Api::EventResourceController < Api::ResourceController
 
   def index
     model = operation_class.new(current_user, params, index_params).run
-    render json: model, include: params[:include]
+
+    respond_to do |format|
+      format.json { render json: model, include: params[:include] }
+      format.csv { send_data csv }
+    end
   end
 
   def show
@@ -43,5 +47,12 @@ class Api::EventResourceController < Api::ResourceController
 
       attributes.merge(event_id: event_relationship[:id])
     end
+  end
+
+
+  protected
+
+  def csv
+    model.to_csv
   end
 end
