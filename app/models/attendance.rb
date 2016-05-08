@@ -25,27 +25,16 @@ class Attendance < ActiveRecord::Base
 
   has_many :custom_field_responses, as: :writer
   has_many :orders
-  has_many :attendance_line_items
-  # has_many :line_items, -> { where("item_type = '' OR item_type IS NULL") }, through: :attendance_line_items
-  has_many :line_items,
-    through: :attendance_line_items
-
-  has_many :other_line_items,
-    ->{ where("item_type = '' OR item_type IS NULL") },
-    through: :attendance_line_items,
-    source: "line_item"
-
-  has_many :shirts,
-    ->{ where("line_items.item_type = '#{LineItem::Shirt.name}'") },
-    class_name: "LineItem",
-    through: :attendance_line_items,
-    source: "line_item"
+  has_many :order_line_items, through: :orders
+  has_many :purchased_items,
+    through: :order_line_items,
+    source: :line_item,
+    inverse_of: :purchasers
 
   has_many :raffle_tickets,
-    ->{ where("line_items.item_type = '#{LineItem::RaffleTicket.name}'")},
-    class_name: LineItem::RaffleTicket.name,
-    through: :attendance_line_items,
-    source: "line_item"
+    through: :order_line_items,
+    source: :line_item,
+    source_type: LineItem::RaffleTicket.name
 
   scope :with_line_items, -> {
     joins(:line_items).group("attendances.id")
@@ -99,7 +88,7 @@ class Attendance < ActiveRecord::Base
 
   def is_using_discount?(discount_id)
     self.orders.map{|o|
-      o.line_items.where(line_item_type: Discount.name, line_item_id: discount_id)
+      o.order_line_items.where(line_item_type: Discount.name, line_item_id: discount_id)
     }.flatten.compact.any?
   end
 
@@ -130,7 +119,7 @@ class Attendance < ActiveRecord::Base
   def ordered_shirts
     result = []
     orders.each do |order|
-      result = order.line_items.select{|li|
+      result = order.order_line_items.select{|li|
         li.line_item_type == LineItem::Shirt.name
       }
     end

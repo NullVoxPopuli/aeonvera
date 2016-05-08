@@ -10,19 +10,17 @@ class RaffleSerializer < ActiveModel::Serializer
   def ticket_purchasers
     return @ticket_purchase_data if @ticket_purchase_data
     by_attendance_id = {}
-
     # need attendance_id, name, number_of_tickets_purchased (see serializer)
-    object.ticket_purchases.includes(:line_item, attendance: :attendee ).map do |attendance_line_item|
-      id = attendance_line_item.attendance_id
-      ticket = attendance_line_item.line_item
-      attendance = attendance_line_item.attendance
+    object.ticket_purchases.includes(:line_item, order: { attendance: :attendee } ).map do |order_line_item|
+      id = order_line_item.order.attendance_id
+      ticket = order_line_item.line_item
+      attendance = order_line_item.order.attendance
       next unless attendance && ticket
 
       by_attendance_id[id] ||= RaffleTicketPurchaser.new(id, attendance.attendee_name)
       old_number_purchased = by_attendance_id[id].number_of_tickets_purchased
       by_attendance_id[id].number_of_tickets_purchased = old_number_purchased + ticket.number_of_tickets
     end
-
     @ticket_purchase_data = by_attendance_id.values
   end
 

@@ -20,6 +20,12 @@ class EventAttendance < Attendance
   # join_table: "attendances_competitions",
   # association_foreign_key: "competition_id", foreign_key: "attendance_id"
 
+  has_many :raffle_tickets,
+    through: :order_line_items,
+    source: :line_item,
+    source_type: LineItem::RaffleTicket.name
+
+
   has_many :competition_responses,
     as: :attendance, class_name: CompetitionResponse.name,
     inverse_of: :attendance

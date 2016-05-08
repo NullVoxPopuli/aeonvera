@@ -5,6 +5,7 @@ class Discount < ActiveRecord::Base
   self.inheritance_column = "discount_type"
 
   include SoftDeletable
+  include Purchasable
 
   belongs_to :host, polymorphic: true
 

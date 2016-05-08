@@ -3,31 +3,11 @@ table
     td.order-payment-status colspan="3" data-paid="#{order.paid?}"
       = order.paid? ? "[#{order.payment_method}] Paid at #{order.updated_at.to_s(:short)}" : "Unpaid"
 
-  - order.line_items.each do |item|
+  - order.order_line_items.each do |item|
     tr
       td = item.line_item.name
       td = item.price
       td = item.quantity
-
-  / - order.line_items.each do |item|
-  /   tr
-  /     td = item["name"]
-  /     td = item["price"]
-  /     td = item["quantity"]
-  / - order.discounts.each do |discount|
-  /   tr
-  /     td = (discount["to"].present? ? discount["to"] : "Discount")
-  /     td
-  /       - if discount["kind"].to_i == Discount::DOLLARS_OFF
-  /         = "-#{discount["amount"]}"
-  /       - else
-  /         = "%#{discount["amount"]}"
-  /     td
-  / - order.checks.each do |check_data|
-  /   tr
-  /     td Checks Payments
-  /     td.order-payment-status  data-paid="#{order.paid?}" = check_data
-  /     td
   tr
 
     td

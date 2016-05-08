@@ -224,9 +224,6 @@ FactoryGirl.define do
 
   end
 
-  factory(:attendance_line_item) do
-  end
-
   factory :attendee, class: User do
     first_name "Attendee"
     last_name "Test"

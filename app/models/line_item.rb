@@ -3,6 +3,7 @@ class LineItem < ActiveRecord::Base
 
   include SoftDeletable
   include HasMetadata
+  include Purchasable
 
   belongs_to :host, polymorphic: true
   # TODO:
@@ -13,18 +14,7 @@ class LineItem < ActiveRecord::Base
   belongs_to :event, class_name: Event.name,
     foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
 
-  has_many :order_line_items, as: :line_item
-  # TODO: figure how to get this to evaluate upon
-  # inheritance
-  # has_many :order_line_items, -> {
-  #   where(line_item_type: self.name)
-  # }, foreign_key: :line_item_id
-
-
-  has_many :attendance_line_items
-  has_many :attendances,
-    -> { where(attending: true).order("attendances.created_at DESC") },
-    through: :attendance_line_items
+  alias_method :attendances, :purchasers
 
   alias_attribute :current_price, :price
 

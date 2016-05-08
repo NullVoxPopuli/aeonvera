@@ -16,10 +16,6 @@ class OrderSerializer < ActiveModel::Serializer
   belongs_to :host
   belongs_to :attendance
 
-  def order_line_items
-    object.line_items
-  end
-
   def total_in_cents
     # convert from dollars to cents
     (object.total * 100).to_i

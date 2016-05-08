@@ -8,7 +8,7 @@ class MigrateCompetitionResponsesToOrderLineItems < ActiveRecord::Migration
       dance_orientation = cr.dance_orientation
 
       a.orders.each do |order|
-        order.line_items.each do |order_line_item|
+        order.order_line_items.each do |order_line_item|
           id = order_line_item.line_item_id
           kind = order_line_item.line_item_type
           next unless kind == Competition.name

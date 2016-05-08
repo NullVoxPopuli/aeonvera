@@ -18,13 +18,21 @@ class Order < ActiveRecord::Base
   # and should always be the same as the user that attendance is attached to.
   belongs_to :user
 
-  has_many :line_items,
-    class_name: "OrderLineItem",
-    dependent: :destroy, inverse_of: :order
-
   has_many :order_line_items, dependent: :destroy, inverse_of: :order
 
-  accepts_nested_attributes_for :line_items
+  # This has many doesn't work due to the line_item
+  # relationship being polymorphic. Rails doesn't want to return
+  # an association of mixed types (understandably)
+  # has_many :line_items,
+  #          through: :order_line_items,
+  #          source: :line_item,
+  #          inverse_of: :orders
+  #
+  # this could be expensive :-\
+  def line_items
+    order_line_items.includes(:line_item).map(&:line_item).flatten.uniq
+  end
+
   accepts_nested_attributes_for :order_line_items
   accepts_nested_attributes_for :attendance
 
@@ -161,7 +169,7 @@ class Order < ActiveRecord::Base
         order_user = order.user
         order_attendee = order.attendance
 
-        line_item_list = order.line_items.map do |i|
+        line_item_list = order.order_line_items.map do |i|
           "#{i.quantity} x #{i.name} @ #{i.price}"
         end.join(", ")
 

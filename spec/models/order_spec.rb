@@ -2,6 +2,25 @@ require 'spec_helper'
 
 describe Order do
 
+  describe 'associations' do
+    context 'line_Items' do
+
+      it 'has line items' do
+        discount = Discount.new
+        discount.save(validate: false)
+
+        order = Order.new
+        order.save(validate: false)
+
+        oli = OrderLineItem.new(order: order, line_item: discount)
+        oli.save(validate: false)
+
+        order.reload
+        expect(order.line_items.first).to eq discount
+      end
+    end
+  end
+
   describe 'validations' do
 
     describe 'buyer_email' do

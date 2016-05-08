@@ -1,3 +1,7 @@
+def json_response
+  JSON.parse(response.body)
+end
+
 def json_api_data
   json = JSON.parse(response.body)
   data = json['data']
@@ -23,12 +27,26 @@ def json_api_create_with(klass, params)
   given_attributes = params[:data][:attributes]
   given_attributes.each do |key, value|
     actual = attributes[key.to_s]
+    # check if actual is a time
+    if value.is_a?(Time)
+      # removes ms
+      value2 = Time.parse(value.to_s)
+      actual2 = Time.parse(actual)
+
+      puts value2
+      puts actual2
+      value = value2.dup
+      actual = actual2.dup
+      puts value2
+      puts actual2
+      puts '----'
+    end
     # output all this if there is no match :-(
     if actual != value
-      puts key
-      puts value
+      puts 'key    :  ' + key.inspect
+      puts 'value  :  ' + value.inspect
+      puts 'actual :  ' + actual.inspect
       puts attributes
-      puts attributes[key]
     end
 
     expect(actual).to eq value

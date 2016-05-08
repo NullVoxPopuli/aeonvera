@@ -4,7 +4,7 @@ module OrderOperations
     def save_order
       ActiveRecord::Base.transaction do
         @model.save
-        @model.line_items.map(&:save)
+        @model.order_line_items.map(&:save)
       end
     end
   end

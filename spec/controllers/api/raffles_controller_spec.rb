@@ -11,11 +11,11 @@ RSpec.describe Api::RafflesController, type: :controller do
       raffle = create(:raffle, event: @event)
       ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: {'number_of_tickets' => 1})
       attendance = create(:attendance, event: @event)
-      create(:attendance_line_item,
-        attendance: attendance,
+      order = create(:order, attendance: attendance, host: @event)
+      create(:order_line_item,
+        order: order,
         line_item: ticket_option,
-        quantity: 1,
-        line_item_type: ticket_option.class.name)
+        quantity: 1)
 
       get :show, id: raffle.id, include: 'ticket_purchasers'
 
@@ -41,11 +41,11 @@ RSpec.describe Api::RafflesController, type: :controller do
       it 'chooses a new winner' do
         # gotta create some ticket purchases
         attendance = create(:attendance, event: @event)
-        create(:attendance_line_item,
-          attendance: attendance,
+        order = create(:order, attendance: attendance, host: @event)
+        create(:order_line_item,
+          order: order,
           line_item: @ticket_option,
-          quantity: 1,
-          line_item_type: @ticket_option.class.name)
+          quantity: 1)
         # sanity, to make sure the test data is correct
         # For whatever reason, when this is uncommented, it *sometimes* fails...
         # (this expectation, that is... not sure what's up with that).
@@ -58,13 +58,12 @@ RSpec.describe Api::RafflesController, type: :controller do
           'data' => {
             'id' => @raffle.id,
             'attributes' => {
-              'choose_new_winner' => true
+              'choose-new-winner' => true
             }, 'type' => 'raffles'
           }
         }
 
         patch :update, json_api
-
         data = json_api_data
         attributes = data['attributes']
         expect(attributes['winner']).to eq attendance.attendee_name

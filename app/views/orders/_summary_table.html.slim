@@ -5,7 +5,7 @@ table width="100%"
       th Item
       th Price
   tbody
-    - order.line_items.each do |line_item|
+    - order.order_line_items.each do |line_item|
       - item = line_item.line_item
       tr
         td = item.class.name.titleize.gsub("Line Item/", "")

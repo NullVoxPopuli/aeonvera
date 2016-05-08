@@ -27,7 +27,7 @@ module OrderMembership
   end
 
   def existing_membership_discounts
-    self.line_items.select{ |i|
+    self.order_line_items.select{ |i|
       i.line_item_type == MembershipDiscount.name
     }
   end

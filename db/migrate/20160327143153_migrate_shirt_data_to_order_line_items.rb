@@ -45,7 +45,7 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
       orders.each do |order|
         current_total = order.total
 
-        order.line_items.each do |order_line_item|
+        order.order_line_items.each do |order_line_item|
           id = order_line_item.line_item_id
           kind = order_line_item.line_item_type
           total_price = order_line_item.price * order_line_item.quantity
@@ -75,7 +75,7 @@ class MigrateShirtDataToOrderLineItems < ActiveRecord::Migration
               next unless item_quantity.to_i > 0
 
               attributes = order_line_item.attributes.select{ |k,v| k != 'id' }
-              new_item = order.line_items.build(attributes)
+              new_item = order.order_line_items.build(attributes)
               new_item.size = size
               new_item.quantity = size_data['quantity']
               new_item.price = order_line_item.price

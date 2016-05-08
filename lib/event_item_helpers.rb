@@ -8,7 +8,7 @@ module EventItemHelpers
 	end
 
 	def has_line_items?
-		self.line_items.count > 0
+		self.order_line_items.count > 0
 	end
 
 	def has_competitions?

@@ -1,5 +1,5 @@
 | Item                                        Price
-- order.line_items.each do |line_item|
+- order.order_line_items.each do |line_item|
   - item = line_item.line_item
   = item.class.name.titleize.gsub("Line Item/", "")
   - if item.is_a?(Discount) and item.kind == Discount::PERCENT_OFF

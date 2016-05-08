@@ -1,5 +1,6 @@
 class Package < ActiveRecord::Base
   include SoftDeletable
+  include Purchasable
 
   has_many :levels
   has_many :attendances, -> {

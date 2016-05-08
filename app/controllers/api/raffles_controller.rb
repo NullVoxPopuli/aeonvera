@@ -15,18 +15,20 @@ class Api::RafflesController < Api::EventResourceController
   private
 
   def must_choose_new_winner?
-    params.dig(:data, :attributes, :choose_new_winner)
+    whitelistable_params do |whitelister|
+      whitelister.permit(:choose_new_winner)
+    end
   end
 
   def update_raffle_params
-    params
-      .require(:data)
-      .require(:attributes)
-      .permit(:name, :winner_id)
+    whitelistable_params do |whitelister|
+      whitelister.permit(:name, :winner_id)
+    end
   end
 
   def create_raffle_params
-    create_params_with(update_raffle_params, host: false)
+    whitelistable_params do |whitelister|
+      whitelister.permit(:name, :winner_id, :event_id)
+    end
   end
-
 end

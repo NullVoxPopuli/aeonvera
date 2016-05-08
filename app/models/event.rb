@@ -205,7 +205,12 @@ class Event < ActiveRecord::Base
   end
 
   def shirts_sold
-    self.attendances.with_shirts.count.inject(0){|total, element| total += element[1]}
+    orders
+      .paid
+      .joins(:order_line_items)
+      .where(order_line_items: { line_item_type: LineItem::Shirt.name })
+      .map(&:order_line_items).flatten
+      .inject(0){ |total, oli| total + oli.quantity }
   end
 
   def shirts_available?

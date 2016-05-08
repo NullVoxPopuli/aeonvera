@@ -231,7 +231,7 @@ module Payable
   # @return [OrderLineItem] the created order line item
   def create_line_item(object, quantity: 1, price: nil)
     price ||= (object.try(:current_price) || object.try(:value))
-    item = self.line_items.new(
+    item = self.order_line_items.new(
       quantity: quantity,
       price: price
     )
