@@ -1,5 +1,6 @@
 class Api::MembersController < APIController
-
+  before_filter :must_be_logged_in
+  
   def index
     search = User.ransack(search_params)
     render json: search.result, each_serializer: MembershipRenewalSerializer::MemberSerializer

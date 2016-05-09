@@ -1,5 +1,5 @@
 class LineItem < ActiveRecord::Base
-  self.inheritance_column = "item_type"
+  self.inheritance_column = 'item_type'
 
   include SoftDeletable
   include HasMetadata
@@ -11,24 +11,23 @@ class LineItem < ActiveRecord::Base
   # TODO:
   # belongs_to :reference, polymorphic: true
   belongs_to :organization, class_name: Organization.name,
-    foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
+                            foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
   belongs_to :event, class_name: Event.name,
-    foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
+                     foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
-  alias_method :attendances, :purchasers
+  alias attendances purchasers
 
   alias_attribute :current_price, :price
 
   has_attached_file :picture,
-  	path: "/assets/:class/:id/picture_:style.:extension",
-	  styles: {
-	    thumb: '128x128>',
-	    medium: '300x300>'
-	  }
+                    path: '/assets/:class/:id/picture_:style.:extension',
+                    styles: {
+                      thumb: '128x128>',
+                      medium: '300x300>'
+                    }
 
-    validates_attachment_file_name :picture, :matches => [/png\Z/, /jpe?g\Z/, /gif\Z/]
-
+  validates_attachment_file_name :picture, matches: [/png\Z/, /jpe?g\Z/, /gif\Z/]
 
   scope :active, ->{
     time = Time.now
@@ -41,5 +40,4 @@ class LineItem < ActiveRecord::Base
       becomes_available_at.lt(time).or(becomes_available_at.eq(nil))
     )
   }
-
 end
