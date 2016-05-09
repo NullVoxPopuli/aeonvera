@@ -44,6 +44,7 @@ RSpec.describe Api::LessonsController, type: :controller do
           type: 'lessons',
           attributes: {
             price: '23.56',
+            description: 'wuuuut',
             name: @lesson.name + ' new lindyhop'
           }
         }
@@ -64,7 +65,8 @@ RSpec.describe Api::LessonsController, type: :controller do
           type: 'lessons',
           attributes: {
             price: '9.0',
-            name: 'new lindyhop'
+            name: 'new lindyhop',
+            description: 'aoeuuu'
           },
           relationships: {
             host: {

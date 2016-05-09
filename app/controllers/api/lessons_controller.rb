@@ -20,13 +20,22 @@ class Api::LessonsController < Api::EventResourceController
 
   def update_lesson_params
     whitelistable_params do |whitelister|
-      whitelister.permit(:name, :price)
+      whitelister.permit(
+        :name, :price, :description,
+        :starts_at, :ends_at, :expires_at,
+        :registration_opens_at, :registration_closes_at, :becomes_available_at
+      )
     end
   end
 
   def create_lesson_params
     whitelistable_params(polymorphic: [:host]) do |whitelister|
-      whitelister.permit(:name, :price, :host_id, :host_type)
+      whitelister.permit(
+        :host_id, :host_type,
+        :name, :price, :description,
+        :starts_at, :ends_at, :expires_at,
+        :registration_opens_at, :registration_closes_at, :becomes_available_at
+      )
     end
   end
 end
