@@ -14,11 +14,11 @@
 
   protected
 
-  def render_model(include_param = nil)
+  def render_model(include_param = nil, success_status: 200)
     if model.errors.present?
       render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     else
-      render json: model, include: include_param
+      render json: model, include: include_param, status: success_status
     end
   end
 
@@ -30,6 +30,11 @@
   # wrapper around normal strong parameters that includes Deserialization
   # for JSON API parameters.
   # all parameters hitting this controller should be JSON API formatted.
+  #
+  # example:
+  # whitelistable_params do |whitelister|
+  #   whitelister.permit(:name, :price)
+  # end
   def whitelistable_params(polymorphic: [], embedded: [])
     deserialized = deserialize_params(
       polymorphic: polymorphic,

@@ -5,6 +5,8 @@ class LineItem < ActiveRecord::Base
   include HasMetadata
   include Purchasable
 
+  validates :name, presence: true
+
   belongs_to :host, polymorphic: true
   # TODO:
   # belongs_to :reference, polymorphic: true

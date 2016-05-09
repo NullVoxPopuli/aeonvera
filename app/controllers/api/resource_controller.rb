@@ -10,7 +10,7 @@ class Api::ResourceController < APIController
   end
 
   def create
-    render_model
+    render_model(params[:include], success_status: 201)
   end
 
   def update

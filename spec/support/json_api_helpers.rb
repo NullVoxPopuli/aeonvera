@@ -15,7 +15,13 @@ end
 def json_api_create_with(klass, params)
   params = ActiveModelSerializers::KeyTransform.dash(params)
 
-  expect { post :create, params }.to change(klass, :count).by(1)
+  expect {
+    post :create, params
+    if response.status != 201
+      ap JSON.parse(response.body)
+    end
+    expect(response.status).to eq 201
+  }.to change(klass, :count).by(1)
 
   json = JSON.parse(response.body)
   data = json['data']
