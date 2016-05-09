@@ -9,26 +9,11 @@ class Api::MembershipRenewalsController < Api::ResourceController
   private
 
   def create_membership_renewal_params
-    data = params.require(:data)
-    attributes = data
-      .require(:attributes)
-      .permit(:start_date)
+    whitelisted = whitelistable_params do |whitelister|
+      whitelister.permit(:start_date, :membership_option_id, :member_id)
+    end
 
-    relationships = data.require(:relationships)
-
-    user = relationships
-      .require(:member)
-      .require(:data)
-      .permit(:id)
-
-    membership_option = relationships
-      .require(:membership_option)
-      .require(:data)
-      .permit(:id)
-
-    attributes.merge(
-      user_id: user[:id],
-      membership_option_id: membership_option[:id])
+    whitelisted.merge(user_id: whitelisted.delete(:member_id))
   end
 
 end
