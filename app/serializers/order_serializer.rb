@@ -1,5 +1,5 @@
 class OrderSerializer < ActiveModel::Serializer
-  type 'order'
+  type 'orders'
 
   attributes :id,
              :host_id, :host_type,

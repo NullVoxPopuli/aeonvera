@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Api::MembershipRenewalsController, type: :controller do
-  context 'create' do
+  describe 'create' do
     before(:each) do
       @organization = create(:organization)
       @user = create(:user)
@@ -36,5 +36,4 @@ describe Api::MembershipRenewalsController, type: :controller do
       json_api_create_with(MembershipRenewal, json_api)
     end
   end
-
 end

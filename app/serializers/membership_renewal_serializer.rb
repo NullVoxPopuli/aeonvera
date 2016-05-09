@@ -1,5 +1,5 @@
 class MembershipRenewalSerializer < ActiveModel::Serializer
-  attributes :id, :start_date, :expires_at, :expired, :duration
+  attributes :id, :start_date, :expires_at, :expired, :duration, :_id
 
   belongs_to :membership_option
   class LineItem::MembershipOptionSerializer < ::MembershipOptionSerializer
@@ -17,8 +17,13 @@ class MembershipRenewalSerializer < ActiveModel::Serializer
   end
 
   # fake the id, since this is a join table
+  # todo: why didn't I just make these relationships?
   def id
     "#{object.user_id}.#{object.membership_option_id}"
+  end
+
+  def _id
+    object.id
   end
 
   def expired

@@ -58,7 +58,9 @@ def json_api_create_with(klass, params)
     expect(actual).to eq value
   end
 
-  created_object = klass.find(data['id'])
+  id = data['id']
+  id = attributes['-id'] if data['id'].include?('.')
+  created_object = klass.find(id)
   expect(created_object).to be_present
 
   # auto compare relationships
