@@ -3,7 +3,7 @@ module OrderOperations
   class ReadAll < SkinnyControllers::Operation::Base
     def run
       search = model.ransack(params[:q]).result(distinct: true)
-        .includes(:user, :host, attendance: [:attendee], line_items: [:line_item])
+        .includes(:user, :host, attendance: [:attendee], order_line_items: [:line_item])
 
       return search if search.empty?
 
