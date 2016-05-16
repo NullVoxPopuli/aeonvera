@@ -38,6 +38,7 @@ AeonVera::Application.routes.draw do
     # per event
     # ideally this stuff would be nested under events
     resources :hosts
+    resources :events 
     resources :housing_requests
     resources :housing_provisions
     resources :volunteers
@@ -46,9 +47,8 @@ AeonVera::Application.routes.draw do
     resources :competitions
     resources :competition_responses
     resources :line_items
-    # create/update is handled by orders' create/update
-    # TODO: this kinda sucks, find a better way.
-    # see UI code for why.
+
+    resources :orders
     resources :order_line_items
     resources :shirts
     resources :packages
@@ -63,19 +63,6 @@ AeonVera::Application.routes.draw do
     get '/chart_infos/:id', to: 'chart_data#show'
     get '/charts/:id', to: 'chart_data#show'
 
-    # TODO: make the above under events
-    resources :events do
-      resources :orders, controller: 'events/orders'
-      # resources :discounts, controller: 'events/discounts'
-      # resources :packages, controller: 'events/packages'
-    end
-
-    # user specific info
-    resources :orders, except: [:destroy] do
-      member do
-        put :modify
-      end
-    end
 
     devise_scope :api_user do
       get '/confirmation', to: 'users/confirmations#show'

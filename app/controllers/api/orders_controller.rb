@@ -18,6 +18,10 @@ class Api::OrdersController < APIController
     render_model('order_line_items.line_item')
   end
 
+  def destroy
+    render json: model
+  end
+
   private
 
   def deserialized_params
