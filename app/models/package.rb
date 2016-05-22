@@ -21,6 +21,8 @@ class Package < ActiveRecord::Base
   }
 
   validates :event, presence: true
+  validates :initial_price, presence: true
+  validates :at_the_door_price, presence: true
 
   # @return [String] Name of this package and the current tier, if applicable
   def name_at_tier
