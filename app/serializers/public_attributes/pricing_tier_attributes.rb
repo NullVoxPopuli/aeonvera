@@ -4,12 +4,8 @@ module PublicAttributes
 
     included do
       attributes :id, :event_id,
-        :increase_by, :date, :registrants,
+        :increase_by_dollars, :date, :registrants,
         :is_opening_tier
-    end
-
-    def increase_by
-      object.amount
     end
 
     def is_opening_tier
