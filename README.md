@@ -16,7 +16,7 @@
 | --- | ---- |
 | master | [![Build Status](https://travis-ci.org/NullVoxPopuli/aeonvera.svg)](https://travis-ci.org/NullVoxPopuli/aeonvera) |
 | production | [![Build Status](https://travis-ci.org/NullVoxPopuli/aeonvera.svg?branch=production)](https://travis-ci.org/NullVoxPopuli/aeonvera) |
-  
+
 Quality:  
 [![Code Climate](https://codeclimate.com/github/NullVoxPopuli/aeonvera/badges/gpa.svg)](https://codeclimate.com/github/NullVoxPopuli/aeonvera)
 [![codebeat badge](https://codebeat.co/badges/371b7d4d-64fe-4375-8e0b-4a505ee2b2ea)](https://codebeat.co/projects/github-com-nullvoxpopuli-aeonvera)
@@ -30,9 +30,10 @@ Quality:
 
   * [Production (aeonvera.com)](https://www.aeonvera.com)
   * [Staging (aeonvera-staging.work)](http://aeonvera-staging.work/)
-    This is automatically updated every time the master branch is updated. Once test coverage gets over 90%, the production server will update automatically as well.
   * [Development (swing.vhost:3000)](http://swing.vhost:3000)
     For development on a local machine / this isn't publicly accessible.
+
+  Production and Staging environments are automatically updated when the tests pass.
 
 ## Environment Setup
 
@@ -60,10 +61,6 @@ rails s
   * STRIPE_SECRET_KEY
   * STRIPE_PUBLISHABLE_KEY
   * REDISCLOUD_URL
-  * MANDRILL_USERNAME
-  * MANDRILL_APIKEY
-  * DEVISE_SECRET_KEY
-  * COOKIE_SECRET_KEY
   * TRUSTED_IP
 
 ## Tests
