@@ -31,7 +31,6 @@ Quality:
   * [Production (aeonvera.com)](https://www.aeonvera.com)
   * [Staging (aeonvera-staging.work)](http://aeonvera-staging.work/)
   * [Development (swing.vhost:3000)](http://swing.vhost:3000)
-    For development on a local machine / this isn't publicly accessible.
 
   Production and Staging environments are automatically updated when the tests pass.
 
