@@ -28,9 +28,9 @@ Quality:
 
 ## Servers
 
-  * [Production (aeonvera.com)](https://www.aeonvera.com)
-  * [Staging (aeonvera-staging.work)](http://aeonvera-staging.work/)
-  * [Development (swing.vhost:3000)](http://swing.vhost:3000)
+* [Production (aeonvera.com)](https://www.aeonvera.com)
+* [Staging (aeonvera-staging.work)](http://aeonvera-staging.work/)
+* [Development (swing.vhost:3000)](http://swing.vhost:3000)
 
   Production and Staging environments are automatically updated when the tests pass.
 
