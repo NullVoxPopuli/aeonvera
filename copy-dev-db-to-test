@@ -1,2 +1,0 @@
-PGPASSWORD='1234';
-psql -U lprestonsegoiii -d aeonvera_development -c 'CREATE DATABASE aeonvera_test WITH TEMPLATE aeonvera_development OWNER lprestonsegoiii;'

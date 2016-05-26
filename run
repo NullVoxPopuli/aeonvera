@@ -1,0 +1,28 @@
+#!/bin/bash
+
+export S3_BUCKET_NAME=aeonvera-dev
+echo 'S3_BUCKET_NAME:'
+echo $S3_BUCKET_NAME
+echo ''
+
+echo 'S3_ACCESS_KEY_ID:'
+echo $S3_ACCESS_KEY_ID
+echo '' 
+
+echo 'S3_SECRET_ACCESS_KEY:'
+echo $S3_SECRET_ACCESS_KEY
+echo ''
+
+
+export pgstatus="$(service postgresql status | grep inactive)"
+if [ -n $pgstatus ]
+then
+  sudo /etc/init.d/postgresql start
+  echo ''
+fi
+
+
+echo 'starting...'
+echo ''
+
+rails s
