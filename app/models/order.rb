@@ -160,6 +160,12 @@ class Order < ActiveRecord::Base
     host_type == Organization.name
   end
 
+  def has_membership?
+    order_line_items.select do |line_item|
+      line_item.line_item_type == LineItem::MembershipOption.name
+    end.present?
+  end
+
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << ["Name", "Email", "Registered At", "Payment Method", "Paid",

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160328115508) do
+ActiveRecord::Schema.define(version: 20160528125102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,19 +55,6 @@ ActiveRecord::Schema.define(version: 20160328115508) do
   create_table "attendances_discounts", force: :cascade do |t|
     t.integer "attendance_id"
     t.integer "discount_id"
-  end
-
-  create_table "attendees", force: :cascade do |t|
-    t.string   "first_name",                 limit: 255
-    t.string   "last_name",                  limit: 255
-    t.string   "phone_number",               limit: 255
-    t.integer  "dancer_orientation"
-    t.boolean  "interested_in_volunteering"
-    t.integer  "event_id"
-    t.integer  "package_id"
-    t.integer  "level_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "collaborations", force: :cascade do |t|
@@ -123,11 +110,6 @@ ActiveRecord::Schema.define(version: 20160328115508) do
     t.string   "host_type",     limit: 255
     t.integer  "user_id"
     t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "discounted_items", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -331,21 +313,24 @@ ActiveRecord::Schema.define(version: 20160328115508) do
   add_index "orders", ["host_id", "host_type"], name: "index_orders_on_host_id_and_host_type", using: :btree
 
   create_table "organizations", force: :cascade do |t|
-    t.string   "name",                    limit: 255
-    t.string   "tagline",                 limit: 255
-    t.string   "city",                    limit: 255
-    t.string   "state",                   limit: 255
-    t.boolean  "beta",                                default: false, null: false
+    t.string   "name",                       limit: 255
+    t.string   "tagline",                    limit: 255
+    t.string   "city",                       limit: 255
+    t.string   "state",                      limit: 255
+    t.boolean  "beta",                                   default: false, null: false
     t.integer  "owner_id"
     t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "domain",                  limit: 255
+    t.string   "domain",                     limit: 255
     t.boolean  "make_attendees_pay_fees"
-    t.string   "logo_file_name",          limit: 255
-    t.string   "logo_content_type",       limit: 255
+    t.string   "logo_file_name",             limit: 255
+    t.string   "logo_content_type",          limit: 255
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+    t.string   "notify_email"
+    t.boolean  "email_all_purchases",                    default: false, null: false
+    t.boolean  "email_membership_purchases",             default: false, null: false
   end
 
   add_index "organizations", ["domain"], name: "index_organizations_on_domain", using: :btree

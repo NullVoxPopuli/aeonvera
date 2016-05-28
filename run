@@ -15,7 +15,7 @@ echo ''
 
 
 export pgstatus="$(service postgresql status | grep inactive)"
-if [ -n $pgstatus ]
+if [ "$($pgstatus)" ] 
 then
   sudo /etc/init.d/postgresql start
   echo ''

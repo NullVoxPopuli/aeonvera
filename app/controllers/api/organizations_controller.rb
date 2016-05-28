@@ -24,7 +24,10 @@ class Api::OrganizationsController < Api::ResourceController
         :city, :state, :domain, :make_attendees_pay_fees,
         :logo,
         :logo_file_name, :logo_file_size,
-        :logo_updated_at, :logo_content_type
+        :logo_updated_at, :logo_content_type,
+        :notify_email,
+        :email_all_purchases,
+        :email_membership_purchases
       )
     end
   end

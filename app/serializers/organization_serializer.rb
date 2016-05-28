@@ -7,7 +7,10 @@ class OrganizationSerializer < ActiveModel::Serializer
     :logo_url_thumb, :logo_url_medium, :logo_url,
     :has_stripe_integration,
     :make_attendees_pay_fees,
-    :accept_only_electronic_payments
+    :accept_only_electronic_payments,
+    :notify_email,
+    :email_all_purchases,
+    :email_membership_purchases
 
   def accept_only_electronic_payments
     true
