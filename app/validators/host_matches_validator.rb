@@ -4,6 +4,8 @@
 class HostMatchesValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
+    return unless value # this should be handled by a presence validator
+
     if options.key?(:with_host)
       host_path = options[:with_host]
 

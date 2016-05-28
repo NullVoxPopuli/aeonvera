@@ -3,7 +3,7 @@ def add_to_order(order, line_item, quantity: 1, price: 0)
           line_item.try(:price) ||
           line_item.try(:value) || price
   oli = OrderLineItem.new(
-    line_item_id: line_item.id,
+    line_item: line_item,
     line_item_type: line_item.class.name,
     order: order,
     price: price,

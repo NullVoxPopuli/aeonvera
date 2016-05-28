@@ -147,7 +147,6 @@ module Payable
       else
         amount += (line_item.price * line_item.quantity)
       end
-
     end
 
     amount = amount_after_global_discounts(amount, remaining_discounts)
