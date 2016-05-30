@@ -1,6 +1,6 @@
 # Main entry point to the app / ember
 class MarketingController < ActionController::Base
-  before_action :allow_embed?
+  before_action :set_x_frame_options
 
   def index
     # get ember from redis
@@ -13,9 +13,9 @@ class MarketingController < ActionController::Base
 
   private
 
-  def allow_embed?
+  def set_x_frame_options
     # somewhat mitigate X-FRAME-OPTIONS weirdness
-    if params[:action].include?('/embed/')
+    if request.path.include?('/embed/')
       response.header['X-Frame-Options'] = 'ALLOW-FROM *'
     end
   end
