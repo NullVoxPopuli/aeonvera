@@ -5,23 +5,21 @@ require 'rails/all'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
-require "csv"
+require 'csv'
 
 module AeonVera
   class Application < Rails::Application
-
     # convert all yml files to {file_name}_CONFIG hashes
     Dir["#{Rails.root}/config/*.yml"].each do |file|
       file_name = File.basename(file)
-      extension = file_name.split(".").last
-      if extension == "yml"
-        name = file_name.split(".").first
-        next if name.upcase == "DATABASE"
-        config_name = "#{name.upcase}_CONFIG"
-        config = YAML.load_file(file)
-        config = HashWithIndifferentAccess.new.merge(config)
-        Kernel.const_set("#{config_name}", config)
-      end
+      extension = file_name.split('.').last
+      next unless extension == 'yml'
+      name = file_name.split('.').first
+      next if name.casecmp('DATABASE').zero?
+      config_name = "#{name.upcase}_CONFIG"
+      config = YAML.load_file(file)
+      config = HashWithIndifferentAccess.new.merge(config)
+      Kernel.const_set(config_name.to_s, config)
     end
 
     # Upgrading from rails 4.1.x to 4.2.x
@@ -32,11 +30,7 @@ module AeonVera
     # Active Record callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
-
-
-    config.action_view.field_error_proc = Proc.new { |html_tag, instance|
-      html_tag
-    }
+    config.action_view.field_error_proc = proc { |html_tag, _instance| html_tag }
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -64,16 +58,24 @@ module AeonVera
         access_key_id: ENV['S3_ACCESS_KEY_ID'] || 'AKIAI4M3O6VZWG7P5VLQ',
         secret_access_key: ENV['S3_SECRET_ACCESS_KEY'] || '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'
       },
-      url: ":s3_domain_url"
+      url: ':s3_domain_url'
     }
 
-    config.middleware.insert_before 0, "Rack::Cors" do
+    # because we want the registration form to be embeddable, and we need to
+    # disable X-Frame-Options restrictions (even for the API).
+    # this is a browser-implemented security feature to help
+    # mitigate phishing attempts
+    config.action_dispatch.default_headers = {
+      'X-Frame-Options' => 'ALLOWALL'
+    }
+
+    config.middleware.insert_before 0, 'Rack::Cors' do
       allow do
-        origins "*"
-        resource "*",
-          :headers => :any,
-          :methods => [:get, :post, :patch, :delete, :put, :options, :head],
-          :credentials => true
+        origins '*'
+        resource '*',
+          headers: :any,
+          methods: [:get, :post, :patch, :delete, :put, :options, :head],
+          credentials: true
       end
     end
   end
