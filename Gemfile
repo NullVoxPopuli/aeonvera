@@ -1,16 +1,16 @@
 source 'https://rubygems.org'
 
-ruby '2.3.0'
+ruby '2.3.1'
 
 ##########
 # Core
 ##########
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '5.0.0.rc1'
 gem 'i18n'
 # Use Active Record to store sessions
-gem 'activerecord-session_store'
+# gem 'activerecord-session_store'
 # for cross-origin resource sharing
 gem 'rack-cors', :require => 'rack/cors'
 # JSON serialization
