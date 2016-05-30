@@ -6,20 +6,19 @@ class HostedEventSerializer < ActiveModel::Serializer
     :number_of_leads, :number_of_follows, :number_of_shirts_sold,
     :my_event
 
+  def number_of_leads
+    object.attendances.leads.count
+  end
 
-    def number_of_leads
-      object.attendances.leads.count
-    end
+  def number_of_follows
+    object.attendances.follows.count
+  end
 
-    def number_of_follows
-      object.attendances.follows.count
-    end
+  def number_of_shirts_sold
+    object.shirts_sold
+  end
 
-    def number_of_shirts_sold
-      object.shirts_sold
-    end
-
-    def my_event
-      object.hosted_by_id == (scope || current_user).id
-    end
+  def my_event
+    object.hosted_by_id == (scope || current_user).id
+  end
 end

@@ -57,6 +57,19 @@ ActiveRecord::Schema.define(version: 20160528125102) do
     t.integer "discount_id"
   end
 
+  create_table "attendees", force: :cascade do |t|
+    t.string   "first_name",                 limit: 255
+    t.string   "last_name",                  limit: 255
+    t.string   "phone_number",               limit: 255
+    t.integer  "dancer_orientation"
+    t.boolean  "interested_in_volunteering"
+    t.integer  "event_id"
+    t.integer  "package_id"
+    t.integer  "level_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "collaborations", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "collaborated_id"
@@ -110,6 +123,11 @@ ActiveRecord::Schema.define(version: 20160528125102) do
     t.string   "host_type",     limit: 255
     t.integer  "user_id"
     t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "discounted_items", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end

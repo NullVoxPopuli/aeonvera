@@ -157,11 +157,14 @@ class User < ActiveRecord::Base
   end
 
   # unique union of the two sets of events
+  # returns a relation, rather than an array, so we can still
+  # use includes, and other active query things on the result.
   def hosted_and_collaborated_events
-    hosted = hosted_events
-    collaborated = collaborated_events
+    ids = (collaborated_event_ids + hosted_event_ids).uniq
+    events_table = Arel::Table.new(:events)
+    id_column = events_table[:id]
 
-    hosted | collaborated
+    Event.where(id_column.in(ids))
   end
 
   def upcoming_events
