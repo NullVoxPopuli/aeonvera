@@ -1,16 +1,21 @@
+# This controller only responds to update
 class Api::Users::CollaborationsController < APIController
   before_filter :must_be_logged_in
 
   def update
-    operation = CollaborationOperations::AcceptInvitation.new(
+    render_model
+  end
+
+  # model will contain errors if something went wrong
+  def model
+    @model_result ||= accept_operation.run
+  end
+
+  def accept_operation
+    @accept_operation ||= CollaborationOperations::AcceptInvitation.new(
       current_user,
       params,
       accept_params)
-
-    model = operation.run
-
-    # model will contain errors if something went wrong
-    render json: model
   end
 
   private

@@ -43,6 +43,8 @@ module CollaborationOperations
     end
 
     def cache_key_is_valid?
+      binding.pry
+
       Cache.get(cache_key) && Cache.get("#{cache_key}-email") == current_user.email
     end
 
