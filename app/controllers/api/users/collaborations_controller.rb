@@ -1,4 +1,4 @@
-class Api::Users::CollaboratorsController < APIController
+class Api::Users::CollaborationsController < APIController
   before_filter :must_be_logged_in
 
   def update
@@ -16,6 +16,6 @@ class Api::Users::CollaboratorsController < APIController
   private
 
   def accept_params
-    params.require(:host_type, :host_id, :token)
+    params.permit(:host_type, :host_id, :token)
   end
 end

@@ -80,10 +80,10 @@ AeonVera::Application.routes.draw do
         # logging in
         sessions: 'api/users/sessions'
       }
-    namespace :users do
-      # accepting invitations to work on an event / org
-      resources :collaborations, only: [:update]
-    end
+
+    # accepting invitations to work on an event / org
+    put '/users/collaborations', to: 'users/collaborations#update'
+
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
     resources :users, only: [:show, :update, :destroy]

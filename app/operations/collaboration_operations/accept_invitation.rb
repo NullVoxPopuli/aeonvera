@@ -5,7 +5,7 @@ module CollaborationOperations
     def run
       return collaboration if collaboration.errors.present?
 
-      if cache_key_is_valid
+      if cache_key_is_valid?
         if can_be_collaborator?
           # push the user in to the collaborators list
           host.collaborators << current_user
