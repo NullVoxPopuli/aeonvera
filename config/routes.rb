@@ -1,17 +1,15 @@
 AeonVera::Application.routes.draw do
-
   constraints(Subdomain) do
-     match '(*any)' => redirect { |params, request|
+    match '(*any)' => redirect { |_params, request|
       url = request.url
       new_url = Subdomain.redirect_url_for(url)
-     }, via: [:get]
-   end
+    }, via: [:get]
+  end
 
   # for our frontend ui.
   # this should also enable the creation of
   # native mobile apps for android / iphone / whatever
   namespace :api, defaults: { format: :json } do
-
     # for both events and communities
     resources :integrations, except: [:update, :index]
 
@@ -39,7 +37,7 @@ AeonVera::Application.routes.draw do
     # ideally this stuff would be nested under events
     resources :hosts
     resources :events
-    resources :collaborations
+    resources :collaborations, except: [:show]
     resources :housing_requests
     resources :housing_provisions
     resources :volunteers
@@ -64,7 +62,6 @@ AeonVera::Application.routes.draw do
     get '/chart_infos/:id', to: 'chart_data#show'
     get '/charts/:id', to: 'chart_data#show'
 
-
     devise_scope :api_user do
       get '/confirmation', to: 'users/confirmations#show'
       post '/confirmation', to: 'users/confirmations#create'
@@ -72,23 +69,24 @@ AeonVera::Application.routes.draw do
 
     resources :registrations
 
-    devise_for :users,# skip: :sessions,
+    devise_for :users, # skip: :sessions,
       controllers: {
         # password resets
         passwords: 'api/users/passwords',
         # email confirmations
-        confirmations: "api/users/confirmations",
+        confirmations: 'api/users/confirmations',
         # creating new account
-        registrations: "api/users/registrations",
+        registrations: 'api/users/registrations',
         # logging in
-        sessions: "api/users/sessions"
+        sessions: 'api/users/sessions'
       }
-
+    namespace :users do
+      # accepting invitations to work on an event / org
+      resources :collaborations, only: [:update]
+    end
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
     resources :users, only: [:show, :update, :destroy]
-
-
   end
 
   namespace :oauth do
@@ -97,19 +95,17 @@ AeonVera::Application.routes.draw do
     post 'stripe/webhook', to: 'stripe#webhook'
   end
 
-
   namespace :auth do
-    get "paypal/callback", to: "paypal#callback"
+    get 'paypal/callback', to: 'paypal#callback'
   end
 
   # legacy routes
-  get "/terms_of_service", to: redirect("welcome/tos")
-  get "/privacy", to: redirect("/welcome/privacy")
-  get "/calendar", to: redirect("/upcoming-events")
-  get "/scenes", to: redirect("/communities")
-
+  get '/terms_of_service', to: redirect('welcome/tos')
+  get '/privacy', to: redirect('/welcome/privacy')
+  get '/calendar', to: redirect('/upcoming-events')
+  get '/scenes', to: redirect('/communities')
 
   # redirect everything to ember
-  get "/*path" => "marketing#index"
-  root :to => "marketing#index"
+  get '/*path' => 'marketing#index'
+  root to: 'marketing#index'
 end

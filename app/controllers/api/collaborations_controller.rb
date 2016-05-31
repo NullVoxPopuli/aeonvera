@@ -5,7 +5,7 @@ class Api::CollaborationsController < Api::ResourceController
 
   private
 
-  def creaet_collaboration_params
+  def create_collaboration_params
     whitelistable_params(polymorphic: [:host]) do |whitelister|
       whitelister.permit(
         :email,
