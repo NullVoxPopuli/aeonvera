@@ -1,8 +1,10 @@
 module CollaborationOperations
-  class AcceptInvitation < SkinnyController::Operation::Base
+  class AcceptInvitation < SkinnyControllers::Operation::Base
     include CollaborationOperations::Helpers
 
     def run
+      return collaboration if collaboration.errors.present?
+
       if cache_key_is_valid
         if can_be_collaborator?
           # push the user in to the collaborators list

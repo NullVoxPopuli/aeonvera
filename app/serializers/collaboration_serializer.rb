@@ -9,6 +9,6 @@ class CollaborationSerializer < ActiveModel::Serializer
   end
 
   def user_name
-    object.user.name
+    object.user&.full_name
   end
 end

@@ -34,13 +34,16 @@ module CollaborationOperations
   # end
   #
   # # CollaborationsController#index
-  # class ReadAll < SkinnyControllers::Operation::Base
-  #   def run
-  #     # model is a list of model_class instances
-  #     model if allowed?
-  #   end
-  # end
+  class ReadAll < SkinnyControllers::Operation::Base
+    include HelperOperations::Helpers
+    def run
+      model if allowed?
+    end
 
+    def find_model
+      host_from_params(params).collaborations
+    end
+  end
 
   #
   # # CollaborationsController#show

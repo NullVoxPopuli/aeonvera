@@ -1,8 +1,10 @@
 module CollaborationOperations
-  class Create < SkinnyController::Operation::Base
+  class Create < SkinnyControllers::Operation::Base
     include CollaborationOperations::Helpers
 
     def run
+      return collaboration if collaboration.errors.present?
+
       create_cache_entry
       send_email
 
@@ -13,12 +15,12 @@ module CollaborationOperations
       # store the token in the cache so that it can be looked up later
       # by the person receiving the email
       Cache.set(cache_key, true)
-      Cache.set("#{cache_key}-email", params[:email])
+      Cache.set("#{cache_key}-email", params_for_action[:email])
     end
 
     def send_email
       CollaboratorsMailer.invitation(
-        from: current_user, email_to: params[:email],
+        from: current_user, email_to: params_for_action[:email],
         host: host, link: link_path
       ).deliver_now!
     end
@@ -27,7 +29,8 @@ module CollaborationOperations
       # for non rails use (cause I was curious)
       # to_query could be written as:
       # hash.to_a.map{ |i| i.join('=') }.join('&')
-      ENV.host + '/collaborations?' + link_params.to_query
+      domain = APPLICATION_CONFIG[:domain][Rails.env]
+      'https://' + domain  + '/collaboration?' + link_params.to_query
     end
 
     def link_params
@@ -35,7 +38,7 @@ module CollaborationOperations
     end
 
     def token_from_email
-      @token_from_email ||= Digest::SHA1.hexdigest(params[:email] + Time.now.to_s)
+      @token_from_email ||= Digest::SHA1.hexdigest(params_for_action[:email] + Time.now.to_s)
     end
 
     def cache_key

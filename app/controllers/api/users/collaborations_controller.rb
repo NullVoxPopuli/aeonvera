@@ -1,4 +1,6 @@
 class Api::Users::CollaboratorsController < APIController
+  before_filter :must_be_logged_in
+
   def update
     operation = CollaborationOperations::AcceptInvitation.new(
       current_user,
@@ -8,7 +10,7 @@ class Api::Users::CollaboratorsController < APIController
     model = operation.run
 
     # model will contain errors if something went wrong
-    render json: model, status: ok
+    render json: model
   end
 
   private
