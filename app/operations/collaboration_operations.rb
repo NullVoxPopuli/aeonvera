@@ -41,51 +41,7 @@ module CollaborationOperations
   #   end
   # end
 
-  class AcceptInvitation < SkinnyController::Operation::Base
-    def run
-      # look up token
-      key = "#{@host.class.name}-#{@host.id}-#{params[:token]}"
-      if Cache.get(key) and Cache.get("#{key}-email") == current_user.email
 
-        # make sure this person is not already a collaborator
-        # and that the current_uer is not the owner of the
-        # event or organization
-        if (not @host.collaborators.include?(current_user)) && @host.hosted_by != current_user
-          # push the user in to the collaborators list
-          @host.collaborators << current_user
-          flash[:notice] = "You are now helping with this #{@host.class.name}"
-        else
-          flash[:notice] = "You are already helping with this #{@host.class.name}"
-        end
-
-        # reduce cache bloat
-        Cache.delete(key)
-        Cache.delete("#{key}-email")
-
-        # redirect to the event the person was just added to
-        path = hosted_event_path(@host.id)
-        path = organization_path(@host.id) if @host.is_a?(Organization)
-
-        return redirect_to path
-      else
-        flash[:notice] = "Key not found or your user is not associated with the invited email"
-      end
-
-      redirect_to root_path
-    end
-
-    def host
-      @host ||= find_host
-    end
-
-    def find_host
-      kind = params[:host_type]
-      if [Event.name, Organization.name].includes?(kind)
-        klass = kind.safe_constantize
-        klass.find(params[:host_id]) if klass
-      end
-    end
-  end
   #
   # # CollaborationsController#show
   # class Read < SkinnyControllers::Operation::Base
