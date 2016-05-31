@@ -1,6 +1,6 @@
 class CollaborationSerializer < ActiveModel::Serializer
   attributes :id,
-    :user_name, :title
+    :user_name, :title, :created_at
 
   belongs_to :host
 
@@ -9,6 +9,6 @@ class CollaborationSerializer < ActiveModel::Serializer
   end
 
   def user_name
-    object.user&.full_name
+    object.user&.name
   end
 end

@@ -19,11 +19,7 @@ class Api::Users::SessionsController < Devise::SessionsController
     return invalid_login_attempt unless resource
 
     success = resource.valid_password?(params[:password])
-
-    if success
-      sign_in("user", resource)
-      return render_success(resource)
-    end
+    return render_success(resource) if success
 
     invalid_login_attempt
   end
@@ -42,10 +38,10 @@ class Api::Users::SessionsController < Devise::SessionsController
 
   def render_success(user)
     data = {
-       token: user.authentication_token,
-       email: user.email,
-       id: user.id
-     }
-     render json: data, status: 201
+      token: user.authentication_token,
+      email: user.email,
+      id: user.id
+    }
+    render json: data, status: 201
   end
 end
