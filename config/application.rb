@@ -1,6 +1,12 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rails/all'
+# require 'rails/all'
+# omitted: sprockets, rails/test_unit
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie' # for emails :-(
+require 'action_mailer/railtie'
+require 'active_job/railtie' # for later
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -68,6 +74,14 @@ module AeonVera
     config.action_dispatch.default_headers = {
       'X-Frame-Options' => 'ALLOWALL'
     }
+
+    # http://edgeguides.rubyonrails.org/api_app.html#choosing-middleware
+    # http://guides.rubyonrails.org/rails_on_rack.html#internal-middleware-stack
+    config.middleware.delete "ActionDispatch::Cookies"
+    config.middleware.delete "ActionDispatch::Session::CookieStore"
+    config.middleware.delete "ActionDispatch::Flash"
+    config.middleware.delete "Rack::Lock"
+    config.middleware.delete "ActionDispatch::Static"
 
     config.middleware.insert_before 0, 'Rack::Cors' do
       allow do
