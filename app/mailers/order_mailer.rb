@@ -23,6 +23,8 @@ class OrderMailer < ApplicationMailer
         @order.has_membership? and @host.try(:email_membership_purchases)
       )
 
+      bcc_emails = org_email.split(/[,;]/).map(&:strip)
+
       options[:bcc] = [org_email] if all_purchases_notification or membership_notification
     end
 

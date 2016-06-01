@@ -87,6 +87,25 @@ RSpec.describe OrderMailer, type: :mailer do
       expect(email.bcc).to eq [@org.notify_email]
     end
 
+    it 'bccs with multiple emails' do
+      @org.notify_email = 'test@testorg.test, test1@testorg.test; test2@testorg.test'
+      @org.email_all_purchases = true
+      @org.save
+      o = create(:order, user: @user, host: @org, buyer_email: 'buyer@gmail.com')
+      add_to_order(o, @lesson, price: 1)
+      o.save
+
+      ActionMailer::Base.deliveries.clear
+
+      OrderMailer.receipt(for_order: o).deliver_now
+      email = ActionMailer::Base.deliveries.first
+
+      expect(email.to).to include('buyer@gmail.com')
+      expect(email.bcc).to include('test@testorg.test')
+      expect(email.bcc).to include('test1@testorg.test')
+      expect(email.bcc).to include('test2@testorg.test')
+    end
+
     it 'bccs on a membership' do
       @org.notify_email = 'test@testorg.test'
       @org.email_membership_purchases = true
