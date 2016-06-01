@@ -2,7 +2,9 @@ class Api::ResourceController < APIController
   include SkinnyControllers::Diet
 
   def index
-    format.json { render json: model, include: params[:include] }
+    respond_to do |format|
+      format.json { render json: model, include: params[:include] }
+    end
   end
 
   def show
