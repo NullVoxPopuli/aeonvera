@@ -51,6 +51,29 @@ RSpec.describe OrderMailer, type: :mailer do
     expect(body).to include(token)
   end
 
+  it 'shows the contact email when present' do
+    host = create(:event, contact_email: 'test@test.abc')
+    o = create(:order, user: @user, attendance: create(:attendance), host: host)
+    ActionMailer::Base.deliveries.clear
+
+    OrderMailer.receipt(for_order: o).deliver_now
+    email = ActionMailer::Base.deliveries.first
+    body = email.body.raw_source
+    expect(body).to include('organizers.</a>')
+    expect(body).to include('test@test.abc')
+  end
+
+  it 'does not show a contact email when there is not one present' do
+    host = create(:event)
+    o = create(:order, user: @user, attendance: create(:attendance), host: host)
+    ActionMailer::Base.deliveries.clear
+
+    OrderMailer.receipt(for_order: o).deliver_now
+    email = ActionMailer::Base.deliveries.first
+    body = email.body.raw_source
+    expect(body.gsub("\n", '')).to include('email  the organizers.')
+  end
+
   describe 'organization email notifications' do
     before(:each) do
       @org = create(:organization)

@@ -13,6 +13,11 @@ Your payment <%= @preposition %> <%= @event.name %> has been received. <br>
 <br>
 <br>
 If you have any questions about <%= @event.name %>,
-feel free to email the event organizers.
+feel free to email
+<% if @event.contact_email.present? %>
+  <a href='mailto:<%= @event.contact_email %>'>the event organizers.</a>
+<% else %>
+  the event organizers.
+<% end %>
 <br>
 <br>

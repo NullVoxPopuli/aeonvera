@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160528125102) do
+ActiveRecord::Schema.define(version: 20160602191847) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,16 @@ ActiveRecord::Schema.define(version: 20160528125102) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "attendance_line_items", force: :cascade do |t|
+    t.integer "attendance_id",  null: false
+    t.integer "line_item_id",   null: false
+    t.integer "quantity"
+    t.string  "size"
+    t.string  "line_item_type"
+  end
+
+  add_index "attendance_line_items", ["attendance_id", "line_item_id"], name: "index_attendance_line_items_on_attendance_id_and_line_item_id", using: :btree
 
   create_table "attendances", force: :cascade do |t|
     t.integer  "attendee_id"
@@ -55,6 +65,11 @@ ActiveRecord::Schema.define(version: 20160528125102) do
   create_table "attendances_discounts", force: :cascade do |t|
     t.integer "attendance_id"
     t.integer "discount_id"
+  end
+
+  create_table "attendances_shirts", force: :cascade do |t|
+    t.integer "attendance_id"
+    t.integer "shirt_id"
   end
 
   create_table "attendees", force: :cascade do |t|
@@ -182,6 +197,7 @@ ActiveRecord::Schema.define(version: 20160528125102) do
     t.text     "registration_email_disclaimer"
     t.boolean  "legacy_housing",                              default: false, null: false
     t.boolean  "ask_if_leading_or_following",                 default: true,  null: false
+    t.string   "contact_email"
   end
 
   add_index "events", ["domain"], name: "index_events_on_domain", using: :btree
@@ -349,6 +365,7 @@ ActiveRecord::Schema.define(version: 20160528125102) do
     t.string   "notify_email"
     t.boolean  "email_all_purchases",                    default: false, null: false
     t.boolean  "email_membership_purchases",             default: false, null: false
+    t.string   "contact_email"
   end
 
   add_index "organizations", ["domain"], name: "index_organizations_on_domain", using: :btree
@@ -410,6 +427,16 @@ ActiveRecord::Schema.define(version: 20160528125102) do
     t.integer "restrictable_id"
     t.string  "restrictable_type", limit: 255
   end
+
+  create_table "sessions", force: :cascade do |t|
+    t.string   "session_id", limit: 255, null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "shirts", force: :cascade do |t|
     t.string   "name",              limit: 255

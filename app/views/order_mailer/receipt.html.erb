@@ -14,6 +14,11 @@ You may view your order at any time <a href='<%= @order_url %>'>at this URL</a>.
 <br>
 <br>
 If you have any questions about <%= @host.name %>,
-feel free to email the organizers.
+feel free to email
+<% if @host.contact_email.present? %>
+  <a href='mailto:<%= @host.contact_email %>'>the organizers.</a>
+<% else %>
+  the organizers.
+<% end %>
 <br>
 <br>
