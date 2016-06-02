@@ -75,18 +75,25 @@ describe Api::UsersController, type: :controller do
   end
 
   context 'destroy' do
-    let (:user) { create(:user) }
+    let(:user) { create(:user) }
+
+    it 'requires a password' do
+      force_login(user)
+      delete :destroy, id: user.id
+      expect(response.status).to eq 422
+    end
+
     it 'deletes a user' do
       force_login(user)
       expect do
-        delete :destroy, id: user.id
+        delete :destroy, id: user.id, password: user.password
       end.to change(User, :count).by(-1)
     end
 
     it 'sends an email' do
       force_login(user)
       expect do
-        delete :destroy, id: user.id
+        delete :destroy, id: user.id, password: user.password
       end.to change(ActionMailer::Base.deliveries, :count).by(1)
     end
 
