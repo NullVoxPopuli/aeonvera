@@ -27,7 +27,8 @@ class Api::OrganizationsController < Api::ResourceController
         :logo_updated_at, :logo_content_type,
         :notify_email,
         :email_all_purchases,
-        :email_membership_purchases
+        :email_membership_purchases,
+        :contact_email
       )
     end
   end

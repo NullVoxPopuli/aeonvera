@@ -10,7 +10,9 @@ class OrganizationSerializer < ActiveModel::Serializer
     :accept_only_electronic_payments,
     :notify_email,
     :email_all_purchases,
-    :email_membership_purchases
+    :email_membership_purchases,
+    :contact_email
+
 
   def accept_only_electronic_payments
     true

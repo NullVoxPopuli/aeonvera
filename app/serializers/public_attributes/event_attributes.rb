@@ -21,7 +21,7 @@ module PublicAttributes
         :registration_email_disclaimer,
         :logo_url_thumb, :logo_url_medium, :logo_url,
         :url, :has_stripe_integration,
-        :ask_if_leading_or_following
+        :ask_if_leading_or_following, :contact_email
 
       belongs_to :opening_tier, serializer: OpeningTierSerializer
       belongs_to :current_tier

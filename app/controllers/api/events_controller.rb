@@ -18,6 +18,7 @@ class Api::EventsController < Api::ResourceController
         :make_attendees_pay_fees, :accept_only_electronic_payments,
         :logo,
         :registration_email_disclaimer,
+        :contact_email,
 
         opening_tier_attributes: [
           :date
