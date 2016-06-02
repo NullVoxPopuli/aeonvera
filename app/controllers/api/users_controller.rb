@@ -8,9 +8,16 @@ class Api::UsersController < Api::ResourceController
   end
 
   def destroy
-    super
-
-    AccountMailer.account_cancelled(model).deliver_now
+    # ensure the password is correct, otherwise error
+    if current_user.valid_password?(params[:password])
+      super
+      AccountMailer.account_cancelled(model).deliver_now
+    else
+      current_user.errors.add(:password, 'must be present')
+      render json: current_user,
+        status: 422,
+        serializer: ActiveModel::Serializer::ErrorSerializer
+    end
   end
 
   private
