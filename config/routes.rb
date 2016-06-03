@@ -79,6 +79,7 @@ AeonVera::Application.routes.draw do
         registrations: 'api/users/registrations',
         # logging in
         sessions: 'api/users/sessions'
+
       }
 
     # accepting invitations to work on an event / org
