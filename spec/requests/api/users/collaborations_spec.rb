@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::Users::ConfirmationsController, type: :request do
+describe Api::Users::CollaborationsController, type: :request do
   let(:user) { create(:user) }
 
   before(:each) do

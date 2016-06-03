@@ -14,16 +14,14 @@ describe Api::Users::ConfirmationsController, type: :request do
 
   context 'confirms the email address' do
     it 'clears the confirmation token' do
-      skip('why is this going to the users controller?')
-      get '/api/users/confirmations?confirmation_token=' + user.confirmation_token, {}, @headers
+      get '/api/users/confirmation?confirmation_token=' + user.confirmation_token, {}, @headers
 
       user.reload
       expect(user.confirmation_token).to be_nil
     end
 
     it 'sets confirmed at' do
-      skip('why is this going to the users controller?')
-      get '/api/confirmations?confirmation_token=' + user.confirmation_token
+      get '/api/confirmation?confirmation_token=' + user.confirmation_token
 
       user.reload
       expect(user.confirmed_at).to_not be_nil
