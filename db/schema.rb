@@ -25,16 +25,6 @@ ActiveRecord::Schema.define(version: 20160602191847) do
     t.datetime "updated_at"
   end
 
-  create_table "attendance_line_items", force: :cascade do |t|
-    t.integer "attendance_id",  null: false
-    t.integer "line_item_id",   null: false
-    t.integer "quantity"
-    t.string  "size"
-    t.string  "line_item_type"
-  end
-
-  add_index "attendance_line_items", ["attendance_id", "line_item_id"], name: "index_attendance_line_items_on_attendance_id_and_line_item_id", using: :btree
-
   create_table "attendances", force: :cascade do |t|
     t.integer  "attendee_id"
     t.integer  "host_id"
@@ -65,24 +55,6 @@ ActiveRecord::Schema.define(version: 20160602191847) do
   create_table "attendances_discounts", force: :cascade do |t|
     t.integer "attendance_id"
     t.integer "discount_id"
-  end
-
-  create_table "attendances_shirts", force: :cascade do |t|
-    t.integer "attendance_id"
-    t.integer "shirt_id"
-  end
-
-  create_table "attendees", force: :cascade do |t|
-    t.string   "first_name",                 limit: 255
-    t.string   "last_name",                  limit: 255
-    t.string   "phone_number",               limit: 255
-    t.integer  "dancer_orientation"
-    t.boolean  "interested_in_volunteering"
-    t.integer  "event_id"
-    t.integer  "package_id"
-    t.integer  "level_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "collaborations", force: :cascade do |t|
@@ -138,11 +110,6 @@ ActiveRecord::Schema.define(version: 20160602191847) do
     t.string   "host_type",     limit: 255
     t.integer  "user_id"
     t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "discounted_items", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -427,16 +394,6 @@ ActiveRecord::Schema.define(version: 20160602191847) do
     t.integer "restrictable_id"
     t.string  "restrictable_type", limit: 255
   end
-
-  create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", limit: 255, null: false
-    t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "shirts", force: :cascade do |t|
     t.string   "name",              limit: 255
