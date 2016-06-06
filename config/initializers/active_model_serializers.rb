@@ -4,6 +4,7 @@ ActiveModel::Serializer.config.adapter = :json_api
 module ActiveModelSerializers::Adapter::JsonApi::Deserialization
   class << self
     def validate_payload(document, &block)
+      # TODO: modify this to accept embedded documents
       true
     end
 
@@ -65,7 +66,7 @@ module ActiveModelSerializers
         private
 
         def type_for(serializer)
-          return serializer._type.call if serializer._type.is_a?(Proc)
+          return serializer._type.call(serializer.object) if serializer._type.is_a?(Proc)
           return serializer._type if serializer._type
           if ActiveModelSerializers.config.jsonapi_resource_type == :singular
             serializer.object.class.model_name.singular
