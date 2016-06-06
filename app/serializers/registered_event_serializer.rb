@@ -1,6 +1,7 @@
 # object is actually an Attendance in this serializer
 class RegisteredEventSerializer < ActiveModel::Serializer
-
+  type 'registered-events'
+  
   attributes :id, :name, :registered_at,
     :amount_owed, :amount_paid,
     :event_begins_at, :is_attending,
