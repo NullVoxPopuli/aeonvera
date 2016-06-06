@@ -8,7 +8,10 @@
   - path = '/confirmation?confirmation_token=' + @resource.confirmation_token
   - url = protocol + domain + path
   p = link_to 'Confirm my account', url
-  p If you need to, you can review the <%= link_to "Terms of Service", terms_of_service_url %>
+  p 
+    | If you need to, you can review the&nbsp;
+    - tos_url = protocol + domain + '/welcome/tos'
+    = link_to 'Terms of Service', tos_url
   br
   
 = render file: "/layouts/email"

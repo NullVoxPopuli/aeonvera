@@ -1,10 +1,10 @@
 class MembershipRenewalSerializer < ActiveModel::Serializer
   attributes :id, :start_date, :expires_at, :expired, :duration, :_id
 
-  belongs_to :membership_option
   class LineItem::MembershipOptionSerializer < ::MembershipOptionSerializer
     type 'membership_options'
   end
+  belongs_to :membership_option
 
   class MemberSerializer < ActiveModel::Serializer
     type 'members'
