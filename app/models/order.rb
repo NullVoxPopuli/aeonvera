@@ -18,6 +18,8 @@ class Order < ActiveRecord::Base
   # and should always be the same as the user that attendance is attached to.
   belongs_to :user
 
+  belongs_to :pricing_tier
+
   has_many :order_line_items, dependent: :destroy, inverse_of: :order
 
   # This has many doesn't work due to the line_item

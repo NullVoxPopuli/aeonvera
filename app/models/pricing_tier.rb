@@ -4,7 +4,7 @@ class PricingTier < ActiveRecord::Base
   has_many :packages
   belongs_to :event
   has_many :attendances, -> { where(attending: true).order("attendances.created_at DESC") }
-
+  has_many :orders
 
   has_and_belongs_to_many :packages,
     join_table: "packages_pricing_tiers",

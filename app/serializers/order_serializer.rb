@@ -15,6 +15,7 @@ class OrderSerializer < ActiveModel::Serializer
   has_many :order_line_items
   belongs_to :host
   belongs_to :attendance
+  belongs_to :pricing_tier
 
   def total_in_cents
     # convert from dollars to cents

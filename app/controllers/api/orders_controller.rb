@@ -34,7 +34,9 @@ class Api::OrdersController < APIController
   def create_order_params
     whitelister = ActionController::Parameters.new(deserialized_params)
     whitelisted = whitelister.permit(
-      :attendance_id, :host_id, :host_type, :payment_method,
+      :attendance_id, :host_id, :host_type,
+      :pricing_tier_id,
+      :payment_method,
       :user_email, :user_name,
       :payment_token,
 
