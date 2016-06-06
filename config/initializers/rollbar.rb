@@ -9,6 +9,8 @@ Rollbar.configure do |config|
     config.enabled = false
   end
 
+  config.scrub_fields |= [:current_password]
+
   # By default, Rollbar will try to call the `current_user` controller method
   # to fetch the logged-in user object, and then call that object's `id`,
   # `username`, and `email` methods to fetch those properties. To customize:
@@ -27,7 +29,9 @@ Rollbar.configure do |config|
   # via the rollbar interface.
   # Valid levels: 'critical', 'error', 'warning', 'info', 'debug', 'ignore'
   # 'ignore' will cause the exception to not be reported at all.
-  # config.exception_level_filters.merge!('MyCriticalException' => 'critical')
+  config.exception_level_filters.merge!(
+    'ActionController::RoutingError' => 'critical'
+  )
   #
   # You can also specify a callable, which will be called with the exception instance.
   # config.exception_level_filters.merge!('MyCriticalException' => lambda { |e| 'critical' })

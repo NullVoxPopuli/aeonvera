@@ -1,28 +1,22 @@
 class DiscountSerializer < ActiveModel::Serializer
-  type 'discounts'
+  include PublicAttributes::DiscountAttributes
 
-  attributes :id, :code,
-    :amount, :kind, :discount_type,
-    :disabled,
-    :applies_to,
-    :host_id, :host_type,
-    :allowed_number_of_uses, :requires_student_id,
-    :times_used, :package_ids
+  attributes :package_ids
 
-    has_many :allowed_packages
-    has_many :restraints, serializer: RestraintSerializer
-    has_many :order_line_items
-    belongs_to :host
+  has_many :allowed_packages
+  has_many :restraints, serializer: RestraintSerializer
+  has_many :order_line_items
+  belongs_to :host
 
-    def package_ids
-      object.allowed_package_ids
-    end
+  def package_ids
+    object.allowed_package_ids
+  end
 
-    def requires_orientation
-      object.requires_orientation?
-    end
+  def requires_orientation
+    object.requires_orientation?
+  end
 
-    def requires_partner
-      object.requires_partner?
-    end
+  def requires_partner
+    object.requires_partner?
+  end
 end

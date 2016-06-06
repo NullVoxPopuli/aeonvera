@@ -1,4 +1,14 @@
 class Api::DiscountsController < Api::EventResourceController
+  def index
+    return super unless params[:q]
+    search = Event.find(event_id).discounts.ransack(params[:q])
+    render json: search.result, each_serializer: RegistrationDiscountSerializer
+  end
+
+  def event_id
+    params.require(:event_id)
+  end
+
   private
 
   def update_discount_params

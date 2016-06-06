@@ -2,7 +2,9 @@ class Api::EventResourceController < Api::ResourceController
   before_filter :must_be_logged_in, except: [:index]
 
   def index
+    # TODO: integrate skinny_controllers with ransack to reduce queries?
     model = operation_class.new(current_user, params, index_params).run
+
 
     respond_to do |format|
       format.json { render json: model, include: params[:include] }

@@ -35,6 +35,7 @@ AeonVera::Application.routes.draw do
 
     # per event
     # ideally this stuff would be nested under events
+    get 'hosts/:subdomain', to: 'hosts#show'
     resources :hosts
     resources :events
     resources :collaborations, except: [:show]
@@ -69,6 +70,7 @@ AeonVera::Application.routes.draw do
 
     resources :registrations
 
+    get '/users/current-user', to: 'users#show'
     devise_for :users, # skip: :sessions,
       controllers: {
         # password resets
@@ -79,7 +81,6 @@ AeonVera::Application.routes.draw do
         registrations: 'api/users/registrations',
         # logging in
         sessions: 'api/users/sessions'
-
       }
 
     # accepting invitations to work on an event / org

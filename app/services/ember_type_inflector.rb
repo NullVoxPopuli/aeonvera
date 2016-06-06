@@ -24,7 +24,7 @@ module EmberTypeInflector
 
     non_line_items = [
       MembershipDiscount.name, Package.name, Competition.name,
-      Event.name, Organization.name]
+      Event.name, Organization.name, Discount.name]
 
     unless non_line_items.include?(key)
       key = key.include?('LineItem') ? key : "LineItem::#{key}"

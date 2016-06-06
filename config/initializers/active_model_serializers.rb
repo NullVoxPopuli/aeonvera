@@ -38,3 +38,42 @@ module ActiveModelSerializers::Adapter::JsonApi::Deserialization
     end
   end
 end
+
+
+# for dynamic type
+module ActiveModel
+  class Serializer
+    def json_key
+      root ||
+        (_type && _type.is_a?(Proc) ? _type.call(object) : _type) ||
+        object.class.model_name.to_s.underscore
+    end
+
+    class << self
+      def type(type)
+        self._type = type.is_a?(Proc) ? type : type.to_s if type
+      end
+    end
+  end
+end
+
+module ActiveModelSerializers
+  module Adapter
+    class JsonApi
+      class ResourceIdentifier
+
+        private
+
+        def type_for(serializer)
+          return serializer._type.call if serializer._type.is_a?(Proc)
+          return serializer._type if serializer._type
+          if ActiveModelSerializers.config.jsonapi_resource_type == :singular
+            serializer.object.class.model_name.singular
+          else
+            serializer.object.class.model_name.plural
+          end
+        end
+      end
+    end
+  end
+end
