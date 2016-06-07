@@ -21,8 +21,8 @@ gem "active_model_serializers", github: "rails-api/active_model_serializers"
 # gem 'jsonapi_parser', '~>0.5'
 
 # controllers, chill out!
-# gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_controllers'
-gem 'skinny_controllers', path: '/media/Ubuntu-Data/Development/skinny_controllers'
+gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_controllers'
+# gem 'skinny_controllers', path: '/media/Ubuntu-Data/Development/skinny_controllers'
 
 # model helpers
 gem 'date_time_attribute'
