@@ -19,6 +19,8 @@ module PublicAttributes
         :show_on_public_calendar,
         :make_attendees_pay_fees,
         :registration_email_disclaimer,
+        :logo_file_name, :logo_content_type,
+        :logo_file_size, :logo_updated_at,
         :logo_url_thumb, :logo_url_medium, :logo_url,
         :url, :has_stripe_integration,
         :ask_if_leading_or_following, :contact_email

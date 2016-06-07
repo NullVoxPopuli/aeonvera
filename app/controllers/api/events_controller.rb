@@ -17,6 +17,8 @@ class Api::EventsController < Api::ResourceController
         :location, :show_on_public_calendar,
         :make_attendees_pay_fees, :accept_only_electronic_payments,
         :logo,
+        :logo_file_name, :logo_file_size,
+        :logo_updated_at, :logo_content_type,
         :registration_email_disclaimer,
         :contact_email,
 
