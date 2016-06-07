@@ -4,7 +4,7 @@ describe Api::OrderLineItemsController, type: :controller do
   describe 'create' do
     before(:each) do
       @organization = create(:organization)
-      @user = create(:user)
+      @user = create_confirmed_user
       @membership_option = create(:membership_option, host: @organization)
       login_through_api(@user)
       @order = create(:order, user: @user, host: @organization)
@@ -45,14 +45,17 @@ describe Api::OrderLineItemsController, type: :controller do
   describe 'update' do
     before(:each) do
       @organization = create(:organization)
-      @user = create(:user)
+      @user = create_confirmed_user
       @membership_option = create(:membership_option, host: @organization)
       login_through_api(@user)
       @order = create(:order, user: @user, host: @organization)
-      @oli = create(:order_line_item, order: @order, line_item: @membership_option)
+      @oli = create(:order_line_item, order: @order, line_item: @membership_option, price: 10)
+      @order.reload
+      @order.paid = false
+      @order.save
     end
 
-    it 'creates a new order line item' do
+    it 'updates a new order line item' do
       json_api = {
         data: {
           id: @oli.id,

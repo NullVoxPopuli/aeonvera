@@ -19,7 +19,8 @@ RSpec.describe Api::CompetitionsController, type: :controller do
   end
 
   context 'logged in and the owner of the event' do
-    let(:event) { create(:event) }
+    let(:user)  { create_confirmed_user }
+    let(:event) { create(:event, hosted_by: user) }
     before(:each) do
       login_through_api(event.hosted_by)
       @competition = create(:competition, event: event)
@@ -58,8 +59,9 @@ RSpec.describe Api::CompetitionsController, type: :controller do
 
     context 'create' do
       before(:each) do
-        @event = create(:event)
-        login_through_api(@event.hosted_by)
+        user = create_confirmed_user
+        @event = create(:event, hosted_by: user)
+        login_through_api(user)
       end
 
       it 'creates a new competition' do

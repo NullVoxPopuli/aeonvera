@@ -1,10 +1,13 @@
 require 'rails_helper'
 
 describe Api::PricingTiersController, type: :controller do
-  context 'index' do
+  let(:user)  { create_confirmed_user }
+  before(:each) do
+    login_through_api
+  end
 
+  context 'index' do
     it 'gets all pricing_tiers' do
-      force_login(user = create(:user))
       event = create(:event, user: user)
       create(:pricing_tier, event: event)
       create(:pricing_tier, event: event)
@@ -17,7 +20,6 @@ describe Api::PricingTiersController, type: :controller do
     end
 
     it 'requires the event id to be specified' do
-      force_login(user = create(:user))
       event = create(:event, user: user)
 
       expect{
@@ -28,9 +30,7 @@ describe Api::PricingTiersController, type: :controller do
 
   context 'show' do
     it 'returns details about a pricing_tier' do
-      login_through_api
-
-      event = create_event
+      event = create(:event, user: user)
       pricing_tier = create(:pricing_tier, event: event)
       create(:pricing_tier, event: event)
 
@@ -45,7 +45,6 @@ describe Api::PricingTiersController, type: :controller do
 
   context 'update' do
     it 'updates a pricing_tier' do
-      force_login(user = create(:user))
       event = create(:event, user: user)
       pricing_tier = create(:pricing_tier, event: event)
 
@@ -68,7 +67,6 @@ describe Api::PricingTiersController, type: :controller do
     end
 
     it 'does not updates a pricing_tier when access is denied' do
-      force_login(user = create(:user))
       event = create(:event, user: create(:user))
       pricing_tier = create(:pricing_tier, event: event)
 
@@ -83,7 +81,6 @@ describe Api::PricingTiersController, type: :controller do
 
   context 'create' do
     it 'creates a pricing_tier' do
-      force_login(user = create(:user))
       event = create(:event, user: user)
       force_login(event.hosted_by)
       pricing_tier = build(:pricing_tier, event: event)
@@ -97,7 +94,6 @@ describe Api::PricingTiersController, type: :controller do
     end
 
     it 'does not create a pricing_tier on someone elses event' do
-      force_login(user = create(:user))
       event = create(:event, user: create(:user))
       pricing_tier = build(:pricing_tier, event: event)
 

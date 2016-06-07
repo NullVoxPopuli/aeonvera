@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Api::HousingRequestsController, type: :controller do
-  let(:event) { create(:event) }
+  let(:user)  { create_confirmed_user }
+  let(:event) { create(:event, hosted_by: user) }
   before(:each) do
     login_through_api
   end
