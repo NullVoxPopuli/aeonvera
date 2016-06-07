@@ -15,7 +15,9 @@
   protected
 
   def render_model(include_param = nil, success_status: 200)
-    if model.errors.present?
+    if params[:action] == 'show' && model.nil?
+      raise ActiveRecord::RecordNotFound
+    elsif model.errors.present?
       render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     else
       render json: model, include: include_param, status: success_status

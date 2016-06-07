@@ -44,11 +44,6 @@ end
 # for dynamic type
 module ActiveModel
   class Serializer
-    def json_key
-      root ||
-        (_type && _type.is_a?(Proc) ? _type.call(object) : _type) ||
-        object.class.model_name.to_s.underscore
-    end
 
     class << self
       def type(type)
