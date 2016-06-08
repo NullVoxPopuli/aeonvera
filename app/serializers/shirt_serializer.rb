@@ -1,66 +1,63 @@
 class ShirtSerializer < ActiveModel::Serializer
+  include PublicAttributes::LineItemAttributes
   type 'shirt'
-  attributes :id, :name,
-    :current_price, :price,
-    :sizes,
-    :expires_at,
-    :host_id, :host_type, :event_id,
-    :xs_price, :s_price, :sm_price, :m_price, :l_price, :xl_price, :xxl_price, :xxxl_price,
-    :number_purchased
+  attributes :sizes,
+             :xs_price, :s_price, :sm_price,
+             :m_price,
+             :l_price, :xl_price, :xxl_price, :xxxl_price
 
-    def sizes
-      available = object.metadata["sizes"].reject {|s| s.blank? }
-      result = []
+  def sizes
+    available = object.metadata['sizes'].reject(&:blank?)
+    result = []
 
-      available.each_with_index do |s, i|
-        result << {
-          id: s,
-          size: s,
-          price:  object.price_for_size(s)
-        }
-      end
-
-      result
+    available.each_with_index do |s, _i|
+      result << {
+        id: s,
+        size: s,
+        price:  object.price_for_size(s)
+      }
     end
 
-    def number_purchased
-      object.order_line_items.count
-    end
+    result
+  end
 
-    def event_id
-      object.host_id
-    end
+  def number_purchased
+    object.order_line_items.count
+  end
 
-    def xs_price
-      object.price_for_size("XS")
-    end
+  def event_id
+    object.host_id
+  end
 
-    def s_price
-      object.price_for_size("S")
-    end
+  def xs_price
+    object.price_for_size('XS')
+  end
 
-    def sm_price
-      object.price_for_size("SM")
-    end
+  def s_price
+    object.price_for_size('S')
+  end
 
-    def m_price
-      object.price_for_size("M")
-    end
+  def sm_price
+    object.price_for_size('SM')
+  end
 
-    def l_price
-      object.price_for_size("L")
-    end
+  def m_price
+    object.price_for_size('M')
+  end
 
-    def xl_price
-      object.price_for_size("XL")
-    end
+  def l_price
+    object.price_for_size('L')
+  end
 
-    def xxl_price
-      object.price_for_size("XXL")
-    end
+  def xl_price
+    object.price_for_size('XL')
+  end
 
-    def xxxl_price
-      object.price_for_size("XXXL")
-    end
+  def xxl_price
+    object.price_for_size('XXL')
+  end
 
+  def xxxl_price
+    object.price_for_size('XXXL')
+  end
 end
