@@ -7,7 +7,7 @@ class ShirtSerializer < ActiveModel::Serializer
              :l_price, :xl_price, :xxl_price, :xxxl_price
 
   def sizes
-    available = object.metadata['sizes'].reject(&:blank?)
+    available = (object.metadata['sizes'] || []).reject(&:blank?)
     result = []
 
     available.each_with_index do |s, _i|

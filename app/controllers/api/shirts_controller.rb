@@ -4,32 +4,38 @@ class Api::ShirtsController < Api::EventResourceController
 
   private
 
+  # NOTE `sizes` in an out-of-convention structure that is handled in
+  # the operation
   def update_shirt_params
     whitelistable_params do |whitelister|
-      whitelister.permit(
+      result = whitelister.permit(
         :name, :price, :description,
         :expires_at, :starts_at, :ends_at, :becomes_available_at,
         :duration_amount, :duration_unit,
-        :logo,
-        :logo_file_name, :logo_file_size,
-        :logo_updated_at, :logo_content_type,
+        :picture,
+        :picture_file_name, :picture_file_size,
+        :picture_updated_at, :picture_content_type,
         :registration_opens_at, :registration_closes_at
       )
+
+      result.merge('sizes' => whitelister['sizes'])
     end
   end
 
   def create_shirt_params
-    whitelister_params(polymorphic: [:host]) do |whitelister|
-      whitelister.permit(
+    whitelistable_params(polymorphic: [:host]) do |whitelister|
+      result = whitelister.permit(
         :host_id, :host_type,
         :name, :price, :description,
         :expires_at, :starts_at, :ends_at, :becomes_available_at,
         :duration_amount, :duration_unit,
-        :logo,
-        :logo_file_name, :logo_file_size,
-        :logo_updated_at, :logo_content_type,
+        :picture,
+        :picture_file_name, :picture_file_size,
+        :picture_updated_at, :picture_content_type,
         :registration_opens_at, :registration_closes_at
       )
+
+      result.merge('sizes' => whitelister['sizes'])
     end
   end
 end
