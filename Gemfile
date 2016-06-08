@@ -72,9 +72,9 @@ gem "date_validator"
 gem 'stripe'
 
 # Uploads
-gem 'paperclip'
+gem "paperclip", "~> 5.0.0.beta2"
 # Upload Storage on S3
-gem 'aws-sdk', '< 2.0'
+gem 'aws-sdk'#, '< 2.0'
 
 
 ############

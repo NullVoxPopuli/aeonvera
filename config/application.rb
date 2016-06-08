@@ -58,12 +58,13 @@ module AeonVera
 
     config.paperclip_defaults = {
       storage: :s3,
-      bucket: ENV['S3_BUCKET_NAME'] || 'aeonvera-dev',
       s3_credentials: {
+        bucket: ENV['S3_BUCKET_NAME'] || 'aeonvera-dev',
         # these development s3 credentials do not have access to staging or production buckets
         access_key_id: ENV['S3_ACCESS_KEY_ID'] || 'AKIAI4M3O6VZWG7P5VLQ',
-        secret_access_key: ENV['S3_SECRET_ACCESS_KEY'] || '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'
+        secret_access_key: ENV['S3_SECRET_ACCESS_KEY'] || 'KEdnRkGgNRvHJ0732krtAD4NzruDrUzY+zlzSiCD',
       },
+      s3_region: 'us-east-1',
       url: ':s3_domain_url'
     }
 
