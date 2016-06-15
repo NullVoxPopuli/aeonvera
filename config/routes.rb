@@ -38,6 +38,8 @@ AeonVera::Application.routes.draw do
     get 'hosts/:subdomain', to: 'hosts#show'
     resources :hosts
     resources :events
+    resources :sponsorships
+
     resources :collaborations, except: [:show]
     resources :housing_requests
     resources :housing_provisions

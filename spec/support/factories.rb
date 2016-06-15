@@ -1,10 +1,9 @@
 FactoryGirl.define do
-
   sequence :email do |n|
     "email#{n}@factory.com"
   end
 
-  sequence :address do |n|
+  sequence :address do |_n|
     {
 
     }
@@ -16,20 +15,19 @@ FactoryGirl.define do
 
   factory :user do
     first_name "ÆONVERA"
-    last_name "User Test"
+    last_name 'User Test'
     email
-    password "12345678"
-    password_confirmation "12345678"
+    password '12345678'
+    password_confirmation '12345678'
   end
 
   factory :hosted_by, class: User do
-    first_name "Hosted"
-    last_name "User Test"
+    first_name 'Hosted'
+    last_name 'User Test'
     email
-    password "12345678"
-    password_confirmation "12345678"
+    password '12345678'
+    password_confirmation '12345678'
   end
-
 
   factory :opening_tier, class: PricingTier do
     date Date.tomorrow
@@ -38,15 +36,15 @@ FactoryGirl.define do
   end
 
   factory :event do
-    name "Test Event"
+    name 'Test Event'
     domain
-    short_description "An event created with FactoryGirl"
+    short_description 'An event created with FactoryGirl'
     starts_at { 6.months.from_now }
     ends_at { 6.months.from_now + 3.days }
     housing_status Event::HOUSING_ENABLED
     has_volunteers true
-    payment_email "test@test.com"
-    location "Indianapolis, IN"
+    payment_email 'test@test.com'
+    location 'Indianapolis, IN'
     show_on_public_calendar true
     hosted_by
 
@@ -55,15 +53,18 @@ FactoryGirl.define do
       # e.hosted_by = create(:hosted_by) unless e.hosted_by
       e.opening_tier = create(:opening_tier, event: e) unless e.opening_tier.present?
     end
+
+    factory :sponsored do
+    end
   end
 
   factory :raffle do
-    name "Some Test Raffle"
+    name 'Some Test Raffle'
     event
   end
 
   factory :raffle_ticket, class: LineItem::RaffleTicket do
-    name "1 Ticket"
+    name '1 Ticket'
     number_of_tickets 1
     current_price 5
     raffle
@@ -71,45 +72,51 @@ FactoryGirl.define do
   end
 
   factory :housing_request do
-    preferred_gender_to_house_with "Guys"
+    preferred_gender_to_house_with 'Guys'
     need_transportation false
     can_provide_transportation true
     transportation_capacity 3
     allergic_to_pets true
     allergic_to_smoke true
-    other_allergies "pollen"
-    notes "Some Notes"
+    other_allergies 'pollen'
+    notes 'Some Notes'
   end
 
   factory :housing_provision do
     housing_capacity 10
     number_of_showers 2
     can_provide_transportation true
-    preferred_gender_to_host "Eeither"
+    preferred_gender_to_host 'Eeither'
     has_pets false
     smokes false
-    notes "Some Notes"
+    notes 'Some Notes'
   end
 
   factory :level do
-    name "Level Number something"
+    name 'Level Number something'
   end
 
-
   factory :organization do
-    name "Naptown Stomp"
-    tagline "Vintage Dancing. Modern Fun"
-    city "Indianapolis"
-    state "Indiana"
+    name 'Naptown Stomp'
+    tagline 'Vintage Dancing. Modern Fun'
+    city 'Indianapolis'
+    state 'Indiana'
     domain
+
+    factory :sponsor do
+    end
+  end
+
+  factory :sponsorship do
+    sponsor
+    sponsored
   end
 
   factory :collaboration do
-
   end
 
   factory :custom_field do
-    label "A field "
+    label 'A field '
     kind CustomField::KIND_TEXT
     host factory: :event
     user
@@ -122,12 +129,12 @@ FactoryGirl.define do
   end
 
   factory :dance, class: LineItem::Dance do
-    name "A Dance!"
+    name 'A Dance!'
   end
 
   factory :lesson, class: LineItem::Lesson do
-    name "A Lesson!"
-    description "description"
+    name 'A Lesson!'
+    description 'description'
     price 10
     starts_at 2.days.from_now
     ends_at 3.days.from_now
@@ -136,11 +143,11 @@ FactoryGirl.define do
   end
 
   factory :line_item, class: LineItem do
-    name "A line item"
+    name 'A line item'
   end
 
   factory :membership_option, class: LineItem::MembershipOption do
-    name "Yearly Membership"
+    name 'Yearly Membership'
     duration_unit Duration::DURATION_YEAR
     duration_amount 1
     price 25
@@ -153,12 +160,12 @@ FactoryGirl.define do
   end
 
   factory :membership_discount do
-    name "My Discount"
+    name 'My Discount'
     value 5
   end
 
   factory :package do
-    name "Dance Only"
+    name 'Dance Only'
     initial_price 50
     at_the_door_price 80
     requires_track false
@@ -166,14 +173,14 @@ FactoryGirl.define do
   end
 
   factory :competition do
-    name "Jack and Jill"
+    name 'Jack and Jill'
     kind Competition::JACK_AND_JILL
     initial_price 10
     at_the_door_price 10
   end
 
   factory :discount do
-    name "My Discount"
+    name 'My Discount'
     value 5
   end
 
@@ -203,44 +210,42 @@ FactoryGirl.define do
     attendee
     pricing_tier
     package
-    metadata {
+    metadata do
       {
-        "address" => {
-          "line1" => "1234 stree",
-          "city" => "City",
-          "state" => "IN",
-          "zip" => "46204"
+        'address' => {
+          'line1' => '1234 stree',
+          'city' => 'City',
+          'state' => 'IN',
+          'zip' => '46204'
         }
       }
-    }
+    end
 
-    after(:build) do |attendance, evaluator|
+    after(:build) do |attendance, _evaluator|
       # attendance.host = create(:event, hosted_by: attendance.attendee) unless attendance.host.present?
       attendance.dance_orientation = 0
     end
   end
 
   factory :organization_attendance, class: OrganizationAttendance do
-
   end
 
   factory :attendee, class: User do
-    first_name "Attendee"
-    last_name "Test"
+    first_name 'Attendee'
+    last_name 'Test'
     email
-    password "12345678"
-    password_confirmation "12345678"
+    password '12345678'
+    password_confirmation '12345678'
   end
 
   factory :shirt, class: LineItem::Shirt do
     event
-    name "Test Shirt"
+    name 'Test Shirt'
     price 15
-    metadata {
+    metadata do
       {
-        "sizes" => ['XS', 'S', 'SM', 'M', 'L', 'XL', 'XXL', 'XXXL']
+        'sizes' => %w(XS S SM M L XL XXL XXXL)
       }
-    }
+    end
   end
-
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160606115808) do
+ActiveRecord::Schema.define(version: 20160615222112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -425,6 +425,18 @@ ActiveRecord::Schema.define(version: 20160606115808) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "sponsorships", force: :cascade do |t|
+    t.integer  "sponsor_id"
+    t.string   "sponsor_type"
+    t.integer  "sponsored_id"
+    t.string   "sponsored_type"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "sponsorships", ["sponsor_type", "sponsor_id"], name: "index_sponsorships_on_sponsor_type_and_sponsor_id", using: :btree
+  add_index "sponsorships", ["sponsored_type", "sponsored_id"], name: "index_sponsorships_on_sponsored_type_and_sponsored_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name",             limit: 255
