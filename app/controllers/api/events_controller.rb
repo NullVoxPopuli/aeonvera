@@ -4,7 +4,7 @@ class Api::EventsController < Api::ResourceController
   private
 
   def update_event_params
-    whitelistable_params(embedded: [:opening_tier]) do | whitelister |
+    whitelistable_params(embedded: [:opening_tier]) do |whitelister|
       whitelister.permit(
         :name, :short_description, :domain,
         :starts_at, :ends_at,

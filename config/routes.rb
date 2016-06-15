@@ -55,6 +55,7 @@ AeonVera::Application.routes.draw do
     resources :discounts
     resources :levels
     resources :pricing_tiers
+    resources :opening_tiers, controller: :pricing_tiers
     resources :raffles
     resources :raffle_tickets
     resources :raffle_ticket_purchasers
