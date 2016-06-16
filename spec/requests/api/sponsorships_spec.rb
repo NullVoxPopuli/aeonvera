@@ -62,7 +62,7 @@ describe Api::SponsorshipsController, type: :request do
     end
 
     context 'object exists' do
-      let(:sponsorship) { create(:sponsorship) }
+      let!(:sponsorship) { create(:sponsorship) }
 
       context 'update' do
         it 'updates' do
@@ -91,6 +91,7 @@ describe Api::SponsorshipsController, type: :request do
         it 'destroys' do
           expect {
             delete path_with.(sponsorship.id), {}, @headers
+            expect(response.status).to eq 200
           }.to change(Sponsorship, :count).by(-1)
         end
       end
