@@ -1,5 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Sponsorship, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'relationships' do
+    it 'can access sponsors' do
+      s = create(:sponsorship)
+
+      expect(s.sponsor.sponsored_events).to include(s.sponsored)
+      expect(s.sponsored.sponsoring_organizations).to include(s.sponsor)
+    end
+  end
 end

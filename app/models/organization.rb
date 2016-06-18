@@ -7,6 +7,11 @@ class Organization < ActiveRecord::Base
   belongs_to :owner, class_name: "User"
   belongs_to :user, foreign_key: :owner_id
   belongs_to :hosted_by, class_name: "User", foreign_key: :owner_id
+  has_many :sponsorships, as: :sponsor
+  has_many :sponsored_events,
+    through: :sponsorships,
+    source: :sponsored,
+    source_type: Event.name
 
   # has_many :events
   # has_many :dances, class_name: "LineItem::Dance"

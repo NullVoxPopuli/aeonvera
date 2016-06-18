@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe Event do
+
   describe '#url' do
     it 'is no longer a subdomain' do
       event = Event.new(subdomain: 'test123')

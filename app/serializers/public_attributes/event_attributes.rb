@@ -35,6 +35,7 @@ module PublicAttributes
       has_many :line_items
       has_many :custom_fields
       has_many :shirts, serializer: ShirtSerializer
+      has_many :sponsorships
     end
 
 

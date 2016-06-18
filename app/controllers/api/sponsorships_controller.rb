@@ -4,10 +4,13 @@ class Api::SponsorshipsController < Api::ResourceController
   private
 
   def update_sponsorship_params
-    whitelistable_params do |whitelister|
+    whitelistable_params(polymorphic: [
+      :sponsor, :sponsored
+      ]) do |whitelister|
       whitelister.permit(
         :sponsor_id, :sponsor_type,
-        :sponsored_id, :sponsored_type
+        :sponsored_id, :sponsored_type,
+        :discount_amount
       )
     end
   end

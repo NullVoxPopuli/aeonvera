@@ -427,12 +427,13 @@ ActiveRecord::Schema.define(version: 20160615222112) do
   end
 
   create_table "sponsorships", force: :cascade do |t|
+    t.integer  "discount_amount", default: 0, null: false
     t.integer  "sponsor_id"
     t.string   "sponsor_type"
     t.integer  "sponsored_id"
     t.string   "sponsored_type"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "sponsorships", ["sponsor_type", "sponsor_id"], name: "index_sponsorships_on_sponsor_type_and_sponsor_id", using: :btree

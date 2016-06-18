@@ -8,6 +8,10 @@ class Event < ActiveRecord::Base
   # aliases, cause I keep forgetting which is what
   belongs_to :hosted_by, class_name: "User"
   belongs_to :user, foreign_key: :hosted_by_id
+  has_many :sponsorships, as: :sponsored
+  has_many :sponsoring_organizations, through: :sponsorships,
+    source: :sponsor,
+    source_type: Organization.name
 
   has_many :integrations,
     :dependent => :destroy,
