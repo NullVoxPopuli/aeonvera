@@ -110,6 +110,7 @@ FactoryGirl.define do
   factory :sponsorship do
     sponsor
     sponsored
+    discount
   end
 
   factory :collaboration do

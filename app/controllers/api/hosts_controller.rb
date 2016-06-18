@@ -1,6 +1,6 @@
 class Api::HostsController < APIController
   SHARED_RELATIONSHIPS       = 'integrations,'.freeze
-  EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions'.freeze
+  EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount'.freeze
   ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'.freeze
 
   before_action :ensure_host
