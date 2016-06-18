@@ -26,6 +26,7 @@ class Discount < ActiveRecord::Base
     source: :restrictable, source_type: Package.name
 
   has_many :order_line_items, as: :line_item
+  has_many :sponsorships, as: :discount
 
   accepts_nested_attributes_for :restraints, allow_destroy: true
   # this in handled manually

@@ -29,7 +29,7 @@ class Api::EventsController < Api::ResourceController
         ],
 
         sponsorship_attributes: [
-          :sponsor_id, :sponsor_type, :discount_amount
+          :sponsor_id, :sponsor_type, :discount_id, :discount_type
         ]
       )
     end

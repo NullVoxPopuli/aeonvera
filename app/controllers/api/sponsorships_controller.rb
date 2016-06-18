@@ -5,12 +5,12 @@ class Api::SponsorshipsController < Api::ResourceController
 
   def update_sponsorship_params
     whitelistable_params(polymorphic: [
-      :sponsor, :sponsored
+      :sponsor, :sponsored, :discount
       ]) do |whitelister|
       whitelister.permit(
         :sponsor_id, :sponsor_type,
         :sponsored_id, :sponsored_type,
-        :discount_amount
+        :discount_id, :discount_type
       )
     end
   end

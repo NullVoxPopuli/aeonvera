@@ -38,8 +38,6 @@ module PublicAttributes
       has_many :sponsorships
     end
 
-
-
     def has_stripe_integration
       object.integrations[:stripe].present?
     end
