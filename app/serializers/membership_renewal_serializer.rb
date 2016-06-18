@@ -19,7 +19,7 @@ class MembershipRenewalSerializer < ActiveModel::Serializer
   # fake the id, since this is a join table
   # todo: why didn't I just make these relationships?
   def id
-    "#{object.user_id}.#{object.membership_option_id}"
+    "#{object.user_id}.#{object.membership_option_id}-#{object.created_at}"
   end
 
   def _id

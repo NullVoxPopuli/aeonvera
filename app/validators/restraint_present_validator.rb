@@ -15,13 +15,15 @@ class RestraintPresentValidator < ActiveModel::EachValidator
       constrained_object_present = false
 
       restraints.each do |constraint|
+        next if line_item == constraint.restrictable
+
         if order.line_item_matching(constraint.restrictable)
           constrained_object_present = true
         end
       end
 
       unless constrained_object_present
-        record.errors.add(attribute, "#{attribute}'s constraint does not exist in the order")
+        record.errors.add(attribute, "(#{line_item.name}) #{attribute}'s constraint does not exist in the order")
       end
     end
   end
