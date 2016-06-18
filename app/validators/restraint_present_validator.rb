@@ -15,8 +15,6 @@ class RestraintPresentValidator < ActiveModel::EachValidator
       constrained_object_present = false
 
       restraints.each do |constraint|
-        next if line_item == constraint.restrictable
-
         if order.line_item_matching(constraint.restrictable)
           constrained_object_present = true
         end

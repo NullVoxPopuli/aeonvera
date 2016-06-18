@@ -66,6 +66,22 @@ describe Restraint do
       expect(actual).to eq expected
     end
 
+    it 'no restraint is applied when no discount is present' do
+      @attendance.package = package
+      @attendance.save!
+      @order = create(:order,
+        attendance: @attendance,
+        host: event,
+        user: @attendance.attendee
+      )
+
+      add_to_order(@order, package)
+
+      actual = @order.total
+      expected = package.current_price
+      expect(actual).to eq expected
+    end
+
     it 'is only applied to the assigned package' do
       @attendance.package = package
       @attendance.save!
