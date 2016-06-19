@@ -62,6 +62,7 @@ AeonVera::Application.routes.draw do
     resources :raffle_tickets
     resources :raffle_ticket_purchasers
     resources :custom_fields
+    resources :custom_field_responses, only: [:update]
     resources :chart_data
     get '/chart_infos/:id', to: 'chart_data#show'
     get '/charts/:id', to: 'chart_data#show'
