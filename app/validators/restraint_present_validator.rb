@@ -1,6 +1,3 @@
-# This prevents relationships from having differing parents
-# For example, on an order line item,
-# the order's host must be the same as the line item's host
 class RestraintPresentValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
@@ -10,6 +7,7 @@ class RestraintPresentValidator < ActiveModel::EachValidator
     # restraint.restrictable == line_item
     # restraint.dependable == what is constraining
     restraints = line_item.try(:restraints)
+    restraints = restraints.select { |r| r.dependable == line_item } if restraints
 
     if restraints.present?
       constrained_object_present = false
