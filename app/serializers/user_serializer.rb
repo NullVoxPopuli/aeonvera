@@ -9,7 +9,7 @@ class UserSerializer < ActiveModel::Serializer
     :unconfirmed_email,
     :time_zone
 
-    has_many :membership_renewals
+    has_many :membership_renewals, each_serializer: MembershipRenewalSerializer
 
     def id
       # this is to make looking up the current user in the

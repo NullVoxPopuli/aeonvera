@@ -76,6 +76,48 @@ describe OrderOperations::Create do
 
       end
 
+
+      context 'is logged in' do
+        # loggedin-ness is represented with the user param on the operation
+        # this is null when not logged in
+        let(:user){ create(:user) }
+
+        context 'purchasing a membership' do
+          let(:membership_option) { create(:membership_option, host: organization) }
+
+          let(:basic_params){
+            {"data"=>{
+              "attributes"=>{
+                "host-name"=>nil, "host-url"=>nil, "created-at"=>nil, "payment-received-at"=>nil, "paid-amount"=>nil, "net-amount-received"=>nil, "total-fee-amount"=>nil, "payment-method"=>nil, "payment-token"=>nil, "check-number"=>nil, "paid"=>false, "total-in-cents"=>nil,
+                "user-email"=>"someone@test.com", "user-name"=>" ", "checkout-token"=>nil, "checkout-email"=>nil},
+              "relationships"=>{
+                "host"=>{"data"=>{"type"=>"organizations", "id"=>organization.id}},
+                "order-line-items"=>{"data"=>[
+                  {
+                    "attributes"=>{"quantity"=>1, "price"=>membership_option.price, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                    "relationships"=>{
+                      "line-item"=>{"data"=>{"type"=>"membership-options", "id"=>membership_option.id}},
+                      "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
+                    "type"=>"order-line-items"},
+                    ]},
+                "attendance"=>{},
+                "user"=>{"data"=>{"type"=>"users", "id"=>"current-user"}}}, "type"=>"orders"},
+                "order"=>{}}
+
+          }
+
+          before(:each) do
+            allow(controller).to receive(:params){ basic_params }
+            params_for_action = controller.send(:create_order_params)
+
+            @operation = klass.new(user, basic_params, params_for_action)
+          end
+
+          it 'creates a membership renewal' do
+            expect { @operation.run }.to change(MembershipRenewal, :count).by(1)
+          end
+        end
+      end
     end
 
     context 'events' do

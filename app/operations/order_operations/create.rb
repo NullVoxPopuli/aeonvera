@@ -15,6 +15,8 @@ module OrderOperations
       # - can't sign up for a package that is on another event
       @model.save
 
+      after_save
+
       model
     end
 
@@ -48,6 +50,29 @@ module OrderOperations
       @model.buyer_name = user_name if user_name.present?
 
       assign_default_payment_method
+    end
+
+    # should this be moved to some sort of business logic one-off layer?
+    # 'service'? though, service is a horrible name.
+    # is there really enough logic for that abstraction though?
+    # it just s eems weird to have membership renewal creating logic
+    # coupled with order creation
+    def after_save
+      return unless current_user && current_user == @model.user
+
+      # if the order's lineitems contain a membership option,
+      # create a renewal
+      olis = @model.order_line_items.select { |oli| oli.line_item_type == LineItem::MembershipOption.name }
+
+      # hopefully there is only one of these
+      olis.each do |order_line_item|
+        item = order_line_item.line_item
+        MembershipRenewal.new(
+          user: current_user,
+          membership_option: item,
+          start_date: @model.created_at
+        ).save!
+      end
     end
 
     # Set payment method based on sub_total.

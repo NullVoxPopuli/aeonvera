@@ -7,17 +7,15 @@ class MembershipRenewal < ActiveRecord::Base
   validates :user, presence: true
   validates :membership_option, presence: true
 
-
   def expired?
     Time.now > expires_at
   end
 
   def expires_at
-    self.start_date + duration
+    start_date + duration
   end
 
   def duration
     membership_option.duration
   end
-
 end
