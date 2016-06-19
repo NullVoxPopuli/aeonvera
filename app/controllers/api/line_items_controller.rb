@@ -7,9 +7,9 @@ class Api::LineItemsController < Api::EventResourceController
         :name, :price, :description,
         :expires_at, :starts_at, :ends_at, :becomes_available_at,
         :duration_amount, :duration_unit,
-        :logo,
-        :logo_file_name, :logo_file_size,
-        :logo_updated_at, :logo_content_type,
+        :picture,
+        :picture_file_name, :picture_file_size,
+        :picture_updated_at, :picture_content_type,
         :registration_opens_at, :registration_closes_at
       )
     end
@@ -22,9 +22,9 @@ class Api::LineItemsController < Api::EventResourceController
         :name, :price, :description,
         :expires_at, :starts_at, :ends_at, :becomes_available_at,
         :duration_amount, :duration_unit,
-        :logo,
-        :logo_file_name, :logo_file_size,
-        :logo_updated_at, :logo_content_type,
+        :picture,
+        :picture_file_name, :picture_file_size,
+        :picture_updated_at, :picture_content_type,
         :registration_opens_at, :registration_closes_at
       )
     end
