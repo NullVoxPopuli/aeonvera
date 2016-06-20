@@ -29,12 +29,39 @@ module EventAttendanceOperations
     def run
       host = host_from_params(params_for_action)
       @model = host.attendances.new(params_for_action)
+
+      map_inferred_relationships(host: host, attendance: @model)
+
       # TODO: if we are setting the attendee if, make sure the current_user
       # has permission to do so
       @model.attendee = current_user unless params_for_action[:attendee_id]
       # TODO: verify level and package belong to the event
       @model.save
       @model
+    end
+
+    # hook up relatioships all over the place
+    def map_inferred_relationships(host: nil, attendance: nil)
+      map_housing_request_relationships(host: host, attendance: attendance)
+      map_housing_provision_relationships(host: host, attendance: attendance)
+    end
+
+    def map_housing_request_relationships(host: nil, attendance: nil)
+      if attendance.housing_request
+        attendance.housing_request.host = host
+
+        # set the polymorphic relationship
+        attendance.housing_request.attendance = attendance
+      end
+    end
+
+    def map_housing_provision_relationships(host: nil, attendance: nil)
+      if attendance.housing_provision
+        attendance.housing_provision.host = host
+        
+        # set the polymorphic relationship
+        attendance.housing_provision.attendance = attendance
+      end
     end
   end
 

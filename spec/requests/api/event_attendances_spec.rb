@@ -13,75 +13,140 @@ describe Api::EventAttendancesController, type: :request do
       }
     end
 
-    context 'creating a housing request' do
+    context 'creating with embedded data' do
       let(:event) { create(:event) }
       let(:package) { create(:package, event: event) }
-      let(:params) do
-        {"data": {
-          "attributes": {
-            "package-id": nil,"amount-owed": nil,"amount-paid": nil,"checked-in-at": nil,"attendee-name": nil,"dance-orientation": "Lead","registered-at": nil,"package-name": nil,"level-name": nil,"interested-in-volunteering": nil,"event-id": nil,"phone-number": nil,"address1": nil,"address2": nil,"city": "Fishers","state": "IN","zip": nil
-          },
-          "relationships": {
-            "level": {"data": nil},
-            "package": {"data": {"type": "packages","id": package.id}},
-            "attendee": {"data": nil},
-            "pricing-tier": {"data": nil},
-            "host": {"data": {"type": "events","id": event.id}},
-            "orders": {"data": [{"type": "orders","id": nil}]},
-            "unpaid-order": {"data": nil},
-            "housing-request": {
-              "data": {
-                "attributes": {
-                  "need-transportation": true,
-                  "can-provide-transportation": true,
-                  "transportation-capacity": 2,
-                  "allergic-to-pets": true,
-                  "allergic-to-smoke": true,
-                  "other-allergies": "Dairy",
-                  "preferred-gender-to-house-with": "No Preference",
-                  "notes": nil,
-                  "requested-roommates": ["a","b","c","d"],
-                  "unwanted-roommates": ["e","f","g","h"]
-                },
-                "relationships": {
-                  "host": {"data": nil},
-                  "attendance": {"data": {"type": "event-attendances","id": nil}},
-                  "housing-provision": {"data": nil}
-                },
-                "type": "housing-requests"
-              }
+
+      context 'creating a housing provision' do
+        let(:params) do
+          {"data": {
+            "attributes": {
+              "package-id": nil,"amount-owed": nil,"amount-paid": nil,"checked-in-at": nil,"attendee-name": nil,"dance-orientation": "Lead","registered-at": nil,"package-name": nil,"level-name": nil,"interested-in-volunteering": nil,"event-id": nil,"phone-number": nil,"address1": nil,"address2": nil,"city": "Fishers","state": "IN","zip": nil
             },
-            "housing-provision": {},
-            },"type": "event-attendances"}}
-      end
+            "relationships": {
+              "level": {"data": nil},
+              "package": {"data": {"type": "packages","id": package.id}},
+              "attendee": {"data": nil},
+              "pricing-tier": {"data": nil},
+              "host": {"data": {"type": "events","id": event.id}},
+              "orders": {"data": [{"type": "orders","id": nil}]},
+              "unpaid-order": {"data": nil},
+              "housing-provision": {
+                "data": {
+                  "attributes": {
+                    "housing-capacity": 4,
+                    "number-of-showers": 2,
+                    "can-provide-transportation": true,
+                    "transportation-capacity": 4,
+                    "preferred-gender-to-host": 'Robots',
+                    "has-pets": true,
+                    "smokes": false,
+                    "notes": 'Lots of couches'
+                  },
+                  "type": "housing-provisions"
+                }
+              },
+              "housing-request": {},
+              },"type": "event-attendances"}}
+        end
 
-      it 'is created' do
-        expect{
+        it 'is created' do
+          expect{
+            post "/api/event_attendances", params, @headers
+          }.to change(HousingProvision, :count).by(1)
+        end
+
+        it 'correctly sets the attendance relationship' do
           post "/api/event_attendances", params, @headers
-          expect(response.status).to eq 200
-        }.to change(HousingRequest, :count).by(1)
+
+          attendance_id = json_api_data['id']
+          housing_provision_id = json_api_data['relationships']['housing-provision']['data']['id']
+
+          hp = HousingProvision.find(housing_provision_id)
+          a = Attendance.find(attendance_id)
+          expect(hp.attendance).to eq a
+        end
+
+        it 'correctly sets the host relationship' do
+          post "/api/event_attendances", params, @headers
+
+          event_id = json_api_data['relationships']['host']['data']['id']
+          housing_provision_id = json_api_data['relationships']['housing-provision']['data']['id']
+
+          hp = HousingProvision.find(housing_provision_id)
+          e = Event.find(event_id)
+          expect(hp.host).to eq e
+        end
       end
 
-      it 'correctly sets the attendance relationship' do
-        post "/api/event_attendances", params, @headers
+      context 'creating a housing request' do
+        let(:params) do
+          {"data": {
+            "attributes": {
+              "package-id": nil,"amount-owed": nil,"amount-paid": nil,"checked-in-at": nil,"attendee-name": nil,"dance-orientation": "Lead","registered-at": nil,"package-name": nil,"level-name": nil,"interested-in-volunteering": nil,"event-id": nil,"phone-number": nil,"address1": nil,"address2": nil,"city": "Fishers","state": "IN","zip": nil
+            },
+            "relationships": {
+              "level": {"data": nil},
+              "package": {"data": {"type": "packages","id": package.id}},
+              "attendee": {"data": nil},
+              "pricing-tier": {"data": nil},
+              "host": {"data": {"type": "events","id": event.id}},
+              "orders": {"data": [{"type": "orders","id": nil}]},
+              "unpaid-order": {"data": nil},
+              "housing-request": {
+                "data": {
+                  "attributes": {
+                    "need-transportation": true,
+                    "can-provide-transportation": true,
+                    "transportation-capacity": 2,
+                    "allergic-to-pets": true,
+                    "allergic-to-smoke": true,
+                    "other-allergies": "Dairy",
+                    "preferred-gender-to-house-with": "No Preference",
+                    "notes": nil,
+                    "requested-roommates": ["a","b","c","d"],
+                    "unwanted-roommates": ["e","f","g","h"]
+                  },
+                  "relationships": {
+                    "host": {"data": nil},
+                    "attendance": {"data": {"type": "event-attendances","id": nil}},
+                    "housing-provision": {"data": nil}
+                  },
+                  "type": "housing-requests"
+                }
+              },
+              "housing-provision": {},
+              },"type": "event-attendances"}}
+        end
 
-        attendance_id = json_api_data['id']
-        housing_request_id = json_api_data['relationships']['housing-request']['data']['id']
+        it 'is created' do
+          expect{
+            post "/api/event_attendances", params, @headers
+            expect(response.status).to eq 200
+          }.to change(HousingRequest, :count).by(1)
+        end
 
-        hr = HousingRequest.find(housing_request_id)
-        a = Attendance.find(attendance_id)
-        expect(hr.attendance).to eq a
-      end
+        it 'correctly sets the attendance relationship' do
+          post "/api/event_attendances", params, @headers
 
-      it 'correctly sets the host relationship' do
-        post "/api/event_attendances", params, @headers
+          attendance_id = json_api_data['id']
+          housing_request_id = json_api_data['relationships']['housing-request']['data']['id']
 
-        event_id = json_api_data['relationships']['host']['data']['id']
-        housing_request_id = json_api_data['relationships']['housing-request']['data']['id']
+          hr = HousingRequest.find(housing_request_id)
+          a = Attendance.find(attendance_id)
+          expect(hr.attendance).to eq a
+        end
 
-        hr = HousingRequest.find(housing_request_id)
-        e = Event.find(event_id)
-        expect(hr.host).to eq e
+        it 'correctly sets the host relationship' do
+          post "/api/event_attendances", params, @headers
+
+          event_id = json_api_data['relationships']['host']['data']['id']
+          housing_request_id = json_api_data['relationships']['housing-request']['data']['id']
+
+          hr = HousingRequest.find(housing_request_id)
+          e = Event.find(event_id)
+          expect(hr.host).to eq e
+        end
       end
     end
   end
