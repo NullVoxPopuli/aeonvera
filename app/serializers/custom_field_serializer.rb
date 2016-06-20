@@ -1,8 +1,5 @@
 class CustomFieldSerializer < ActiveModel::Serializer
+  include PublicAttributes::CustomFieldAttributes
 
-  attributes :id,
-    :label, :kind, :default_value, :editable
-
-    belongs_to :host
-
+  has_many :custom_field_responses
 end

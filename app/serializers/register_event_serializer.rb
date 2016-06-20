@@ -21,5 +21,7 @@ class RegisterEventSerializer < ActiveModel::Serializer
     type 'opening_tier'
   end
 
-
+  class CustomFieldSerializer < ActiveModel::Serializer
+    include PublicAttributes::CustomFieldAttributes
+  end
 end
