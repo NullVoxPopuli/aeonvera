@@ -127,6 +127,65 @@ describe OrderOperations::Create do
       let(:package){ create(:package, event: event) }
       let(:attendance){ create(:attendance, host: event, package: package, attendee: user) }
 
+      context 'with a package and discount for that package' do
+        let(:discount) { create(:discount, host: event, amount: 20, kind: Discount::DOLLARS_OFF) }
+        let(:basic_params){
+          {"data"=>{
+            "attributes"=>{
+              "host-name"=>nil, "host-url"=>nil, "created-at"=>nil, "payment-received-at"=>nil, "paid-amount"=>nil, "net-amount-received"=>nil, "total-fee-amount"=>nil, "payment-method"=>nil, "payment-token"=>nil, "check-number"=>nil, "paid"=>false, "total-in-cents"=>nil,
+              "user-email"=>"someone@test.com", "user-name"=>" ", "checkout-token"=>nil, "checkout-email"=>nil},
+            "relationships"=>{
+              "host"=>{"data"=>{"type"=>"events", "id"=>event.id}},
+              "order-line-items"=>{"data"=>[
+                {
+                  "attributes"=>{"quantity"=>1, "price"=>package.current_price, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                  "relationships"=>{
+                    "line-item"=>{"data"=>{"type"=>"packages", "id"=>package.id}},
+                    "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
+                  "type"=>"order-line-items"},
+                {
+                  "attributes"=>{"quantity"=>1, "price"=>0 - discount.amount, "partner-name"=>nil, "dance-orientation"=>nil, "size"=>nil, "payment-token"=>nil},
+                  "relationships"=>{
+                    "line-item"=>{"data"=>{"type"=>"discounts", "id"=>discount.id}},
+                    "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
+                  "type"=>"order-line-items"},
+                  ]},
+              "attendance"=>{"data"=>{"type"=>"event-attendances", "id"=>attendance.id}},
+              "user"=>{"data"=>{"type"=>"users", "id"=>"current-user"}}}, "type"=>"orders"},
+              "order"=>{}}
+        }
+
+        before(:each) do
+          allow(controller).to receive(:params){ basic_params }
+          params_for_action = controller.send(:create_order_params)
+
+          @operation = klass.new(user, basic_params, params_for_action)
+        end
+
+        it 'creates order line items' do
+          expect{
+            @operation.run
+          }.to change(OrderLineItem, :count).by(2)
+        end
+
+        it 'reduced the price by 20 dollars' do
+          order = @operation.run
+          expect(order.sub_total).to eq(package.current_price - discount.amount)
+        end
+
+        it 'reduces the price, even when the discount is restraint to the package' do
+          create(:restraint, dependable: discount, restrictable: package)
+          order = @operation.run
+          expect(order.sub_total).to_not eq(package.current_price)
+          expect(order.sub_total).to eq(package.current_price - discount.amount)
+        end
+
+        it 'does not reduce the price if the discount is intended for a different package' do
+          create(:restraint, dependable: discount, restrictable: create(:package, event: event))
+          order = @operation.run
+          expect(order.sub_total).to eq(package.current_price)
+        end
+      end
 
       context 'with a package and competition' do
         let(:competition){ create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
