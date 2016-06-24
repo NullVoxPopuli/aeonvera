@@ -5,7 +5,7 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   # - view all orders of a community they help run
   # - TODO: view all orders of an event/community they collaborate on
   def read?(o = object)
-    owner? || is_from_an_owned_event?
+    owner? || is_collaborator?
   end
 
   # This is allowed when:
@@ -16,7 +16,7 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   # I don't know if I want ordinary collaborators editing orders
   def update?
     # TODO: also check for unauth token
-    owner? || is_from_an_owned_event?
+    owner? || is_collaborator?
   end
 
   def delete?
@@ -32,6 +32,10 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   # this covers both event and community
   def is_from_an_owned_event?
     object.host.user.id == user_id
+  end
+
+  def is_collaborator?
+    object.host.is_accessible_as_collaborator?(user)
   end
 
   def user_id

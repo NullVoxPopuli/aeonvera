@@ -63,6 +63,15 @@ class Organization < ActiveRecord::Base
     "//#{self.domain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
   end
 
+  # a higher level of access
+  def is_accessible_as_collaborator?(user)
+    return false unless user
+    return true if self.owner == user
+    return true if user.collaborated_organization_ids.include?(self.id)
+
+    false
+  end
+
   private
 
   def available_items(association_name, klass)
