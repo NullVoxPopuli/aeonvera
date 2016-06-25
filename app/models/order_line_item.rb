@@ -10,6 +10,7 @@ class OrderLineItem < ActiveRecord::Base
   validates :line_item, presence: true
   validates :line_item, host_matches: { with_host: 'order.host' }
   validates :line_item, restraint_present: true
+  validates :line_item_id, :uniqueness => {:scope => [:order_id, :line_item_type]}
 
   validates :order, presence: true
   validates :price, presence: true

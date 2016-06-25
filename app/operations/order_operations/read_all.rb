@@ -2,9 +2,7 @@ module OrderOperations
 
   class ReadAll < SkinnyControllers::Operation::Base
     def run
-      search = model.ransack(params[:q]).result(distinct: true)
-        .includes(:user, :host, attendance: [:attendee], order_line_items: [:line_item])
-
+      search = orders
       return search if search.empty?
 
       # for the sake of speed, and the garbage collector,
@@ -20,6 +18,16 @@ module OrderOperations
         policy.object = order
         policy.read?
       end
+    end
+
+    def orders
+      return model if model.is_a?(Array)
+
+      model.ransack(params[:q]).result(distinct: true)
+        .includes(
+          :user,
+          :host,
+          attendance: [:attendee], order_line_items: [:line_item])
     end
   end
 end

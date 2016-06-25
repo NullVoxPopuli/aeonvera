@@ -65,5 +65,29 @@ describe OrderLineItem do
         expect(oli.errors[:dance_orientation]).to be_present
       end
     end
+
+    context 'cannot have the same line_item ref as other order_line_item' do
+      it 'does not save' do
+        package = create(:package)
+        order = create(:order, host: package.event, attendance: create(:attendance))
+        create(:order_line_item, line_item: package, order: order)
+        expect {
+          create(:order_line_item, line_item: package, order: order)
+        }.to raise_error
+        order.reload
+
+        expect(order.order_line_items.length).to eq 1
+      end
+
+      it 'allows adding a different order' do
+        package = create(:package)
+        order = create(:order, host: package.event, attendance: create(:attendance))
+        order2 = create(:order, host: package.event, attendance: create(:attendance))
+        expect {
+          create(:order_line_item, line_item: package, order: order)
+          create(:order_line_item, line_item: package, order: order2)
+        }.to change(OrderLineItem, :count).by 2
+      end
+    end
   end
 end
