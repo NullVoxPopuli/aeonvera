@@ -8,7 +8,14 @@ class OrderLineItemSerializer < ActiveModel::Serializer
       k.gsub('line-item/', '') # cause ember doesn't have nesting
     }
 
-    attributes :id, :name, :amount
+    attributes :id, :name, :amount, :kind
+
+    # TODO these hacks are just for discounts
+    # I need a way for the belongs_to for order line item to
+    # take a block, so I can use the discount serializer just for discounts
+    #
+    # This nested serializer is used because there is a lot of data involved,
+    # and we don't need /everything/
 
     has_many :restraints
     def restraints
@@ -20,6 +27,11 @@ class OrderLineItemSerializer < ActiveModel::Serializer
     def amount
       # hack for discounts :-(
       object.try(:amount)
+    end
+
+    def kind
+      #hack for discounts :-(
+      object.try(:kind)
     end
   end
 
