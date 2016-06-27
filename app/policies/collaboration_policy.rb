@@ -10,15 +10,18 @@ class CollaborationPolicy < SkinnyControllers::Policy::Base
   # - object - the object the user is trying to access.
   # - user - the current user
   #
+  def readall?; read_all?; end; # wut
 
   # CollaborationsController#index
   def read_all?
-    default? # SkinnyControllers.allow_by_default # aka "true"
+    # for read_all, the host/parent is passed
+    # TODO: should this use the host policy?
+    object.is_accessible_as_collaborator?(user)
   end
 
   # CollaborationsController#show
   def read?
-    default? # SkinnyControllers.allow_by_default # aka "true"
+    is_at_least_a_collaborator?
   end
 
   # CollaborationsController#create
@@ -38,8 +41,18 @@ class CollaborationPolicy < SkinnyControllers::Policy::Base
 
   private
 
+  def is_at_least_a_collaborator?
+    host = object.collaborated
+    host.collaboration_ids.include?(user.id) || is_owner?
+  end
+
+  def is_at_least_an_admin?
+    # TODO: implement this
+  end
+
   def is_owner?
-    id = object.try(:hosted_by_id) || object.try(:owner_id)
+    host = object.collaborated
+    id = host.try(:hosted_by_id) || host.try(:owner_id)
     id == user.id
   end
 end

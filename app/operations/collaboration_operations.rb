@@ -37,11 +37,15 @@ module CollaborationOperations
   class ReadAll < SkinnyControllers::Operation::Base
     include HelperOperations::Helpers
     def run
-      model if allowed?
+      model if allowed_for?(host)
     end
 
     def find_model
-      host_from_params(params).collaborations
+      host.collaborations
+    end
+
+    def host
+      @host ||= host_from_params(params)
     end
   end
 

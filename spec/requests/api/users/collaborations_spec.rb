@@ -13,7 +13,7 @@ describe Api::Users::CollaborationsController, type: :request do
     before(:each) do
       # create an invitation
       options = { email: user.email, host_type: Event.name, host_id: event.id }
-      op = CollaborationOperations::Create.new(user, options)
+      op = CollaborationOperations::Create.new(event.hosted_by, options)
       op.run
       @token = op.token_from_email
     end
@@ -90,12 +90,12 @@ describe Api::Users::CollaborationsController, type: :request do
   end
 
   context 'organizations' do
-    let(:organization) { create(:organization) }
+    let(:organization) { create(:organization, owner: create_confirmed_user) }
 
     before(:each) do
       # create an invitation
       options = { email: user.email, host_type: Organization.name, host_id: organization.id }
-      op = CollaborationOperations::Create.new(user, options)
+      op = CollaborationOperations::Create.new(organization.owner, options)
       op.run
       @token = op.token_from_email
 

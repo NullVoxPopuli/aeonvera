@@ -4,6 +4,7 @@ module CollaborationOperations
 
     def run
       return collaboration if collaboration.errors.present?
+      return unless allowed_for?(collaboration)
 
       create_cache_entry
       send_email

@@ -3,7 +3,7 @@ class Api::ResourceController < APIController
 
   def index
     respond_to do |format|
-      format.json { render json: model, include: params[:include] }
+      format.json { render_models }
     end
   end
 
