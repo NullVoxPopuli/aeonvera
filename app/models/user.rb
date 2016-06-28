@@ -167,6 +167,18 @@ class User < ActiveRecord::Base
     Event.where(id_column.in(ids))
   end
 
+  def owned_and_collaborated_events
+    hosted_and_collaborated_events
+  end
+
+  def owned_and_collaborated_organizations
+    ids = (collaborated_organization_ids + organization_ids).uniq
+    organizations_table = Arel::Table.new(:organizations)
+    id_column = organizations_table[:id]
+
+    Organization.where(id_column.in(ids))
+  end
+
   def upcoming_events
     @upcoming_events ||= self.attended_events.where("starts_at > '#{Time.now.to_s(:db)}'")
   end

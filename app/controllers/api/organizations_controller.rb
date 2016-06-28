@@ -4,8 +4,8 @@ class Api::OrganizationsController < Api::ResourceController
   def index
     # TODO: add a `self.parent = :method` to SkinnyControllers
     if params[:mine]
-      organizations = current_user.organizations
-      render json: organizations, inclrude: params[:include]
+      organizations = current_user.owned_and_collaborated_organizations
+      render json: organizations, include: params[:include]
     else
       render json: model, include: params[:include]
     end
