@@ -8,7 +8,7 @@ class Api::ResourceController < APIController
   end
 
   def show
-    render json: model, include: params[:include]
+    render_model(params[:include])
   end
 
   def create
