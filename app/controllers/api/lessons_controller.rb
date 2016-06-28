@@ -1,6 +1,8 @@
-class Api::LessonsController < Api::EventResourceController
+class Api::LessonsController < Api::ResourceController
   self.model_class = LineItem::Lesson
   self.model_key = :lesson
+
+  before_filter :must_be_logged_in, except: [:index, :show]
 
   def index
     model = operation_class.new(current_user, params, index_params).run
@@ -8,7 +10,7 @@ class Api::LessonsController < Api::EventResourceController
   end
 
   def show
-    model = operation_class.new(current_user, params, show_params).run
+    model = operation_class.new(current_user, params, params).run
     render json: model, include: params[:include], serializer: LineItem::LessonSerializer
   end
 

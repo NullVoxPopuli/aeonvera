@@ -96,6 +96,8 @@ def json_api_update_with(obj, params)
   params = ActiveModelSerializers::KeyTransform.dash(params)
   patch :update, { id: obj.id }.merge(params)
 
+  # expect(response.status).to eq 200
+
   json = JSON.parse(response.body)
   data = json['data']
   attributes = data['attributes']

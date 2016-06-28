@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::LessonsController, type: :controller do
   before(:each) do
-    @organization = create(:organization)
+    @organization = create(:organization, owner: create_confirmed_user)
   end
 
   context 'lesson already exists' do
