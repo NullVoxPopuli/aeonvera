@@ -4,6 +4,9 @@ class HousingStatsSerializer < ActiveModel::Serializer
   attributes :id,
     :requests, :provisions
 
+  has_many :housing_requests
+  has_many :housing_provisions
+
   def requests
     object.housing_requests.count
   end

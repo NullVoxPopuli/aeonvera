@@ -8,8 +8,9 @@ class HousingProvisionSerializer < ActiveModel::Serializer
     :preferred_gender_to_host,
     :has_pets,
     :smokes,
-    :notes,
-    :attendance_id, :attendance_type,
-    :host_id, :host_type
+    :notes
 
+
+  belongs_to :host
+  belongs_to :attendance
 end

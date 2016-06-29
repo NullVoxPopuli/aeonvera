@@ -5,9 +5,8 @@ class HousingRequestSerializer < ActiveModel::Serializer
              :allergic_to_pets, :allergic_to_smoke, :other_allergies,
              :requested_roommates, :unwanted_roommates,
              :preferred_gender_to_house_with,
-             :attendance_id, :attendance_type,
-             :host_id, :host_type,
              :housing_provision_id
 
   belongs_to :host
+  belongs_to :attendance
 end

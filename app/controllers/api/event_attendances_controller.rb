@@ -66,6 +66,7 @@ class Api::EventAttendancesController < APIController
         :preferred_gender_to_house_with, :notes,
         :requested_roommates => [], :unwanted_roommates => [],
       ],
+
       housing_provision_attributes: [
         :housing_capacity, :number_of_showers, :can_provide_transportation,
         :transportation_capacity, :preferred_gender_to_host,
