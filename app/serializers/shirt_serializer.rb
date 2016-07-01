@@ -6,6 +6,8 @@ class ShirtSerializer < ActiveModel::Serializer
              :m_price,
              :l_price, :xl_price, :xxl_price, :xxxl_price
 
+  has_many :order_line_items
+
   def sizes
     available = (object.metadata['sizes'] || []).reject(&:blank?)
     result = []
