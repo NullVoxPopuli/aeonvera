@@ -10,9 +10,7 @@ module StripeData
   end
 
   def stripe_refunds
-    @refunds ||= stripe_charge['refunds'].try(:[], 'data').map do |refund_data|
-      StripeRefund.new(refund_data)
-    end
+    stripe_charge['refunds'].try(:[], 'data')
   end
 
   # includes the fee breakdown

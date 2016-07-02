@@ -8,7 +8,8 @@ class OrderSerializer < ActiveModel::Serializer
              :host_name, :host_url,
              :created_at, :user_email, :user_name,
              :payment_received_at,
-             :total_in_cents
+             :total_in_cents,
+             :stripe_refunds
 
   # never render the payment_token
 
@@ -17,7 +18,15 @@ class OrderSerializer < ActiveModel::Serializer
   belongs_to :attendance
   belongs_to :pricing_tier
 
-  has_many :stripe_refunds, serializer: StripeRefundSerializer
+  def stripe_refunds
+    object.stripe_refunds.map do |refund|
+      {
+        amount: refund['amount'],
+        created: refund['created'],
+        status: refund['status']
+      }
+    end
+  end
 
   def total_in_cents
     # convert from dollars to cents
