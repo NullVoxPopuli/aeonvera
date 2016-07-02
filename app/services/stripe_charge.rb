@@ -44,7 +44,6 @@ module StripeCharge
       order.errors.add(:base, e.message)
     end
 
-
     order
   end
 

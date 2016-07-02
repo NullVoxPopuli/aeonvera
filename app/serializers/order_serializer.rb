@@ -17,6 +17,8 @@ class OrderSerializer < ActiveModel::Serializer
   belongs_to :attendance
   belongs_to :pricing_tier
 
+  has_many :stripe_refunds, serializer: StripeRefundSerializer
+
   def total_in_cents
     # convert from dollars to cents
     (object.total * 100).to_i
