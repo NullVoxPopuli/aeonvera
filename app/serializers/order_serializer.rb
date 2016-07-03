@@ -1,5 +1,5 @@
 class OrderSerializer < ActiveModel::Serializer
-  type 'orders'
+  type 'order'
 
   attributes :id,
              :host_id, :host_type,
@@ -9,7 +9,10 @@ class OrderSerializer < ActiveModel::Serializer
              :created_at, :user_email, :user_name,
              :payment_received_at,
              :total_in_cents,
-             :stripe_refunds
+             :stripe_refunds,
+             :current_paid_amount,
+             :current_total_fee_amount,
+             :current_net_amount_received
 
   # never render the payment_token
 

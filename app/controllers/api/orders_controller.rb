@@ -22,6 +22,15 @@ class Api::OrdersController < APIController
     render json: model
   end
 
+  def refresh_stripe
+    # op = OrderOperations::Read.new(current_user, params)
+    # order = op.run
+    order =  Order.find(params[:id])
+    StripeRefreshCharge.update(order)
+    order.save
+    render json: order
+  end
+
   private
 
   def deserialized_params

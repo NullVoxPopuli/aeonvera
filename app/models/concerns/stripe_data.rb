@@ -6,11 +6,11 @@ module StripeData
   end
 
   def stripe_charge
-    metadata['details']
+    @stripe_charge ||= metadata['details'] || {}
   end
 
   def stripe_refunds
-    stripe_charge['refunds'].try(:[], 'data')
+    stripe_charge['refunds'].try(:[], 'data') || []
   end
 
   # includes the fee breakdown
@@ -18,10 +18,15 @@ module StripeData
 
   end
 
-  def stripe_net_amount
-    initial_amount = stripe_charge['amount'] || 0
-    refunded = stripe_charge['amount_refunded'] || 0
+  def stripe_net_amount_paid
+    stripe_amount_paid - stripe_amount_refunded
+  end
 
-    initial_amount - refunded
+  def stripe_amount_paid
+    stripe_charge['amount'] || 0
+  end
+
+  def stripe_amount_refunded
+    stripe_charge['amount_refunded'] || 0
   end
 end

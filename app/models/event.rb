@@ -200,12 +200,12 @@ class Event < ActiveRecord::Base
 
   def preregistration_revenue
     pre_orders = orders.paid.created_before(starts_at)
-    pre_orders.map{ |a| a.net_received }.inject(:+) || 0
+    pre_orders.map{ |a| a.current_net_amount_received }.inject(:+) || 0
   end
 
   def postregistration_revenue
     pre_orders = orders.paid.created_after(starts_at)
-    pre_orders.map{ |a| a.net_received }.inject(:+) || 0
+    pre_orders.map{ |a| a.current_net_amount_received }.inject(:+) || 0
   end
 
   def shirts_sold
