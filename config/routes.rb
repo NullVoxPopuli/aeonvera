@@ -53,6 +53,7 @@ AeonVera::Application.routes.draw do
     resources :orders do
       member do
         get :refresh_stripe
+        put :refund_payment
       end
     end
     resources :order_line_items

@@ -25,13 +25,27 @@ class Api::OrdersController < APIController
   def refresh_stripe
     # op = OrderOperations::Read.new(current_user, params)
     # order = op.run
-    order =  Order.find(params[:id])
-    StripeRefreshCharge.update(order)
+    order = Order.find(params[:id])
+    StripeTasks::RefreshCharge.run(order)
+    order.save
+    render json: order
+  end
+
+  # expects two parameters
+  # - refund_type
+  # - partial_refund_amount
+  def refund_payment
+    order = Order.find(params[:id])
+    StripeTasks::RefundPayment.run(order, refund_params)
     order.save
     render json: order
   end
 
   private
+
+  def refund_params
+    params.permit(:refund_type, :partial_refund_amount)
+  end
 
   def deserialized_params
     ActiveModelSerializers::Deserialization.jsonapi_parse(

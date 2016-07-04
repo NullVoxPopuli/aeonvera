@@ -83,7 +83,7 @@ module OrderOperations
       # this will add errors to the model if something
       # goes wrong with the charge process
       # NOTE: if this succeeds, the order is saved
-      StripeCharge.charge_card!(
+      StripeTasks::ChargeCard.charge_card!(
         checkout_token,
         checkout_email,
         absorb_fees: absorb_fees,
