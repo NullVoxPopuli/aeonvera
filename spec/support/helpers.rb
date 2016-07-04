@@ -7,6 +7,10 @@ def login(user = @user = create(:user))
   sign_in user
 end
 
+def auth_header_for(user = @user = create(:user))
+  @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
+end
+
 def force_login(user)
   allow(controller).to receive(:current_user){ user }
 end
