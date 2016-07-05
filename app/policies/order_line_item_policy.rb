@@ -1,6 +1,12 @@
 class OrderLineItemPolicy < SkinnyControllers::Policy::Base
+  def read_all?
+    order = object.first.order
+    order.user_id == user.id ||
+    order.host.is_accessible_to?(user)
+  end
+
   def read?
-    owner? || order.event.is_accessible_to?(user)
+    owner? || order.host.is_accessible_to?(user)
   end
 
   def update?
