@@ -11,9 +11,9 @@ class EventAttendancePolicy < SkinnyControllers::Policy::Base
   #
 
   # EventAttendancesController#index
-  def read_all?
-    is_collaborator?
-  end
+  # def read_all?
+  #   is_collaborator?
+  # end
 
   # EventAttendancesController#show
   def read?
