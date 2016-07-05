@@ -23,6 +23,13 @@ module StripePaymentHandler
     self.paid_amount = self.calculate_paid_amount
     self.set_net_amount_received_and_fees_from_stripe
 
+    # these 3 fields are used in calculations, as
+    # they'll contain the aggregation of any possible
+    # refunds
+    self.current_paid_amount = self.paid_amount
+    self.current_total_fee_amount = self.total_fee_amount
+    self.current_net_amount_received = self.net_amount_received
+
     self.save
   end
 

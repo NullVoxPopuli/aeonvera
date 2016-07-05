@@ -13,7 +13,7 @@ describe Api::OrderLineItemsController, type: :controller do
     it 'creates a new order line item' do
       json_api = {
         data: {
-          type: 'order-line-items',
+          type: 'order-line-item',
           attributes: {
             price: '10.0',
             quantity: 2,
@@ -25,7 +25,7 @@ describe Api::OrderLineItemsController, type: :controller do
             order: {
               data: {
                 id: @order.id,
-                type: 'orders'
+                type: 'order'
               }
             },
             line_item: {

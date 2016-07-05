@@ -1,5 +1,5 @@
 class VolunteerSerializer < ActiveModel::Serializer
-  type 'volunteers'
+  type 'volunteer'
   attributes :id,
     :attendee_name, :attendee_email,
     :amount_owed, :amount_paid, :registered_at,

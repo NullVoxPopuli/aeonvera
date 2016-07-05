@@ -5,13 +5,13 @@ class Order < ActiveRecord::Base
   # - details
   include HasMetadata
   include StripePaymentHandler
+  include StripeData
   include Payable
   include OrderMembership
 
   belongs_to :host, polymorphic: true
 	belongs_to :event, class_name: Event.name,
 	 foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
-
 
   belongs_to :attendance
   # A user is always going to be the person paying.

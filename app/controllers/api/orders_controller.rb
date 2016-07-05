@@ -1,13 +1,8 @@
-class Api::OrdersController < APIController
-  include SkinnyControllers::Diet
-  before_filter :must_be_logged_in, only: [:index]
+class Api::OrdersController < Api::ResourceController
+  before_filter :must_be_logged_in, only: [:index, :refund_payment, :refresh_stripe]
 
   def index
-    render json: model, include: params[:include]
-  end
-
-  def show
-    render_model(params[:include])
+    render_models(params[:include])
   end
 
   def create
@@ -18,11 +13,19 @@ class Api::OrdersController < APIController
     render_model('order_line_items.line_item')
   end
 
-  def destroy
-    render json: model
+  def refresh_stripe
+    render_model
+  end
+
+  def refund_payment
+    render_model
   end
 
   private
+
+  def refund_payment_order_params
+    params.permit(:refund_type, :partial_refund_amount)
+  end
 
   def deserialized_params
     ActiveModelSerializers::Deserialization.jsonapi_parse(

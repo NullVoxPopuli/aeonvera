@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615222112) do
+ActiveRecord::Schema.define(version: 20160703124522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -312,22 +312,25 @@ ActiveRecord::Schema.define(version: 20160615222112) do
   add_index "order_line_items", ["line_item_id", "line_item_type"], name: "index_order_line_items_on_line_item_id_and_line_item_type", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.string   "payment_token",       limit: 255
-    t.string   "payer_id",            limit: 255
+    t.string   "payment_token",               limit: 255
+    t.string   "payer_id",                    limit: 255
     t.text     "metadata"
     t.integer  "attendance_id"
     t.integer  "host_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "paid",                            default: false,  null: false
-    t.string   "payment_method",      limit: 255, default: "Cash", null: false
+    t.boolean  "paid",                                    default: false,  null: false
+    t.string   "payment_method",              limit: 255, default: "Cash", null: false
     t.decimal  "paid_amount"
-    t.decimal  "net_amount_received",             default: 0.0,    null: false
-    t.decimal  "total_fee_amount",                default: 0.0,    null: false
+    t.decimal  "net_amount_received",                     default: 0.0,    null: false
+    t.decimal  "total_fee_amount",                        default: 0.0,    null: false
     t.integer  "user_id"
-    t.string   "host_type",           limit: 255
+    t.string   "host_type",                   limit: 255
     t.datetime "payment_received_at"
     t.integer  "pricing_tier_id"
+    t.decimal  "current_paid_amount",                     default: 0.0,    null: false
+    t.decimal  "current_net_amount_received",             default: 0.0,    null: false
+    t.decimal  "current_total_fee_amount",                default: 0.0,    null: false
   end
 
   add_index "orders", ["host_id", "host_type"], name: "index_orders_on_host_id_and_host_type", using: :btree

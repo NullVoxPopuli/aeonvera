@@ -1,5 +1,5 @@
 class OrderSerializer < ActiveModel::Serializer
-  type 'orders'
+  type 'order'
 
   attributes :id,
              :host_id, :host_type,
@@ -8,7 +8,11 @@ class OrderSerializer < ActiveModel::Serializer
              :host_name, :host_url,
              :created_at, :user_email, :user_name,
              :payment_received_at,
-             :total_in_cents
+             :total_in_cents,
+             :stripe_refunds,
+             :current_paid_amount,
+             :current_total_fee_amount,
+             :current_net_amount_received
 
   # never render the payment_token
 
@@ -16,6 +20,16 @@ class OrderSerializer < ActiveModel::Serializer
   belongs_to :host
   belongs_to :attendance
   belongs_to :pricing_tier
+
+  def stripe_refunds
+    object.stripe_refunds.map do |refund|
+      {
+        amount: refund['amount'],
+        created: refund['created'],
+        status: refund['status']
+      }
+    end
+  end
 
   def total_in_cents
     # convert from dollars to cents
