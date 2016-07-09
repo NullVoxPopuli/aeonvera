@@ -13,7 +13,7 @@ class HousingRequestPolicy < SkinnyControllers::Policy::Base
 
   # HousingRequestsController#index
   def read_all?
-    is_user_a_collaborator?
+    is_user_a_collaborator?(object.first)
   end
 
   # HousingRequestsController#show
@@ -39,7 +39,8 @@ class HousingRequestPolicy < SkinnyControllers::Policy::Base
 
   private
 
-  def is_user_a_collaborator?
+  def is_user_a_collaborator?(object = object)
+    return false unless object.try(:host)
     object.host.is_accessible_as_collaborator?(user)
   end
 
