@@ -39,9 +39,9 @@ class HousingRequestPolicy < SkinnyControllers::Policy::Base
 
   private
 
-  def is_user_a_collaborator?(object = object)
-    return false unless object.try(:host)
-    object.host.is_accessible_as_collaborator?(user)
+  def is_user_a_collaborator?(o = object)
+    return false unless o.try(:host)
+    o.host.is_accessible_as_collaborator?(user)
   end
 
   def is_the_attendee?

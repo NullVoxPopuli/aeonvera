@@ -16,8 +16,8 @@ class EventAttendancePolicy < SkinnyControllers::Policy::Base
   # end
 
   # EventAttendancesController#show
-  def read?
-    object.attendee == user || is_collaborator?
+  def read?(o = object)
+    o.attendee == user || is_collaborator?(o)
   end
 
   # EventAttendancesController#create
@@ -37,7 +37,7 @@ class EventAttendancePolicy < SkinnyControllers::Policy::Base
 
   private
 
-  def is_collaborator?
-    object.host.is_accessible_as_collaborator?(user)
+  def is_collaborator?(o = object)
+    o.host.is_accessible_as_collaborator?(user)
   end
 end
