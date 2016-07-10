@@ -15,7 +15,7 @@ class Api::Users::SessionsController < Devise::SessionsController
   #
   # HTTPS required :-)
   def create
-    resource = User.find_by_email(params[:email])
+    resource = User.find_for_authentication(email: params[:email])
     return invalid_login_attempt unless resource
 
     success = resource.valid_password?(params[:password])
