@@ -1,5 +1,5 @@
 class HousingRequestSerializer < ActiveModel::Serializer
-  attributes :id, :notes,
+  attributes :id, :notes, :name,
              :need_transportation, :can_provide_transportation,
              :transportation_capacity,
              :allergic_to_pets, :allergic_to_smoke, :other_allergies,

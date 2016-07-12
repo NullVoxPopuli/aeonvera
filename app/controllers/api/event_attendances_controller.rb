@@ -6,6 +6,12 @@ class Api::EventAttendancesController < APIController
   before_filter :must_be_logged_in
 
   def index
+    if params[:q]
+      set_event
+      search = @event.attendances.includes(:attendee).ransack(search_params)
+      return render json: search.result, fields: { 'event-attendance' => ['attendee_name'] }
+    end
+
     return render_attendance_for_event if requesting_attendance_for_event?
 
     # TODO: do I still need this param?
@@ -18,6 +24,14 @@ class Api::EventAttendancesController < APIController
     end
 
     render json: @attendances
+  end
+
+  def search_params
+    params.require(:event_id)
+    params[:q].merge({
+      host_id_eq: params[:event_id],
+      host_type_eq: Event.name,
+    })
   end
 
   def show

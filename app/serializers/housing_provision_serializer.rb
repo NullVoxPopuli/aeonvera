@@ -1,6 +1,6 @@
 class HousingProvisionSerializer < ActiveModel::Serializer
 
-  attributes :id,
+  attributes :id, :name,
     :housing_capacity,
     :number_of_showers,
     :can_provide_transportation,
