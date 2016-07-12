@@ -29,8 +29,8 @@ class Api::EventAttendancesController < APIController
   def search_params
     params.require(:event_id)
     params[:q].merge({
-      host_id: params[:event_id],
-      host_type: Event.name,
+      host_id_eq: params[:event_id],
+      host_type_eq: Event.name,
     })
   end
 
