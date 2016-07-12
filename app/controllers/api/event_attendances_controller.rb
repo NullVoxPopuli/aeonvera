@@ -9,7 +9,7 @@ class Api::EventAttendancesController < APIController
     if params[:q]
       set_event
       search = @event.attendances.includes(:attendee).ransack(search_params)
-      return render json: search.result, fields: :attendee_name, include: ''
+      return render json: search.result, fields: { 'event-attendance' => ['attendee_name'] }
     end
 
     return render_attendance_for_event if requesting_attendance_for_event?
