@@ -12,7 +12,7 @@ class HousingStatsSerializer < ActiveModel::Serializer
   end
 
   def provisions
-    object.housing_provisions.map(&:housing_capacity).inject(:+) || 0
+    object.housing_provisions.map(&:housing_capacity).map(&:to_i).inject(:+) || 0
   end
 
 end
