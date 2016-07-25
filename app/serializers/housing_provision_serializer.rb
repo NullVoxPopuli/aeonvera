@@ -12,5 +12,5 @@ class HousingProvisionSerializer < ActiveModel::Serializer
 
 
   belongs_to :host
-  belongs_to :attendance
+  belongs_to :attendance, serializer: EventAttendanceSerializer
 end
