@@ -1,6 +1,8 @@
 class Api::ResourceController < APIController
   include SkinnyControllers::Diet
 
+  respond_to :json, :csv
+
   def index
     respond_to do |format|
       format.json { render_models }

@@ -54,6 +54,14 @@ class Api::EventResourceController < Api::ResourceController
   protected
 
   def csv
-    model.to_csv
+    options = { adapter: :attributes }
+    if params[:fields]
+      options[:fields] = params[:fields].split(',').map(&:underscore).map(&:to_sym)
+    end
+    hash = ActiveModelSerializers::SerializableResource.new(model, options).as_json
+
+    # hack until AMS considers relationships as options
+    hash = JSON.parse(hash.to_json(only: options[:fields]))
+    CsvGeneration.models_to_csv(hash)
   end
 end

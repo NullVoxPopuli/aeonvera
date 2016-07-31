@@ -1,4 +1,4 @@
- class APIController < ActionController::Base
+class APIController < ActionController::Base
   include CommonApplicationController
   respond_to :json
   before_action :set_default_response_format
