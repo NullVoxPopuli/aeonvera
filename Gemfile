@@ -14,9 +14,9 @@ gem 'activerecord-session_store'
 # for cross-origin resource sharing
 gem 'rack-cors', :require => 'rack/cors'
 # JSON serialization
-gem "active_model_serializers", github: "rails-api/active_model_serializers"
+# gem "active_model_serializers", github: "rails-api/active_model_serializers"
 # gem "active_model_serializers", github: "rails-api/active_model_serializers", tag: 'v0.10.0.rc4'
-# gem "active_model_serializers", git: "https://github.com/NullVoxPopuli/active_model_serializers.git", branch: 'underscored_keys_support_for_deserialization'
+gem "active_model_serializers", git: "https://github.com/NullVoxPopuli/active_model_serializers.git", branch: 'fields-also-whitelists-relationships'
 # gem 'active_model_serializers', path: '/home/lprestonsegoiii/Development/active_model_serializers'
 # Rediculousness for deserializing embedded data
 # gem 'jsonapi_parser', '~>0.5'

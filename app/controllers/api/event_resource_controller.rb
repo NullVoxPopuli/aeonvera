@@ -62,6 +62,14 @@ class Api::EventResourceController < Api::ResourceController
 
     # hack until AMS considers relationships as options
     hash = JSON.parse(hash.to_json(only: options[:fields]))
+    hash = flat_hash(hash)
+    binding.pry
     CsvGeneration.models_to_csv(hash)
+  end
+
+
+  def flat_hash(hash, k = [])
+    return {k => hash} unless hash.is_a?(Hash)
+    hash.inject({}){ |h, v| h.merge! flat_hash(v[-1], k + [v[0]]) }
   end
 end

@@ -21,7 +21,7 @@ describe Api::HousingProvisionsController, type: :request do
       end
 
       it 'selects attributes' do
-        get "/api/housing_provisions.csv?event_id=#{@event.id}&fields=housingCapacity,numberOfShowers", {}, @headers
+        get "/api/housing_provisions.csv?event_id=#{@event.id}&fields=housingCapacity,numberOfShowers,attendance.attendeeName", {}, @headers
         expect(response.status).to eq 200
       end
     end
