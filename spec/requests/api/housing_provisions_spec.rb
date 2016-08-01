@@ -11,8 +11,9 @@ describe Api::HousingProvisionsController, type: :request do
         user = create_confirmed_user
         auth_header_for(user)
         @event = create(:event, hosted_by: user)
-        create(:housing_provision, host: @event)
-        create(:housing_provision, host: @event)
+        attendance = create(:attendance, host: @event)
+        create(:housing_provision, host: @event, attendance: attendance)
+        create(:housing_provision, host: @event, attendance: attendance)
       end
 
       it 'can read all' do

@@ -56,20 +56,26 @@ class Api::EventResourceController < Api::ResourceController
   def csv
     options = { adapter: :attributes }
     if params[:fields]
-      options[:fields] = params[:fields].split(',').map(&:underscore).map(&:to_sym)
+      fields = JSONAPI::IncludeDirective.new(params[:fields]).to_hash
+      options[:fields] = ActiveModelSerializers::KeyTransform.underscore(fields)
     end
     hash = ActiveModelSerializers::SerializableResource.new(model, options).as_json
 
-    # hack until AMS considers relationships as options
-    hash = JSON.parse(hash.to_json(only: options[:fields]))
     hash = flat_hash(hash)
-    binding.pry
     CsvGeneration.models_to_csv(hash)
   end
 
 
-  def flat_hash(hash, k = [])
-    return {k => hash} unless hash.is_a?(Hash)
-    hash.inject({}){ |h, v| h.merge! flat_hash(v[-1], k + [v[0]]) }
+  def flat_hash(hash)
+    return hash.map{|h| flat_hash(h)} if hash.is_a?(Array)
+    result = {}
+    hash.each do |k, v|
+      if v.is_a?(Hash)
+        result.merge!(v)
+      else
+        result[k] = v
+      end
+    end
+    result
   end
 end

@@ -92,7 +92,6 @@ module ActiveModelSerializers
 
         result = {}
         fields_keys = fields.keys
-
         hash.each do |k, v|
           next unless fields_keys.include?(k)
           if v.is_a?(Hash)
