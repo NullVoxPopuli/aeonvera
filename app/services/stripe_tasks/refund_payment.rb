@@ -19,6 +19,9 @@ module StripeTasks
       stripe_refund_params = { charge: order.stripe_charge['id'] }
       stripe_refund_params[:amount] = amount if type == 'partial'
 
+      secret_key = order.host.integrations[Integration::STRIPE].try(:config).try(:[], 'access_token')
+      stripe_refund_params[:secret_key] = secret_key if secret_key
+
       Stripe::Refund.create(stripe_refund_params)
     end
   end
