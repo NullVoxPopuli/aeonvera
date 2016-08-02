@@ -37,7 +37,7 @@ describe Api::CollaborationsController, type: :request do
 
         it 'reads - route does not exist' do
           get "/api/collaborations/#{collaboration.id}"
-          expect(response.status).to eq 500
+          expect(response.status).to eq 404
         end
 
         it 'reads all' do

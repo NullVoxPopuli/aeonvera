@@ -117,6 +117,9 @@ AeonVera::Application.routes.draw do
   get '/scenes', to: redirect('/communities')
 
   # redirect everything to ember
-  get '/*path' => 'marketing#index'
+  #
+  # But only if it doesn't start with /api/
+  # http://www.rubular.com/r/AUxFqYLOf8
+  get '/*path' => 'marketing#index', fullpath: /^\/((?!api\/).)*$/
   root to: 'marketing#index'
 end
