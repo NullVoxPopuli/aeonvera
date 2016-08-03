@@ -7,7 +7,7 @@ class Api::EventResourceController < Api::ResourceController
 
     respond_to do |format|
       format.json { render json: model, include: params[:include] }
-      format.csv { send_data csv }
+      format.csv { send_data CsvGeneration.model_to_csv(model, params[:fields]) }
     end
   end
 
@@ -48,34 +48,5 @@ class Api::EventResourceController < Api::ResourceController
 
       attributes.merge(event_id: event_relationship[:id])
     end
-  end
-
-
-  protected
-
-  def csv
-    options = { adapter: :attributes }
-    if params[:fields]
-      fields = JSONAPI::IncludeDirective.new(params[:fields]).to_hash
-      options[:fields] = ActiveModelSerializers::KeyTransform.underscore(fields)
-    end
-    hash = ActiveModelSerializers::SerializableResource.new(model, options).as_json
-
-    hash = flat_hash(hash)
-    CsvGeneration.models_to_csv(hash)
-  end
-
-
-  def flat_hash(hash)
-    return hash.map{|h| flat_hash(h)} if hash.is_a?(Array)
-    result = {}
-    hash.each do |k, v|
-      if v.is_a?(Hash)
-        result.merge!(v)
-      else
-        result[k] = v
-      end
-    end
-    result
   end
 end

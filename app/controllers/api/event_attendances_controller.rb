@@ -23,7 +23,10 @@ class Api::EventAttendancesController < APIController
       @attendances = @attendances.unpaid if params[:unpaid]
     end
 
-    render json: @attendances
+    respond_to do |format|
+      format.json { render json: @attendances }
+      format.csv { send_data CsvGeneration.model_to_csv(@attendances, params[:fields]) }
+    end
   end
 
   def search_params
