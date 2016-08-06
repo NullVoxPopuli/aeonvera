@@ -25,15 +25,35 @@ describe OrderOperations::MarkPaid do
 
   context 'order is unpaid' do
     it 'marks an order as paid' do
+      package = create(:package, event: event)
       order = create(:order, host: event, attendance: attendance)
+      oli = create(:order_line_item, order: order, line_item: package)
+      order.reload
 
       params = {
         id: order.id,
         payment_method: 'Cash'
       }
 
+      result = klass.new(owner, params, params[:order]).run
+      expect(result.paid).to eq true
+    end
+
+    it 'marks an order as paid with a total of 0' do
+      package = create(:package, event: event)
+      order = create(:order, host: event, attendance: attendance)
+      oli = create(:order_line_item, order: order, line_item: package)
+      order.reload
+
+      params = {
+        id: order.id,
+        payment_method: 'Cash',
+        amount: 0
+      }
+
       result = klass.new(owner, params).run
       expect(result.paid).to eq true
+
     end
 
     it 'marks an order as paid with persistence' do

@@ -1,5 +1,7 @@
 class Api::OrdersController < Api::ResourceController
-  before_filter :must_be_logged_in, only: [:index, :refund_payment, :refresh_stripe]
+  before_filter :must_be_logged_in, only: [
+    :index, :refund_payment, :refresh_stripe, :mark_paid
+  ]
 
   def index
     render_models(params[:include])
@@ -29,6 +31,13 @@ class Api::OrdersController < Api::ResourceController
 
   def refund_payment_order_params
     params.permit(:refund_type, :partial_refund_amount)
+  end
+
+  def mark_paid_order_params
+    params.permit(
+      :id,
+      :amount, :payment_method, :check_number
+    )
   end
 
   def deserialized_params

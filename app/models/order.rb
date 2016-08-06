@@ -186,7 +186,7 @@ class Order < ActiveRecord::Base
     # at least, we'd want to really be sure
     # and have some sort of administrative
     # override
-    return unless paid?
+    return if paid?
 
     params = {
       paid: true,

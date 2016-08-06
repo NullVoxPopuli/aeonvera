@@ -17,6 +17,11 @@ describe Api::OrdersController, type: :request do
       expect(response.status).to eq 401
     end
 
+    it 'cannot mark paid' do
+      put "/api/orders/#{order.id}/mark_paid", { payment_method: 'Cash', amount: 10, check_number: '' }
+      expect(response.status).to eq 401
+    end
+
     it 'cannot refresh stripe data' do
       get "/api/orders/#{order.id}/refresh_stripe"
       expect(response.status).to eq 401
@@ -32,8 +37,18 @@ describe Api::OrdersController, type: :request do
     after { StripeMock.stop }
 
     it 'can refund' do
+      package = create(:package, event: event)
+      oli = create(:order_line_item, order: order, line_item: package)
+      order.reload
       put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(owner)
       expect(response.status).to eq 200
+    end
+
+
+    it 'can mark paid' do
+      put "/api/orders/#{order.id}/mark_paid", { payment_method: 'Cash', amount: 10, check_number: '' }, auth_header_for(owner)
+      expect(response.status).to eq 200
+      expect(json_api_data['attributes']['paid']).to eq true
     end
 
     it 'can refresh stripe data' do
@@ -68,7 +83,5 @@ describe Api::OrdersController, type: :request do
       get "/api/orders/#{order.id}", {}, @headers
       expect(response.status).to eq 200
     end
-
-    it
   end
 end
