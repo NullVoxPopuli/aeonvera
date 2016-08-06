@@ -87,6 +87,14 @@ class Order < ActiveRecord::Base
     self.metadata['name'] = name
   end
 
+  def notes
+    self.metadata['notes']
+  end
+
+  def notes=(new_notes)
+    self.metadata['notes'] = new_notes
+  end
+
   def email_from_metadata
     self.metadata['email']
   end
@@ -194,6 +202,7 @@ class Order < ActiveRecord::Base
       payment_method:      data[:payment_method],
       paid_amount:         data[:amount] || paid_amount || 0,
       net_amount_received: data[:amount] || net_amount_received || 0,
+      notes:               data[:notes],
       payment_received_at: Time.now
     }
 

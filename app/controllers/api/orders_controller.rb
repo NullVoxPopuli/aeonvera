@@ -36,7 +36,7 @@ class Api::OrdersController < Api::ResourceController
   def mark_paid_order_params
     params.permit(
       :id,
-      :amount, :payment_method, :check_number
+      :amount, :payment_method, :check_number, :notes
     )
   end
 

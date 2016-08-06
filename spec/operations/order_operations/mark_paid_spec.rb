@@ -80,6 +80,21 @@ describe OrderOperations::MarkPaid do
       expect(result.check_number).to eq '1234'
     end
 
+    it 'sets the notes' do
+      order = create(:order, host: event, attendance: attendance)
+      add_to_order!(order, package)
+      expect(order.paid).to eq false
+
+      params = {
+        id: order.id,
+        payment_method: 'Cash',
+        notes: 'a note!'
+      }
+
+      result = klass.new(owner, params).run
+      expect(result.notes).to eq 'a note!'
+    end
+
     it 'marks an order as paid with persistence' do
       order = create(:order, host: event, attendance: attendance)
 
