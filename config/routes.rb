@@ -52,10 +52,15 @@ AeonVera::Application.routes.draw do
 
     resources :orders do
       member do
+        # breaking pure REST :-(
+        # it's better than hacking a bunch of if conditionals
+        # in the core actions though.
         get :refresh_stripe
         put :refund_payment
+        put :mark_paid
       end
     end
+
     resources :order_line_items
     resources :shirts
     resources :packages

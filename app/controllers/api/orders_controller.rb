@@ -21,6 +21,10 @@ class Api::OrdersController < Api::ResourceController
     render_model
   end
 
+  def mark_paid
+    render_model
+  end
+
   private
 
   def refund_payment_order_params

@@ -168,6 +168,38 @@ class Order < ActiveRecord::Base
     end.present?
   end
 
+  # Sets the non-stripe payment information.
+  # paid_amount, and net_amount_received are
+  # set from the amount passed in.
+  #
+  # TODO: will this ever make sense to set
+  #       electronic payment information on?
+  #
+  # data should contain:
+  # - payment_method
+  # - amount
+  # - check_number
+  #
+  # @param [Hash] data
+  def mark_paid!(data)
+    # we cannot change payment information
+    # at least, we'd want to really be sure
+    # and have some sort of administrative
+    # override
+    return unless paid?
+
+    params = {
+      paid: true,
+      check_number:        data[:check_number],
+      payment_method:      data[:payment_method],
+      paid_amount:         data[:amount] || paid_amount || 0,
+      net_amount_received: data[:amount] || net_amount_received || 0,
+      payment_received_at: Time.now
+    }
+
+    update(params)
+  end
+
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
       csv << ["Name", "Email", "Registered At", "Payment Method", "Paid",
