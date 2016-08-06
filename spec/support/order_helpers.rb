@@ -13,6 +13,11 @@ def add_to_order(order, line_item, quantity: 1, price: 0)
   oli
 end
 
+def add_to_order!(order, line_item, quantity: 1, price: 0)
+  add_to_order(order, line_item, quantity: quantity, price: price).save
+  order.save
+end
+
 # simulates not saving
 def remove_invalid_items(order)
   items = order.order_line_items
