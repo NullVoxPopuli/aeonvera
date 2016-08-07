@@ -1,7 +1,7 @@
 class EventPolicy < SkinnyControllers::Policy::Base
   class SubConfiguration < SkinnyControllers::Policy::Base
-    def read?
-      parent.is_accessible_to? user
+    def read?(o = object)
+      parent(o).is_accessible_to? user
     end
 
     def update?
@@ -18,8 +18,8 @@ class EventPolicy < SkinnyControllers::Policy::Base
 
     private
 
-    def parent
-      object.try(:event) || object.try(:host)
+    def parent(o = object)
+      o.try(:event) || o.try(:host)
     end
   end
 end
