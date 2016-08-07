@@ -112,6 +112,7 @@ module Payable
   end
 
   def add_check_number(number)
+    return unless number.present?
     check_data = checks
     check_data << {
       number: number
