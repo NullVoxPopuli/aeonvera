@@ -58,7 +58,7 @@ module EventAttendanceOperations
     def map_housing_provision_relationships(host: nil, attendance: nil)
       if attendance.housing_provision
         attendance.housing_provision.host = host
-        
+
         # set the polymorphic relationship
         attendance.housing_provision.attendance = attendance
       end
@@ -86,6 +86,10 @@ module EventAttendanceOperations
       model.update(params_for_action) if allowed?
       model
     end
+  end
+
+  class Checkin < Update
+    # TODO: only event collaborators can check someone in
   end
 
   # # EventAttendancesController#destroy

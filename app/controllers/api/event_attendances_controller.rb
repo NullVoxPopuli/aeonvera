@@ -24,7 +24,11 @@ class Api::EventAttendancesController < APIController
     end
 
     respond_to do |format|
-      format.json { render json: @attendances }
+      format.json {
+        render json: @attendances,
+          include: params[:include],
+          each_serializer: EventAttendanceSerializer
+      }
       format.csv { send_data CsvGeneration.model_to_csv(@attendances, params[:fields]) }
     end
   end
@@ -51,7 +55,15 @@ class Api::EventAttendancesController < APIController
     render_model('housing_request,housing_provision,custom_field_responses')
   end
 
+  def checkin
+    render_model
+  end
+
   private
+
+  def checkin_event_attendance_params
+    params.permit(:checked_in_at)
+  end
 
   def deserialized_params
     ActiveModelSerializers::Deserialization.jsonapi_parse(
