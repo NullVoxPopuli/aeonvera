@@ -19,4 +19,22 @@ describe OrderPolicy do
       it { expect(policy.delete?).to eq false }
     end
   end
+
+  context 'creator of the order' do
+    let(:other_user) { create(:user) }
+
+    it 'can delete unpaid orders' do
+      order = build(:order, created_by: other_user, paid: false)
+      policy = OrderPolicy.new(other_user, order)
+
+      expect(policy.delete?).to eq true
+    end
+
+    it 'cannot delete paid orders' do
+      order = build(:order, created_by: other_user, paid: true)
+      policy = OrderPolicy.new(other_user, order)
+
+      expect(policy.delete?).to eq false
+    end
+  end
 end

@@ -23,6 +23,20 @@ describe Order do
 
   describe 'validations' do
 
+    describe 'attendance' do
+      it 'is required when there is a competition' do
+        event = create(:event)
+        competition = create(:competition, event: event)
+        order = build(:order, host: event)
+        oli = add_to_order(order, competition)
+        oli.dance_orientation = 'Lead'
+
+        order.valid?
+        expect(order.errors.full_messages).to_not be_empty
+        expect(order).to_not be_valid
+      end
+    end
+
     describe 'buyer_email' do
       it 'is invalid with no email' do
         o = create(:order, host: create(:organization))

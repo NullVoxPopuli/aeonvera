@@ -40,7 +40,9 @@ module OrderOperations
       # a user is alwoys going to be the person paying.
       # if an attendance is passed, use the user from
       # that attendance.
-      @model.user = attendance.try(:attendee) || current_user
+      @model.user = attendance.try(:attendee)
+      @model.user = current_user if @model.host.is_a?(Organization)
+      @model.created_by = current_user
 
       # the payment token is used for people who aren't logged in.
       # In order to update / pay for an order, you must either

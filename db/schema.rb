@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160712224154) do
+ActiveRecord::Schema.define(version: 20160808030912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -333,8 +333,10 @@ ActiveRecord::Schema.define(version: 20160712224154) do
     t.decimal  "current_paid_amount",                     default: 0.0,    null: false
     t.decimal  "current_net_amount_received",             default: 0.0,    null: false
     t.decimal  "current_total_fee_amount",                default: 0.0,    null: false
+    t.integer  "created_by_id"
   end
 
+  add_index "orders", ["created_by_id"], name: "index_orders_on_created_by_id", using: :btree
   add_index "orders", ["host_id", "host_type"], name: "index_orders_on_host_id_and_host_type", using: :btree
   add_index "orders", ["pricing_tier_id"], name: "index_orders_on_pricing_tier_id", using: :btree
 

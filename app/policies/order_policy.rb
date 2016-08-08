@@ -20,10 +20,14 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   end
 
   def delete?
-    !object.paid && owner?
+    !object.paid && (owner? || did_create?)
   end
 
   private
+
+  def did_create?
+    object.created_by_id == user_id
+  end
 
   def owner?
     object.user_id == user_id

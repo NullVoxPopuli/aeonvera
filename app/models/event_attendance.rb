@@ -2,6 +2,19 @@ class EventAttendance < Attendance
   include ::EventItemHelpers
   include AttendanceDownloadableData
 
+  # TODO: remove this
+  # temp hack until skinny controllers supports the include param
+  default_scope do
+    # eager_load(
+    #   :attendee, :package, :level, :housing_request, :housing_provision, :custom_field_responses,
+    #   :orders => [:order_line_items]
+    # )
+    includes(
+      :attendee, :package, :level, :housing_request, :housing_provision, :custom_field_responses,
+      :orders => [:order_line_items => :line_item]
+    )
+    # .includes(:orders => [:order_line_items => :line_item])
+  end
 
   belongs_to :event, class_name: Event.name,
    foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
