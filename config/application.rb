@@ -51,6 +51,7 @@ module AeonVera
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
 
     config.autoload_paths += [config.root.join('lib')]
+    config.autoload_paths += %W(#{config.root}/app/services)
 
     config.generators do |g|
       g.test_framework :rspec

@@ -133,7 +133,7 @@ describe OrderOperations::Create do
           {"data"=>{
             "attributes"=>{
               "host-name"=>nil, "host-url"=>nil, "created-at"=>nil, "payment-received-at"=>nil, "paid-amount"=>nil, "net-amount-received"=>nil, "total-fee-amount"=>nil, "payment-method"=>nil, "payment-token"=>nil, "check-number"=>nil, "paid"=>false, "total-in-cents"=>nil,
-              "user-email"=>"someone@test.com", "user-name"=>" ", "checkout-token"=>nil, "checkout-email"=>nil},
+              "user-email"=>"someone@test.com", "user-name"=>"some name", "checkout-token"=>nil, "checkout-email"=>nil},
             "relationships"=>{
               "host"=>{"data"=>{"type"=>"events", "id"=>event.id}},
               "order-line-items"=>{"data"=>[
@@ -166,6 +166,12 @@ describe OrderOperations::Create do
           expect{
             @operation.run
           }.to change(OrderLineItem, :count).by(2)
+        end
+
+        it 'stores the buyer_name and buyer_email' do
+          order = @operation.run
+          expect(order.buyer_email).to eq 'someone@test.com'
+          expect(order.buyer_name).to eq 'some name'
         end
 
         it 'reduced the price by 20 dollars' do
