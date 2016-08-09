@@ -1,7 +1,9 @@
-class Api::HousingStatsController < APIController
-  include SetsEvent
+module Api
+  class HousingStatsController < APIController
+    include SetsEvent
 
-  def show
-    render json: @event, serializer: HousingStatsSerializer
+    def show
+      render json: @event, serializer: HousingStatsSerializer
+    end
   end
 end

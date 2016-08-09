@@ -1,16 +1,18 @@
-class Api::Users::ConfirmationsController < Devise::ConfirmationsController
-  include DeviseOverrides
-  respond_to :html, :json
+module Api
+  class Users::ConfirmationsController < Devise::ConfirmationsController
+    include DeviseOverrides
+    respond_to :html, :json
 
-  # POST /resource/confirmation
-  def create
-    self.resource = resource_class.send_confirmation_instructions(params[:user])
-    respond_with(resource)
-  end
+    # POST /resource/confirmation
+    def create
+      self.resource = resource_class.send_confirmation_instructions(params[:user])
+      respond_with(resource)
+    end
 
-  # GET /resource/confirmation?confirmation_token=abcdef
-  def show
-    self.resource = resource_class.confirm_by_token(params[:confirmation_token])
-    respond_with(resource)
+    # GET /resource/confirmation?confirmation_token=abcdef
+    def show
+      self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+      respond_with(resource)
+    end
   end
 end
