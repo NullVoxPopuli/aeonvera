@@ -59,6 +59,7 @@ module AeonVera
 
     config.paperclip_defaults = {
       storage: :s3,
+      s3_protocol: :https,
       s3_credentials: {
         bucket: ENV['S3_BUCKET_NAME'] || 'aeonvera-dev',
         # these development s3 credentials do not have access to staging or production buckets
