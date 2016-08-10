@@ -17,7 +17,7 @@ class Order < ActiveRecord::Base
   include Payable
   include OrderMembership
 
-  belongs_to :host, polymorphic: true
+  belongs_to :host, -> { unscope(where: :deleted_at) }, polymorphic: true
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 

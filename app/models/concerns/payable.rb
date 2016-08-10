@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 module Payable
   module Methods
-    PAYPAL = "PayPal"
-    CHECK = "Check"
-    CREDIT = "Credit"
-    DEBIT = "Debit"
-    CASH = "Cash"
-    STRIPE = "Stripe"
+    PAYPAL = 'PayPal'
+    CHECK = 'Check'
+    CREDIT = 'Credit'
+    DEBIT = 'Debit'
+    CASH = 'Cash'
+    STRIPE = 'Stripe'
 
     ALL = [
       PAYPAL,
@@ -14,22 +15,21 @@ module Payable
       CREDIT,
       DEBIT,
       CASH
-    ]
+    ].freeze
 
     FEES = {
-      STRIPE => Proc.new{ |amount|
+      STRIPE => proc do |amount|
         # 30 cents + 2.9%
         0.30 + (amount * 0.029)
         # $100 + (($100.3 / 0.975) * 0.25) + 0.3
         # amount + ((amount / 1 - 0.029) - 0.3) * 1.029 + 0.3
-      },
-      PAYPAL => Proc.new{ |amount|
+      end,
+      PAYPAL => proc do |amount|
         # 30 cents + 2.9%
         0.30 + (amount * 0.029)
         # (amount + ((amount / (1 - 0.029)) - 0.3) * 0.029 + 0.3).round(2)
-      }
-    }
-
+      end
+    }.freeze
   end
 
   FEES = Payable::Methods::FEES
@@ -47,7 +47,7 @@ module Payable
   # ]
 
   def application_fee
-    self.total * 0.0075 # 0.75%
+    total * 0.0075 # 0.75%
   end
 
   # check if the discount is allowed for this order
@@ -67,15 +67,11 @@ module Payable
   end
 
   def eligible_for_discount?
-    if !allows_discounts?
-      return false
-    end
+    return false unless allows_discounts?
 
-    if already_has_discount? && !allows_multiple_discounts?
-      return false
-    end
+    return false if already_has_discount? && !allows_multiple_discounts?
 
-    return true
+    true
   end
 
   def is_an_item_with_quantity?(item)
@@ -95,9 +91,9 @@ module Payable
   end
 
   def already_has_discount?
-    order_line_items.select{|line_item|
+    order_line_items.select do |line_item|
       line_item.line_item_type == Discount.name
-    }.count > 0
+    end.count > 0
   end
 
   def already_exists?(object)
@@ -105,10 +101,10 @@ module Payable
   end
 
   def line_item_matching(object)
-    order_line_items.select{|line_item|
+    order_line_items.select do |line_item|
       line_item.line_item_id == object.id &&
-      line_item.line_item_type == object.class.name
-    }.first
+        line_item.line_item_type == object.class.name
+    end.first
   end
 
   def add_check_number(number)
@@ -132,11 +128,11 @@ module Payable
     return legacy_total if is_legacy?
     amount = 0
     remaining_discounts = []
-    discounts_to_apply_at_end = ->(discount){
+    discounts_to_apply_at_end = lambda do |discount|
       remaining_discounts << discount
-    }
+    end
 
-    valid_order_line_items = order_line_items.select{|o| o.valid? }
+    valid_order_line_items = order_line_items.select(&:valid?)
     valid_order_line_items.each do |line_item|
       if (object = line_item.line_item).is_a?(Discount)
         amount = amount_after_discount(
@@ -157,9 +153,9 @@ module Payable
 
   def should_apply_fee?
     sub_total > 0 &&
-    host.make_attendees_pay_fees? &&
-    (self.payment_method == Payable::Methods::STRIPE ||
-     self.payment_method == Payable::Methods::PAYPAL)
+      host.make_attendees_pay_fees? &&
+      (payment_method == Payable::Methods::STRIPE ||
+       payment_method == Payable::Methods::PAYPAL)
   end
 
   def calculated_price(charge_fees: true)
@@ -183,21 +179,20 @@ module Payable
   end
 
   def is_legacy?
-    !!self.metadata["line_items"].present?
+    !!metadata['line_items'].present?
   end
 
-
   def checks
-    items_from_metadata("checks")
+    items_from_metadata('checks')
   end
 
   def checks=(checks)
-    self.metadata["checks"] = checks
+    metadata['checks'] = checks
   end
 
   def calculate_paid_amount
-    if self.paid?
-      if self.payment_method == Payable::Methods::STRIPE
+    if paid?
+      if payment_method == Payable::Methods::STRIPE
         paid_amount_from_stripe_charge_data
       else
         total
@@ -208,14 +203,15 @@ module Payable
   end
 
   def items_from_metadata(key)
-    c = (self.metadata[key] || [])
-    c.map{|h| h.default_proc = proc do |h, k|
+    c = (metadata[key] || [])
+    c.map do |h|
+      h.default_proc = proc do |h, k|
         case k
         when String then sym = k.to_sym; h[sym] if h.key?(sym)
         when Symbol then str = k.to_s; h[str] if h.key?(str)
         end
       end
-    }
+    end
     c
   end
 
@@ -231,7 +227,7 @@ module Payable
   # @return [OrderLineItem] the created order line item
   def create_line_item(object, quantity: 1, price: nil)
     price ||= (object.try(:current_price) || object.try(:value))
-    item = self.order_line_items.new(
+    item = order_line_items.new(
       quantity: quantity,
       price: price
     )
@@ -241,7 +237,6 @@ module Payable
     item.save
     item
   end
-
 
   def amount_after_discount(amount, discount, order_line_item: nil, discounts_to_apply_at_end: nil)
     discount_from = amount
@@ -291,11 +286,10 @@ module Payable
       if discount.amount_discount?
         amount -= discount.value
       else discount.percent_discount?
-        amount -= (amount * discount.value / 100.0)
+           amount -= (amount * discount.value / 100.0)
       end
     end
 
     amount
   end
-
 end

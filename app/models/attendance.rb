@@ -21,7 +21,7 @@ class Attendance < ActiveRecord::Base
   # references are deleted, we want to know what they were
   def attendee; User.unscoped{ super }; end
 
-  belongs_to :host, polymorphic: true
+  belongs_to :host, -> { unscope(where: :deleted_at) }, polymorphic: true
 
   has_many :custom_field_responses, as: :writer
   has_many :orders
