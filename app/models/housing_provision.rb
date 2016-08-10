@@ -1,5 +1,6 @@
 class HousingProvision < ActiveRecord::Base
   include CSVOutput
+  include SoftDeletable
 
   belongs_to :host, polymorphic: true
   belongs_to :attendance, -> { with_deleted }, polymorphic: true

@@ -1,5 +1,6 @@
 class HousingRequest < ActiveRecord::Base
   include CSVOutput
+  include SoftDeletable
 
   # Store the list of requested and unwanted
   # roommates as a list of strings

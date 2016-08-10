@@ -12,7 +12,7 @@ describe Api::HousingProvisionsController, type: :request do
         auth_header_for(user)
         @event = create(:event, hosted_by: user)
         attendance = create(:attendance, host: @event)
-        create(:housing_provision, host: @event, attendance: attendance)
+        @housing_provision = create(:housing_provision, host: @event, attendance: attendance)
         create(:housing_provision, host: @event, attendance: attendance)
       end
 
@@ -23,6 +23,13 @@ describe Api::HousingProvisionsController, type: :request do
 
       it 'selects attributes' do
         get "/api/housing_provisions.csv?event_id=#{@event.id}&fields=housingCapacity,numberOfShowers,attendance.attendeeName", {}, @headers
+        expect(response.status).to eq 200
+      end
+
+      it 'can delete' do
+        expect {
+          delete "/api/housing_provisions/#{@housing_provision.id}?event_id=#{@event.id}", {}, @headers
+        }.to change(HousingProvision.with_deleted, :count).by 0
         expect(response.status).to eq 200
       end
     end
