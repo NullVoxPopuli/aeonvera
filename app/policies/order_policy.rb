@@ -4,8 +4,17 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   # - view all orders of an event they are helping organize
   # - view all orders of a community they help run
   # - TODO: view all orders of an event/community they collaborate on
-  def read?(o = object)
+  def read?(_o = object)
     owner? || is_collaborator?
+  end
+
+  def refund_payment?
+    # Must Not own an order you are refunding
+    !owner? && (
+      # but you can refund orders on events you own
+      is_from_an_owned_event? ||
+      # and you can be a collaborator
+      is_collaborator?)
   end
 
   # This is allowed when:
@@ -20,7 +29,12 @@ class OrderPolicy < SkinnyControllers::Policy::Base
   end
 
   def delete?
-    !object.paid && (owner? || did_create?)
+    # a paid order cannot be deleted
+    !object.paid && (
+      # otherwise, the owner may delete (cancel) the order
+      owner? ||
+      # or whomever created the order
+      did_create?)
   end
 
   private

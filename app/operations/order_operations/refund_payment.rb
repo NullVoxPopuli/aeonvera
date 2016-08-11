@@ -1,13 +1,17 @@
 module OrderOperations
   class RefundPayment < SkinnyControllers::Operation::Base
     def run
-      order = OrderOperations::Read.new(current_user, params).run
-      StripeTasks::RefundPayment.run(order, params_for_action)
-      StripeTasks::RefreshCharge.run(order)
+      return unless allowed?
+      StripeTasks::RefundPayment.run(model, params_for_action)
+      StripeTasks::RefreshCharge.run(model)
 
-      order.save
+      model.save
 
-      order
+      model
     end
+  end
+
+  def model
+    @model ||= OrderOperations::Read.new(current_user, params).run
   end
 end

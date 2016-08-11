@@ -38,12 +38,11 @@ describe Api::OrdersController, type: :request do
 
     it 'can refund' do
       package = create(:package, event: event)
-      oli = create(:order_line_item, order: order, line_item: package)
+      create(:order_line_item, order: order, line_item: package)
       order.reload
       put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(owner)
       expect(response.status).to eq 200
     end
-
 
     it 'can mark paid' do
       put "/api/orders/#{order.id}/mark_paid", { payment_method: 'Cash', amount: 10, check_number: '' }, auth_header_for(owner)
@@ -59,28 +58,35 @@ describe Api::OrdersController, type: :request do
 
   context 'is logged in' do
     let(:user) { create_confirmed_user }
-    before(:each) do
-      @headers = {
-        'Authorization' => 'Bearer ' + user.authentication_token
-      }
-    end
 
     it 'cannot view someone elses order' do
       order = create(:order, attendance: create(:attendance))
-      get "/api/orders/#{order.id}", {}, @headers
+      get "/api/orders/#{order.id}", {}, auth_header_for(user)
+      expect(response.status).to eq 404
+    end
+
+    it 'cannot refund someone elses order' do
+      order = create(:order, attendance: create(:attendance))
+      put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(user)
       expect(response.status).to eq 404
     end
 
     it 'can view own order' do
       order = create(:order, user: user, attendance: create(:attendance, attendee: user))
-      get "/api/orders/#{order.id}", {}, @headers
+      get "/api/orders/#{order.id}", {}, auth_header_for(user)
       expect(response.status).to eq 200
+    end
+
+    it 'cannot refund own order' do
+      order = create(:order, user: user, attendance: create(:attendance, attendee: user))
+      put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(user)
+      expect(response.status).to eq 404
     end
 
     it 'can view the order of an owned event' do
       event = create(:event, hosted_by: user)
       order = create(:order, host: event, attendance: create(:attendance, attendee: user))
-      get "/api/orders/#{order.id}", {}, @headers
+      get "/api/orders/#{order.id}", {}, auth_header_for(user)
       expect(response.status).to eq 200
     end
   end
