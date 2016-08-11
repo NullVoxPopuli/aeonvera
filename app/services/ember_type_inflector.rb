@@ -18,15 +18,19 @@ module EmberTypeInflector
     end.with_indifferent_access
   end
 
+  # at this point, it'd be better to white list, than to black list
+  NON_LINE_ITEMS = [
+    MembershipDiscount.name, Package.name, Competition.name,
+    Event.name, Organization.name, Discount.name,
+    HousingRequest.name, HousingProvision.name,
+    EventAttendance.name, Attendance.name
+  ].freeze
+
   def ember_type_to_rails(key)
     return unless key
     key = key.underscore.classify
 
-    non_line_items = [
-      MembershipDiscount.name, Package.name, Competition.name,
-      Event.name, Organization.name, Discount.name]
-
-    unless non_line_items.include?(key)
+    unless NON_LINE_ITEMS.include?(key)
       key = key.include?('LineItem') ? key : "LineItem::#{key}"
     end
 
