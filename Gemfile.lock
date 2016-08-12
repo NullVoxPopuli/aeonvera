@@ -164,10 +164,6 @@ GEM
     json_pure (1.8.3)
     jsonapi (0.1.1.beta2)
       json (~> 1.8)
-    lazy_crud (0.9.8.1)
-      activesupport
-      i18n
-      responders
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -387,7 +383,6 @@ DEPENDENCIES
   fuubar
   goldiloader
   i18n
-  lazy_crud
   mail
   metahash-rb
   newrelic_rpm
@@ -422,5 +417,8 @@ DEPENDENCIES
   stripe-ruby-mock (~> 2.2.1)
   uglifier
 
+RUBY VERSION
+   ruby 2.3.0p0
+
 BUNDLED WITH
-   1.11.2
+   1.12.5

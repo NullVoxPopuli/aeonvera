@@ -30,8 +30,7 @@ gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_contr
 # model helpers
 gem 'date_time_attribute'
 gem 'recurring_select'
-# controller helpers
-gem 'lazy_crud'
+
 # request response helpers
 gem 'responders'
 
