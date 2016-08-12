@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 class ShirtSerializer < ActiveModel::Serializer
   include PublicAttributes::LineItemAttributes
   type 'shirt'
   attributes :sizes,
-             :xs_price, :s_price, :sm_price,
-             :m_price,
-             :l_price, :xl_price, :xxl_price, :xxxl_price
+    :xs_price, :s_price, :sm_price,
+    :m_price,
+    :l_price, :xl_price, :xxl_price, :xxxl_price
 
   has_many :order_line_items
 
