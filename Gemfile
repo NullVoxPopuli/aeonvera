@@ -33,8 +33,13 @@ gem 'lazy_crud'
 # request response helpers
 gem 'responders'
 
-# error capturing
-gem 'rollbar'
+# automatic includes on everything (AR)
+gem 'goldiloader'
+
+group :production do
+  # error capturing
+  gem 'rollbar'
+end
 
 # app performance monitoring
 gem "newrelic_rpm"
@@ -103,16 +108,6 @@ group :production do
   gem "rails_12factor"
 end
 
-group :development, :development_public, :development_remote do
-  # https://github.com/slim-template/slim/wiki/Template-Converters-ERB-to-SLIM
-  # convert erb and html to slim
-  gem  "html2slim"
-
-  # easier / better error pages
-  gem "better_errors"
-  gem "binding_of_caller"
-end
-
 group :development, :development_public, :development_remote, :test do
   # pretty printing of objects (for debugging)
   gem "awesome_print"
@@ -133,10 +128,6 @@ group :test do
   # Mimicking objects
   gem "metahash-rb", require: "metahash"
 
-
-  # In memory database for speed
-  gem "sqlite3"
-
   # The test runner
   gem "rspec"
   gem "rspec-rails"
@@ -149,15 +140,6 @@ group :test do
   gem 'stripe-ruby-mock', '~> 2.2.1', :require => 'stripe_mock'
 
   gem 'database_cleaner'
-
-  gem "capybara"
-  # Javascript testing
-  gem "capybara-webkit", "~> 1.4.0"
-  # Alternative Javascript Driver - used on travis.ci
-  gem "poltergeist"
-
-  # For opening web pages for debugging
-  gem 'launchy'
 
   # Local Coverage Metrics
   gem 'simplecov', :require => false

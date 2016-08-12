@@ -31,7 +31,7 @@ describe Api::OrderLineItemsController, type: :controller do
             line_item: {
               data: {
                 id: @membership_option.id,
-                type: 'membership-option'
+                type: 'membership-options'
               }
             }
           }

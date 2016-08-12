@@ -2,6 +2,8 @@ class OrderLineItemSerializer < ActiveModel::Serializer
   type 'order-line-item'
   attributes :id, :price, :quantity, :order_id, :dance_orientation, :partner_name, :size, :color
 
+  # This can be removed when AMS supports proper relationship tree navigation
+  # See note in event_attendance.rb
   class LineItemSerializer < ActiveModel::Serializer
     type proc { |object|
       k = object.class.name.underscore.dasherize.downcase
@@ -33,8 +35,13 @@ class OrderLineItemSerializer < ActiveModel::Serializer
       #hack for discounts :-(
       object.try(:kind)
     end
+
+    def requires_student_id
+      #hack for discounts :-(
+      object.try(:requires_student_id)
+    end
   end
 
-  belongs_to :line_item, serializer: OrderLineItemSerializer::LineItemSerializer
+  belongs_to :line_item#, serializer: OrderLineItemSerializer::LineItemSerializer
   belongs_to :order
 end
