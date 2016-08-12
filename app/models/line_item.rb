@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class LineItem < ActiveRecord::Base
   self.inheritance_column = 'item_type'
 
@@ -8,8 +9,7 @@ class LineItem < ActiveRecord::Base
   validates :name, presence: true
 
   belongs_to :host, polymorphic: true
-  # TODO:
-  # belongs_to :reference, polymorphic: true
+
   belongs_to :organization, class_name: Organization.name,
                             foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
@@ -21,11 +21,12 @@ class LineItem < ActiveRecord::Base
   alias_attribute :current_price, :price
 
   has_attached_file :picture,
-                    path: '/assets/:class/:id/picture_:style.:extension',
-                    styles: {
-                      thumb: '128x128>',
-                      medium: '300x300>'
-                    }
+    preserve_files: true,
+    path: '/assets/:class/:id/picture_:style.:extension',
+    styles: {
+      thumb: '128x128>',
+      medium: '300x300>'
+    }
 
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
 
