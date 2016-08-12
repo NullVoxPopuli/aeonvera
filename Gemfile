@@ -20,6 +20,8 @@ gem "active_model_serializers", git: "https://github.com/NullVoxPopuli/active_mo
 # gem 'active_model_serializers', path: '/home/lprestonsegoiii/Development/active_model_serializers'
 # Rediculousness for deserializing embedded data
 # gem 'jsonapi_parser', '~>0.5'
+gem 'oj'
+gem 'oj_mimic_json'
 
 # controllers, chill out!
 gem 'skinny_controllers'#, path: '/home/lprestonsegoiii/Development/skinny_controllers'
