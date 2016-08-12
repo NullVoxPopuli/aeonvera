@@ -7,7 +7,7 @@ ruby '2.3.0'
 ##########
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails'
+gem 'rails', '~> 4.2'
 gem 'i18n'
 # Use Active Record to store sessions
 gem 'activerecord-session_store'

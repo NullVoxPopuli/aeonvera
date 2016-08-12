@@ -396,7 +396,7 @@ DEPENDENCIES
   pry-byebug
   puma
   rack-cors
-  rails
+  rails (~> 4.2)
   rails_12factor
   ransack
   recurring_select
