@@ -50,6 +50,7 @@ gem 'sass-rails'
 gem 'foundation-rails'
 gem 'font-awesome-rails'
 gem 'sprockets-rails', '2.3.3'
+gem 'uglifier' # for heroku asset precompilation. :-(
 
 #########
 # Templating
