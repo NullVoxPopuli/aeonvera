@@ -2,38 +2,6 @@
 class EventAttendance < Attendance
   include ::EventItemHelpers
 
-  # TODO: remove this
-  # temp hack until skinny controllers supports the include param
-  default_scope do
-    # NOTE: to compare agains for AMS Benchmarking
-    # last test of this:
-    # 686 records being requested from ember
-    # 64ms in sql land
-    # total request is 7141 ms, mostly ams
-    # well, 640ms was Active Record
-    # which I think the 64ms is a part of
-    #
-    # eager_load(
-    #   :attendee, :package, :level, :housing_request, :housing_provision, :custom_field_responses,
-    #   :orders => [:order_line_items => [
-    #     # :pricing_tier,
-    #     :_line_item,
-    #     :_line_item_package,
-    #     :_line_item_lesson,
-    #     :_line_item_membership_option,
-    #     :_line_item_raffle_ticket,
-    #     :_line_item_shirt,
-    #     :_line_item_discount,
-    #     :_line_item_competition
-    #     ]]
-    # )
-    # includes(
-    #   :attendee, :package, :level, :housing_request, :housing_provision, :custom_field_responses,
-    #   orders: [order_line_items: :line_item]
-    # )
-    # .includes(:orders => [:order_line_items => :line_item])
-  end
-
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
