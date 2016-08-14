@@ -57,13 +57,27 @@ describe EventAttendanceOperations::Create do
     end
 
     it 'the event owner sets the attendee' do
-      basic_params['data']['relationships']['attendee']['data'] = { 'type' => 'users', 'id' => user.id }
+      basic_params['data']['attributes']['attendee-email'] = user.email
+      basic_params['data']['attributes']['attendee-name'] = user.name
       allow(controller).to receive(:params){ basic_params }
       params_for_action = controller.send(:create_event_attendance_params)
 
       operation = klass.new(event.hosted_by, basic_params, params_for_action)
       attendance = operation.run
       expect(attendance.attendee).to eq user
+    end
+
+    it 'the event owner creates a new user' do
+      basic_params['data']['attributes']['attendee-email'] = 'a@a.o'
+      basic_params['data']['attributes']['attendee-name'] = 'first last'
+      allow(controller).to receive(:params){ basic_params }
+      params_for_action = controller.send(:create_event_attendance_params)
+
+      operation = klass.new(event.hosted_by, basic_params, params_for_action)
+      expect {
+        attendance = operation.run
+        expect(attendance.attendee.name).to eq 'first last'
+      }.to change(User, :count).by 1
     end
 
   end

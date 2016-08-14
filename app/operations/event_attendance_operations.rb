@@ -27,17 +27,46 @@ module EventAttendanceOperations
     include HelperOperations::Helpers
 
     def run
+      # these two are not actually a part of the attendance,
+      # but are used to find/create a user to assign to
+      # this new attendance
+      email = params_for_action.delete(:attendee_email)
+      name = params_for_action.delete(:attendee_name)
+
       host = host_from_params(params_for_action)
       @model = host.attendances.new(params_for_action)
+      @model.attendee = attendee_for(email, name)
 
       map_inferred_relationships(host: host, attendance: @model)
 
-      # TODO: if we are setting the attendee if, make sure the current_user
-      # has permission to do so
-      @model.attendee = current_user unless params_for_action[:attendee_id]
       # TODO: verify level and package belong to the event
       @model.save
       @model
+    end
+
+    # Given an email address and name, we could look up the user
+    # to see if they already have an account.
+    #
+    # If they don't have an account, a user will be created for them,
+    # and they will receive an email asking them to create their account.
+    #
+    # If no email is provided, we assign to current_user
+    def attendee_for(email = nil, name = nil)
+      return current_user unless email && name
+
+      # TODO: if we are creating a new user, make sure the current_user
+      # has permission to do so.
+      user = User.find_by_email(email)
+      return user if user
+
+      # user doesn't exist, create
+      name_parts = name.split(' ')
+      User.create(
+        first_name: name_parts.first,
+        last_name: name_parts.last,
+        email: email,
+        password: 'change me please'
+      )
     end
 
     # hook up relatioships all over the place

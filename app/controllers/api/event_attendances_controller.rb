@@ -84,9 +84,12 @@ module Api
         :phone_number, :interested_in_volunteering,
         :city, :state, :zip,
         :dance_orientation,
+        # To be deleted - these are used for seraching for an existing user
+        # and then creating a new user if one doesn't exist
+        :attendee_email, :attendee_name,
 
         # Relationships
-        :package_id, :level_id, :attendee_id, :pricing_tier_id,
+        :package_id, :level_id, :pricing_tier_id,
         :host_id, :host_type,
 
         housing_request_attributes: [
