@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160810010437) do
+ActiveRecord::Schema.define(version: 20160814134138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.string   "transfer_reason"
   end
 
+  add_index "attendances", ["attendee_id"], name: "index_attendances_on_attendee_id", using: :btree
   add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree
   add_index "attendances", ["host_id", "host_type"], name: "index_attendances_on_host_id_and_host_type", using: :btree
 
@@ -81,6 +82,9 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.string   "collaborated_type", limit: 255
   end
 
+  add_index "collaborations", ["collaborated_id", "collaborated_type"], name: "index_collaborations_on_collaborated_id_and_collaborated_type", using: :btree
+  add_index "collaborations", ["user_id"], name: "index_collaborations_on_user_id", using: :btree
+
   create_table "competition_responses", force: :cascade do |t|
     t.integer  "attendance_id"
     t.integer  "competition_id"
@@ -104,6 +108,8 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "deleted_at"
   end
 
+  add_index "competitions", ["event_id"], name: "index_competitions_on_event_id", using: :btree
+
   create_table "custom_field_responses", force: :cascade do |t|
     t.text     "value"
     t.integer  "writer_id"
@@ -113,6 +119,8 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "custom_field_responses", ["writer_id", "writer_type"], name: "index_custom_field_responses_on_writer_id_and_writer_type", using: :btree
 
   create_table "custom_fields", force: :cascade do |t|
     t.string   "label",         limit: 255
@@ -126,6 +134,8 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "custom_fields", ["host_id", "host_type"], name: "index_custom_fields_on_host_id_and_host_type", using: :btree
 
   create_table "discounted_items", force: :cascade do |t|
     t.datetime "created_at"
@@ -147,6 +157,8 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.string   "discount_type",          limit: 255
     t.boolean  "requires_student_id",                default: false
   end
+
+  add_index "discounts", ["host_id", "host_type"], name: "index_discounts_on_host_id_and_host_type", using: :btree
 
   create_table "events", force: :cascade do |t|
     t.string   "name",                            limit: 255,                 null: false
@@ -219,6 +231,9 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "deleted_at"
   end
 
+  add_index "housing_provisions", ["attendance_id", "attendance_type"], name: "index_housing_provisions_on_attendance_id_and_attendance_type", using: :btree
+  add_index "housing_provisions", ["host_id", "host_type"], name: "index_housing_provisions_on_host_id_and_host_type", using: :btree
+
   create_table "housing_requests", force: :cascade do |t|
     t.boolean  "need_transportation"
     t.boolean  "can_provide_transportation",                 default: false, null: false
@@ -241,6 +256,9 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "deleted_at"
   end
 
+  add_index "housing_requests", ["attendance_id", "attendance_type"], name: "index_housing_requests_on_attendance_id_and_attendance_type", using: :btree
+  add_index "housing_requests", ["host_id", "host_type"], name: "index_housing_requests_on_host_id_and_host_type", using: :btree
+
   create_table "integrations", force: :cascade do |t|
     t.string  "kind",             limit: 255
     t.text    "encrypted_config"
@@ -259,6 +277,8 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
   end
+
+  add_index "levels", ["event_id"], name: "index_levels_on_event_id", using: :btree
 
   create_table "line_items", force: :cascade do |t|
     t.string   "name",                   limit: 255
@@ -299,6 +319,10 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "updated_at"
   end
 
+  add_index "membership_renewals", ["membership_option_id"], name: "index_membership_renewals_on_membership_option_id", using: :btree
+  add_index "membership_renewals", ["user_id", "membership_option_id"], name: "index_membership_renewals_on_user_id_and_membership_option_id", using: :btree
+  add_index "membership_renewals", ["user_id"], name: "index_membership_renewals_on_user_id", using: :btree
+
   create_table "order_line_items", force: :cascade do |t|
     t.integer  "order_id"
     t.integer  "line_item_id"
@@ -314,6 +338,7 @@ ActiveRecord::Schema.define(version: 20160810010437) do
   end
 
   add_index "order_line_items", ["line_item_id", "line_item_type"], name: "index_order_line_items_on_line_item_id_and_line_item_type", using: :btree
+  add_index "order_line_items", ["order_id"], name: "index_order_line_items_on_order_id", using: :btree
 
   create_table "orders", force: :cascade do |t|
     t.string   "payment_token",               limit: 255
@@ -341,6 +366,7 @@ ActiveRecord::Schema.define(version: 20160810010437) do
   add_index "orders", ["created_by_id"], name: "index_orders_on_created_by_id", using: :btree
   add_index "orders", ["host_id", "host_type"], name: "index_orders_on_host_id_and_host_type", using: :btree
   add_index "orders", ["pricing_tier_id"], name: "index_orders_on_pricing_tier_id", using: :btree
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
 
   create_table "organizations", force: :cascade do |t|
     t.string   "name",                       limit: 255
@@ -408,6 +434,8 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "deleted_at"
   end
 
+  add_index "pricing_tiers", ["event_id"], name: "index_pricing_tiers_on_event_id", using: :btree
+
   create_table "raffles", force: :cascade do |t|
     t.string   "name",       limit: 255
     t.integer  "event_id"
@@ -423,6 +451,9 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.integer "restrictable_id"
     t.string  "restrictable_type", limit: 255
   end
+
+  add_index "restraints", ["dependable_id", "dependable_type"], name: "index_restraints_on_dependable_id_and_dependable_type", using: :btree
+  add_index "restraints", ["restrictable_id", "restrictable_type"], name: "index_restraints_on_restrictable_id_and_restrictable_type", using: :btree
 
   create_table "shirts", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -446,6 +477,7 @@ ActiveRecord::Schema.define(version: 20160810010437) do
     t.datetime "updated_at",     null: false
   end
 
+  add_index "sponsorships", ["discount_id", "discount_type"], name: "index_sponsorships_on_discount_id_and_discount_type", using: :btree
   add_index "sponsorships", ["sponsor_type", "sponsor_id"], name: "index_sponsorships_on_sponsor_type_and_sponsor_id", using: :btree
   add_index "sponsorships", ["sponsored_type", "sponsored_id"], name: "index_sponsorships_on_sponsored_type_and_sponsored_id", using: :btree
 
