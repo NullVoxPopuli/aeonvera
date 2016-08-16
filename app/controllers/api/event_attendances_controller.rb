@@ -131,7 +131,7 @@ module Api
       attendance = current_user.attendance_for_event(e)
 
       if attendance
-        include_paths = 'housing_request,housing_provision,package,level,pricing_tier,custom_field_responses,attendee,unpaid_order.order_line_items.line_item'
+        include_paths = 'housing_request,housing_provision,package,level,pricing_tier,custom_field_responses,attendee,unpaid_order.order_line_items.line_item.restraints'
         render json: attendance, include: include_paths, serializer: EventAttendanceSerializer
       else
         render json: {}, status: 404
