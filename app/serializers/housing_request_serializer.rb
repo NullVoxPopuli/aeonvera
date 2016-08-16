@@ -9,4 +9,5 @@ class HousingRequestSerializer < ActiveModel::Serializer
 
   belongs_to :host
   belongs_to :attendance
+  belongs_to :housing_provision
 end
