@@ -1,7 +1,7 @@
 module Api
   class OrderLineItemsController < Api::ResourceController
     def create
-      render_model('line_item', success_status: 201)
+      render_model('line_item.restraints', success_status: 201)
     end
 
     def update

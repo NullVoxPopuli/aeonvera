@@ -4,7 +4,7 @@ class DiscountSerializer < ActiveModel::Serializer
   attributes :package_ids
 
   has_many :allowed_packages
-  has_many :restraints, serializer: RestraintSerializer
+  has_many :restraints#, serializer: RestraintSerializer
   has_many :order_line_items
   belongs_to :host
 
