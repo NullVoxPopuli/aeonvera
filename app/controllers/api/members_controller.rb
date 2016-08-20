@@ -14,6 +14,7 @@ module Api
     private
 
     def search_params
+      params[:q] ||= {}
       params[:q][:confirmed_at_not_null] = true
 
       params[:q]
