@@ -5,6 +5,7 @@ module HasLogo
   included do
     has_attached_file :logo,
       preserve_files: true,
+      keep_old_files: true,
       path: '/assets/:class/:id/logo_:style.:extension',
       styles: {
         thumb: '128x128>',
