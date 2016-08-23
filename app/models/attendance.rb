@@ -23,7 +23,7 @@ class Attendance < ActiveRecord::Base
 
   belongs_to :host, -> { unscope(where: :deleted_at) }, polymorphic: true
 
-  has_many :custom_field_responses, as: :writer
+  has_many :custom_field_responses, as: :writer, dependent: :destroy
   has_many :orders
   has_many :order_line_items, through: :orders
   has_many :purchased_items,

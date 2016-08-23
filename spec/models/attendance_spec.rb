@@ -1,9 +1,19 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
-
 describe Attendance do
-
   describe 'associations' do
+    describe 'custom_field_responses' do
+      it 'destroys when the attendance is destroyed' do
+        a = create(:attendance)
+        create(:custom_field_response, writer: a)
+
+        expect do
+          a.destroy
+        end.to change(CustomFieldResponse, :count).by -1
+      end
+    end
+
     describe 'order_line_items' do
       it 'has an order_line_item' do
         attendance = Attendance.new
@@ -36,7 +46,7 @@ describe Attendance do
   end
 
   describe '#attendee_name' do
-    let(:event){ create(:event) }
+    let(:event) { create(:event) }
 
     it 'returns the transfer name if set' do
       attendance = create(:attendance, event: event, transferred_to_name: 'Luke')
@@ -51,5 +61,4 @@ describe Attendance do
       expect(attendance.attendee_name).to eq user.name.titleize
     end
   end
-
 end
