@@ -76,11 +76,15 @@ class Order < ActiveRecord::Base
   end
 
   def require_attendance_if_has_competitions
-    return true unless is_attendance_required? && !attendance
-    errors.add(:attendance, 'is required when a buying a competition')
+    return true unless has_competition?
+
+    unless (name_from_metadata || attendance.try(:attendee_name)) &&
+        (email_from_metadata || attendance.try(:attendee_email))
+      errors.add(:base, 'Registrant attendance or buyer name and email are required when purchasing a competition.')
+    end
   end
 
-  def is_attendance_required?
+  def has_competition?
     order_line_items.select { |oli| oli.line_item_type == Competition.name }.present?
   end
 

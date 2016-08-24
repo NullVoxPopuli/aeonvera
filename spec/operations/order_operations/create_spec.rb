@@ -123,7 +123,7 @@ describe OrderOperations::Create do
     let(:event) { create(:event) }
     let(:package) { create(:package, event: event) }
     let(:attendance) { create(:attendance, host: event, package: package, attendee: user) }
-    let(:competition) { create(:competition, event: event) }
+    let(:competition) { create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
 
     context 'with a package and discount for that package' do
       let(:discount) { create(:discount, host: event, amount: 20, kind: Discount::DOLLARS_OFF) }
@@ -257,39 +257,38 @@ describe OrderOperations::Create do
     end
 
     context 'competition can be purchased without an attendance' do
-      let(:basic_params) do
-        { 'data' => {
-          'attributes' => {
-            'host-name' => nil, 'host-url' => nil, 'created-at' => nil, 'payment-received-at' => nil, 'paid-amount' => nil, 'net-amount-received' => nil, 'total-fee-amount' => nil, 'payment-method' => nil, 'payment-token' => nil, 'check-number' => nil, 'paid' => false, 'total-in-cents' => nil,
-            'user-email' => 'someone@test.com', 'user-name' => 'first last', 'checkout-token' => nil, 'checkout-email' => nil },
-          'relationships' => {
-            'host' => { 'data' => { 'type' => 'events', 'id' => event.id } },
-            'order-line-items' => { 'data' => [
-              {
-                'attributes' => { 'quantity' => 1, 'price' => 0, 'partner-name' => nil, 'dance-orientation' => nil, 'size' => nil, 'payment-token' => nil },
-                'relationships' => {
-                  'line-item' => { 'data' => { 'type' => 'competitions', 'id' => competition.id } },
-                  'order' => { 'data' => { 'type' => 'orders', 'id' => nil } } },
-                'type' => 'order-line-items' }
-            ] },
-            'user' => { 'data' => { 'type' => 'users', 'id' => 'current-user' } } }, 'type' => 'orders' },
-          'order' => {} }
+      let(:params_for_action) do
+        {
+          host_id: event.id,
+          host_type: Event.name,
+          payment_method: nil,
+          user_email: 'someone@test.com',
+          user_name: 'first last',
+          payment_token: nil,
+          order_line_items_attributes: [
+            {
+              line_item_id: competition.id,
+              line_item_type: Competition.name,
+              price: competition.current_price,
+              quantity: 1,
+              partner_name: nil,
+              dance_orientation: nil,
+              size: nil
+            }
+          ]
+        }
       end
 
-
-      before(:each) do
-        allow(controller).to receive(:params) { basic_params }
-        params_for_action = controller.send(:create_order_params)
-
-        @operation = klass.new(user, basic_params, params_for_action)
+      it 'creates the competition' do
+        @operation = klass.new(user, params_for_action, params_for_action)
+        expect { @operation.run }.to change(OrderLineItem, :count).by(1)
       end
 
-      xit 'creates the competition' do
-
-      end
-
-      xit 'requires a name' do
-
+      it 'requires a name' do
+        params_for_action.delete(:user_name)
+        @operation = klass.new(user, params_for_action, params_for_action)
+        r = @operation.run
+        expect(r.errors.full_messages.first).to include('name')
       end
     end
 
