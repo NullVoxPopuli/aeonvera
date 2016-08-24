@@ -84,7 +84,7 @@ module Api
         :phone_number, :interested_in_volunteering,
         :city, :state, :zip,
         :dance_orientation,
-        # To be deleted - these are used for seraching for an existing user
+        # To be deleted - these are used for searching for an existing user
         # and then creating a new user if one doesn't exist
         :attendee_email, :attendee_name,
 

@@ -37,6 +37,15 @@ module EventAttendanceOperations
       @model = host.attendances.new(params_for_action)
       @model.attendee = attendee_for(email, name)
 
+      unless @model.attendee
+        name_parts = name.split(' ')
+        # Trigger Validations, rather than throw exception
+        @model.metadata['first_name'] = name_parts.try(:[], 0)
+        @model.metadata['last_name'] = name_parts.try(:[], 1)
+      end
+
+      # TODO: if attendee is nil, should housing be skipped?
+      # (yes)
       map_inferred_relationships(host: host, attendance: @model)
 
       # TODO: verify level and package belong to the event
@@ -52,7 +61,14 @@ module EventAttendanceOperations
     #
     # If no email is provided, we assign to current_user
     def attendee_for(email = nil, name = nil)
-      return current_user unless email && name
+      # Assume current user if neither email nor name are provided
+      return current_user if email.blank? && name.blank?
+
+      # Assume we are creating a registration not tied to a user if
+      # we don't have an email to work with
+      # (could this ever backfire?)
+      name_parts = name.split(' ')
+      return nil if name.present? && email.blank?
 
       # TODO: if we are creating a new user, make sure the current_user
       # has permission to do so.
@@ -60,7 +76,6 @@ module EventAttendanceOperations
       return user if user
 
       # user doesn't exist, create
-      name_parts = name.split(' ')
       User.create(
         first_name: name_parts.first,
         last_name: name_parts.last,
