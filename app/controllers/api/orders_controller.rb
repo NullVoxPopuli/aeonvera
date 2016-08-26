@@ -13,7 +13,7 @@ module Api
     end
 
     def update
-      render_model('order_line_items.line_item')
+      render_model('order_line_items.line_item,attendance')
     end
 
     def refresh_stripe
