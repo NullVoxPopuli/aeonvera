@@ -8,7 +8,7 @@ module Chart
       :registration_times
 
     def id
-      'income-and-registrations'
+      "#{object.id}-income-and-registrations"
     end
 
     def incomes
