@@ -34,7 +34,9 @@ class OrderPolicy < SkinnyControllers::Policy::Base
       # otherwise, the owner may delete (cancel) the order
       owner? ||
       # or whomever created the order
-      did_create?)
+      did_create? ||
+      # or the event owner may delete unpaid orders
+      is_from_an_owned_event?)
   end
 
   private

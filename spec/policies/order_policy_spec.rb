@@ -37,4 +37,22 @@ describe OrderPolicy do
       expect(policy.delete?).to eq false
     end
   end
+
+  context 'owner of the event' do
+    let(:event) { create(:event) }
+
+    it 'can delete unpaid orders' do
+      order = build(:order, host: event, paid: false)
+      policy = OrderPolicy.new(event.hosted_by, order)
+
+      expect(policy.delete?).to eq true
+    end
+
+    it 'cannot delete paid orders' do
+      order = build(:order, host: event, paid: true)
+      policy = OrderPolicy.new(event.hosted_by, order)
+
+      expect(policy.delete?).to eq false
+    end
+  end
 end
