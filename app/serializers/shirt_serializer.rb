@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class ShirtSerializer < ActiveModel::Serializer
   include PublicAttributes::LineItemAttributes
+  include SharedAttributes::Stock
+
   type 'shirt'
   attributes :sizes,
     :xs_price, :s_price, :sm_price,
@@ -22,10 +24,6 @@ class ShirtSerializer < ActiveModel::Serializer
     end
 
     result
-  end
-
-  def number_purchased
-    object.order_line_items.count
   end
 
   def event_id

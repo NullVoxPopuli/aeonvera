@@ -1,11 +1,19 @@
 module Api
   class OrderLineItemsController < Api::ResourceController
+    def index
+      render_models(params[:include])
+    end
+
     def create
       render_model('line_item.restraints', success_status: 201)
     end
 
     def update
       render_model('line_item')
+    end
+
+    def mark_as_picked_up
+      render_model
     end
 
     private

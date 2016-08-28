@@ -23,6 +23,20 @@ describe OrderLineItemPolicy do
     }
   }
 
+  let(:by_a_collaborator) {
+    -> (method, paid = false) {
+      event = create(:event)
+      order = create(:order, host: event, attendance: create(:attendance))
+      order.paid = paid
+      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
+      collaborator = create(:user)
+      event.collaborators << collaborator
+      event.save
+      policy = OrderLineItemPolicy.new(collaborator, order_item)
+      policy.send(method)
+    }
+  }
+
   let(:by_a_stranger){
     ->(method){
       event = create(:event)
@@ -128,6 +142,23 @@ describe OrderLineItemPolicy do
 
     it 'not by a stranger' do
       result = by_a_stranger.call(:delete?)
+      expect(result).to eq false
+    end
+  end
+
+  context 'can be marked as picked up' do
+    it 'by the event owner' do
+      result = by_event_owner.call(:mark_as_picked_up?)
+      expect(result).to eq true
+    end
+
+    it 'by a collaborator' do
+      result = by_a_collaborator.call(:mark_as_picked_up?)
+      expect(result).to eq true
+    end
+
+    it 'by a stranger' do
+      result = by_a_stranger.call(:mark_as_picked_up?)
       expect(result).to eq false
     end
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160814134138) do
+ActiveRecord::Schema.define(version: 20160828123604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -305,6 +305,7 @@ ActiveRecord::Schema.define(version: 20160814134138) do
     t.datetime "registration_opens_at"
     t.datetime "registration_closes_at"
     t.datetime "becomes_available_at"
+    t.integer  "initial_stock",                      default: 0, null: false
   end
 
   add_index "line_items", ["host_id", "host_type", "item_type"], name: "index_line_items_on_host_id_and_host_type_and_item_type", using: :btree
@@ -335,6 +336,7 @@ ActiveRecord::Schema.define(version: 20160814134138) do
     t.string   "color"
     t.string   "dance_orientation"
     t.string   "partner_name"
+    t.datetime "picked_up_at"
   end
 
   add_index "order_line_items", ["line_item_id", "line_item_type"], name: "index_order_line_items_on_line_item_id_and_line_item_type", using: :btree

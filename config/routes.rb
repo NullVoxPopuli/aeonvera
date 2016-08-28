@@ -65,7 +65,11 @@ AeonVera::Application.routes.draw do
       end
     end
 
-    resources :order_line_items
+    resources :order_line_items do
+      member do
+        put :mark_as_picked_up
+      end
+    end
     resources :shirts
     resources :packages
     resources :discounts

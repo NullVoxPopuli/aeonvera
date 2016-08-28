@@ -21,6 +21,7 @@ class Event < ActiveRecord::Base
 
   has_many :custom_fields, as: :host
   has_many :orders, as: :host
+  has_many :order_line_items, through: :orders, source: :order_line_items
 
   has_many :attendances,
     -> { where(attending: true).order("attendances.created_at DESC") },
