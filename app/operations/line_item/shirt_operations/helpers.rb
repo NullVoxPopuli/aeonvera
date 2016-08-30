@@ -31,20 +31,25 @@ module LineItem::ShirtOperations
 
       result_sizes = []
       result_prices = {}
+      result_inventories = {}
 
       sizes.each do |size_data|
         # skip incomplete entries (this shouldn't happen, though)
         next unless size_data['price'] && size_data['size']
 
-        result_sizes << size_data['size']
+        size = size_data['size']
+
+        result_sizes << size
         # this will also inadvertantly take care of duplicates
-        result_prices[size_data['size']] = size_data['price'].to_s
+        result_prices[size] = size_data['price'].to_s
+        result_inventories[size] = size_data['inventory'].to_s
       end
 
       # set up new structures in metadata
       whitelisted[:metadata] ||= {}
-      whitelisted[:metadata]['sizes'] = result_sizes
-      whitelisted[:metadata]['prices'] = result_prices
+      whitelisted[:metadata][LineItem::Shirt::SIZES_KEY] = result_sizes
+      whitelisted[:metadata][LineItem::Shirt::PRICES_KEY] = result_prices
+      whitelisted[:metadata][LineItem::Shirt::INVENTORY_KEY] = result_inventories
 
       whitelisted
     end

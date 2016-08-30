@@ -35,7 +35,7 @@ module OrderOperations
       # nil or will be set
       # TODO: do we need to mess with this manually?
       # the new(params_for_action) already cover this
-      @model.attendance = attendance
+      @model.attendance = attendance#.becomes(Attendance)
 
       # a user is alwoys going to be the person paying.
       # if an attendance is passed, use the user from

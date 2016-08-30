@@ -4,10 +4,7 @@ class ShirtSerializer < ActiveModel::Serializer
   include SharedAttributes::Stock
 
   type 'shirt'
-  attributes :sizes,
-    :xs_price, :s_price, :sm_price,
-    :m_price,
-    :l_price, :xl_price, :xxl_price, :xxxl_price
+  attributes :sizes
 
   has_many :order_line_items
 
@@ -16,49 +13,19 @@ class ShirtSerializer < ActiveModel::Serializer
     result = []
 
     available.each_with_index do |s, _i|
+      purchased = object.order_line_items.where(size: s).count
+      inventory = object.inventory_for_size(s).to_i
+
       result << {
         id: s,
         size: s,
-        price:  object.price_for_size(s)
+        price:  object.price_for_size(s),
+        inventory: inventory,
+        purchased: purchased,
+        remaining: inventory - purchased
       }
     end
 
     result
-  end
-
-  def event_id
-    object.host_id
-  end
-
-  def xs_price
-    object.price_for_size('XS')
-  end
-
-  def s_price
-    object.price_for_size('S')
-  end
-
-  def sm_price
-    object.price_for_size('SM')
-  end
-
-  def m_price
-    object.price_for_size('M')
-  end
-
-  def l_price
-    object.price_for_size('L')
-  end
-
-  def xl_price
-    object.price_for_size('XL')
-  end
-
-  def xxl_price
-    object.price_for_size('XXL')
-  end
-
-  def xxxl_price
-    object.price_for_size('XXXL')
   end
 end
