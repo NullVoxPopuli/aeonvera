@@ -42,12 +42,18 @@ RSpec.describe Api::ShirtsController, type: :controller do
                 {
                   'id' => 'L', # cause serializer renders this for ember
                   'size' => 'L',
-                  'price' => '15.0'
+                  'price' => '15.0',
+                  'inventory' => 4,
+                  'purchased' => 0,
+                  'remaining' => 4
                 },
                 {
                   'id' => 'M',
                   'size' => 'M',
-                  'price' => '10.0'
+                  'price' => '10.0',
+                  'inventory' => 6,
+                  'purchased' => 0,
+                  'remaining' => 6
                 }
               ]
             }
@@ -71,12 +77,18 @@ RSpec.describe Api::ShirtsController, type: :controller do
                 {
                   'id' => 'L', # cause serializer renders this for ember
                   'size' => 'L',
-                  'price' => '15.0'
+                  'price' => '15.0',
+                  'inventory' => 4,
+                  'purchased' => 0,
+                  'remaining' => 4
                 },
                 {
                   'id' => 'M',
                   'size' => 'M',
-                  'price' => '10.0'
+                  'price' => '10.0',
+                  'inventory' => 9,
+                  'purchased' => 0,
+                  'remaining' => 9
                 }
               ]
             },
