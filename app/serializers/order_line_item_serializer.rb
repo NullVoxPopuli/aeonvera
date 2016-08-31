@@ -1,5 +1,5 @@
 class OrderLineItemSerializer < ActiveModel::Serializer
-  type 'order-line-item'
+  type 'order_line_item'
   attributes :id, :price, :quantity,
     :order_id, :dance_orientation, :partner_name,
     :size, :color,

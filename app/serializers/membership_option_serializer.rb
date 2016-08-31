@@ -1,6 +1,6 @@
 class MembershipOptionSerializer < ActiveModel::Serializer
   include PublicAttributes::LineItemAttributes
-  type 'membership-option'
+  type 'membership_option'
 
   attributes :duration_in_words
 end

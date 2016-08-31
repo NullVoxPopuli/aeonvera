@@ -1,6 +1,6 @@
 # object is actually an Event
 class UpcomingEventSerializer < ActiveModel::Serializer
-  type 'upcoming-event'
+  type 'upcoming_event'
   attributes :id, :name, :location,
     :registration_opens_at, :starts_at, :ends_at, :url,
     :logo_url_thumb, :logo_url_medium, :logo_url

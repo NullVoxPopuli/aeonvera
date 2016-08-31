@@ -1,5 +1,11 @@
 require 'active_model_serializers'
 ActiveModel::Serializer.config.adapter = :json_api
+# TODO: switch to unaltered when bf4's belongs_to PR is ready
+# ActiveModelSerializers.config.key_transform = :unaltered
+
+# properly handle JSON API Accept/Content-Type
+# require 'active_model_serializers/register_jsonapi_renderer'
+
 # Blegh...............
 module ActiveModelSerializers::Adapter::JsonApi::Deserialization
   class << self
