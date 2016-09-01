@@ -13,7 +13,7 @@ class ShirtSerializer < ActiveModel::Serializer
     result = []
 
     available.each_with_index do |s, _i|
-      purchased = object.order_line_items.where(size: s).count
+      purchased = object.order_line_items.where(size: s).sum(:quantity)
       inventory = object.inventory_for_size(s).to_i
 
       result << {
