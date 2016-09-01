@@ -12,6 +12,7 @@ module Api
           :name, :short_description, :domain,
           :starts_at, :ends_at,
           :mail_payments_end_at, :electronic_payments_end_at,
+          :online_competition_sales_end_at,
           :refunds_end_at, :has_volunteers,
           :volunteer_description,
           :housing_status, :housing_nights,

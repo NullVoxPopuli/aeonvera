@@ -9,6 +9,7 @@ module PublicAttributes
         :starts_at, :ends_at,
         :mail_payments_end_at,
         :electronic_payments_end_at,
+        :online_competition_sales_end_at,
         :accept_only_electronic_payments,
         :refunds_end_at,
         :has_volunteers, :volunteer_description,
