@@ -27,7 +27,9 @@ module Api
     end
 
     def mark_paid
-      render_model
+      # attendance has to be included here for the checkin-screen.
+      # because owning money is stored on the attendance. :-\
+      render_model('attendance')
     end
 
     private

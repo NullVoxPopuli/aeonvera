@@ -30,6 +30,10 @@ module StripeTasks
       # - refunds: data: [ refund data ]
       order.metadata['details'] = charge_object.as_json
 
+      update_current_amounts(order)
+    end
+
+    def update_current_amounts(order)
       # re-calculate everything
       refund_amount = order.stripe_amount_refunded / 100.0
       refund_totals = calculate_totals_after_refund(order, refund_amount)
@@ -44,8 +48,9 @@ module StripeTasks
       new_fee = order.total_fee_amount - refund_data[:total_fee]
       new_net_received = order.net_amount_received - refund_data[:received_by_event]
 
+      paid_amount = (order.paid_amount || 0) - (refund_amount || 0)
       {
-        paid_amount: order.paid_amount - refund_amount,
+        paid_amount: paid_amount,
         net_amount_received: new_net_received,
         total_fee_amount: new_fee
       }

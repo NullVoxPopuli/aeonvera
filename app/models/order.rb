@@ -60,6 +60,7 @@ class Order < ActiveRecord::Base
   # validates :attendance, presence: true, if: 'host_type=="Event"'
 
   before_save do |instance|
+    instance.sync_current_payment_aggregations
     instance.check_paid_status
     # before filter must return true to continue saving.
     # the above two checks do not halt saving, nor do they
@@ -227,6 +228,10 @@ class Order < ActiveRecord::Base
     }
 
     update(params)
+  end
+
+  def sync_current_payment_aggregations
+    StripeTasks::RefreshCharge.update_current_amounts(self)
   end
 
   def self.to_csv(options = {})
