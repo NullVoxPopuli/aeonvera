@@ -176,8 +176,8 @@ describe Order do
       package = create(:package, event: event)
       add_to_order!(o, package, quantity: -1)
 
-      result = o.sub_total
-      expect(result).to eq 0 - package.current_price
+      expect(o.sub_total).to eq 0 - package.current_price
+      expect(o.total).to eq 0 - package.current_price
     end
 
     it 'min amount is 0 when all quantities are positive' do
@@ -186,8 +186,8 @@ describe Order do
       package = create(:package, event: event)
       add_to_order(o, package, quantity: 1)
 
-      result = o.sub_total
-      expect(result).to eq package.current_price
+      expect(o.sub_total).to eq package.current_price
+      expect(o.total).to eq package.current_price
     end
   end
 
