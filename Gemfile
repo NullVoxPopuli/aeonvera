@@ -20,6 +20,7 @@ gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
 gem 'roadie' # enables rails' layouts for emails
 gem 'ransack' # search
+gem 'rollbar'
 
 # Cache
 gem 'redis'
