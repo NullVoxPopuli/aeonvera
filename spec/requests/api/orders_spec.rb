@@ -26,6 +26,11 @@ describe Api::OrdersController, type: :request do
       get "/api/orders/#{order.id}/refresh_stripe"
       expect(response.status).to eq 401
     end
+
+    it 'cannot delete' do
+      delete "/api/orders/#{order.id}"
+      expect(response.status).to eq 401
+    end
   end
 
   context 'user owns the event' do
@@ -53,6 +58,25 @@ describe Api::OrdersController, type: :request do
     it 'can refresh stripe data' do
       get "/api/orders/#{order.id}/refresh_stripe", {}, auth_header_for(owner)
       expect(response.status).to eq 200
+    end
+
+    it 'can delete an unpaid order' do
+      package = create(:package, event: event)
+      add_to_order(order, package, price: 2)
+      order.paid = false
+      order.save
+      expect(order.paid).to eq false
+      delete "/api/orders/#{order.id}", {}, auth_header_for(owner)
+      expect(response.status).to eq 200
+    end
+
+    it 'cannot delete a paid order' do
+      package = create(:package, event: event)
+      add_to_order(order, package, price: 2)
+      order.mark_paid!({})
+      expect(order.paid).to eq true
+      delete "/api/orders/#{order.id}", {}, auth_header_for(owner)
+      expect(response.status).to eq 404
     end
   end
 

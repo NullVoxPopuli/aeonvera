@@ -169,6 +169,27 @@ describe Order do
     end
   end
 
+  describe 'sub_total' do
+    it 'totals negative amounts' do
+      event = create(:event)
+      o = create(:order, host: event)
+      package = create(:package, event: event)
+      add_to_order!(o, package, quantity: -1)
+
+      result = o.sub_total
+      expect(result).to eq 0 - package.current_price
+    end
+
+    it 'min amount is 0 when all quantities are positive' do
+      event = create(:event)
+      o = create(:order, host: event)
+      package = create(:package, event: event)
+      add_to_order(o, package, quantity: 1)
+
+      result = o.sub_total
+      expect(result).to eq package.current_price
+    end
+  end
 
   describe 'package + discount' do
     let(:event){ create(:event) }

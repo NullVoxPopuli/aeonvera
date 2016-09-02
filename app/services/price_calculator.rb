@@ -17,7 +17,8 @@ module PriceCalculator
     value,
     absorb_fees: false,
     skip_application_fee: false,
-    constant_card_fee: CONSTANT_CARD_FEE)
+    constant_card_fee: CONSTANT_CARD_FEE,
+    allow_negative: false)
 
     buyer_pays_value = 0
     you_get_value = 0
@@ -26,7 +27,7 @@ module PriceCalculator
 
     app_fee = skip_application_fee ? 0 : APP_FEE_PERCENTAGE
 
-    if value > 0
+    if allow_negative || value > 0
       if absorb_fees
         service_fee_value = value * app_fee
         card_fee_value = value * CARD_FEE_PERCENTAGE + constant_card_fee

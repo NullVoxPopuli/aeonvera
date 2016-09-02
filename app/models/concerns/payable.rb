@@ -147,8 +147,8 @@ module Payable
     end
 
     amount = amount_after_global_discounts(amount, remaining_discounts)
-
-    amount > 0 ? amount : 0
+    any_negative = valid_order_line_items.select{ |o| o.quantity < 0 }.any?
+    amount > 0 || any_negative ? amount : 0
   end
 
   def should_apply_fee?
@@ -160,7 +160,10 @@ module Payable
 
   def calculated_price(charge_fees: true)
     absorb_fees = !charge_fees
-    PriceCalculator.calculate_for_sub_total(sub_total, absorb_fees: absorb_fees)
+    PriceCalculator.calculate_for_sub_total(
+      sub_total,
+      absorb_fees: absorb_fees,
+      allow_negative: has_item_of_negative_quantity?)
   end
 
   # when absorb_fees is false, it defaults to should_apply_fee
@@ -172,6 +175,10 @@ module Payable
     calculated = calculated_price(charge_fees: charge_fee)
 
     calculated[:total]
+  end
+
+  def has_item_of_negative_quantity?
+    order_line_items.select { |o| o.quantity < 0 }.any?
   end
 
   def net_received

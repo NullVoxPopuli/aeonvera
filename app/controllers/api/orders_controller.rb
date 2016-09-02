@@ -1,7 +1,9 @@
+# frozen_string_literal: true
 module Api
   class OrdersController < Api::ResourceController
     before_filter :must_be_logged_in, only: [
-      :index, :refund_payment, :refresh_stripe, :mark_paid
+      :index, :refund_payment, :refresh_stripe, :mark_paid,
+      :destroy
     ]
 
     def index
