@@ -37,7 +37,7 @@ module EventAttendanceOperations
       @model = host.attendances.new(params_for_action)
       @model.attendee = attendee_for(email, name)
 
-      unless @model.attendee
+      unless @model.attendee || !name
         name_parts = name.split(' ')
         # Trigger Validations, rather than throw exception
         @model.metadata['first_name'] = name_parts.try(:[], 0)
@@ -67,13 +67,17 @@ module EventAttendanceOperations
       # Assume we are creating a registration not tied to a user if
       # we don't have an email to work with
       # (could this ever backfire?)
-      name_parts = name.split(' ')
       return nil if name.present? && email.blank?
 
       # TODO: if we are creating a new user, make sure the current_user
       # has permission to do so.
       user = User.find_by_email(email)
       return user if user
+
+      # couldn't find the user by email, and in order to create one,
+      # we need first name and last name
+      return nil unless name
+      name_parts = name.split(' ')
 
       # user doesn't exist, create
       User.create(
