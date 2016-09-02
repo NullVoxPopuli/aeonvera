@@ -5,6 +5,9 @@ module OrderOperations
       return unless order
 
       order.mark_paid!(params_for_action)
+
+      OrderMailer.receipt(for_order: model).deliver_now if order.paid?
+
       order
     end
   end
