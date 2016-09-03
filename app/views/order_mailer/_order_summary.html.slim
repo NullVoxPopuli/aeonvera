@@ -16,11 +16,10 @@ table width="100%"
         - else
           td
             - if item.is_a?(Competition)
-              - competition_response = order.attendance.competition_responses.where(competition_id: item.id).first
               - if item.requires_orientation?
-                = "#{item.name}: #{competition_response.try(:dance_orientation)}"
+                = "#{item.name}: #{order_line_item.try(:dance_orientation)}"
               - elsif item.requires_partner?
-                = "#{item.name} w/ #{competition_response.try(:partner_name)}"
+                = "#{item.name} w/ #{order_line_item.try(:partner_name)}"
               - else
                 = item.name
             - else
