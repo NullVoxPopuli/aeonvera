@@ -1,2 +1,2 @@
-class LevelPolicy < EventPolicy::SubConfiguration
+class LevelPolicy < Api::EventPolicy::SubConfiguration
 end

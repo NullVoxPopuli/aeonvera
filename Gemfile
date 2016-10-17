@@ -21,6 +21,7 @@ gem 'mail'
 gem 'roadie' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
+gem 'rails_module_unification', path: '../rails_module_unification'
 
 # Cache
 gem 'redis'
