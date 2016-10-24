@@ -14,7 +14,7 @@ gem 'pg' # database
 gem 'attr_encrypted' # column encryption
 
 gem 'goldiloader' # automatic includes on everything (AR)
-gem 'skinny_controllers', github: 'NullVoxPopuli/skinny_controllers' # controllers, chill out!
+gem 'skinny_controllers'#, github: 'NullVoxPopuli/skinny_controllers' # controllers, chill out!
 gem 'devise' # User Authentication and management
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
