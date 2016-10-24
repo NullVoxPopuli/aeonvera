@@ -33,5 +33,4 @@ module LevelOperations
     end
 
   end
-
 end
