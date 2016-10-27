@@ -12,6 +12,7 @@ gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
 gem 'attr_encrypted' # column encryption
+gem 'rails_module_unification', path: '../rails_module_unification'
 
 gem 'goldiloader' # automatic includes on everything (AR)
 gem 'skinny_controllers' # controllers, chill out!
