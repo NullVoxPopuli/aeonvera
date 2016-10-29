@@ -24,7 +24,7 @@ GIT
 PATH
   remote: ../rails_module_unification
   specs:
-    rails_module_unification (0.6.0)
+    rails_module_unification (0.7.2)
       activesupport
 
 GEM
