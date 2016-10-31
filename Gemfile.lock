@@ -149,7 +149,7 @@ GEM
     mime-types (2.99.2)
     mimemagic (0.3.1)
     mini_portile2 (2.1.0)
-    minitest (5.9.0)
+    minitest (5.9.1)
     multi_json (1.11.2)
     netrc (0.11.0)
     newrelic_rpm (3.11.2.286)
@@ -273,7 +273,7 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
-    skinny_controllers (0.8.6)
+    skinny_controllers (0.9.0)
       activesupport
     slim (3.0.3)
       temple (~> 0.7.3)
@@ -369,4 +369,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.13.2

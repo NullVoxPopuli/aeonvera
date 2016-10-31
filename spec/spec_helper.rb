@@ -51,6 +51,8 @@ end
 
 puts "!Env: #{Rails.env}:#{ENV["RAILS_ENV"]}"
 
+# USE A FREAKING NORMAL TIMEZONE, SORRY INDIANA
+Time.zone = 'Central Time (US & Canada)'
 
 RSpec.configure do |config|
 

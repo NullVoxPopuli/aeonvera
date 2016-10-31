@@ -17,6 +17,9 @@ class APIController < ActionController::Base
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
+  # TODO: Change this to a 401 (instead of 404)
+  rescue_from SkinnyControllers::DeniedByPolicy, with: :not_found
+
   protected
 
   def deserialize_params(polymorphic: [], embedded: [])

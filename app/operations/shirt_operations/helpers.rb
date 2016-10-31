@@ -1,4 +1,4 @@
-module LineItem::ShirtOperations
+module ShirtOperations
   module Helpers
     # sizes comes in looking like:
     # [ { size: 'M', price: 20 }, { size: 'L', price: 22 } ]
