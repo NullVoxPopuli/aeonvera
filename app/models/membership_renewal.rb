@@ -12,6 +12,10 @@ class MembershipRenewal < ActiveRecord::Base
   end
 
   def expires_at
+    ap "---"
+    ap start_date
+    ap duration
+    ap start_date + duration
     start_date + duration
   end
 
