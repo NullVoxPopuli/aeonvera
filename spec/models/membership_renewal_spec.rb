@@ -22,14 +22,11 @@ describe MembershipRenewal do
 
   describe '#expires_at' do
     it 'adds the duration to the start date' do
-      now = Time.now
+      now = Time.zone.now
       week = now + 1.week
 
       @renewal.start_date = now
       allow(@renewal).to receive(:duration) { 1.week }
-      ap now.utc.to_formatted_s(:rfc822)
-      ap week.utc.to_formatted_s(:rfc822)
-      ap @renewal.expires_at.utc.to_formatted_s(:rfc822)
       expect(@renewal.expires_at).to be_the_same_time_as(week)
     end
   end
