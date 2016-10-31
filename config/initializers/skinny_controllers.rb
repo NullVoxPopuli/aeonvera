@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-SkinnyControllers.controller_namespace = 'Api'
+# SkinnyControllers.controller_namespace = 'Api'
 
 module SkinnyControllers
   module Operation
