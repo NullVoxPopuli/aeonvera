@@ -21,6 +21,12 @@ GIT
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
 
+PATH
+  remote: ../rails_module_unification
+  specs:
+    rails_module_unification (0.8.1)
+      activesupport
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -348,6 +354,7 @@ DEPENDENCIES
   puma
   rack-cors
   rails (~> 4.2)
+  rails_module_unification!
   ransack
   redis
   roadie

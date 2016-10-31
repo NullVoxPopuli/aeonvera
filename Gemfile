@@ -15,7 +15,7 @@ gem 'attr_encrypted' # column encryption
 
 gem 'goldiloader' # automatic includes on everything (AR)
 gem 'skinny_controllers' # controllers, chill out!
-# gem 'rails_module_unification', path: '../rails_module_unification'
+gem 'rails_module_unification', path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
