@@ -5,7 +5,7 @@ if !(Rails.env.production? || Rails.env.staging?)
 
     desc 'Run all specs in spec directory'
     RSpec::Core::RakeTask.new(:api) do |task|
-      # task.rspec_opts = '--pattern "**{,/*/**}/*_spec.rb"'
+      task.rspec_opts = '--pattern "**{,/*/**}/*_spec.rb"'
 
       # ensure the database is setup
       `RAILS_ENV=test rake db:create`
