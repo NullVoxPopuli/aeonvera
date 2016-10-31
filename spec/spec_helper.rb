@@ -30,7 +30,6 @@ SimpleCov.start do
   add_filter '/db/'
 end
 
-require 'rspec'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 
