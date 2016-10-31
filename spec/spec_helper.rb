@@ -1,54 +1,23 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
-if ENV['TRAVIS']
-  ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
-  require 'codeclimate-test-reporter'
-  CodeClimate::TestReporter.start
-else
-  require 'simplecov'
-end
+Bundler.require(:default, :test)
 
-SimpleCov.start do
-  add_group 'Models', 'app/models'
-  add_group 'Controllers', 'app/controllers/api'
-  add_group 'Operations', 'app/operations'
-  add_group 'Policies', 'app/policies'
-  add_group 'Mailers', 'app/mailers'
-  add_group 'Serializers', 'app/serializers'
-  add_group 'Services', 'app/services'
-
-
-  # filters.clear
-  add_filter '/app/controllers/[^a][^p][^i]'
-  add_filter '/app/helpers/'
-  add_filter '/app/decorators/'
-  add_filter '/app/views/'
-  add_filter '/gems/'
-  add_filter '/spec/'
-  add_filter '/config/'
-  add_filter '/public/'
-  add_filter '/db/'
-end
-
+# Load the app
 require File.expand_path("../../config/environment", __FILE__)
+puts "!Env: #{Rails.env}:#{ENV["RAILS_ENV"]}"
 require 'rspec/rails'
+# Checks for pending migrations before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-
-# Checks for pending migrations before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 # for debugging, sometimes it's helpful to see the sql for each request
 # especially for our complicated / numerous relationships
 if ENV['SQL']
   show_sql
 end
-
-
-puts "!Env: #{Rails.env}:#{ENV["RAILS_ENV"]}"
 
 # USE A FREAKING NORMAL TIMEZONE, SORRY INDIANA
 Time.zone = 'Central Time (US & Canada)'
