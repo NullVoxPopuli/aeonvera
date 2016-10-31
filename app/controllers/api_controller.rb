@@ -16,6 +16,7 @@ class APIController < ActionController::Base
   before_action :set_time_zone
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from SkinnyControllers::DeniedByPolicy, with: :not_found
 
   protected
 
