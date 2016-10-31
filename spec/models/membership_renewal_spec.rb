@@ -25,7 +25,7 @@ describe MembershipRenewal do
       now = Time.now
       @renewal.start_date = now
       allow(@renewal).to receive(:duration){ 1.week }
-      expect(@renewal.expires_at).to eq now + 1.week
+      expect(@renewal.expires_at.to_i).to eq (now + 1.week).to_i
     end
   end
 
