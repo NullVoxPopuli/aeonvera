@@ -1,4 +1,4 @@
-module LineItem::ShirtOperations
+module ShirtOperations
   class Create < SkinnyControllers::Operation::Base
     include LineItem::ShirtOperations::Helpers
 

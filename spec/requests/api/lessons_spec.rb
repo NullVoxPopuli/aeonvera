@@ -157,7 +157,7 @@ describe Api::LessonsController, type: :request do
         }
 
         post '/api/lessons', create_params, @headers
-        expect(response.status).to eq 422
+        expect(response.status).to eq 404
       end
 
       context 'data exists' do
@@ -193,6 +193,5 @@ describe Api::LessonsController, type: :request do
         end
       end
     end
-
   end
 end

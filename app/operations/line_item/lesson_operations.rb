@@ -1,5 +1,0 @@
-module LineItem::LessonOperations
-
-
-
-end

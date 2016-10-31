@@ -1,4 +1,4 @@
-class LineItem::LessonPolicy < SkinnyControllers::Policy::Base
+class LessonPolicy < SkinnyControllers::Policy::Base
 
   # Below are all the available permissions. Each permission corresponds
   # to an action in the controller.
