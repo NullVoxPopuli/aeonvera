@@ -12,25 +12,3 @@ if ENV['CODECLIMATE_REPO_TOKEN'] && ENV['TRAVIS']
   require 'codeclimate-test-reporter'
   CodeClimate::TestReporter.start
 end
-
-SimpleCov.start do
-  add_group 'Models', 'app/models'
-  add_group 'Controllers', 'app/controllers/api'
-  add_group 'Operations', 'app/operations'
-  add_group 'Policies', 'app/policies'
-  add_group 'Mailers', 'app/mailers'
-  add_group 'Serializers', 'app/serializers'
-  add_group 'Services', 'app/services'
-
-
-  # filters.clear
-  # add_filter '/app/controllers/[^a][^p][^i]'
-  add_filter '/app/helpers/'
-  add_filter '/app/decorators/'
-  add_filter '/app/views/'
-  add_filter '/gems/'
-  add_filter '/spec/'
-  add_filter '/config/'
-  add_filter '/public/'
-  add_filter '/db/'
-end
