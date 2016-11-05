@@ -80,6 +80,7 @@ def json_api_create_with(klass, params)
     type = actual_relationship['data']['type']
 
     expect(id).to eq relationship_id
+    ap actual_relationship
     expect(type).to eq relationship_type
 
     # check the saved relationships

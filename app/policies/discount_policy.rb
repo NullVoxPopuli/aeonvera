@@ -1,2 +1,2 @@
-class DiscountPolicy < EventPolicy::SubConfiguration
+class DiscountPolicy < Api::EventPolicy::SubConfiguration
 end

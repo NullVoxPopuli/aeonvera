@@ -1,5 +1,16 @@
 require 'active_model_serializers'
-ActiveModel::Serializer.config.adapter = :json_api
+ActiveModelSerializers.config.adapter = :json_api
+ActiveModelSerializers.config.serializer_lookup_chain.unshift(
+  lambda do |resource_class, _, controller_class|
+    if controller_class
+      serializer_name = "::#{resource_class.name}Serializer"
+      controller_class.name.gsub(/::([^:])+Controller$/, serializer_name)
+    end
+  end
+  # ] + ActiveModelSerializers::LookupChain::DEFAULT.dup
+)
+
+
 # TODO: switch to unaltered when bf4's belongs_to PR is ready
 # ActiveModelSerializers.config.key_transform = :unaltered
 

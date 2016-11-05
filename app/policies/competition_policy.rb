@@ -1,2 +1,2 @@
-class CompetitionPolicy < EventPolicy::SubConfiguration
+class CompetitionPolicy < Api::EventPolicy::SubConfiguration
 end
