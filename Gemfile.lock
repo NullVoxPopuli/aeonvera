@@ -19,12 +19,6 @@ PATH
       activemodel (>= 4.1, < 6)
       jsonapi (= 0.1.1.beta2)
 
-PATH
-  remote: ../rails_module_unification
-  specs:
-    rails_module_unification (0.8.2)
-      activesupport
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -208,6 +202,8 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
+    rails_module_unification (0.8.1)
+      activesupport
     railties (4.2.6)
       actionpack (= 4.2.6)
       activesupport (= 4.2.6)
@@ -350,7 +346,7 @@ DEPENDENCIES
   puma
   rack-cors
   rails (~> 4.2)
-  rails_module_unification!
+  rails_module_unification
   ransack
   redis
   roadie
