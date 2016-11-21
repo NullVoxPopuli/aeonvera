@@ -31,8 +31,9 @@ gem 'api_cache', github: 'NullVoxPopuli/api_cache'
 # JSON serialization
 # gem 'active_model_serializers', git: 'https://github.com/NullVoxPopuli/active_model_serializers.git', branch: 'fields-also-whitelists-relationships'
 # gem 'active_model_serializers' , github: 'rails-api/active_model_serializers'
-gem 'active_model_serializers', path: '../active_model_serializers'
+# gem 'active_model_serializers', path: '../active_model_serializers'
 # gem 'active_model_serializers', github: 'bf4/active_model_serializers', branch: 'smarter_association_id_lookup'
+gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
 

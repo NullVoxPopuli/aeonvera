@@ -4,7 +4,6 @@ ActiveModelSerializers.config.serializer_lookup_chain.unshift(
   lambda do |resource_class, _, namespace|
     "#{namespace.name}::#{resource_class.name}Serializer" if namespace
   end
-  # ] + ActiveModelSerializers::LookupChain::DEFAULT.dup
 )
 
 
