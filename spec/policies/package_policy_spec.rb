@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe PackagePolicy do
+describe Api::PackagePolicy do
   let(:by_owner){
     ->(method){
       package = create(:package)
-      policy = PackagePolicy.new(package.event.hosted_by, package)
+      policy = Api::PackagePolicy.new(package.event.hosted_by, package)
       policy.send(method)
     }
   }
@@ -15,7 +15,7 @@ describe PackagePolicy do
       package = create(:package, event: event)
       attendance = create(:attendance, host: event, package: package)
 
-      policy = PackagePolicy.new(attendance.attendee, package)
+      policy = Api::PackagePolicy.new(attendance.attendee, package)
       policy.send(method)
     }
   }

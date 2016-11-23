@@ -1,2 +1,4 @@
-class PackagePolicy < Api::EventPolicy::SubConfiguration
+module Api
+  class PackagePolicy < Api::EventPolicy::SubConfiguration
+  end
 end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe OrderOperations::MarkPaid do
-  let(:klass){ OrderOperations::MarkPaid }
+describe Api::OrderOperations::MarkPaid do
+  let(:klass){ Api::OrderOperations::MarkPaid }
   let(:owner){ create_confirmed_user }
   let(:event){ create(:event, hosted_by: owner) }
   let(:attendance){ create(:attendance, host: event) }

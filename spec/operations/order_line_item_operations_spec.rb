@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe OrderLineItemOperations do
+describe Api::OrderLineItemOperations do
 
   context 'delete' do
     it 'is allowed with token' do

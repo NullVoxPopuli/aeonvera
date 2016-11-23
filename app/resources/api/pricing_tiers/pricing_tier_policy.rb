@@ -1,2 +1,4 @@
-class PricingTierPolicy < Api::EventPolicy::SubConfiguration
+module Api
+  class PricingTierPolicy < Api::EventPolicy::SubConfiguration
+  end
 end

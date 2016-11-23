@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe PricingTierPolicy do
+describe Api::PricingTierPolicy do
   let(:by_owner){
     ->(method){
       tier = create(:pricing_tier)
-      policy = PricingTierPolicy.new(tier.event.hosted_by, tier)
+      policy = Api::PricingTierPolicy.new(tier.event.hosted_by, tier)
       policy.send(method)
     }
   }
@@ -15,7 +15,7 @@ describe PricingTierPolicy do
       tier = create(:pricing_tier, event: event)
       attendance = create(:attendance, host: event, pricing_tier: tier)
 
-      policy = PricingTierPolicy.new(attendance.attendee, tier)
+      policy = Api::PricingTierPolicy.new(attendance.attendee, tier)
       policy.send(method)
     }
   }

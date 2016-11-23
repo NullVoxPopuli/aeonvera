@@ -1,2 +1,4 @@
-class LineItemPolicy < Api::EventPolicy::SubConfiguration
+module Api
+  class LineItemPolicy < Api::EventPolicy::SubConfiguration
+  end
 end

@@ -1,5 +1,7 @@
-module LessonOperations
+module Api
+  module LessonOperations
 
 
 
+  end
 end

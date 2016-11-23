@@ -3,4 +3,8 @@ module Api
   class LineItem::LessonSerializer < LineItemSerializer
     type 'lesson'
   end
+
+  class LessonSerializer < LineItemSerializer
+    type 'lesson'
+  end
 end

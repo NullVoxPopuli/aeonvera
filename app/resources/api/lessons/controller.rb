@@ -7,12 +7,12 @@ module Api
 
     def index
       model = operation_class.new(current_user, params, index_params).run
-      render json: model, include: params[:include], each_serializer: LineItem::LessonSerializer
+      render json: model, include: params[:include], each_serializer: LessonSerializer
     end
 
     def show
       model = operation_class.new(current_user, params, params).run
-      render json: model, include: params[:include], serializer: LineItem::LessonSerializer
+      render json: model, include: params[:include], serializer: LessonSerializer
     end
 
     private

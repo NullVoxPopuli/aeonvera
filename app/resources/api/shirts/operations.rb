@@ -4,7 +4,7 @@ module Api
       include ShirtOperations::Helpers
 
       def run
-        shirt = LineItem::Shirt.new(params_with_proper_sizing_metadata)
+        shirt = Shirt.new(params_with_proper_sizing_metadata)
         return unless allowed_for?(shirt)
 
         shirt.save

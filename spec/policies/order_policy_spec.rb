@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe OrderPolicy do
+describe Api::OrderPolicy do
   context 'for collaborators' do
     context 'accessing data from an event' do
       let(:event) { create(:event) }
       let(:other_user) { create(:user) }
       let(:order) { create(:order, host: event, attendance: create(:attendance, host: event)) }
 
-      let(:policy) { OrderPolicy.new(other_user, order) }
+      let(:policy) { Api::OrderPolicy.new(other_user, order) }
 
       before(:each) do
         event.collaborators << other_user
@@ -25,14 +25,14 @@ describe OrderPolicy do
 
     it 'can delete unpaid orders' do
       order = build(:order, created_by: other_user, paid: false)
-      policy = OrderPolicy.new(other_user, order)
+      policy = Api::OrderPolicy.new(other_user, order)
 
       expect(policy.delete?).to eq true
     end
 
     it 'cannot delete paid orders' do
       order = build(:order, created_by: other_user, paid: true)
-      policy = OrderPolicy.new(other_user, order)
+      policy = Api::OrderPolicy.new(other_user, order)
 
       expect(policy.delete?).to eq false
     end
@@ -43,14 +43,14 @@ describe OrderPolicy do
 
     it 'can delete unpaid orders' do
       order = build(:order, host: event, paid: false)
-      policy = OrderPolicy.new(event.hosted_by, order)
+      policy = Api::OrderPolicy.new(event.hosted_by, order)
 
       expect(policy.delete?).to eq true
     end
 
     it 'cannot delete paid orders' do
       order = build(:order, host: event, paid: true)
-      policy = OrderPolicy.new(event.hosted_by, order)
+      policy = Api::OrderPolicy.new(event.hosted_by, order)
 
       expect(policy.delete?).to eq false
     end

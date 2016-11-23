@@ -48,9 +48,9 @@ module Api
 
         # set up new structures in metadata
         whitelisted[:metadata] ||= {}
-        whitelisted[:metadata][LineItem::Shirt::SIZES_KEY] = result_sizes
-        whitelisted[:metadata][LineItem::Shirt::PRICES_KEY] = result_prices
-        whitelisted[:metadata][LineItem::Shirt::INVENTORY_KEY] = result_inventories
+        whitelisted[:metadata][Shirt::SIZES_KEY] = result_sizes
+        whitelisted[:metadata][Shirt::PRICES_KEY] = result_prices
+        whitelisted[:metadata][Shirt::INVENTORY_KEY] = result_inventories
 
         whitelisted
       end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe OrderOperations do
+describe Api::OrderOperations do
 
   context 'SendReceipt' do
     context 'run' do
@@ -8,7 +8,7 @@ describe OrderOperations do
         attendance = create(:attendance)
         order = create(:order, attendance: attendance)
 
-        operation = OrderOperations::SendReceipt.new(order.user, {id: order.id})
+        operation = Api::OrderOperations::SendReceipt.new(order.user, {id: order.id})
         allow(operation).to receive(:allowed?){ true }
 
         expect{

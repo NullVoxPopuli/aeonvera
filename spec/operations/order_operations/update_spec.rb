@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe OrderOperations::Update do
-  let(:klass){ OrderOperations::Update }
+describe Api::OrderOperations::Update do
+  let(:klass){ Api::OrderOperations::Update }
   # This is only for the parameter mapping
   let(:controller){ Api::OrdersController.new }
   let(:user){ create(:user) }
@@ -18,7 +18,7 @@ describe OrderOperations::Update do
           attendance: attendance,
           payment_token: nil,
           metadata: { name: 'a', email: 'a'})
-        operation = OrderOperations::Update.new(nil, {
+        operation = Api::OrderOperations::Update.new(nil, {
           id: order.id, payment_method: 'Stripe'
         })
         allow(operation).to receive(:update)
@@ -34,7 +34,7 @@ describe OrderOperations::Update do
           payment_token: '123',
           payment_method: 'Stripe',
           metadata: { name: 'a', email: 'a'})
-        operation = OrderOperations::Update.new(nil, {
+        operation = Api::OrderOperations::Update.new(nil, {
           id: order.id, payment_token: '123', payment_method: 'Stripe'
         })
         allow(operation).to receive(:update)
@@ -53,7 +53,7 @@ describe OrderOperations::Update do
         @order.save
 
         expect(@order.paid).to eq false
-        operation = OrderOperations::Update.new(nil, {
+        operation = Api::OrderOperations::Update.new(nil, {
           id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10,
           checkout_token: 'cash' # doesn't super matter, cause the control flow is based
           # on the payment_method (which is an actual property)
@@ -86,7 +86,7 @@ describe OrderOperations::Update do
           checkout_email: 'test@test.com'
         }
 
-        @operation = OrderOperations::Update.new(event.hosted_by, @params)
+        @operation = Api::OrderOperations::Update.new(event.hosted_by, @params)
       end
 
       context 'for a check' do
