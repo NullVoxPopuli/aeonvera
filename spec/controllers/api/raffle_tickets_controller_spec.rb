@@ -21,7 +21,7 @@ RSpec.describe Api::RaffleTicketsController, type: :controller do
       json = JSON.parse(response.body)
       result = ActiveModel::SerializableResource.new(
         @ticket_option,
-        serializer: RaffleTicketSerializer,
+        serializer: Api::RaffleTicketSerializer,
         adapter: :json_api).serializable_hash.as_json
 
       expect(json).to eq result
