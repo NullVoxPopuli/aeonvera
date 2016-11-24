@@ -1,12 +1,11 @@
+# frozen_string_literal: true
 module PriceCalculator
   module_function
-
 
   CARD_FEE_PERCENTAGE = 0.029
   CONSTANT_CARD_FEE = 0.3
 
   APP_FEE_PERCENTAGE = 0.0075
-
 
   # estimated - actual fee is calculated on the total
   # charging service fees hurts morale. Its best to
@@ -18,7 +17,8 @@ module PriceCalculator
     absorb_fees: false,
     skip_application_fee: false,
     constant_card_fee: CONSTANT_CARD_FEE,
-    allow_negative: false)
+    allow_negative: false
+  )
 
     buyer_pays_value = 0
     you_get_value = 0
@@ -61,6 +61,7 @@ module PriceCalculator
       refund_amount,
       absorb_fees: true,
       skip_application_fee: true,
-      constant_card_fee: 0)
+      constant_card_fee: 0
+    )
   end
 end

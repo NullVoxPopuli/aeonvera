@@ -17,6 +17,7 @@ ratings:
     - app/policies/**/*
     - app/serializers/**/*
     - app/services/**/*
+    - app/resources/**/*
 
 
 exclude_paths:

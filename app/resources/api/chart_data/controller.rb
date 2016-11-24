@@ -12,8 +12,8 @@ module Api
       chart_type = params[:chart_type]
 
       case chart_type
-      when 'line-income-and-registrations' then Chart::IncomeAndRegistrationsChartSerializer
-      when 'sunburt-registration-breakdown' then Chart::RegistrationBreakdownSerializer
+      when 'line-income-and-registrations' then ChartData::IncomeAndRegistrationsChartSerializer
+      when 'sunburt-registration-breakdown' then ChartData::RegistrationBreakdownSerializer
       end
     end
   end

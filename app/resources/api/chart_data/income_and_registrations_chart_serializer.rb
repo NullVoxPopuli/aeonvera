@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 module Api
-  module Chart
+  module ChartData
     class IncomeAndRegistrationsChartSerializer < ActiveModel::Serializer
       type 'charts'
 
@@ -28,8 +29,6 @@ module Api
         data[:registration_times]
       end
 
-
-
       private
 
       def data
@@ -42,14 +41,14 @@ module Api
           count = 0
           money = 0
 
-          attendances = object.attendances.reorder("created_at ASC")
+          attendances = object.attendances.reorder('created_at ASC')
           attendances.each do |attendance|
             time = attendance.created_at.to_i
             registration_times << time.to_s
             registrations << (count += 1).to_s
           end
 
-          orders = object.orders.reorder("created_at ASC")
+          orders = object.orders.reorder('created_at ASC')
           orders.each do |order|
             time = order.created_at.to_i
             income_times << time.to_s
@@ -76,9 +75,6 @@ module Api
 
         @data
       end
-
-
     end
-
   end
 end

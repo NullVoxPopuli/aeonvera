@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   # the objects for this is built in raffle#ticket_purchase_data
   class RaffleTicketPurchaserSerializer < ActiveModel::Serializer

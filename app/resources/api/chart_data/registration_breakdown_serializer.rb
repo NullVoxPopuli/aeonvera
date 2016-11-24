@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 module Api
-  module Chart
+  module ChartData
     class RegistrationBreakdownSerializer < ActiveModel::Serializer
       type 'charts'
 
@@ -54,7 +55,7 @@ module Api
           levels = object.levels
 
           levels.map do |level|
-            attendances_for_level = attendances.select{ |a| a.level_id == level.id }
+            attendances_for_level = attendances.select { |a| a.level_id == level.id }
 
             {
               name: level.name,

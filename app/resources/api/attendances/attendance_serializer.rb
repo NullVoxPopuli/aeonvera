@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Api
   class AttendanceSerializer < ActiveModel::Serializer
-
     attributes :id,
       :attendee_name, :attendee_email, :dance_orientation,
       :amount_owed, :amount_paid, :registered_at,
@@ -40,6 +40,5 @@ module Api
     def event_id
       object.host_id
     end
-
   end
 end

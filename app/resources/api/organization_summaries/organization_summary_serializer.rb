@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   # object is actually an Organization
   class OrganizationSummarySerializer < ActiveModel::Serializer
@@ -32,7 +33,7 @@ module Api
 
     def unpaid_past_month
       unpaid_orders = orders_past_month.where(paid: false)
-      unpaid_orders.map{ |o| o.total || 0 }.inject(:+)
+      unpaid_orders.map { |o| o.total || 0 }.inject(:+)
     end
 
     def new_memberships_past_month

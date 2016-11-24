@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module PublicAttributes
     module EventAttributes
@@ -27,7 +28,11 @@ module Api
           :url, :has_stripe_integration,
           :ask_if_leading_or_following, :contact_email
 
-        belongs_to :opening_tier, serializer: Api::OpeningTierSerializer
+        class OpeningTierSerializer < PricingTierSerializer
+          type 'opening_tier'
+        end
+
+        belongs_to :opening_tier, serializer: OpeningTierSerializer
         belongs_to :current_tier
         has_many :pricing_tiers
         has_many :integrations
