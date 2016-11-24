@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Api::UsersController, type: :controller do
   before(:each) do
-    ActiveModel::Serializer.config.adapter = ActiveModel::Serializer::Adapter::JsonApi
+    ActiveModelSerializers.config.adapter = :json_api
   end
 
   context 'show' do
