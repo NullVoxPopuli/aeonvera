@@ -15,6 +15,8 @@ module Api
         @model = restraint = build_from_params
         return restraint unless restraint.valid?
 
+        raise SkinnyControllers::DeniedByPolicy unless allowed?
+
         restraint.save if allowed?
         restraint
       end

@@ -14,14 +14,6 @@ module Api
       dep_allowed = dep_host.is_accessible_to?(user)
       res_allowed = res_host.is_accessible_to?(user)
 
-      unless dep_allowed
-        object.errors.add(:dependable, 'not allowed to modify this')
-      end
-
-      unless res_allowed
-        object.errors.add(:restrictable, 'not allowed to modify this')
-      end
-
       dep_allowed && res_allowed
     end
   end

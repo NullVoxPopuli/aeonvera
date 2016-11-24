@@ -42,6 +42,12 @@ Metrics/PerceivedComplexity:
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
+Style/BlockDelimiters:
+  # TODO: get the spec exclusion working
+  Enabled: false
+  Exclude:
+    - spec/**/*
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: nested
 
