@@ -1,3 +1,22 @@
+# frozen_string_literal: true
+def jsonapi_params(type, id: nil, attributes: {}, relationships: {})
+  attributes[:id] = id if id
+
+  data = {
+    type: type,
+    attributes: attributes,
+    relationships: relationships.each_with_object({}) do |(k, v), h|
+      h[k] = { data: { type: v.class.name.downcase.pluralize, id: v.id } }
+    end
+  }
+
+  data[:id] = id if id
+
+  {
+    data: data
+  }
+end
+
 def json_response
   JSON.parse(response.body)
 end
@@ -15,13 +34,11 @@ end
 def json_api_create_with(klass, params)
   params = ActiveModelSerializers::KeyTransform.dash(params)
 
-  expect {
+  expect do
     post :create, params
-    if response.status != 201
-      ap JSON.parse(response.body)
-    end
+    ap JSON.parse(response.body) if response.status != 201
     expect(response.status).to eq 201
-  }.to change(klass, :count).by(1)
+  end.to change(klass, :count).by(1)
 
   json = JSON.parse(response.body)
   data = json['data']

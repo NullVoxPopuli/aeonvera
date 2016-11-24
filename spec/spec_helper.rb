@@ -10,11 +10,11 @@ end
 
 SimpleCov.start do
   add_group 'Models', 'app/models'
-  add_group 'Controllers', 'app/controllers/api'
-  add_group 'Operations', 'app/operations'
-  add_group 'Policies', 'app/policies'
+  add_group 'Controllers', '.*controller.*'
+  add_group 'Operations', '.*operation.*'
+  add_group 'Policies', '.*polic.*'
   add_group 'Mailers', 'app/mailers'
-  add_group 'Serializers', 'app/serializers'
+  add_group 'Serializers', '.*serializer.*'
   add_group 'Services', 'app/services'
 
 
