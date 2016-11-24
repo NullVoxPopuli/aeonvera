@@ -6,7 +6,6 @@ ActiveModelSerializers.config.serializer_lookup_chain.unshift(
   end
 )
 
-
 # TODO: switch to unaltered when bf4's belongs_to PR is ready
 # ActiveModelSerializers.config.key_transform = :unaltered
 
@@ -53,36 +52,24 @@ module ActiveModelSerializers::Adapter::JsonApi::Deserialization
   end
 end
 
+module AttributeFieldHack
+  def serializable_hash(options = {})
+    hash = super
 
-# for applying fields filtering to attributes
-module ActiveModelSerializers
-  module Adapter
-    class Attributes < Base
-      def serializable_hash(options = nil)
-        options = serialization_options(options)
-        options[:fields] ||= instance_options[:fields]
-        hash = serializer.serializable_hash(instance_options, options, self)
-        fields = JSONAPI::IncludeDirective.new(options[:fields]).to_hash
-        apply_fields_whitelist(hash, fields)
-      end
+    fields = JSONAPI::IncludeDirective.new(options[:fields]).to_hash
+    apply_fields_whitelist(hash, fields)
+  end
 
-      # this is a little backwards, but it's needed until AMS has a more unified interface
-      def apply_fields_whitelist(hash, fields)
-        return hash.map{ |e| apply_fields_whitelist(e, fields) } if hash.is_a?(Array)
+  # this is a little backwards, but it's needed until AMS has a more unified interface
+  def apply_fields_whitelist(hash, fields)
+    return hash.map{ |e| apply_fields_whitelist(e, fields) } if hash.is_a?(Array)
 
-        result = {}
-        fields_keys = fields.keys
-        hash.each do |k, v|
-          next unless fields_keys.include?(k)
-          if v.is_a?(Hash)
-            result[k] = apply_fields_whitelist(v, fields[k])
-          else
-            result[k] = v
-          end
-        end
-
-        result
-      end
+    requested_fields = hash.slice(*fields.keys)
+    requested_fields.each_with_object({}) do |(k, v), h|
+      h[k] = v.is_a?(Hash) ? apply_fields_whitelist(v, fields[k]) : v
+      h
     end
   end
 end
+
+ActiveModelSerializers::Adapter::Attributes.prepend AttributeFieldHack

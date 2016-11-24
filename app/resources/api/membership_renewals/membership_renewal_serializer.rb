@@ -5,6 +5,7 @@ module Api
     class LineItem::MembershipOptionSerializer < Api::MembershipOptionSerializer
       type 'membership_options'
     end
+
     belongs_to :membership_option
 
     class MemberSerializer < ActiveModel::Serializer

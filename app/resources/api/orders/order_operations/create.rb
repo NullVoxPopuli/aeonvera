@@ -65,7 +65,7 @@ module Api
 
         # if the order's lineitems contain a membership option,
         # create a renewal
-        olis = @model.order_line_items.select { |oli| oli.line_item_type == MembershipOption.name }
+        olis = @model.order_line_items.select { |oli| oli.line_item_type.include?(MembershipOption.name) }
 
         # hopefully there is only one of these
         olis.each do |order_line_item|

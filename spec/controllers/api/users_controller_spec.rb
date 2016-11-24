@@ -9,10 +9,8 @@ describe Api::UsersController, type: :controller do
     it 'returns the current user' do
       force_login(user = create(:user))
       get :show, id: -1
-      json = response.body
 
-      expected = ActiveModel::SerializableResource.new(user).serializable_hash.to_json
-      expect(json).to eq expected
+      expect(response.body).to have_used_serializer Api::UserSerializer, user
     end
 
     it 'returns nothing when not logged in' do

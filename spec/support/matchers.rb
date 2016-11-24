@@ -21,3 +21,14 @@ RSpec::Matchers.define :be_the_same_time_as do |expected|
 
   diffable
 end
+
+RSpec::Matchers.define :have_used_serializer do |klass, resource|
+  match do |response_body|
+
+    expected = ActiveModelSerializers::SerializableResource.new(resource, {
+      serializer: klass
+    }).serializable_hash.to_json
+
+    expect(response_body).to eq expected
+  end
+end
