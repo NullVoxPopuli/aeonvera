@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CustomFieldResponse < ActiveRecord::Base
   include SoftDeletable
 
@@ -8,9 +9,8 @@ class CustomFieldResponse < ActiveRecord::Base
   # validates :writer, presence: true
   validates :custom_field, presence: true
 
-  scope :with_values, -> {
+  scope :with_values, lambda {
     column = CustomFieldResponse.arel_table[:value]
     where(column.not_eq(nil).or(column.not_eq('')))
   }
-
 end

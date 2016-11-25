@@ -7,6 +7,7 @@ def login(user = @user = create(:user))
   sign_in user
 end
 
+# TODO: remove
 def auth_header_for(user = @user = create(:user))
   @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
 end

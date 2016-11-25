@@ -1,12 +1,13 @@
+# frozen_string_literal: true
 class Organization < ActiveRecord::Base
   include SoftDeletable
   include HasPaymentProcessor
   include HasDomain
   include HasLogo
 
-  belongs_to :owner, class_name: "User"
+  belongs_to :owner, class_name: 'User'
   belongs_to :user, foreign_key: :owner_id
-  belongs_to :hosted_by, class_name: "User", foreign_key: :owner_id
+  belongs_to :hosted_by, class_name: 'User', foreign_key: :owner_id
   has_many :sponsorships, as: :sponsor
   has_many :sponsored_events,
     through: :sponsorships,
@@ -23,8 +24,8 @@ class Organization < ActiveRecord::Base
   has_many :attendances, as: :host, class_name: OrganizationAttendance.name
 
   has_many :integrations,
-    :dependent => :destroy,
-    :extend => Extensions::Integrations,
+    dependent: :destroy,
+    extend: Extensions::Integrations,
     as: :owner
 
   has_many :line_items, as: :host
@@ -41,11 +42,10 @@ class Organization < ActiveRecord::Base
     class_name: LineItem::Lesson.name, as: :host
 
   has_many :membership_options,
-    -> { where(item_type: "LineItem::MembershipOption") },
+    -> { where(item_type: 'LineItem::MembershipOption') },
     class_name: LineItem::MembershipOption.name, as: :host
 
   alias_attribute :user_id, :owner_id
-
 
   def available_dances
     available_items(:dances, LineItem::Dance)
@@ -56,18 +56,18 @@ class Organization < ActiveRecord::Base
   end
 
   def location
-    "#{self.city.titleize}, #{self.state.titleize}"
+    "#{city.titleize}, #{state.titleize}"
   end
 
   def link
-    "//#{self.domain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
+    "//#{domain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
   end
 
   # a higher level of access
   def is_accessible_as_collaborator?(user)
     return false unless user
-    return true if self.owner == user
-    return true if user.collaborated_organization_ids.include?(self.id)
+    return true if owner == user
+    return true if user.collaborated_organization_ids.include?(id)
 
     false
   end
@@ -85,12 +85,10 @@ class Organization < ActiveRecord::Base
     only_opening_date_exists = closes_at_column.eq(nil).and(starts_at_column.eq(now))
     no_dates = closes_at_column.eq(nil).and(starts_at_column.eq(nil))
 
-    self.send(association_name).
-      where(no_dates.
-        or(only_closing_date_exists.
-        or(only_opening_date_exists.
-        or(both_dates_exist)))
-      )
+    send(association_name)
+      .where(no_dates
+        .or(only_closing_date_exists
+        .or(only_opening_date_exists
+        .or(both_dates_exist))))
   end
-
 end

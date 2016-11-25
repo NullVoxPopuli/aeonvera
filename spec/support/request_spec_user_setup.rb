@@ -20,4 +20,8 @@ module RequestSpecUserSetup
       end
     end
   end
+
+  def auth_header_for(user)
+    @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
+  end
 end

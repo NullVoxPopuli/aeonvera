@@ -3,13 +3,9 @@ module Api
   module OrderLineItemOperations
     class Delete < SkinnyControllers::Operation::Base
       def run
+        return unless allowed?
         model.destroy
         model
-      end
-
-      # TODO: Is this used?
-      def allowed_to_delete?
-        allowed? || token_matches
       end
     end
 

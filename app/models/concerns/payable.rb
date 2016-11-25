@@ -57,7 +57,7 @@ module Payable
       # ensure just one of the allowed packages is present
       # in this order
       package_eligibility = allowed.map do |package|
-        item_exists = already_exists?(package)
+        already_exists?(package)
       end
 
       return false unless package_eligibility.any?
@@ -76,9 +76,9 @@ module Payable
 
   def is_an_item_with_quantity?(item)
     if [Discount, Competition, Package].include?(item.class)
-      return false
+      false
     else
-      return true
+      true
     end
   end
 
@@ -93,7 +93,7 @@ module Payable
   def already_has_discount?
     order_line_items.select do |line_item|
       line_item.line_item_type == Discount.name
-    end.count > 0
+    end.count.positive?
   end
 
   def already_exists?(object)
@@ -147,7 +147,7 @@ module Payable
     end
 
     amount = amount_after_global_discounts(amount, remaining_discounts)
-    any_negative = valid_order_line_items.select{ |o| o.quantity < 0 }.any?
+    any_negative = valid_order_line_items.select { |o| o.quantity < 0 }.any?
     amount > 0 || any_negative ? amount : 0
   end
 
@@ -163,7 +163,8 @@ module Payable
     PriceCalculator.calculate_for_sub_total(
       sub_total,
       absorb_fees: absorb_fees,
-      allow_negative: has_item_of_negative_quantity?)
+      allow_negative: has_item_of_negative_quantity?
+    )
   end
 
   # when absorb_fees is false, it defaults to should_apply_fee

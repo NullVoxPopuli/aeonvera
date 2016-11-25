@@ -1,25 +1,24 @@
+# frozen_string_literal: true
 module OrderMembership
   extend ActiveSupport::Concern
 
   def user_has_organization_discount?
     belongs_to_organization? &&
-    self.user.is_member_of(self.host) &&
-    self.host.membership_discounts.present?
+      user.is_member_of(host) &&
+      host.membership_discounts.present?
   end
 
   def applicable_membership_discounts
     user_belongs_to_organization = (
       belongs_to_organization? &&
-      self.user && self.user.is_member_of?(self.host)
+      user && user.is_member_of?(host)
     )
 
     if user_belongs_to_organization
 
-      membership_discounts = self.host.membership_discounts
+      membership_discounts = host.membership_discounts
 
-      if membership_discounts.present?
-        return membership_discounts
-      end
+      return membership_discounts if membership_discounts.present?
     end
 
     # there is notheng else to do, return something falsy
@@ -27,13 +26,12 @@ module OrderMembership
   end
 
   def existing_membership_discounts
-    self.order_line_items.select{ |i|
+    order_line_items.select do |i|
       i.line_item_type == MembershipDiscount.name
-    }
+    end
   end
 
   def clear_existing_membership_discounts
     existing_membership_discounts.map(&:destroy)
   end
-
 end
