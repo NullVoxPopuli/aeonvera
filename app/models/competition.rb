@@ -1,4 +1,24 @@
 # frozen_string_literal: true
+# == Schema Information
+#
+# Table name: competitions
+#
+#  id                :integer          not null, primary key
+#  name              :string(255)
+#  initial_price     :decimal(, )
+#  at_the_door_price :decimal(, )
+#  kind              :integer          not null
+#  metadata          :text
+#  event_id          :integer
+#  created_at        :datetime
+#  updated_at        :datetime
+#  deleted_at        :datetime
+#
+# Indexes
+#
+#  index_competitions_on_event_id  (event_id)
+#
+
 class Competition < ActiveRecord::Base
   include HasMetadata
   include SoftDeletable

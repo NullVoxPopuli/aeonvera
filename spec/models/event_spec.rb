@@ -1,3 +1,49 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id                              :integer          not null, primary key
+#  name                            :string(255)      not null
+#  short_description               :string(255)
+#  domain                          :string(255)      not null
+#  starts_at                       :datetime         not null
+#  ends_at                         :datetime         not null
+#  mail_payments_end_at            :datetime
+#  electronic_payments_end_at      :datetime
+#  refunds_end_at                  :datetime
+#  has_volunteers                  :boolean          default(FALSE), not null
+#  volunteer_description           :string(255)
+#  housing_status                  :integer          default(0), not null
+#  housing_nights                  :string(255)      default("5,6")
+#  hosted_by_id                    :integer
+#  deleted_at                      :datetime
+#  created_at                      :datetime
+#  updated_at                      :datetime
+#  allow_discounts                 :boolean          default(TRUE), not null
+#  payment_email                   :string(255)      default(""), not null
+#  beta                            :boolean          default(FALSE), not null
+#  shirt_sales_end_at              :datetime
+#  show_at_the_door_prices_at      :datetime
+#  allow_combined_discounts        :boolean          default(TRUE), not null
+#  location                        :string(255)
+#  show_on_public_calendar         :boolean          default(TRUE), not null
+#  make_attendees_pay_fees         :boolean          default(TRUE), not null
+#  accept_only_electronic_payments :boolean          default(FALSE), not null
+#  logo_file_name                  :string(255)
+#  logo_content_type               :string(255)
+#  logo_file_size                  :integer
+#  logo_updated_at                 :datetime
+#  registration_email_disclaimer   :text
+#  legacy_housing                  :boolean          default(FALSE), not null
+#  ask_if_leading_or_following     :boolean          default(TRUE), not null
+#  contact_email                   :string
+#  online_competition_sales_end_at :datetime
+#
+# Indexes
+#
+#  index_events_on_domain  (domain)
+#
+
 require "spec_helper"
 
 describe Event do

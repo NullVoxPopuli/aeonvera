@@ -1,4 +1,20 @@
 # frozen_string_literal: true
+# == Schema Information
+#
+# Table name: pricing_tiers
+#
+#  id                  :integer          not null, primary key
+#  increase_by_dollars :decimal(, )      default(0.0)
+#  date                :datetime
+#  registrants         :integer
+#  event_id            :integer
+#  deleted_at          :datetime
+#
+# Indexes
+#
+#  index_pricing_tiers_on_event_id  (event_id)
+#
+
 class PricingTier < ActiveRecord::Base
   include SoftDeletable
 

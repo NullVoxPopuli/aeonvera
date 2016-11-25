@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: packages
+#
+#  id                   :integer          not null, primary key
+#  name                 :string(255)
+#  initial_price        :decimal(, )
+#  at_the_door_price    :decimal(, )
+#  attendee_limit       :integer
+#  expires_at           :datetime
+#  requires_track       :boolean
+#  event_id             :integer
+#  created_at           :datetime
+#  updated_at           :datetime
+#  deleted_at           :datetime
+#  ignore_pricing_tiers :boolean          default(FALSE), not null
+#
+# Indexes
+#
+#  index_packages_on_event_id  (event_id)
+#
+
 require "spec_helper"
 
 describe Package do

@@ -76,6 +76,8 @@ group :development, :development_public, :development_remote, :test do
   gem 'puma'
   # linting
   gem 'rubocop'
+  # list the fields in models
+  gem 'annotate'
 end
 
 group :test do

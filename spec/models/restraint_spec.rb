@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: restraints
+#
+#  dependable_id     :integer
+#  dependable_type   :string(255)
+#  restrictable_id   :integer
+#  restrictable_type :string(255)
+#  id                :integer          not null, primary key
+#
+# Indexes
+#
+#  index_restraints_on_dependable_id_and_dependable_type      (dependable_id,dependable_type)
+#  index_restraints_on_restrictable_id_and_restrictable_type  (restrictable_id,restrictable_type)
+#
+
 require 'spec_helper'
 
 describe Restraint do

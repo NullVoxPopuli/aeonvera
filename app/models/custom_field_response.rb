@@ -1,4 +1,22 @@
 # frozen_string_literal: true
+# == Schema Information
+#
+# Table name: custom_field_responses
+#
+#  id              :integer          not null, primary key
+#  value           :text
+#  writer_id       :integer
+#  writer_type     :string(255)
+#  custom_field_id :integer          not null
+#  deleted_at      :datetime
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+# Indexes
+#
+#  index_custom_field_responses_on_writer_id_and_writer_type  (writer_id,writer_type)
+#
+
 class CustomFieldResponse < ActiveRecord::Base
   include SoftDeletable
 

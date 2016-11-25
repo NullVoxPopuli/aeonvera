@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: custom_fields
+#
+#  id            :integer          not null, primary key
+#  label         :string(255)
+#  kind          :integer
+#  default_value :text
+#  editable      :boolean          default(TRUE), not null
+#  host_id       :integer
+#  host_type     :string(255)
+#  user_id       :integer
+#  deleted_at    :datetime
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+# Indexes
+#
+#  index_custom_fields_on_host_id_and_host_type  (host_id,host_type)
+#
+
 class CustomField < ActiveRecord::Base
   include SoftDeletable
 

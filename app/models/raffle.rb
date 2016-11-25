@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: raffles
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  event_id   :integer
+#  deleted_at :datetime
+#  created_at :datetime
+#  updated_at :datetime
+#  winner_id  :integer
+#
+
 class Raffle < ActiveRecord::Base
   include SoftDeletable
   belongs_to :event

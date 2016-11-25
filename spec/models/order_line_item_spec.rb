@@ -1,3 +1,27 @@
+# == Schema Information
+#
+# Table name: order_line_items
+#
+#  id                :integer          not null, primary key
+#  order_id          :integer
+#  line_item_id      :integer
+#  line_item_type    :string(255)
+#  price             :decimal(, )      default(0.0), not null
+#  quantity          :integer          default(1), not null
+#  created_at        :datetime
+#  updated_at        :datetime
+#  size              :string
+#  color             :string
+#  dance_orientation :string
+#  partner_name      :string
+#  picked_up_at      :datetime
+#
+# Indexes
+#
+#  index_order_line_items_on_line_item_id_and_line_item_type  (line_item_id,line_item_type)
+#  index_order_line_items_on_order_id                         (order_id)
+#
+
 require 'spec_helper'
 
 describe OrderLineItem do

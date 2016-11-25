@@ -1,4 +1,19 @@
 # frozen_string_literal: true
+# == Schema Information
+#
+# Table name: integrations
+#
+#  id               :integer          not null, primary key
+#  kind             :string(255)
+#  encrypted_config :text
+#  owner_id         :integer
+#  owner_type       :string(255)
+#
+# Indexes
+#
+#  index_integrations_on_owner_id_and_owner_type  (owner_id,owner_type)
+#
+
 # the entire config is encrypted, but since the whole config gets loaded (and decrypted)
 # all at once, if anyone figures out how to read to read the RAM of our system, we don't
 # want the clear text version of the password floating around.
