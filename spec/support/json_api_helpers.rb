@@ -4,7 +4,7 @@ def jsonapi_params(type, id: nil, attributes: {}, relationships: {})
 
   data = {
     type: type,
-    attributes: attributes,
+    attributes: CaseTransform.dash(attributes),
     relationships: relationships.each_with_object({}) do |(k, v), h|
       h[k] = { data: { type: v.class.name.downcase.pluralize, id: v.try(:id) } }
     end

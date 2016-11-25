@@ -1,5 +1,7 @@
+# frozen_string_literal: true
 module Api
   module IntegrationOperations
+    # TODO: Refactor to handle multiple oauth providers
     class Create < SkinnyControllers::Operation::Base
       def run
         build_integration
@@ -25,13 +27,10 @@ module Api
 
         stripe_credentials = get_stripe_credentials(authorization_code)
 
-        if @model.errors.blank?
-          @model.config = stripe_credentials
-        end
+        @model.config = stripe_credentials if @model.errors.blank?
 
         @model
       end
-
 
       def get_stripe_credentials(authorization_code)
         client_id = ENV['STRIPE_CLIENT_ID'] || STRIPE_CONFIG['client_id']
@@ -39,12 +38,12 @@ module Api
         access_token_url = STRIPE_CONFIG['access_token_url']
 
         data = {
-          :client_id => client_id,
-          :client_secret => secret_key,
-          :code => authorization_code,
-          :redirect_uri => "",
-          :scope => "read_write",
-          :grant_type => "authorization_code"
+          client_id: client_id,
+          client_secret: secret_key,
+          code: authorization_code,
+          redirect_uri: '',
+          scope: 'read_write',
+          grant_type: 'authorization_code'
         }
 
         uri = URI.parse(access_token_url)
@@ -55,14 +54,12 @@ module Api
         response = http.request(request)
 
         response_body = JSON.parse(response.body)
-        if (error = response_body["error"]).present?
+        if (error = response_body['error']).present?
           @model.errors.add(:base, error)
         end
 
-        return response_body
+        response_body
       end
     end
-
-
   end
 end

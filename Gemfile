@@ -80,6 +80,9 @@ group :development, :development_public, :development_remote, :test do
   gem 'annotate'
   # capturing emails
   gem 'letter_opener_web'
+
+  # hopefully eventually used in AMS...
+  gem 'case_transform'
 end
 
 group :test do

@@ -1,7 +1,7 @@
 module Api
   class EventPolicy < SkinnyControllers::Policy::Base
     class SubConfiguration < SkinnyControllers::Policy::Base
-      include OwnershipChecks
+      include ::OwnershipChecks
 
       def read?(o = object)
         parent(o).is_accessible_to? user
