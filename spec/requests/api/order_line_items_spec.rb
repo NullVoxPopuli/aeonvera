@@ -2,14 +2,14 @@
 require 'rails_helper'
 
 describe Api::OrderLineItemsController, type: :request do
+  include RequestSpecUserSetup
+
   before(:each) do
     host! APPLICATION_CONFIG[:domain][Rails.env]
   end
 
-  let(:event) { create(:event) }
-
   context 'is logged in' do
-    let(:user) { create_confirmed_user }
+    let(:user) { stray_user }
 
     context 'user owns the order' do
       let(:order) { create(:order, host: event, attendance: create(:attendance, host: event), user: user) }
@@ -42,5 +42,9 @@ describe Api::OrderLineItemsController, type: :request do
         end
       end
     end
+  end
+
+  context 'is not logged in' do
+
   end
 end

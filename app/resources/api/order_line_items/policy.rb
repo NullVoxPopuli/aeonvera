@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 module Api
   class OrderLineItemPolicy < SkinnyControllers::Policy::Base
     def read_all?
       order = object.first.order
       order.user_id == user.id ||
-      order.host.is_accessible_to?(user)
+        order.host.is_accessible_to?(user)
     end
 
     def read?

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::OrderLineItemsController, type: :controller do
@@ -73,5 +74,4 @@ describe Api::OrderLineItemsController, type: :controller do
       json_api_update_with(@oli, json_api)
     end
   end
-
 end
