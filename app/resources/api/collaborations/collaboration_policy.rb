@@ -1,5 +1,6 @@
 module Api
   class CollaborationPolicy < SkinnyControllers::Policy::Base
+    include OwnershipChecks
 
     # Below are all the available permissions. Each permission corresponds
     # to an action in the controller.
@@ -43,18 +44,11 @@ module Api
     private
 
     def is_at_least_a_collaborator?
-      host = object.collaborated
-      host.collaboration_ids.include?(user.id) || is_owner?
-    end
-
-    def is_at_least_an_admin?
-      # TODO: implement this
+      super(object.collaborated)
     end
 
     def is_owner?
-      host = object.collaborated
-      id = host.try(:hosted_by_id) || host.try(:owner_id)
-      id == user.id
+      super(object.collaborated)
     end
   end
 end

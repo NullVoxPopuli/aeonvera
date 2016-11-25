@@ -2,20 +2,7 @@
 require 'rails_helper'
 
 describe Api::LessonsController, type: :request do
-  before(:each) do
-    host! APPLICATION_CONFIG[:domain][Rails.env]
-  end
-
-  let(:organization) { create(:organization, owner: create_confirmed_user) }
-  let(:owner) { organization.hosted_by }
-  let(:admin) { create_confirmed_user }
-  let(:collaborator) { create_confirmed_user }
-  let(:host_params) { "host_id=#{organization.id}&host_type=Organization" }
-  let(:set_login_header_as) do
-    lambda do |user|
-      @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
-    end
-  end
+  include RequestSpecUserSetup
 
   context 'is not logged in' do
     it 'can not create' do

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module PackageOperations
     class ReadAll < SkinnyControllers::Operation::Base
@@ -16,22 +17,16 @@ module Api
     end
 
     class Create < SkinnyControllers::Operation::Base
-
       def run
         package = Package.new(model_params)
+        return unless allowed_for?(package)
 
-        if allowed_for?(package)
-          package.save
-        else
-          package.errors.add(:base, 'not authorized')
-        end
-
+        package.save
         package
       end
     end
 
     class Update < SkinnyControllers::Operation::Base
-
       def run
         if allowed?
           update
@@ -47,8 +42,6 @@ module Api
         package.update(model_params)
         package
       end
-
     end
-
   end
 end

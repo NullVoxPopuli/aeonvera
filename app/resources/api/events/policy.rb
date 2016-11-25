@@ -1,20 +1,22 @@
 module Api
   class EventPolicy < SkinnyControllers::Policy::Base
     class SubConfiguration < SkinnyControllers::Policy::Base
+      include OwnershipChecks
+
       def read?(o = object)
         parent(o).is_accessible_to? user
       end
 
       def update?
-        parent && parent.hosted_by == user
+        is_at_least_a_collaborator?(parent)
       end
 
       def delete?
-        parent && parent.hosted_by == user
+        is_owner?(parent)
       end
 
       def create?
-        parent && parent.hosted_by == user
+        is_at_least_a_collaborator?(parent)
       end
 
       private
