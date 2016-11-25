@@ -40,9 +40,12 @@ describe Api::UsersController, type: :request do
 
     it 'is prevented when the user is attending an event' do
       create(:attendance, attendee: user)
+      params = {
+        password: user.password
+      }
 
       expect {
-        delete "/api/users/#{user.id}", {}, auth_header_for(user)
+        delete "/api/users/#{user.id}", params, auth_header_for(user)
         expect(response.status).to eq 422
       }.to change(User, :count).by(0)
     end
