@@ -1,12 +1,8 @@
+# frozen_string_literal: true
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
-if ENV['TRAVIS']
-  ENV['CODECLIMATE_REPO_TOKEN'] = '1eeb995da67e27b3df3f6cff8049df742e0aa73ce0e1505d2ffa2323b1a98896'
-  require 'codeclimate-test-reporter'
-  CodeClimate::TestReporter.start
-else
-  require 'simplecov'
-end
+ENV['RAILS_ENV'] ||= 'test'
+
+require 'simplecov'
 
 SimpleCov.start do
   add_group 'Models', 'app/models'
@@ -16,7 +12,6 @@ SimpleCov.start do
   add_group 'Mailers', 'app/mailers'
   add_group 'Serializers', '.*serializer.*'
   add_group 'Services', 'app/services'
-
 
   # filters.clear
   add_filter '/app/controllers/[^a][^p][^i]'
@@ -30,13 +25,12 @@ SimpleCov.start do
   add_filter '/db/'
 end
 
-
-require File.expand_path("../../config/environment", __FILE__)
+require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -44,23 +38,18 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 # for debugging, sometimes it's helpful to see the sql for each request
 # especially for our complicated / numerous relationships
-if ENV['SQL']
-  show_sql
-end
+show_sql if ENV['SQL']
 
-
-puts "!Env: #{Rails.env}:#{ENV["RAILS_ENV"]}"
+puts "!Env: #{Rails.env}:#{ENV['RAILS_ENV']}"
 
 # USE A FREAKING NORMAL TIMEZONE, SORRY INDIANA
 Time.zone = 'Central Time (US & Canada)'
 
 RSpec.configure do |config|
-
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added
   # metadata to specs based on their location on the filesystem. This was both
   # confusing to new users and not desirable for some veteran users.
   config.infer_spec_type_from_file_location!
-
 
   # ## Mock Framework
   #
@@ -87,5 +76,5 @@ RSpec.configure do |config|
   # order dependency and want to debug it, you can fix the order by providing
   # the seed, which is printed after each run.
   #     --seed 1234
-  config.order = "random"
+  config.order = 'random'
 end

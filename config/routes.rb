@@ -6,6 +6,10 @@ AeonVera::Application.routes.draw do
     }, via: [:get]
   end
 
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
   # for our frontend ui.
   # this should also enable the creation of
   # native mobile apps for android / iphone / whatever

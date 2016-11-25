@@ -16,7 +16,7 @@ gem 'attr_encrypted' # column encryption
 gem 'goldiloader' # automatic includes on everything (AR)
 gem 'skinny_controllers' # controllers, chill out!
 # gem 'rails_module_unification', github: 'NullVoxPopuli/rails_module_unification'#, path: '../rails_module_unification'
-gem 'rails_module_unification'#, path: '../rails_module_unification'
+gem 'rails_module_unification' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
@@ -78,6 +78,8 @@ group :development, :development_public, :development_remote, :test do
   gem 'rubocop'
   # list the fields in models
   gem 'annotate'
+  # capturing emails
+  gem 'letter_opener_web'
 end
 
 group :test do

@@ -35,13 +35,9 @@ AeonVera::Application.configure do
   config.action_mailer.default_url_options = { host: 'swing.vhost' }
 
   config.action_mailer.perform_deliveries = true
-  # instructions: http://mailcatcher.me/
-  # do not add this to the gem file
-  # gem install mailcatcher
-  # mailcatcher (in any terminal)
-  # browser -> localhost:1080
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
+
+  config.action_mailer.delivery_method = :letter_opener_web
+
   Mail.defaults do
     delivery_method ActionMailer::Base.delivery_method, ActionMailer::Base.smtp_settings
   end
