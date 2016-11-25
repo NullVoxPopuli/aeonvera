@@ -46,7 +46,6 @@
 #
 
 class Event < ActiveRecord::Base
-  include ::EventItemHelpers
   include SoftDeletable
   include HasPaymentProcessor
   include HasDomain
