@@ -32,7 +32,7 @@ AeonVera::Application.configure do
   config.assets.compile = true
   config.serve_static_files = false
 
-  config.action_mailer.default_url_options = { host: 'swing.vhost' }
+  config.action_mailer.default_url_options = { host: 'swing.vhost:4200' }
 
   config.action_mailer.perform_deliveries = true
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class ApplicationController < ActionController::Base
   include CommonApplicationController
 
@@ -6,16 +7,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   skip_before_filter :verify_authenticity_token
   before_action :set_time_zone
-
-  protected
-
-  def devise_parameter_sanitizer
-    if resource_class == User
-      UserParameterSanitizer.new(User, :user, params)
-    else
-      super
-    end
-  end
 
   private
 
@@ -30,8 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   # overrides devise hook
-  def after_sign_out_path_for(resource)
+  def after_sign_out_path_for(_resource)
     root_url
   end
-
 end
