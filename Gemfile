@@ -20,7 +20,7 @@ gem 'rails_module_unification' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
-gem 'roadie-rails' # enables rails' layouts for emails
+gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
 
