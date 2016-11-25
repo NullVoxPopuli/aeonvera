@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class UsersController < Api::ResourceController
     before_filter :must_be_logged_in, except: :create
@@ -16,8 +17,8 @@ module Api
       else
         current_user.errors.add(:password, 'must be present')
         render json: current_user,
-          status: 422,
-          serializer: ActiveModel::Serializer::ErrorSerializer
+               status: 422,
+               serializer: ActiveModel::Serializer::ErrorSerializer
       end
     end
 

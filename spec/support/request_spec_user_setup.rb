@@ -2,6 +2,7 @@ module RequestSpecUserSetup
   extend ActiveSupport::Concern
 
   included do
+    let(:user) { create_confirmed_user }
     let(:stray_user) { create_confirmed_user }
     let(:owner) { create_confirmed_user }
 
@@ -19,9 +20,17 @@ module RequestSpecUserSetup
         @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
       end
     end
+
+    before(:each) do
+      host! APPLICATION_CONFIG[:domain][Rails.env]
+    end
   end
 
   def auth_header_for(user)
-    @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
+    @headers = {
+      'Authorization' => 'Bearer ' + user.authentication_token,
+      # 'Accept'        => 'application/vnd.api+json',
+      # 'Content-Type'  => 'application/vnd.api+json'
+    }
   end
 end

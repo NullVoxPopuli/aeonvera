@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module UserOperations
   class Update < SkinnyControllers::Operation::Base
     def run
@@ -17,7 +18,7 @@ module UserOperations
         if current_user.upcoming_events.count > 0
           current_user.errors.add(
             :base,
-            "You cannot delete your account when you are about to attend an event. You will first have to cancel all your attendances"
+            'You cannot delete your account when you are about to attend an event. You will first have to cancel all your attendances'
           )
         else
           current_user.destroy
@@ -31,5 +32,4 @@ module UserOperations
       end
     end
   end
-
 end
