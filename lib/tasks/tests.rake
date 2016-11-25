@@ -9,6 +9,5 @@ if !(Rails.env.production? || Rails.env.staging?)
       `RAILS_ENV=test rake db:create`
       `RAILS_ENV=test rake db:schema:load`
     end
-
   end
 end

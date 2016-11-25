@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+ruby '2.3.3'
 
 ##########
 # Core
@@ -15,7 +15,8 @@ gem 'attr_encrypted' # column encryption
 
 gem 'goldiloader' # automatic includes on everything (AR)
 gem 'skinny_controllers' # controllers, chill out!
-# gem 'rails_module_unification', path: '../rails_module_unification'
+# gem 'rails_module_unification', github: 'NullVoxPopuli/rails_module_unification'#, path: '../rails_module_unification'
+gem 'rails_module_unification' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
@@ -29,8 +30,10 @@ gem 'api_cache', github: 'NullVoxPopuli/api_cache'
 
 # JSON serialization
 # gem 'active_model_serializers', git: 'https://github.com/NullVoxPopuli/active_model_serializers.git', branch: 'fields-also-whitelists-relationships'
-gem 'active_model_serializers', github: 'rails-api/active_model_serializers'
+# gem 'active_model_serializers' , github: 'rails-api/active_model_serializers'
+# gem 'active_model_serializers', path: '../active_model_serializers'
 # gem 'active_model_serializers', github: 'bf4/active_model_serializers', branch: 'smarter_association_id_lookup'
+gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
 
@@ -73,6 +76,13 @@ group :development, :development_public, :development_remote, :test do
   gem 'puma'
   # linting
   gem 'rubocop'
+  # list the fields in models
+  gem 'annotate'
+  # capturing emails
+  gem 'letter_opener_web'
+
+  # hopefully eventually used in AMS...
+  gem 'case_transform'
 end
 
 group :test do

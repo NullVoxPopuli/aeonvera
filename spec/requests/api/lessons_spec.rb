@@ -1,22 +1,8 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::LessonsController, type: :request do
-  before(:each) do
-    host! APPLICATION_CONFIG[:domain][Rails.env]
-  end
-
-  let(:organization) { create(:organization, owner: create_confirmed_user) }
-  let(:owner) { organization.hosted_by }
-  let(:admin) { create_confirmed_user }
-  let(:collaborator) { create_confirmed_user }
-  let(:host_params) { "host_id=#{organization.id}&host_type=Organization" }
-  let(:set_login_header_as) do
-    lambda do |user|
-      @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
-    end
-  end
-
-
+  include RequestSpecUserSetup
 
   context 'is not logged in' do
     it 'can not create' do
@@ -47,15 +33,12 @@ describe Api::LessonsController, type: :request do
         expect(response.status).to eq 401
       end
     end
-
   end
 
   context 'is logged in' do
-
     # for each permission set (owner, collaborator, admin)
     context 'for each permission set' do
       # users = [owner, collaborator, admin]
-
 
       context 'is owner' do
         before(:each) do
@@ -63,34 +46,19 @@ describe Api::LessonsController, type: :request do
         end
 
         context 'creating' do
-          let(:params) do
-            # TODO: use this in other places
-            lambda do |attributes = {}, relationships = {}|
-              {
-                data: {
-                  type: 'lessons',
-                  attributes: attributes,
-                  relationships: relationships.each_with_object({}) do |(k, v), h|
-                    h[k] = { data: { type: v.class.name.downcase.pluralize, id: v.id } }
-                  end
-                }
-              }
-            end
-          end
-
           it 'can create' do
-            create_params = params.call(
-              { name: 'hi', price: '2'},
-              { host: organization })
+            create_params = jsonapi_params('lessons',
+              attributes: { name: 'hi', price: '2' },
+              relationships: { host: organization})
 
             post '/api/lessons', create_params, @headers
             expect(response.status).to eq 201
           end
 
           it 'creates a lesson' do
-            create_params = params.call(
-              { name: 'hi', price: '2'},
-              { host: organization })
+            create_params = jsonapi_params('lessons',
+              attributes: { name: 'hi', price: '2' },
+              relationships: { host: organization })
 
             expect do
               post '/api/lessons', create_params, @headers
@@ -100,20 +68,11 @@ describe Api::LessonsController, type: :request do
 
         context 'on existing' do
           let!(:lesson) { create(:lesson, host: organization) }
-          let(:params) do
-            lambda do |attributes|
-              {
-                data: {
-                  type: 'lessons',
-                  id: lesson.id,
-                  attributes: attributes
-                }
-              }
-            end
-          end
 
           it 'can update' do
-            put "/api/lessons/#{lesson.id}", params.call(name: 'hi'), @headers
+            put "/api/lessons/#{lesson.id}",
+              jsonapi_params('lessons', id: lesson.id, attributes: { name: 'hi' }),
+              @headers
 
             expect(response.status).to eq 200
           end
@@ -135,7 +94,6 @@ describe Api::LessonsController, type: :request do
           end
         end
       end
-
     end
 
     context 'is non collaborator' do
@@ -162,7 +120,7 @@ describe Api::LessonsController, type: :request do
 
       context 'data exists' do
         let(:lesson) { create(:lesson, host: organization) }
-        let(:fake_json_api) {
+        let(:fake_json_api) do
           {
             data: {
               type: 'lessons',
@@ -170,7 +128,7 @@ describe Api::LessonsController, type: :request do
               attributes: {}
             }
           }
-        }
+        end
 
         it 'can read all' do
           get "/api/lessons?organization_id=#{organization.id}", {}, @headers

@@ -1,41 +1,58 @@
+# frozen_string_literal: true
+# == Schema Information
+#
+# Table name: pricing_tiers
+#
+#  id                  :integer          not null, primary key
+#  increase_by_dollars :decimal(, )      default(0.0)
+#  date                :datetime
+#  registrants         :integer
+#  event_id            :integer
+#  deleted_at          :datetime
+#
+# Indexes
+#
+#  index_pricing_tiers_on_event_id  (event_id)
+#
+
 class PricingTier < ActiveRecord::Base
   include SoftDeletable
 
   has_many :packages
   belongs_to :event
-  has_many :attendances, -> { where(attending: true).order("attendances.created_at DESC") }
+  has_many :attendances, -> { where(attending: true).order('attendances.created_at DESC') }
   has_many :orders
 
   has_and_belongs_to_many :packages,
-    join_table: "packages_pricing_tiers",
-    association_foreign_key: "pricing_tier_id", foreign_key: "package_id"
+    join_table: 'packages_pricing_tiers',
+    association_foreign_key: 'pricing_tier_id', foreign_key: 'package_id'
 
   has_many :restraints, as: :dependable
   has_many :allowed_packages, through: :restraints,
-    source: :restrictable, source_type: Package.name
+                              source: :restrictable, source_type: Package.name
 
   validates :event, presence: true
   validates :date,
     allow_blank: true,
-  date: {
-    # after: Proc.new{ |o| o.event.registration_opens_at - 1.day },
-    before: Proc.new{ |o| o.event ? o.event.ends_at : Date.today + 1000.years },
-    message: :invalid_date
-  }
+    date: {
+      # after: Proc.new{ |o| o.event.registration_opens_at - 1.day },
+      before: proc { |o| o.event ? o.event.ends_at : Date.today + 1000.years },
+      message: :invalid_date
+    }
 
-  scope :before, ->(object){
+  scope :before, ->(object) {
     if object.is_a?(PricingTier)
       table = object.class.arel_table
       attendance_table = Attendance.arel_table
 
       where(
-        (
-          # table[:date].not_eq(nil) &&
-          table[:date].lt((object.date || Date.today))
-        ).or(
-          # table[:registrants].not_eq(nil) &&
-          table[:registrants].lteq(object.registrants)
-        )
+
+        # table[:date].not_eq(nil) &&
+        table[:date].lt((object.date || Date.today))
+      .or(
+        # table[:registrants].not_eq(nil) &&
+        table[:registrants].lteq(object.registrants)
+      )
       )
     end
   }
@@ -66,7 +83,7 @@ class PricingTier < ActiveRecord::Base
     tiers.each do |pt|
       restricted_to = pt.allowed_packages
 
-      if restricted_to.empty? or restricted_to.include?(package)
+      if restricted_to.empty? || restricted_to.include?(package)
         result += pt.amount
       end
     end
@@ -74,19 +91,14 @@ class PricingTier < ActiveRecord::Base
     result
   end
 
-
   def should_apply_amount?
     result = false
     # account for race condition where Date.today doesn't eval to the same date
-    if date && date <= Date.today + 1.minute
-      result = true
-    end
+    result = true if date && date <= Date.today + 1.minute
 
-    if registrants && registrants <= event.attendances.count
-      result = true
-    end
+    result = true if registrants && registrants <= event.attendances.count
 
-    return result
+    result
   end
 
   def amount
@@ -103,5 +115,4 @@ class PricingTier < ActiveRecord::Base
     # otherwise, return the previous tiers
     index < 0 ? [] : tiers[0..index]
   end
-
 end

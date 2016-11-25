@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: levels
+#
+#  id          :integer          not null, primary key
+#  name        :string(255)
+#  sequence    :integer
+#  requirement :integer
+#  event_id    :integer
+#  created_at  :datetime
+#  updated_at  :datetime
+#  deleted_at  :datetime
+#
+# Indexes
+#
+#  index_levels_on_event_id  (event_id)
+#
+
 class Level < ActiveRecord::Base
   include SoftDeletable
 

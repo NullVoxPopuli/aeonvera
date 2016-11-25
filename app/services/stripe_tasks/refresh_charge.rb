@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # example charge, and then refund
 # initial charge: 105 <- also net received
 # added fees:     4.29
@@ -17,12 +18,12 @@ module StripeTasks
     module_function
 
     def run(order)
-      charge_id = order.stripe_charge.try(:[], "id")
+      charge_id = order.stripe_charge.try(:[], 'id')
       return unless charge_id
 
       stripe_config = order.stripe_config
       return unless stripe_config
-      token = stripe_config["access_token"]
+      token = stripe_config['access_token']
       charge_object = Stripe::Charge.retrieve(charge_id, token)
       # this will give us
       # - amount_received

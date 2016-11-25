@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe MembershipRenewalOperations do
-  let(:klass){ MembershipRenewalOperations }
+describe Api::MembershipRenewalOperations do
+  let(:klass){ Api::MembershipRenewalOperations }
 
   context 'ReadAll' do
     context 'organization' do

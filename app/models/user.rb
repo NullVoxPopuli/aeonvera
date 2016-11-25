@@ -1,3 +1,40 @@
+# frozen_string_literal: true
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :integer          not null, primary key
+#  first_name             :string(255)
+#  last_name              :string(255)
+#  email                  :string(255)      default(""), not null
+#  encrypted_password     :string(255)      default(""), not null
+#  reset_password_token   :string(255)
+#  reset_password_sent_at :datetime
+#  remember_created_at    :datetime
+#  sign_in_count          :integer          default(0)
+#  current_sign_in_at     :datetime
+#  last_sign_in_at        :datetime
+#  current_sign_in_ip     :string(255)
+#  last_sign_in_ip        :string(255)
+#  confirmation_token     :string(255)
+#  confirmed_at           :datetime
+#  confirmation_sent_at   :datetime
+#  unconfirmed_email      :string(255)
+#  failed_attempts        :integer          default(0)
+#  unlock_token           :string(255)
+#  locked_at              :datetime
+#  created_at             :datetime
+#  updated_at             :datetime
+#  deleted_at             :datetime
+#  time_zone              :string(255)
+#  authentication_token   :string
+#
+# Indexes
+#
+#  index_users_on_email                 (email) UNIQUE
+#  index_users_on_reset_password_token  (reset_password_token) UNIQUE
+#
+
 class User < ActiveRecord::Base
   include SoftDeletable
   include HasMemberships
@@ -7,22 +44,22 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
     :recoverable, :rememberable, :trackable, :validatable,
-    :confirmable, :lockable#, :omniauthable
+    :confirmable, :lockable # , :omniauthable
 
   has_many :integrations,
-  :dependent => :destroy,
-  :extend => Extensions::Integrations,
-  as: :owner
+    dependent: :destroy,
+    extend: Extensions::Integrations,
+    as: :owner
 
   has_many :organizations, foreign_key: 'owner_id'
-  has_many :hosted_events, class_name: "Event", foreign_key: "hosted_by_id"
+  has_many :hosted_events, class_name: 'Event', foreign_key: 'hosted_by_id'
   has_many :event_attendances,
-    ->{ where("attendance_type = '#{EventAttendance.name}'") },
-    foreign_key: "attendee_id",
+    -> { where("attendance_type = '#{EventAttendance.name}'") },
+    foreign_key: 'attendee_id',
     class_name: EventAttendance.name
 
   has_many :attended_events, through: :event_attendances, source: :host, source_type: Event.name
-  has_many :attendances, foreign_key: "attendee_id"
+  has_many :attendances, foreign_key: 'attendee_id'
   has_many :collaborated_events, through: :collaborations, source: :collaborated, source_type: Event.name
   has_many :collaborated_organizations, through: :collaborations, source: :collaborated, source_type: Organization.name
   has_many :collaborations
@@ -46,7 +83,8 @@ class User < ActiveRecord::Base
   ransacker :full_name do |parent|
     Arel::Nodes::NamedFunction.new(
       'concat_ws',
-      [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]])
+      [Arel::Nodes.build_quoted(' '), parent.table[:first_name], parent.table[:last_name]]
+    )
   end
 
   # @return [Attendance] the attendance record for this user for the specified event
@@ -54,8 +92,8 @@ class User < ActiveRecord::Base
     attendances.where(host: event).first
   end
 
-  alias_method :attendance_for_host, :attendance_for_event
-  alias_method :attendance_for_organization, :attendance_for_event
+  alias attendance_for_host attendance_for_event
+  alias attendance_for_organization attendance_for_event
 
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
   # Overriding the find_for_database_authentication method allows you to edit database authentication ;
@@ -121,7 +159,6 @@ class User < ActiveRecord::Base
     confirmable
   end
 
-
   # There is yet again something wrong with Devise (as of Jan 25 2014)
   # This is having the same issues as the confirm by token method, in that
   #  the are cerating a new token for no documented reason, and checking against that
@@ -133,7 +170,7 @@ class User < ActiveRecord::Base
   # try saving the record. If not user is found, returns a new user
   # containing an error in reset_password_token attribute.
   # Attributes must contain reset_password_token, password and confirmation
-  def self.reset_password_by_token(attributes={})
+  def self.reset_password_by_token(attributes = {})
     # original_token       = attributes[:reset_password_token]
     # reset_password_token = Devise.token_generator.digest(self, :reset_password_token, original_token)
 
@@ -180,7 +217,7 @@ class User < ActiveRecord::Base
   end
 
   def upcoming_events
-    @upcoming_events ||= self.attended_events.where("starts_at > '#{Time.now.to_s(:db)}'")
+    @upcoming_events ||= attended_events.where("starts_at > '#{Time.now.to_s(:db)}'")
   end
 
   def attending_upcoming_events?
@@ -188,26 +225,26 @@ class User < ActiveRecord::Base
   end
 
   def is_a_manager_of?(host)
-    return (
+    (
       host.owner == self ||
       host.collaborators.include?(self)
     )
   end
 
   def ensure_authentication_token
-   if authentication_token.blank?
-     self.authentication_token = generate_authentication_token
-   end
- end
+    if authentication_token.blank?
+      self.authentication_token = generate_authentication_token
+    end
+  end
 
   protected
 
   # ensure that the user is not signed up for an upcoming event
   def not_attending_event?
-    if self.attending_upcoming_events?
-      event_names = self.upcoming_events.map(&:name).join(', ')
-      self.errors[:base] << "You may not delete your account when you are attending an upcoming event. (#{event_names})"
-      return false
+    if attending_upcoming_events?
+      event_names = upcoming_events.map(&:name).join(', ')
+      errors[:base] << "You may not delete your account when you are attending an upcoming event. (#{event_names})"
+      false
     end
   end
 
@@ -218,5 +255,4 @@ class User < ActiveRecord::Base
       break token unless User.where(authentication_token: token).first
     end
   end
-
 end

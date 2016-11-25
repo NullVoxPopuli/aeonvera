@@ -9,14 +9,15 @@ describe 'AMS monkey patches' do
       attendance = build(:attendance, attendee: user, host: event)
       housing_provision = build(:housing_provision, attendance: attendance, host: event)
 
-      # fields = { housing_provisions: [ :id, :housing_capacity, { attendance: [ :attendee_name ] } ] }
       fields = [:id, :housing_capacity, { attendance: [:attendee_name] }]
       options = {
         adapter: :attributes,
         key_transform: :underscore,
-        fields: fields
+        fields: fields,
+        serializer: Api::HousingProvisionSerializer
       }
-      result = ActiveModelSerializers::SerializableResource.new(housing_provision, options).serializable_hash
+      resource = ActiveModelSerializers::SerializableResource.new(housing_provision, options)
+      result = resource.serializable_hash
 
       expected = {
         id: nil,
@@ -24,7 +25,6 @@ describe 'AMS monkey patches' do
         attendance: {
           attendee_name: "Æonvera User Test"
         }
-
       }
 
       expect(result).to eq expected
@@ -41,24 +41,27 @@ describe 'AMS monkey patches' do
       options = {
         adapter: :attributes,
         key_transform: :underscore,
-        fields: fields
+        fields: fields,
+        each_serializer: Api::HousingProvisionSerializer
       }
       result = ActiveModelSerializers::SerializableResource.new([housing_provision, housing_provision], options).serializable_hash
 
-      expected = [{
-        id: nil,
-        housing_capacity: 10,
-        attendance: {
-          attendee_name: "Æonvera User Test"
+      expected = [
+        {
+          id: nil,
+          housing_capacity: 10,
+          attendance: {
+            attendee_name: "Æonvera User Test"
+          }
+        },
+        {
+          id: nil,
+          housing_capacity: 10,
+          attendance: {
+            attendee_name: "Æonvera User Test"
+          }
         }
-      },
-      {
-        id: nil,
-        housing_capacity: 10,
-        attendance: {
-          attendee_name: "Æonvera User Test"
-        }
-      }]
+      ]
 
       expect(result).to eq expected
     end

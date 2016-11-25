@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe OrderOperations::Create do
-  let(:klass) { OrderOperations::Create }
+describe Api::OrderOperations::Create do
+  let(:klass) { Api::OrderOperations::Create }
   # This is only for the parameter mapping
   let(:controller) { Api::OrdersController.new }
 

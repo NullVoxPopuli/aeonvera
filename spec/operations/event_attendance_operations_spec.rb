@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe EventAttendanceOperations::Create do
-  let(:klass) { EventAttendanceOperations::Create }
+describe Api::EventAttendanceOperations::Create do
+  let(:klass) { Api::EventAttendanceOperations::Create }
   let(:user) { create(:user) }
   let(:event) { create(:event) }
   let(:package) { create(:package, event: event) }

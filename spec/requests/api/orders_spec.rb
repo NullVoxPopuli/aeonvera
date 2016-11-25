@@ -83,6 +83,19 @@ describe Api::OrdersController, type: :request do
   context 'is logged in' do
     let(:user) { create_confirmed_user }
 
+    it 'can view all their orders' do
+      create(:order, user: user, attendance: create(:attendance, attendee: user))
+      get '/api/orders', {}, auth_header_for(user)
+      expect(response.status).to eq 200
+      expect(json_api_data.count).to eq 1
+    end
+
+    it 'orders from others are not included' do
+      create(:order, attendance: create(:attendance))
+      get '/api/orders', {}, auth_header_for(user)
+      expect(json_api_data).to be_empty
+    end
+
     it 'cannot view someone elses order' do
       order = create(:order, attendance: create(:attendance))
       get "/api/orders/#{order.id}", {}, auth_header_for(user)

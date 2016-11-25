@@ -1,8 +1,7 @@
+# frozen_string_literal: true
 module StripeTasks
   module ChargeCard
-
     module_function
-
 
     # requires that a host (event, org) exists
     # also integration
@@ -23,18 +22,16 @@ module StripeTasks
       amount = order.total(absorb_fees: absorb_fees)
 
       begin
-        chargeData =  {
+        chargeData = {
           amount: to_cents(amount),
-          currency: "usd",
+          currency: 'usd',
           source: token,
           description: email,
-          statement_descriptor: statement_description(description).gsub(/'/, ''),
+          statement_descriptor: statement_description(description).delete("'"),
           receipt_email: email
         }
 
-        if !beta
-          chargeData[:application_fee] = to_cents(order.application_fee)
-        end
+        chargeData[:application_fee] = to_cents(order.application_fee) unless beta
 
         charge = Stripe::Charge.create(chargeData, secret_key)
         order.handle_stripe_charge(charge)
@@ -48,7 +45,6 @@ module StripeTasks
       order
     end
 
-
     # @param [Integer] from amount to be charged
     # @param [Integer] multiplier what to multiply the amount by
     # @param [Symbol] output conversion method
@@ -59,6 +55,5 @@ module StripeTasks
     def statement_description(string)
       string.length > 15 ? string[0..14] : string
     end
-
   end
 end

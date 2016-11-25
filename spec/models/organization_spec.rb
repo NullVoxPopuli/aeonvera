@@ -1,3 +1,33 @@
+# == Schema Information
+#
+# Table name: organizations
+#
+#  id                         :integer          not null, primary key
+#  name                       :string(255)
+#  tagline                    :string(255)
+#  city                       :string(255)
+#  state                      :string(255)
+#  beta                       :boolean          default(FALSE), not null
+#  owner_id                   :integer
+#  deleted_at                 :datetime
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  domain                     :string(255)
+#  make_attendees_pay_fees    :boolean
+#  logo_file_name             :string(255)
+#  logo_content_type          :string(255)
+#  logo_file_size             :integer
+#  logo_updated_at            :datetime
+#  notify_email               :string
+#  email_all_purchases        :boolean          default(FALSE), not null
+#  email_membership_purchases :boolean          default(FALSE), not null
+#  contact_email              :string
+#
+# Indexes
+#
+#  index_organizations_on_domain  (domain)
+#
+
 require 'spec_helper'
 
 describe Organization do

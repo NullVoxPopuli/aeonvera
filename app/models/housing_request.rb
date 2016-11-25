@@ -1,3 +1,34 @@
+# == Schema Information
+#
+# Table name: housing_requests
+#
+#  id                             :integer          not null, primary key
+#  need_transportation            :boolean
+#  can_provide_transportation     :boolean          default(FALSE), not null
+#  transportation_capacity        :integer          default(0), not null
+#  allergic_to_pets               :boolean          default(FALSE), not null
+#  allergic_to_smoke              :boolean          default(FALSE), not null
+#  other_allergies                :string(255)
+#  requested_roommates            :text
+#  unwanted_roommates             :text
+#  preferred_gender_to_house_with :string(255)
+#  notes                          :text
+#  attendance_id                  :integer
+#  attendance_type                :string(255)
+#  host_id                        :integer
+#  host_type                      :string(255)
+#  housing_provision_id           :integer
+#  created_at                     :datetime
+#  updated_at                     :datetime
+#  name                           :string
+#  deleted_at                     :datetime
+#
+# Indexes
+#
+#  index_housing_requests_on_attendance_id_and_attendance_type  (attendance_id,attendance_type)
+#  index_housing_requests_on_host_id_and_host_type              (host_id,host_type)
+#
+
 class HousingRequest < ActiveRecord::Base
   include CSVOutput
   include SoftDeletable

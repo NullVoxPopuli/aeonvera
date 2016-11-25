@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Api::Users::RegistrationsController, type: :controller do
   before(:each) do
     @request.env["devise.mapping"] = Devise.mappings[:api_user]
-    ActiveModel::Serializer.config.adapter = ActiveModel::Serializer::Adapter::JsonApi
+    ActiveModelSerializers.config.adapter = :json_api
   end
 
   context 'create' do
@@ -22,7 +22,7 @@ describe Api::Users::RegistrationsController, type: :controller do
         }
       }.to change(User, :count).by(1)
 
-      expected = ActiveModel::SerializableResource.new(user).serializable_hash.to_json
+      expected = ActiveModelSerializers::SerializableResource.new(user).serializable_hash.to_json
       # the difference here is the confirmation sent at...
       # I don't know how to ignore that during the compare atm
       expect(response.body).to_not be_nil
@@ -65,7 +65,7 @@ describe Api::Users::RegistrationsController, type: :controller do
         }
       }.to change(User, :count).by(0)
 
-      expected = ActiveModel::SerializableResource.new(user).serializable_hash.to_json
+      expected = ActiveModelSerializers::SerializableResource.new(user).serializable_hash.to_json
       # the difference here is the confirmation sent at...
       # I don't know how to ignore that during the compare atm
       json = JSON.parse(response.body)

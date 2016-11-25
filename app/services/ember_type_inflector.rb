@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module EmberTypeInflector
   module_function
 

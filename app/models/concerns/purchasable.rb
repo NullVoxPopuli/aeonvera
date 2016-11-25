@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Purchasable
   extend ActiveSupport::Concern
 
@@ -5,13 +6,12 @@ module Purchasable
     has_many :order_line_items, as: :line_item, inverse_of: :line_item
 
     has_many :orders,
-             through: :order_line_items,
-             source: :order#,
-            #  inverse_of: :line_items
+      through: :order_line_items,
+      source: :order
 
     has_many :purchasers,
-             through: :orders,
-             source: :attendance,
-             inverse_of: :purchased_items
+      through: :orders,
+      source: :attendance,
+      inverse_of: :purchased_items
   end
 end

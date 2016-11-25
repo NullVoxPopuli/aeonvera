@@ -1,4 +1,0 @@
-class OrganizationOrder < Order
-
-
-end

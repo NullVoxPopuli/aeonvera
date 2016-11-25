@@ -5,18 +5,20 @@ module JsonApiErrors
   protected
 
   def must_be_logged_in
-    unless current_user
-      render json: {
-        jsonapi: { version: '1.0' },
-        errors: [
-          {
-            code: 401,
-            title: 'Unauthorized'
-          }
-        ]
-      }, status: 401
-      return false
-    end
+    return if current_user
+
+    render json: {
+      jsonapi: { version: '1.0' },
+      errors: [
+        {
+          code: 401,
+          title: 'Unauthorized'
+        }
+      ]
+    }, status: 401
+
+    # halt the action chain
+    false
   end
 
   def not_found(id_key = nil)

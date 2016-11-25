@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module HasMemberships
   extend ActiveSupport::Concern
 
   included do
-    has_many :renewals, class_name: "::MembershipRenewal"
+    has_many :renewals, class_name: '::MembershipRenewal'
     has_many :memberships, through: :renewals, source: :user
   end
 
@@ -16,12 +17,10 @@ module HasMemberships
 
   def is_member_of?(organization)
     organization.membership_options.each do |option|
-      if self.is_renewal_active?(option)
-        return true
-      end
+      return true if is_renewal_active?(option)
     end
 
-    return false
+    false
   end
 
   def membership_expires_at(organization)
@@ -31,24 +30,23 @@ module HasMemberships
 
   def latest_active_renewal(organization)
     latest = nil
+
     organization.membership_options.each do |option|
       local_latest = latest_renewal_for_membership(option)
-      if is_renewal_active?(local_latest)
-        if latest and latest.duration < local_tatest.duration
-          latest = local_latest
-        end
-        latest = local_latest if latest.nil?
-      end
+      next unless is_renewal_active?(local_latest)
+
+      latest = local_latest if latest && latest.duration < local_tatest.duration
+      latest = local_latest if latest.nil?
     end
 
     latest
   end
 
   def first_renewal_for_membership(membership_option)
-    membership_option.renewals.where(user_id: self.id).first
+    membership_option.renewals.where(user_id: id).first
   end
 
   def latest_renewal_for_membership(membership_option)
-    membership_option.renewals.where(user_id: self.id).last
+    membership_option.renewals.where(user_id: id).last
   end
 end

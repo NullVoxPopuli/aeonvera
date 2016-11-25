@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CsvGeneration
   module_function
 
@@ -14,7 +15,7 @@ module CsvGeneration
   end
 
   def flat_hash(hash)
-    return hash.map{|h| flat_hash(h)} if hash.is_a?(Array)
+    return hash.map { |h| flat_hash(h) } if hash.is_a?(Array)
     result = {}
     hash.each do |k, v|
       if v.is_a?(Hash)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Duration
   extend ActiveSupport::Concern
 
@@ -11,14 +12,14 @@ module Duration
     DURATION_WEEK,
     DURATION_MONTH,
     DURATION_YEAR
-  ]
+  ].freeze
 
   DURATION_NAMES = {
-    DURATION_DAY => "Day",
-    DURATION_WEEK => "Week",
-    DURATION_MONTH => "Month",
-    DURATION_YEAR => "Year"
-  }
+    DURATION_DAY => 'Day',
+    DURATION_WEEK => 'Week',
+    DURATION_MONTH => 'Month',
+    DURATION_YEAR => 'Year'
+  }.freeze
 
   def duration
     unit_method = DURATION_NAMES[duration_unit].downcase.pluralize
@@ -28,5 +29,4 @@ module Duration
   def duration_in_words
     "#{duration_amount} #{DURATION_NAMES[duration_unit]}"
   end
-
 end
