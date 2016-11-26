@@ -15,6 +15,8 @@ module Api
     before_action :enforce_search_parameters, only: [:index]
 
     def index
+      return all if params[:all]
+
       model = MemberOperations::ReadAll.new(current_user, params).run
       respond_to do |format|
         format.json { render_models }

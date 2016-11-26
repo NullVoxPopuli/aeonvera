@@ -25,7 +25,7 @@ module HasMemberships
 
   def member_since(organization)
     renewal = oldest_renewal(organization)
-    renewal.try(:created_at)
+    renewal.try(:start_date)
   end
 
   def membership_expires_at(organization)
@@ -33,14 +33,15 @@ module HasMemberships
     renewal.try(:expires_at)
   end
 
+  # this causes performance problems
   def oldest_renewal(organization)
-    oldest = nil
-
-    organization.membership_options.map do |option|
-      first_renewal_for_membership(option)
-    end.sort_by(&:created_at)
-
-    oldest
+    organization
+      .membership_options.map do |option|
+        first_renewal_for_membership(option)
+      end
+      .compact
+      .sort_by(&:start_date)
+      .first
   end
 
   def latest_active_renewal(organization)

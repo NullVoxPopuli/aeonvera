@@ -34,7 +34,7 @@ describe Api::MembersController, type: :request do
           'last_name'             => stray_user.last_name,
           'email'                 => stray_user.email,
           'is_active_member'      => stray_user.is_member_of?(organization).to_s,
-          'member_since'          => stray_user.member_since(organization),
+          'member_since'          => stray_user.member_since(organization).iso8601,
           'membership_expires_at' => stray_user.membership_expires_at(organization).iso8601
         }
         expect(first_user).to eq expected
