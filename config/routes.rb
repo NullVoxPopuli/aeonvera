@@ -32,7 +32,11 @@ AeonVera::Application.routes.draw do
     resources :lessons
     resources :dances
     resources :restraints, except: [:show]
-    resources :members # list of users
+    resources :members do
+      collection do
+        get :all
+      end
+    end
     resources :membership_renewals
     resources :membership_options
 

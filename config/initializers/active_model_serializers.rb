@@ -56,7 +56,7 @@ module AttributeFieldHack
   def serializable_hash(options = {})
     hash = super
 
-    fields = JSONAPI::IncludeDirective.new(options[:fields]).to_hash
+    fields = options ? JSONAPI::IncludeDirective.new(options[:fields]).to_hash : {}
     apply_fields_whitelist(hash, fields)
   end
 

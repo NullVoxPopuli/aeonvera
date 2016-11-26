@@ -2,13 +2,18 @@
 module CsvGeneration
   module_function
 
-  def model_to_csv(model, fields_from_params = nil)
+  def model_to_csv(model, fields_from_params = nil, skip_serialization: false)
     options = { adapter: :attributes }
+
     if fields_from_params
       fields = JSONAPI::IncludeDirective.new(fields_from_params).to_hash
       options[:fields] = ActiveModelSerializers::KeyTransform.underscore(fields)
     end
-    hash = ActiveModelSerializers::SerializableResource.new(model, options).as_json
+    hash = if skip_serialization
+             model
+           else
+             ActiveModelSerializers::SerializableResource.new(model, options).as_json
+           end
 
     hash = flat_hash(hash)
     collection_to_csv(hash)
@@ -28,6 +33,8 @@ module CsvGeneration
   end
 
   def collection_to_csv(models)
+    return unless models.present?
+
     CSV.generate do |csv|
       csv << models.first.keys
       models.each do |model|
