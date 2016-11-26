@@ -64,6 +64,9 @@ class User < ActiveRecord::Base
   has_many :collaborated_organizations, through: :collaborations, source: :collaborated, source_type: Organization.name
   has_many :collaborations
 
+  has_many :membership_renewals
+  has_many :memberships, through: :membership_renewals, source: :membership_option
+
   has_many :levels
   has_many :discounts
   has_many :shirts

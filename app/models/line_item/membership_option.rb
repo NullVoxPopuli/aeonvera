@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: line_items
@@ -41,10 +42,9 @@ class LineItem::MembershipOption < LineItem
   # this shouldn't need to be here, but rspec fails without,
   # even though the superclass has this exact association
   belongs_to :organization, class_name: Organization.name,
-    foreign_key: "host_id", foreign_type: "host_type", polymorphic: true
+                            foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
-
-  has_many :renewals, class_name: "::MembershipRenewal"
+  has_many :renewals, class_name: '::MembershipRenewal'
   has_many :members, through: :renewals, source: :user
 
   has_many :order_line_items, -> {
@@ -56,8 +56,19 @@ class LineItem::MembershipOption < LineItem
   validates :duration_unit, presence: true
   validates :price, presence: true
 
+  # expired, expires_at, and duration
+  # are all computed fields, so we can't directly query
+  # for active members
+  def active_members
+    active_renewals.map(&:user)
+  end
+
+  def active_renewals
+    renewals.select { |r| !r.expired? }
+  end
+
   def create_renewal_for_user(user, date: Time.now)
-    renewal = self.renewals.new(
+    renewal = renewals.new(
       user: user,
       start_date: date
     )

@@ -75,7 +75,19 @@ class Organization < ActiveRecord::Base
     -> { where(item_type: 'LineItem::MembershipOption') },
     class_name: LineItem::MembershipOption.name, as: :host
 
+  # Members are just Users that have a relationship to an organization via:
+  #  User -> Membership Renewal -> Membership Option -> Organization
+  has_many :members, -> { uniq },
+    through: :membership_options,
+    source: :members
+
   alias_attribute :user_id, :owner_id
+
+  # activeness is calculated and therefore can't
+  # be directly queried :-(
+  def active_members
+    membership_options.map(&:active_members).flatten.uniq
+  end
 
   def available_dances
     available_items(:dances, LineItem::Dance)
@@ -104,16 +116,17 @@ class Organization < ActiveRecord::Base
 
   private
 
+  # Who needs SQL?
   def available_items(association_name, klass)
-    table = klass.arel_table
+    table            = klass.arel_table
     starts_at_column = table[:registration_opens_at]
     closes_at_column = table[:registration_closes_at]
-    now = Time.now
+    now              = Time.now
 
-    both_dates_exist = starts_at_column.lt(now).and(closes_at_column.gt(now))
+    both_dates_exist         = starts_at_column.lt(now).and(closes_at_column.gt(now))
     only_closing_date_exists = starts_at_column.eq(nil).and(closes_at_column.gt(now))
     only_opening_date_exists = closes_at_column.eq(nil).and(starts_at_column.eq(now))
-    no_dates = closes_at_column.eq(nil).and(starts_at_column.eq(nil))
+    no_dates                 = closes_at_column.eq(nil).and(starts_at_column.eq(nil))
 
     send(association_name)
       .where(no_dates

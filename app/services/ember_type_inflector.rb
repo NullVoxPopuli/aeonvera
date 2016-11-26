@@ -20,6 +20,8 @@ module EmberTypeInflector
   end
 
   # at this point, it'd be better to white list, than to black list
+  #
+  # This is a lame hack, because ember doesn't namespace models
   NON_LINE_ITEMS = [
     MembershipDiscount.name, Package.name, Competition.name,
     Event.name, Organization.name, Discount.name,

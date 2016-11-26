@@ -1,5 +1,8 @@
+# frozen_string_literal: true
 module Api
   class MembershipRenewalSerializer < ActiveModel::Serializer
+    type 'membership_renewals'
+
     attributes :id, :start_date, :expires_at, :expired, :duration, :_id
 
     class LineItem::MembershipOptionSerializer < Api::MembershipOptionSerializer
@@ -7,11 +10,6 @@ module Api
     end
 
     belongs_to :membership_option
-
-    class MemberSerializer < ActiveModel::Serializer
-      type 'members'
-      attributes :id, :first_name, :last_name, :email
-    end
     belongs_to :member, serializer: MemberSerializer
 
     def member

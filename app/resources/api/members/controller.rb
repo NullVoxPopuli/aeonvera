@@ -1,24 +1,24 @@
+# frozen_string_literal: true
 module Api
-  class MembersController < APIController
-    before_filter :must_be_logged_in
+  class MembersController < ResourceController
+    self.model_class = User
+    self.model_key = 'member'
+    self.association_name = 'members'
+    self.serializer = MemberSerializer
 
-    def index
-      search = User.ransack(search_params)
-      render json: search.result, each_serializer: MembershipRenewalSerializer::MemberSerializer
-    end
-
-    def index_params
-      # filter out members, by requiring the organization_id
-    end
+    before_action :must_be_logged_in
+    before_action :enforce_search_parameters, only: [:index]
 
     private
 
-    def search_params
+    def enforce_search_parameters
       params[:q] ||= {}
       params[:q][:confirmed_at_not_null] = true
-
-      params[:q]
     end
 
+    def index_member_params
+      params.require(:organization_id)
+      params
+    end
   end
 end
