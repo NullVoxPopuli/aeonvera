@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class ResourceController < APIController
     include SkinnyControllers::Diet
@@ -7,6 +8,10 @@ module Api
     def index
       respond_to do |format|
         format.json { render_models }
+        format.csv do
+          csv_data = CsvGeneration.model_to_csv(model, params[:fields])
+          send_data(csv_data)
+        end
       end
     end
 

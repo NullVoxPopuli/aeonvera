@@ -81,4 +81,8 @@ class LineItem < ActiveRecord::Base
       becomes_available_at.lt(time).or(becomes_available_at.eq(nil))
     )
   }
+
+  def expired?
+    Time.now > expires_at
+  end
 end

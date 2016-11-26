@@ -6,6 +6,10 @@ AllCops:
   DisplayStyleGuide: true
   TargetRubyVersion: 2.3
 
+# Prefer short-arrow syntax (->) to the full `lambda` keyword
+Style/Lambda:
+  Enabled: false
+
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
