@@ -1,6 +1,4 @@
 # frozen_string_literal: true
-SkinnyControllers.controller_namespace = 'Api'
-
 module SkinnyControllers
   module Operation
     module ModelHelpers
