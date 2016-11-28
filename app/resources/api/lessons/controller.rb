@@ -1,8 +1,5 @@
 module Api
   class LessonsController < Api::ResourceController
-    # self.model_class = LineItem::Lesson
-    # self.model_key = :lesson
-
     before_filter :must_be_logged_in, except: [:index, :show]
 
     def index

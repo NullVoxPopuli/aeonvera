@@ -1,8 +1,5 @@
 module Api
   class ShirtsController < Api::EventResourceController
-    # self.model_class = LineItem::Shirt
-    # self.model_key = 'shirt'
-
     private
 
     # NOTE `sizes` in an out-of-convention structure that is handled in
