@@ -2,7 +2,8 @@ module Api
   class EventAttendancesController < APIController
     include SkinnyControllers::Diet
     include EventLoader
-    self.model_class = EventAttendance
+
+    skinny_controllers_config model_class: EventAttendance
 
     before_filter :must_be_logged_in
 

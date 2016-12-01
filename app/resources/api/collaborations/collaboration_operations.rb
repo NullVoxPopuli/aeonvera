@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Api
-    module CollaborationOperations
-
+  module CollaborationOperations
     # Below are all the available actions an Operation can have.
     # These directly correlate to the controller actions.  None of
     # the operations below are required. Default functionality is basic CRUD,

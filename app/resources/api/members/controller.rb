@@ -6,9 +6,10 @@ module Api
   # The current user must supply an organization_id that they
   # manage to be able to to view this data
   class MembersController < ResourceController
-    self.model_class = User
-    self.model_key = 'member'
-    self.association_name = 'members'
+    skinny_controllers_config model_class: User,
+                              model_params_key: 'member',
+                              association_name: 'members'
+
     self.serializer = MemberSerializer
 
     before_action :must_be_logged_in
