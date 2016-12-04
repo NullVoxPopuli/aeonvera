@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160901004243) do
+ActiveRecord::Schema.define(version: 20161204144608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -324,6 +324,18 @@ ActiveRecord::Schema.define(version: 20160901004243) do
   add_index "membership_renewals", ["membership_option_id"], name: "index_membership_renewals_on_membership_option_id", using: :btree
   add_index "membership_renewals", ["user_id", "membership_option_id"], name: "index_membership_renewals_on_user_id_and_membership_option_id", using: :btree
   add_index "membership_renewals", ["user_id"], name: "index_membership_renewals_on_user_id", using: :btree
+
+  create_table "notes", force: :cascade do |t|
+    t.text     "note"
+    t.integer  "host_id"
+    t.string   "host_type"
+    t.integer  "target_id"
+    t.string   "target_type"
+    t.integer  "author_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "order_line_items", force: :cascade do |t|
     t.integer  "order_id"

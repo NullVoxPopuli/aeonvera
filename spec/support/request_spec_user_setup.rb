@@ -14,6 +14,12 @@ module RequestSpecUserSetup
       event.save
       user
     end
+    let(:organization_collaborator) do
+      user = create_confirmed_user
+      organization.collaborators << user
+      organization.save
+      user
+    end
 
     let(:set_login_header_as) do
       lambda do |user|

@@ -58,6 +58,12 @@ FactoryGirl.define do
     end
   end
 
+  factory :note do
+    note 'some notes and stuff'
+    author factory: :user
+    target factory: :user
+  end
+
   factory :raffle do
     name 'Some Test Raffle'
     event

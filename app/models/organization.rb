@@ -53,6 +53,7 @@ class Organization < ActiveRecord::Base
 
   has_many :attendances, as: :host, class_name: OrganizationAttendance.name
 
+  has_many :notes, as: :host
   has_many :integrations,
     dependent: :destroy,
     extend: Extensions::Integrations,
