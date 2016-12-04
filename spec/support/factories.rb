@@ -59,7 +59,7 @@ FactoryGirl.define do
   end
 
   factory :note do
-    text 'some notes and stuff'
+    note 'some notes and stuff'
     author factory: :user
     target factory: :user
   end

@@ -8,7 +8,7 @@ module Api
     def create_note_params
       whitelistable_params(polymorphic: [:target, :host]) do |whitelister|
         whitelister.permit(
-          :text,
+          :note,
           :target_id, :target_type,
           :host_id, :host_type
         )
@@ -17,7 +17,7 @@ module Api
 
     def update_note_params
       whitelistable_params do |whitelister|
-        whitelister.permit(:text)
+        whitelister.permit(:note)
       end
     end
 

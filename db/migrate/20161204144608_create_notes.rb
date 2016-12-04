@@ -6,6 +6,7 @@ class CreateNotes < ActiveRecord::Migration
       t.references :target, polymorphic: true
       t.references :author # user
 
+      t.datetime :deleted_at
       t.timestamps
     end
   end

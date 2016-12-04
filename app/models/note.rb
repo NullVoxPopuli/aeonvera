@@ -10,12 +10,17 @@
 #  target_id   :integer
 #  target_type :string
 #  author_id   :integer
+#  deleted_at  :datetime
 #  created_at  :datetime
 #  updated_at  :datetime
 #
 
 class Note < ActiveRecord::Base
+  include SoftDeletable
+
   belongs_to :author, class_name: User.name
   belongs_to :target, polymorphic: true
   belongs_to :host, polymorphic: true
+
+  validates :author, :target, presence: true
 end

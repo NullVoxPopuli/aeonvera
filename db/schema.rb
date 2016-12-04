@@ -332,6 +332,7 @@ ActiveRecord::Schema.define(version: 20161204144608) do
     t.integer  "target_id"
     t.string   "target_type"
     t.integer  "author_id"
+    t.datetime "deleted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

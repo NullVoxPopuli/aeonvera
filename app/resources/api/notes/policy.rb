@@ -3,7 +3,7 @@ module Api
   class NotePolicy < SkinnyControllers::Policy::Base
     def read_all?
       object.map(&:host).uniq.map do |host|
-        host.is_at_least_a_collaborator?
+        is_at_least_a_collaborator?(host)
       end.all?
     end
 
@@ -25,8 +25,8 @@ module Api
 
     private
 
-    def is_at_least_a_collaborator?
-      object.host.is_accessible_as_collaborator?(user)
+    def is_at_least_a_collaborator?(h = object.host)
+      h.is_accessible_as_collaborator?(user)
     end
   end
 end

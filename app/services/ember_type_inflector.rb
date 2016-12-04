@@ -22,11 +22,18 @@ module EmberTypeInflector
   # at this point, it'd be better to white list, than to black list
   #
   # This is a lame hack, because ember doesn't namespace models
+  #
+  # Maybe I should just figure out how to get ember to namespace models,
+  # or set which models are namespace on the ember side.
+  # Worst case, I could get rid of the namespacing, but that would make
+  # me feel bad. Though, in the grand scheme of things, there aren't THAT
+  # many kinds of line items.... idk.
   NON_LINE_ITEMS = [
     MembershipDiscount.name, Package.name, Competition.name,
     Event.name, Organization.name, Discount.name,
     HousingRequest.name, HousingProvision.name,
-    EventAttendance.name, Attendance.name
+    EventAttendance.name, Attendance.name,
+    User.name
   ].freeze
 
   def ember_type_to_rails(key)

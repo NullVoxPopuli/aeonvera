@@ -3,7 +3,7 @@ module Api
   class NoteSerializer < ActiveModel::Serializer
     type 'notes'
 
-    attributes :id, :text
+    attributes :id, :note
 
     belongs_to :host
     belongs_to :author
