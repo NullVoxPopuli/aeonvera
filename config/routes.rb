@@ -24,6 +24,7 @@ AeonVera::Application.routes.draw do
     resources :registerable_events # TODO: is this used?
     resources :event_summaries, only: [:show] # overview
 
+    resources :notes
     # organizations / communties
     # TODO: finalize a name for these
     resources :communities # public
