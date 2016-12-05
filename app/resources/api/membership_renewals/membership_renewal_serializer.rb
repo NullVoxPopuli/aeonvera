@@ -3,7 +3,7 @@ module Api
   class MembershipRenewalSerializer < ActiveModel::Serializer
     type 'membership_renewals'
 
-    attributes :id, :start_date, :expires_at, :expired, :duration, :_id
+    attributes :id, :start_date, :expires_at, :expired, :duration
 
     class LineItem::MembershipOptionSerializer < Api::MembershipOptionSerializer
       type 'membership_options'
@@ -14,16 +14,6 @@ module Api
 
     def member
       object.user
-    end
-
-    # fake the id, since this is a join table
-    # todo: why didn't I just make these relationships?
-    def id
-      "#{object.user_id}.#{object.membership_option_id}-#{object.created_at}"
-    end
-
-    def _id
-      object.id
     end
 
     def expired

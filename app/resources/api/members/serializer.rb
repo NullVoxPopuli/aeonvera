@@ -5,6 +5,9 @@ module Api
 
     attributes :id, :first_name, :last_name, :email
 
+    has_many :membership_renewals
+    has_many :memberships
+
     # Requires context of organization
     # Maybe use an array of hashes?
     #
