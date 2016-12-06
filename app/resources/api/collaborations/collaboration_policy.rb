@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module Api
   class CollaborationPolicy < SkinnyControllers::Policy::Base
-    include OwnershipChecks
+    include ::OwnershipChecks
 
     # Below are all the available permissions. Each permission corresponds
     # to an action in the controller.
@@ -12,13 +13,18 @@ module Api
     # - object - the object the user is trying to access.
     # - user - the current user
     #
-    def readall?; read_all?; end; # wut
+    # wut
+    def readall?
+      read_all?
+    end
 
     # CollaborationsController#index
     def read_all?
       # for read_all, the host/parent is passed
       # TODO: should this use the host policy?
-      object.is_accessible_as_collaborator?(user)
+      object.map(&:collaborated).uniq.map do |host|
+        host&.is_accessible_as_collaborator?(user)
+      end.presence&.all?
     end
 
     # CollaborationsController#show

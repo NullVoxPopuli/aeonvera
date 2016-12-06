@@ -38,7 +38,7 @@ module Api
     class ReadAll < SkinnyControllers::Operation::Base
       include HelperOperations::Helpers
       def run
-        model if allowed_for?(host)
+        model if allowed?
       end
 
       def find_model

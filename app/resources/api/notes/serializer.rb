@@ -6,7 +6,6 @@ module Api
     attributes :id, :note, :author_name
 
     belongs_to :host
-    belongs_to :author
     # TODO: what if the target isn't a user
     belongs_to :target, serializer: MemberSerializer
 
