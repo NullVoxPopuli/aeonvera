@@ -24,6 +24,10 @@ gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
 gem 'will_paginate', '~> 3.1.0' # pagination
+# Background Tasks
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
+gem 'sidekiq-rollbar'
 
 # Cache
 gem 'redis'
@@ -63,6 +67,7 @@ gem 'uglifier' # for heroku asset precompilation. :-(
 # Templating
 #########
 gem 'slim-rails'
+gem 'arbre'
 
 group :development, :development_public, :development_remote, :test do
   # pretty printing of objects (for debugging)

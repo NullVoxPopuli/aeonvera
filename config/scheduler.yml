@@ -1,0 +1,6 @@
+membership_renewal_reminder_job:
+  every: ["1d"]
+  class: MembershipReminderJob
+  queue: daemons
+  args:
+  description: "Membership Renewal Reminder"
