@@ -1,0 +1,8 @@
+:enabled: true
+:dynamic: true
+:verbose: true
+:concurrency: 1
+:queues:
+  - mailers
+  - default
+  - daemons

@@ -7,6 +7,10 @@ AeonVera::Application.routes.draw do
   end
 
   if Rails.env.development?
+    require 'sidekiq/web'
+    require 'sidekiq-scheduler/web'
+
+    mount Sidekiq::Web => '/sidekiq'
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
