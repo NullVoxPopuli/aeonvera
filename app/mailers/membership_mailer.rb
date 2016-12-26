@@ -1,9 +1,11 @@
+# frozen_string_literal: true
 class MembershipMailer < ApplicationMailer
-
   # only called from the membership_reminder_job,
   # so this should not be called with deliver later.
   def one_week_expiration(member, renewal, org)
-    template = slim(%Q{
+    template = slim(%(
+      = content_for :header
+        = org.name
       Hello, #{member.name},
       br
       Your membership for #{org.name} is set to expire at
@@ -13,12 +15,11 @@ class MembershipMailer < ApplicationMailer
       a membership renewal.
       br
       br
-    })
+    ))
 
-    mail(
-      to: member.email,
-      subject: "Your membership for #{org.name} is going to expire soon",
-      body: template
-    )
+    subject = "Your membership for #{org.name} is going to expire soon"
+    mail(to: member.email, subject: subject) do |format|
+      format.html { render text: template }
+    end
   end
 end

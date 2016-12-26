@@ -8,8 +8,9 @@ class ApplicationMailer < ActionMailer::Base
     Arbre::Context.new(&block).to_s
   end
 
-  def slim(header, slim_string)
-    content_for(:header) { header }
-    slim_string
+  def slim(source, options = {}, &block)
+    scope = options.delete(:scope)
+    locals = options.delete(:locals)
+    Slim::Template.new('', {}) { source }.render(scope, locals, &block)
   end
 end
