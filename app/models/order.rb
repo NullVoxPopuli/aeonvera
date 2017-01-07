@@ -85,6 +85,12 @@ class Order < ActiveRecord::Base
   scope :paid, -> { where(paid: true) }
   scope :created_after, ->(time) { where('orders.created_at > ?', time) }
   scope :created_before, ->(time) { where('orders.created_at < ?', time) }
+  scope :order_line_items_line_item_id, ->(value) {
+    joins(:order_line_items).where(order_line_items: { line_item_id: value })
+  }
+  scope :order_line_items_line_item_type, ->(value) {
+    joins(:order_line_items).where(order_line_items: { line_item_type: value })
+  }
 
   validates :buyer_email, presence: true
   validates :buyer_name, presence: true
@@ -102,23 +108,8 @@ class Order < ActiveRecord::Base
     true
   end
 
-  ransacker :order_line_items_line_item_id, formatter: proc { |value|
-    Order.joins(:order_line_items).where(order_line_items: { line_item_id: value }).pluck(:id).presence
-  } do |parent|
-    # #parent references the ransacker, and #table references the table for this
-    # model (MyModel).  Pass in :id to #table to tell the ransacker the search is
-    # based on the ID field.
-    parent.table[:id]
-  end
-
-  # https://gist.github.com/dougc84/5fc60eb8a2224d358f88
-  ransacker :order_line_items_line_item_type, formatter: proc { |value|
-    Order.joins(:order_line_items).where(order_line_items: { line_item_type: value }).pluck(:id).presence
-  } do |parent|
-    # #parent references the ransacker, and #table references the table for this
-    # model (MyModel).  Pass in :id to #table to tell the ransacker the search is
-    # based on the ID field.
-    parent.table[:id]
+  def self.ransackable_scopes(auth_object = nil)
+    [:order_line_items_line_item_id, :order_line_items_line_item_type]
   end
 
   def is_accessible_to?(someone)
