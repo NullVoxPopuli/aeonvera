@@ -85,6 +85,12 @@ class Order < ActiveRecord::Base
   scope :paid, -> { where(paid: true) }
   scope :created_after, ->(time) { where('orders.created_at > ?', time) }
   scope :created_before, ->(time) { where('orders.created_at < ?', time) }
+  scope :order_line_items_line_item_id_eq, ->(value) {
+    joins(:order_line_items).where(order_line_items: { line_item_id: value })
+  }
+  scope :order_line_items_line_item_type_like, ->(value) {
+    joins(:order_line_items).where('order_line_items.line_item_type LIKE ?', "%#{value}%")
+  }
 
   validates :buyer_email, presence: true
   validates :buyer_name, presence: true
@@ -100,6 +106,10 @@ class Order < ActiveRecord::Base
     # the above two checks do not halt saving, nor do they
     # create a bad state
     true
+  end
+
+  def self.ransackable_scopes(auth_object = nil)
+    [:order_line_items_line_item_id_eq, :order_line_items_line_item_type_like]
   end
 
   def is_accessible_to?(someone)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CommonApplicationController
   extend ActiveSupport::Concern
 
@@ -14,18 +15,13 @@ module CommonApplicationController
   end
 
   def subdomain_failure?
-    if params[:subdomain_failure]
-      flash[:alert] = 'Domain not found.'
-    end
+    flash[:alert] = 'Domain not found.' if params[:subdomain_failure]
   end
-
 
   def set_time_zone
-    if current_user && current_user.time_zone.present?
-      Time.zone = current_user.time_zone
-    end
+    return unless current_user && current_user.time_zone.present?
+    Time.zone = current_user.time_zone
   end
-
 
   def authenticate_user_from_token!
     http_authorization = request.env['HTTP_AUTHORIZATION']
@@ -46,5 +42,4 @@ module CommonApplicationController
 
     user
   end
-
 end

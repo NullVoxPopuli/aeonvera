@@ -5,7 +5,7 @@ module JsonApiErrors
   protected
 
   def must_be_logged_in
-    return if current_user
+    return true if current_user
 
     render json: {
       jsonapi: { version: '1.0' },

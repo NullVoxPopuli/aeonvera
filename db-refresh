@@ -1,1 +1,1 @@
-rake db:drop; PGUSER=lprestonsegoiii PGPASSWORD=1234 heroku pg:pull DATABASE_URL aeonvera_development --app aeonvera; rake db:migrate; RAILS_ENV=test rake db:create; RAILS_ENV=test rake db:schema:load;
+rake db:drop; PGUSER=lprestonsegoiii PGPASSWORD=1234 heroku pg:pull DATABASE_URL aeonvera_development --app aeonvera && rake db:migrate && RAILS_ENV=test rake db:create && RAILS_ENV=test rake db:schema:load;
