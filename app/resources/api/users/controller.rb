@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Api
   class UsersController < Api::ResourceController
-    before_filter :must_be_logged_in, except: :create
+    before_action :must_be_logged_in, except: :create
 
     def show
       # this should never return any other user

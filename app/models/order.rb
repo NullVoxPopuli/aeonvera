@@ -102,6 +102,25 @@ class Order < ActiveRecord::Base
     true
   end
 
+  ransacker :order_line_items_line_item_id, formatter: proc { |value|
+    Order.joins(:order_line_items).where(order_line_items: { line_item_id: value }).pluck(:id).presence
+  } do |parent|
+    # #parent references the ransacker, and #table references the table for this
+    # model (MyModel).  Pass in :id to #table to tell the ransacker the search is
+    # based on the ID field.
+    parent.table[:id]
+  end
+
+  # https://gist.github.com/dougc84/5fc60eb8a2224d358f88
+  ransacker :order_line_items_line_item_type, formatter: proc { |value|
+    Order.joins(:order_line_items).where(order_line_items: { line_item_type: value }).pluck(:id).presence
+  } do |parent|
+    # #parent references the ransacker, and #table references the table for this
+    # model (MyModel).  Pass in :id to #table to tell the ransacker the search is
+    # based on the ID field.
+    parent.table[:id]
+  end
+
   def is_accessible_to?(someone)
     return true if someone == user
     return true if user.hosted_events.include?(event)
