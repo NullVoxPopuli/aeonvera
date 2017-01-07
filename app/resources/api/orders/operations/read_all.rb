@@ -23,7 +23,7 @@ module Api
 
       def orders
         return model if model.is_a?(Array)
-        model.search(params[:q]).result(distinct: true)
+        model.ransack(params[:q]).result(distinct: true)
              .includes(
                :user,
                :host,
