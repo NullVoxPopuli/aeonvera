@@ -1,16 +1,23 @@
 # frozen_string_literal: true
+require 'render_anywhere'
 class ApplicationMailer < ActionMailer::Base
   default from: APPLICATION_CONFIG['support_email']
+
   layout 'email'
 
-  def arbre(header, &block)
-    content_for(:header) { header }
-    Arbre::Context.new(&block).to_s
+  def arbre(env: {})
+    raise 'No Block Given' unless block_given?
+
+    RenderAnywhere::RenderingController.new.render_to_string(
+      inline: yield, layout: 'email', type: :arbre, locals: env
+    )
   end
 
-  def slim(source, options = {}, &block)
-    scope = options.delete(:scope)
-    locals = options.delete(:locals)
-    Slim::Template.new('', {}) { source }.render(scope, locals, &block)
+  def slim(env: {})
+    raise 'No Block Given' unless block_given?
+
+    RenderAnywhere::RenderingController.new.render_to_string(
+      inline: yield, layout: 'email', type: :slim, locals: env
+    )
   end
 end

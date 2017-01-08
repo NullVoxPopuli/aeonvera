@@ -29,6 +29,9 @@ module AeonVera
       Kernel.const_set(config_name.to_s, config)
     end
 
+    config.active_job.queue_adapter = :sidekiq
+
+
     # Upgrading from rails 4.1.x to 4.2.x
     # Currently, Active Record suppresses errors raised within
     # `after_rollback`/`after_commit` callbacks and only print them to the logs.

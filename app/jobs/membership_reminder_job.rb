@@ -12,6 +12,7 @@ class MembershipReminderJob < ApplicationJob
     Organization.all.each do |org|
       org.members.each do |member|
         renewal = member.latest_active_renewal(org)
+
         next unless renewal
         next unless should_send_email(renewal, now)
 

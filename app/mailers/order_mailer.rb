@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OrderMailer < ApplicationMailer
   def receipt(for_order: nil)
     @order = for_order
@@ -20,16 +21,14 @@ class OrderMailer < ApplicationMailer
     if (org_email = @host.try(:notify_email)).present?
       all_purchases_notification = @host.try(:email_all_purchases)
       membership_notification = (
-        @order.has_membership? and @host.try(:email_membership_purchases)
+        @order.has_membership? && @host.try(:email_membership_purchases)
       )
 
       bcc_emails = org_email.split(/[,;]/).map(&:strip)
 
-      options[:bcc] = [org_email] if all_purchases_notification or membership_notification
+      options[:bcc] = [org_email] if all_purchases_notification || membership_notification
     end
 
-    if to_email.present?
-      mail(options)
-    end
+    mail(options) if to_email.present?
   end
 end

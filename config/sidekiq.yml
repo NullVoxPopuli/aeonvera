@@ -1,7 +1,7 @@
 :enabled: true
 :dynamic: true
 :verbose: true
-:concurrency: 3
+:concurrency: 1
 :queues:
   - mailers
   - default
