@@ -25,9 +25,9 @@ gem 'ransack' # search
 gem 'rollbar'
 gem 'will_paginate', '~> 3.1.0' # pagination
 # Background Tasks
-# gem 'sidekiq'
-# gem 'sidekiq-scheduler'
-# gem 'sidekiq-rollbar'
+gem 'sidekiq'
+gem 'sidekiq-scheduler'
+gem 'sidekiq-rollbar'
 
 # Cache
 gem 'redis'

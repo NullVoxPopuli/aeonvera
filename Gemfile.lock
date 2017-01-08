@@ -128,6 +128,7 @@ GEM
     goldiloader (0.0.10)
       activerecord (>= 3.2, < 5.1)
       activesupport (>= 3.2, < 5.1)
+    hashie (3.4.6)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
@@ -279,6 +280,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
+    rufus-scheduler (3.1.10)
     sass (3.3.14)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
@@ -291,6 +293,15 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (~> 3.2, >= 3.2.1)
+    sidekiq-rollbar (0.0.1)
+      rollbar
+      sidekiq
+    sidekiq-scheduler (2.0.21)
+      hashie (~> 3.4)
+      redis (~> 3)
+      rufus-scheduler (~> 3.1.8)
+      sidekiq (>= 3)
+      tilt (>= 1.4.0)
     simplecov (0.12.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -385,6 +396,9 @@ DEPENDENCIES
   rubocop
   sass (~> 3.3.14)
   sass-rails
+  sidekiq
+  sidekiq-rollbar
+  sidekiq-scheduler
   simplecov
   skinny_controllers
   slim-rails
