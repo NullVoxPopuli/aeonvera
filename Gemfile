@@ -90,6 +90,7 @@ group :development, :test do
   gem 'rubocop'
 
   # hopefully eventually used in AMS...
+  gem 'case_transform'
   # gem 'case_transform-rust-extensions', require: 'case_transform'
 end
 
