@@ -24,6 +24,10 @@ gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
 gem 'will_paginate', '~> 3.1.0' # pagination
+# Background Tasks
+# gem 'sidekiq'
+# gem 'sidekiq-scheduler'
+# gem 'sidekiq-rollbar'
 
 # Cache
 gem 'redis'
@@ -62,31 +66,38 @@ gem 'uglifier' # for heroku asset precompilation. :-(
 #########
 # Templating
 #########
+gem 'render_anywhere', require: false
 gem 'slim-rails'
+gem 'arbre'
 
-group :development, :development_public, :development_remote, :test do
+group :development do
+  # list the fields in models
+  gem 'annotate'
+  # capturing emails
+  gem 'letter_opener_web'
+end
+
+group :development, :test do
   # pretty printing of objects (for debugging)
   gem 'awesome_print'
   # debugging! `binding.pry` to initiate!
   gem 'pry-byebug'
   # pretty logs!
   gem 'formatted_rails_logger'
-  # managing and traversing time in specs
-  gem 'delorean'
   # fast web server
   gem 'puma'
   # linting
   gem 'rubocop'
-  # list the fields in models
-  gem 'annotate'
-  # capturing emails
-  gem 'letter_opener_web'
 
   # hopefully eventually used in AMS...
   gem 'case_transform'
+  # gem 'case_transform-rust-extensions', require: 'case_transform'
 end
 
 group :test do
+  # managing and traversing time in specs
+  gem 'delorean'
+
   # Mimicking objects
   gem 'metahash-rb', require: 'metahash'
 
@@ -94,6 +105,7 @@ group :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'fuubar'
+  gem 'rspec-sidekiq'
 
   gem 'factory_girl_rails'
   gem 'factory_girl', github: 'thoughtbot/factory_girl'
