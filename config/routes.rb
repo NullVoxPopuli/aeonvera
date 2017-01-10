@@ -35,6 +35,7 @@ AeonVera::Application.routes.draw do
     resources :organizations # managing
     resources :organization_summaries, only: [:show] # overview
     resources :lessons
+    resources :membership_discounts
     resources :dances
     resources :restraints, except: [:show]
     resources :members do

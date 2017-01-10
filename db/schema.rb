@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161204144608) do
+ActiveRecord::Schema.define(version: 20170110002448) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -307,6 +307,7 @@ ActiveRecord::Schema.define(version: 20161204144608) do
     t.datetime "registration_closes_at"
     t.datetime "becomes_available_at"
     t.integer  "initial_stock",                      default: 0, null: false
+    t.integer  "membership_discount_id"
   end
 
   add_index "line_items", ["host_id", "host_type", "item_type"], name: "index_line_items_on_host_id_and_host_type_and_item_type", using: :btree

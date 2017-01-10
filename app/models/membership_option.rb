@@ -29,6 +29,7 @@
 #  registration_closes_at :datetime
 #  becomes_available_at   :datetime
 #  initial_stock          :integer          default(0), not null
+#  membership_discount_id :integer
 #
 # Indexes
 #

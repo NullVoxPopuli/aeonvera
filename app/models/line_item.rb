@@ -29,6 +29,7 @@
 #  registration_closes_at :datetime
 #  becomes_available_at   :datetime
 #  initial_stock          :integer          default(0), not null
+#  membership_discount_id :integer
 #
 # Indexes
 #
@@ -46,6 +47,7 @@ class LineItem < ActiveRecord::Base
   validates :name, presence: true
 
   belongs_to :host, polymorphic: true
+  belongs_to :membership_discount
 
   belongs_to :organization, class_name: Organization.name,
                             foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true

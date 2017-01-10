@@ -1,20 +1,12 @@
 # frozen_string_literal: true
 module Api
-  class DiscountsController < Api::EventResourceController
-    def index
-      return super unless params[:q]
-      search = Event.find(event_id).discounts.ransack(params[:q])
-      render json: search.result, each_serializer: RegistrationDiscountSerializer
-    end
-
-    def event_id
-      params.require(:event_id)
-    end
+  class MembershipDiscountsController < Api::HostResourceController
+    before_action :must_be_logged_in
 
     private
 
-    def update_discount_params
-      whitelistable_params do |whitelister|
+    def update_line_item_params
+      whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :code, :amount, :kind,
           :requires_student_id,
@@ -23,7 +15,7 @@ module Api
       end
     end
 
-    def create_discount_params
+    def create_line_item_params
       whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :code, :amount, :kind,

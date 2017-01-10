@@ -11,7 +11,7 @@ puts "defined?(Puma) is #{defined?(Puma).inspect}"
 Sidekiq::Scheduler.enabled = true
 Sidekiq::Scheduler.dynamic = true
 
-if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
+if (defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)) && !defined?(Rails::Console)
   Sidekiq.configure_server do |config|
     config.on(:startup) do
       # In case we have lots of crons, migrating to this yml might be a good idea

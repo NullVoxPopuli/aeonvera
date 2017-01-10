@@ -6,5 +6,6 @@ module Api
 
     has_many :attendances
     has_many :order_line_items
+    belongs_to :membership_discount
   end
 end

@@ -26,7 +26,7 @@ module Api
         whitelister.permit(
           :name, :price, :description,
           :starts_at, :ends_at, :expires_at,
-          :registration_opens_at, :registration_closes_at, :becomes_available_at
+          :registration_opens_at, :registration_closes_at, :becomes_available_at, :membership_discount_id
         )
       end
     end
@@ -37,7 +37,7 @@ module Api
           :host_id, :host_type,
           :name, :price, :description,
           :starts_at, :ends_at, :expires_at,
-          :registration_opens_at, :registration_closes_at, :becomes_available_at
+          :registration_opens_at, :registration_closes_at, :becomes_available_at, :membership_discount_id
         )
       end
     end
