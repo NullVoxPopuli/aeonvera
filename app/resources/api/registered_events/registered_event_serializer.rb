@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   # object is actually an Attendance in this serializer
   class RegisteredEventSerializer < ActiveModel::Serializer
@@ -13,7 +14,7 @@ module Api
     end
 
     def event_begins_at
-      object.event.starts_at
+      object.event&.starts_at
     end
 
     def amount_paid
@@ -29,12 +30,11 @@ module Api
     end
 
     def name
-      object.event.name
+      object.event&.name
     end
 
     def url
       object.host.url
     end
-
   end
 end

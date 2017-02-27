@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class RegisteredEventsController < APIController
     before_filter :must_be_logged_in
