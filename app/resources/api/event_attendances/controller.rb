@@ -122,7 +122,7 @@ module Api
     end
 
     def requesting_attendance_for_event?
-      params[:event_id]
+      params[:current_user] && params[:event_id]
     end
 
     def render_attendance_for_event
