@@ -14,8 +14,6 @@ module Api
         return render json: search.result, fields: { 'event-attendance' => ['attendee_name'] }
       end
 
-      return render_attendance_for_event if requesting_attendance_for_event?
-
       # TODO: do I still need this param?
       if params[:cancelled]
         set_event
@@ -124,7 +122,7 @@ module Api
     end
 
     def requesting_attendance_for_event?
-      params[:current_user] && params[:event_id]
+      params[:event_id]
     end
 
     def render_attendance_for_event
