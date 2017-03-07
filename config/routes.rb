@@ -67,6 +67,7 @@ AeonVera::Application.routes.draw do
     resources :line_items
 
     resources :orders do
+      resources :order_line_items
       member do
         # breaking pure REST :-(
         # it's better than hacking a bunch of if conditionals
