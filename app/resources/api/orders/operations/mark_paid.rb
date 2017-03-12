@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module OrderOperations
     class MarkPaid < SkinnyControllers::Operation::Base

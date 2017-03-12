@@ -76,6 +76,10 @@ AeonVera::Application.routes.draw do
         put :refund_payment
         put :mark_paid
       end
+
+      collection do
+        post :find_by_token_or_create
+      end
     end
 
     resources :order_line_items do

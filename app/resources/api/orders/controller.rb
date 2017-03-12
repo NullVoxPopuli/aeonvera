@@ -26,6 +26,10 @@ module Api
       render_model
     end
 
+    def find_by_token_or_create
+      render_model('order_line_items.line_item')
+    end
+
     def mark_paid
       # attendance has to be included here for the checkin-screen.
       # because owning money is stored on the attendance. :-\
@@ -50,6 +54,13 @@ module Api
         params,
         embedded: [:order_line_items],
         polymorphic: [:line_item, :host])
+    end
+
+    def find_by_token_or_create_order_params
+      params.require(:order).permit(
+        :host_id, :host_type, :payment_token,
+        :user_id
+      )
     end
 
     def create_order_params

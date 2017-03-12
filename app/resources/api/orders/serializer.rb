@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class OrderSerializer < ActiveModel::Serializer
+    include Rails.application.routes.url_helpers
+
     type 'order'
 
     attributes :id,
@@ -21,7 +23,7 @@ module Api
     # never render the payment_token
 
     has_many :order_line_items do
-      link(:related) { href api_order_order_line_items_path(order: object) }
+      # link(:related) { href api_order_order_line_items_path(order: object) }
       include_data false
       # object.order_line_items.loaded? ? object.order_line_items : OrderLineItem.none
     end
