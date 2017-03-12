@@ -6,6 +6,8 @@ module Api
         token = params[:token]
 
         order = Order.find_by_payment_token(token)
+        # TODO: through in the host's current tier
+        # TODO: scope creation and finding to the host
         order || Order.create(params_for_action)
       end
     end
