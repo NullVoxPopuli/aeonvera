@@ -78,7 +78,7 @@ AeonVera::Application.routes.draw do
       end
 
       collection do
-        post :find_by_token_or_create
+        post :find_by_token
       end
     end
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class OrderPolicy < SkinnyControllers::Policy::Base
     # A User should be able to:
@@ -7,6 +8,11 @@ module Api
     # - TODO: view all orders of an event/community they collaborate on
     def read?(_o = object)
       owner? || is_collaborator?
+    end
+
+    # Everyone can create orders
+    def create?
+      true
     end
 
     def refund_payment?

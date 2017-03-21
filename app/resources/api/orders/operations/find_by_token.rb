@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Api
   module OrderOperations
-    class FindByTokenOrCreate < SkinnyControllers::Operation::Base
+    class FindByToken < SkinnyControllers::Operation::Base
       def run
         token = params[:token]
 

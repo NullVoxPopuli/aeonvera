@@ -23,9 +23,9 @@ module Api
     # never render the payment_token
 
     has_many :order_line_items do
-      # link(:related) { href api_order_order_line_items_path(order: object) }
-      include_data false
-      # object.order_line_items.loaded? ? object.order_line_items : OrderLineItem.none
+      link(:related) { href api_order_order_line_items_path(order_id: object.id) }
+      include_data true
+      object.order_line_items.loaded? ? object.order_line_items : OrderLineItem.none
     end
     belongs_to :host
     belongs_to :attendance
@@ -56,14 +56,6 @@ module Api
 
     def host_name
       object.host.name
-    end
-
-    def host_type
-      if object.host_type == 'Organization'
-        'Community'
-      else
-        object.host_type
-      end
     end
 
     def host_url
