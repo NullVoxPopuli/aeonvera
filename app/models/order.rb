@@ -24,6 +24,7 @@
 #  current_net_amount_received :decimal(, )      default(0.0), not null
 #  current_total_fee_amount    :decimal(, )      default(0.0), not null
 #  created_by_id               :integer
+#  is_fee_absorbed             :boolean          default(TRUE)
 #
 # Indexes
 #
@@ -101,7 +102,6 @@ class Order < ActiveRecord::Base
 
   before_save do |instance|
     instance.sync_current_payment_aggregations
-    instance.check_paid_status
     # before filter must return true to continue saving.
     # the above two checks do not halt saving, nor do they
     # create a bad state
@@ -127,6 +127,19 @@ class Order < ActiveRecord::Base
         (email_from_metadata || attendance.try(:attendee_email))
       errors.add(:base, 'Registrant attendance or buyer name and email are required when purchasing a competition.')
     end
+  end
+
+  # There cannot be multiple results.
+  # that's why where is quantity.
+  def order_line_item_for_item(line_item)
+    order_line_item_for(line_item.id, line_item.class.name)
+  end
+
+  def order_line_item_for(line_item_id, line_item_type)
+    order_line_items.select do |oli|
+      oli.line_item_id == line_item_id &&
+        oli.line_item_type == line_item_type
+    end.first
   end
 
   def has_competition?
@@ -195,40 +208,6 @@ class Order < ActiveRecord::Base
     if payment_method == Payable::Methods::STRIPE || payment_method == Payable::Methods::CREDIT
       set_net_amount_received_and_fees_from_stripe
     end
-  end
-
-  # TODO: this logic sucks, find a better way
-  # Scenarios:
-  # Total is 0
-  #  - automatically mark paid
-  # Total is not 0
-  #  - should not be paid, unless paid amount matches total
-  def check_paid_status
-    # if we don't owe anything
-    # - can happen on new record
-    # - can happen if paid
-    if total == 0.0
-      # set to paid
-      self.payer_id = '0'
-      self.paid = true
-
-      # if the paid amount is /still/ nil
-      if paid_amount.nil?
-        # set the paid amount to 0.0, since the total is 0.0
-        self.paid_amount = 0.0
-      end
-    elsif total > 0 && paid_amount == 0.0
-      # this happens when total amount has changed
-      # (adding a line item when a package of 0 cost has been
-      # previously added)
-      self.paid = false
-      self.paid_amount = nil
-    elsif paid_amount.nil?
-      # money is owed, the order has not been paid
-      self.paid = false
-    end
-
-    self.paid = false if paid == true && paid_amount.nil? && total == 0.0
   end
 
   def belongs_to_organization?

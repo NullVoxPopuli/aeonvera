@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module Api
-  class UsersController < Api::ResourceController
+  class UsersController < ResourceController
     before_action :must_be_logged_in, except: :create
 
     def show

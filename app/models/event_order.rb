@@ -23,6 +23,7 @@
 #  current_net_amount_received :decimal(, )      default(0.0), not null
 #  current_total_fee_amount    :decimal(, )      default(0.0), not null
 #  created_by_id               :integer
+#  is_fee_absorbed             :boolean          default(TRUE)
 #
 # Indexes
 #

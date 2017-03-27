@@ -70,7 +70,7 @@ class LineItem < ActiveRecord::Base
 
   # validates_attachment_file_name :picture, matches: [/png\Z/, /jpe?g\Z/, /gif\Z/]
 
-  scope :active, ->{
+  scope :active, -> {
     time = Time.now
     expires_at = arel_table[:expires_at]
     becomes_available_at = arel_table[:becomes_available_at]

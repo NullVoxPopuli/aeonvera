@@ -7,6 +7,7 @@ module Api
 
     attributes :id,
       :host_id, :host_type,
+      :is_fee_absorbed,
       :paid_amount, :net_amount_received, :total_fee_amount,
       :paid, :payment_method,
       :host_name, :host_url,

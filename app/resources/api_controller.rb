@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class APIController < ActionController::Base
   include CommonApplicationController
   include JsonApiErrors
@@ -15,10 +16,17 @@ class APIController < ActionController::Base
   before_filter :authenticate_user_from_token!
   before_action :set_time_zone
 
+  rescue_from StandardError, with: :server_error
+  rescue_from ActionController::RoutingError, with: :routing_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   # TODO: Change this to a 401 (instead of 404)
   rescue_from SkinnyControllers::DeniedByPolicy, with: :not_found
+
+  def error_route
+    # JSONAPI formatted routing error
+    raise ActionController::RoutingError.new(params[:path])
+  end
 
   protected
 
