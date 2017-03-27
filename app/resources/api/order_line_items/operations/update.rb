@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Api
   module OrderLineItemOperations
-    class Update < SkinnyControllers::Operations::Base
+    class Update < SkinnyControllers::Operation::Base
       def run
         model.update_attributes(params_for_action)
 
