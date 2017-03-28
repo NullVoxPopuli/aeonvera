@@ -22,10 +22,20 @@ module Api
         return unless @order.belongs_to_organization?
 
         # finally, figure out what discounts to add.
-        add_to_order(applicable_membership_discounts)
+        if applicable_membership_discounts.present?
+          add_to_order(applicable_membership_discounts)
+        else
+          clear_discounts
+        end
       end
 
       private
+
+      def clear_discounts
+        host.membership_discounts.each do |discount|
+          @order.order_line_item_for_item(discount)&.destroy
+        end
+      end
 
       # Add if doesn't already exist.
       # make quantity match number of applicable line items
@@ -82,6 +92,10 @@ module Api
 
       def organization
         @organization ||= @order.host
+      end
+
+      def host
+        @host ||= @order.host
       end
 
       def may_be_eligable_for_automatic_discount?

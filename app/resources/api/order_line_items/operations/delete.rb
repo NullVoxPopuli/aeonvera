@@ -5,6 +5,9 @@ module Api
       def run
         return unless allowed?
         model.destroy
+
+        ::Api::OrderOperations::AddAutomaticDiscounts.new(model.order.reload).run
+
         model
       end
     end
