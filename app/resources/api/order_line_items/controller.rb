@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class OrderLineItemsController < Api::ResourceController
     def index
@@ -23,7 +24,8 @@ module Api
         whitelister.permit(
           :line_item_id, :line_item_type, :order_id,
           :price, :quantity,
-          :partner_name, :dance_orientation, :size
+          :partner_name, :dance_orientation, :size,
+          :discount_code
         )
       end
     end

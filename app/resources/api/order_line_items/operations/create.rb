@@ -3,9 +3,8 @@ module Api
   module OrderLineItemOperations
     class Create < SkinnyControllers::Operation::Base
       def run
-        check_params!
+        @model = discount_code? ? add_discount! : create_line_item!
 
-        @model = build_model
         return unless allowed?
         @model.save
 
@@ -18,6 +17,35 @@ module Api
       end
 
       private
+
+      def add_discount!
+        code = ActiveModelSerializers::Deserialization.jsonapi_parse(params)[:discount_code]
+
+        operation = ::Api::OrderLineItemsOperations::ApplyDiscount.new(
+          order,
+          code
+        )
+
+        operation.run
+      end
+
+      def discount_code?
+        params[:order_line_item][:discount_code]
+      end
+
+      def create_line_item!
+        check_params!
+
+        # operation = ::Api::OrderLineItemsOperations::CreateOrderLineItem.new(
+        #   order,
+        #   line_item,
+        #   quantity: order_line_item_params[:quantity],
+        #   price: order_line_item_params[:price]
+        # )
+        #
+        # operation.run
+        build_model
+      end
 
       def build_model
         item = existing_order_line_item
@@ -38,10 +66,14 @@ module Api
       end
 
       def order_line_item_params
-        @order_line_item_params ||= params_for_action.merge(
-          price: price,
-          quantity: 1
-        )
+        @order_line_item_params ||= begin
+          attributes = OrderLineItem.column_names
+          oli_params = params_for_action.select { |c| attributes.include?(c) }
+          oli_params.merge(
+            price: price,
+            quantity: 1
+          )
+        end
       end
 
       def price
@@ -60,9 +92,11 @@ module Api
       end
 
       def order
-        @order ||= ::Api::OrderOperations::Read.new(current_user, id: params_for_action[:order_id]).run
+        @order ||= ::Api::OrderOperations::Read.new(
+          current_user,
+          id: params_for_action[:order_id]
+        ).run
       end
-
     end
   end
 end
