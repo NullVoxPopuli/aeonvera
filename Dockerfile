@@ -9,7 +9,6 @@ RUN \
   apt-get update && \
   apt-get -y install postgresql postgresql-contrib nodejs
 
-
 RUN mkdir /web
 
 WORKDIR /web
