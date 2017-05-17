@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170326231056) do
+ActiveRecord::Schema.define(version: 20170517015411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,12 @@ ActiveRecord::Schema.define(version: 20170326231056) do
     t.integer  "transferred_to_user_id"
     t.datetime "transferred_at"
     t.string   "transfer_reason"
+    t.string   "attendee_first_name"
+    t.string   "attendee_last_name"
+    t.string   "phone_number"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
   end
 
   add_index "attendances", ["attendee_id"], name: "index_attendances_on_attendee_id", using: :btree

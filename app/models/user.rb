@@ -72,8 +72,8 @@ class User < ActiveRecord::Base
   has_many :shirts
   has_many :packages
   has_many :competitions
-  has_many :housing_applicants
-  has_many :housing_providers
+  # has_many :housing_applicants
+  # has_many :housing_providers
 
   has_many :orders
 

@@ -25,6 +25,12 @@
 #  transferred_to_user_id     :integer
 #  transferred_at             :datetime
 #  transfer_reason            :string
+#  attendee_first_name        :string
+#  attendee_last_name         :string
+#  phone_number               :string
+#  city                       :string
+#  state                      :string
+#  zip                        :string
 #
 # Indexes
 #
@@ -95,9 +101,6 @@ class EventAttendance < Attendance
   # TODO: these are gross
   validates :dance_orientation, presence: true, if: ->(a) { a.event.ask_if_leading_or_following? }
   validates :level, presence: true, if: proc { |a| (p = a.package) && p.requires_track? }
-  validate :has_address, if: proc { |a| !(a.event.present? && event.started?) }
-  validate :has_phone_number, if: proc { |a| a.interested_in_volunteering? }
-  validate :has_name, if: proc { |a| a.attendee_id.blank? && a.attendee.blank? }
 
   # for CSV output
   csv_with_columns [
@@ -113,47 +116,7 @@ class EventAttendance < Attendance
       :id,
       :host_id, :host_type]
 
-  def crossover_orientation=(o)
-    metadata['crossover_orientation'] = o
-  end
-
-  def crossover_orientation
-    metadata['crossover_orientation']
-  end
-
-  def requested_housing_data
-    metadata_safe['need_housing']
-  end
-
-  def providing_housing_data
-    metadata_safe['providing_housing']
-  end
-
-  def phone_number
-    metadata_safe['phone_number']
-  end
-
-  def phone_number=(phone)
-    self.metadata ||= {} # TODO: why isn't this done on initialize?
-    self.metadata['phone_number'] = phone
-  end
-
   private
-
-  def has_phone_number
-    unless metadata_safe['phone_number'].present?
-      errors.add('phone number', 'must be present when volunteering')
-    end
-  end
-
-  def has_name
-    unless metadata_safe['first_name'].present?
-      errors.add('first name', 'must be present')
-    end
-    unless metadata_safe['last_name'].present?
-      errors.add('last name', 'must be present')
-    end
-  end
 
   def purchasable_items
     result = []

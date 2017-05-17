@@ -18,6 +18,10 @@ gem 'skinny_controllers' # , path: '../skinny_controllers' # controllers, chill 
 # gem 'rails_module_unification', github: 'NullVoxPopuli/rails_module_unification'#, path: '../rails_module_unification'
 gem 'drawers' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
+
+gem "dry-validation"
+gem 'reform' # Non-Model Validation
+
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
 gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails

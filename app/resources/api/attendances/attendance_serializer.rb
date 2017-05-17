@@ -3,6 +3,7 @@ module Api
   class AttendanceSerializer < ActiveModel::Serializer
     attributes :id,
       :attendee_name, :attendee_email, :dance_orientation,
+      :attendee_first_name, :attendee_last_name,
       :amount_owed, :amount_paid, :registered_at,
       :checked_in_at, :is_checked_in,
       :package_name, :level_name,

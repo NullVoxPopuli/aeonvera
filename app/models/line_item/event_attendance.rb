@@ -24,6 +24,12 @@
 #  transferred_to_user_id     :integer
 #  transferred_at             :datetime
 #  transfer_reason            :string
+#  attendee_first_name        :string
+#  attendee_last_name         :string
+#  phone_number               :string
+#  city                       :string
+#  state                      :string
+#  zip                        :string
 #
 # Indexes
 #
