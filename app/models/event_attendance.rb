@@ -96,8 +96,6 @@ class EventAttendance < Attendance
 
   # validates :pricing_tier, presence: true
   validates :event, presence: true
-  # validates :attendee, presence: true
-  validates :package, presence: true
   # TODO: these are gross
   validates :dance_orientation, presence: true, if: ->(a) { a.event.ask_if_leading_or_following? }
   validates :level, presence: true, if: proc { |a| (p = a.package) && p.requires_track? }

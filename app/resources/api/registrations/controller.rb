@@ -26,7 +26,7 @@ module Api
     def resource_params
       whitelistable_params(polymorphic: [:host]) do |w|
         w.permit(
-          :first_name, :last_name,
+          :attendee_first_name, :attendee_last_name,
           :city, :state, :phone_number,
           :interested_in_volunteering,
           :dance_orientation,

@@ -7,6 +7,8 @@ module Api
       property :attendee_last_name
       property :phone_number
       property :interested_in_volunteering
+      property :city
+      property :state
 
       validation do
         configure do
@@ -14,15 +16,17 @@ module Api
           config.messages_file = 'config/locales/validations.yml'
 
           def require_phone_number?(value)
-            value.present? if form.interested_in_volunteering
-            true
+            return false unless form['interested_in_volunteering']
+            value.present?
           end
         end
 
         required(:attendee_first_name).filled
         required(:attendee_last_name).filled
+        required(:city).filled
+        required(:state).filled
 
-        required(:phone_number).filled(:require_phone_number?)
+        optional(:phone_number).filled(:require_phone_number?)
       end
     end
   end
