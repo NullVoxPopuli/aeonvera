@@ -11,15 +11,15 @@ module Api
       model = resource_proxy.new(create_params)
       form = RegistrationForms::Create.new(model)
       valid = form.validate(create_params)
-      ap form.errors
-      ap valid
-      ap form.sync
-      ap model.errors.full_messages
+
+      sync_form_and_model(form, model) unless valid
 
       if valid && model.save
         render jsonapi: model, status: :created
       else
-        render jsonapi: form.errors, status: :unprocessable_entity
+        # render jsonapi: model.errors, status: :unprocessable_entity
+        # TODO: upgrade to rails 5
+        render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
       end
     end
 

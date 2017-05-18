@@ -58,4 +58,17 @@ class APIController < ActionController::Base
   def set_default_response_format
     request.format = :json unless params[:format]
   end
+
+  def sync_form_and_model(form, model)
+    form.sync
+
+    form_errors = form.errors.messages
+    return if form_errors.blank?
+
+    form_errors.each do |field, errors|
+      Array[*errors].each do |error|
+        model.errors.add(field, error)
+      end
+    end
+  end
 end
