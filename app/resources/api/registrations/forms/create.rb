@@ -26,7 +26,7 @@ module Api
         required(:city).filled
         required(:state).filled
 
-        optional(:phone_number).filled(:require_phone_number?)
+        # optional(:phone_number).filled(:require_phone_number?)
       end
     end
   end
