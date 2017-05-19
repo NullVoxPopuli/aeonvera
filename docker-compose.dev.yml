@@ -1,37 +1,49 @@
-db:
-  image: postgres:9.6
-  ports:
-    - "5432:5432"
-  volumes:
-    - ./backups:/backups
-  environment:
-    POSTGRES_DB: aeonvera_development
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
+version: '2'
+services:
+  db:
+    image: postgres:9.6
+    ports:
+      - "25432:5432"
+    volumes:
+      - ./backups:/backups
+    environment:
+      POSTGRES_DB: aeonvera_development
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+     - backend
 
-redis:
-  image: redis:3.2
-  ports:
-    - "16379:6379"
-web:
-  build: .
-  dockerfile: ./Dockerfile
-  command: bundle exec rails s -p 3000 -b '0.0.0.0'
-  volumes:
-    - .:/web
-    - ./backups:/backups
-  ports:
-    - "3000:3000"
-  links:
-    - db
-    - redis
-    - redis:redis.local
-  environment:
-    - RAILS_ENV=development
-    - REDIS_URL=redis://redis.local:6379
+  redis:
+    image: redis:3.2
+    networks:
+     - backend
+    ports:
+      - "26379:6379"
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: bundle exec rails s -p 4301 -b '0.0.0.0'
+    volumes:
+      - .:/web
+      - ./backups:/backups
+    ports:
+      - "4301:4301"
+    networks:
+     - backend
+    links:
+      - db
+      - redis
+      - redis:redis.local
+    environment:
+      - RAILS_ENV=development
+      - REDIS_URL=redis://redis.local:6379
 
-    - DATABASE_HOST=db
-    - DATABASE_NAME=aeonvera_development
-    - DATABASE_USERNAME=postgres
-    - DATABASE_PASSWORD=postgres
-    - DATABASE_PORT=5432
+      - DATABASE_HOST=db
+      - DATABASE_NAME=aeonvera_development
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_PORT=5432
+networks:
+  backend:
+    driver: bridge

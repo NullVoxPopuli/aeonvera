@@ -5,7 +5,7 @@ if [[ -n "$1" ]]; then
 else
   echo "Booting Environment..."
   # make extra sure that the images are built
-  # docker-compose -f docker-compose.dev.yml build
+  docker-compose -f docker-compose.dev.yml build
 
   # start up everything
   docker-compose -f docker-compose.dev.yml run --rm --service-ports web
