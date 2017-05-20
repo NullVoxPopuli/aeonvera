@@ -9,6 +9,7 @@ module Api
       property :interested_in_volunteering
       property :city
       property :state
+      property :dance_orientation
 
       validation do
         configure do
@@ -25,6 +26,7 @@ module Api
         required(:attendee_last_name).filled
         required(:city).filled
         required(:state).filled
+        required(:dance_orientation).filled
 
         # optional(:phone_number).filled(:require_phone_number?)
       end
