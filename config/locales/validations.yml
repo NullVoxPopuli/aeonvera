@@ -1,3 +1,4 @@
+# http://dry-rb.org/gems/dry-validation/error-messages/
 en:
   errors:
     require_phone_number?: "Phone number is required when volunteering"
