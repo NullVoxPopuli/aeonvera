@@ -30,7 +30,7 @@ module Api
       end
 
       def discount_code?
-        params[:order_line_item][:discount_code]
+        params_for_action[:discount_code]
       end
 
       def create_line_item!
@@ -92,10 +92,14 @@ module Api
       end
 
       def order
-        @order ||= ::Api::OrderOperations::Read.new(
-          current_user,
-          id: params_for_action[:order_id]
-        ).run
+        @order ||= begin
+          raise 'Must provide order_id' unless params_for_action[:order_id]
+
+          ::Api::OrderOperations::Read.new(
+            current_user,
+            id: params_for_action[:order_id]
+          ).run
+        end
       end
     end
   end

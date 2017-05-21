@@ -91,7 +91,17 @@ module Api
       end
 
       def organization
-        @organization ||= @order.host
+        @organization ||= begin
+          if is_event?
+            host.sponsoring_organizations.first
+          else
+            host
+          end
+        end
+      end
+
+      def is_event?
+        host.is_a?(Event)
       end
 
       def host
