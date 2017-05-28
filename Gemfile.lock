@@ -318,6 +318,9 @@ GEM
       rspec (~> 3.0, >= 3.0.0)
       sidekiq (>= 2.4.0)
     rspec-support (3.5.0)
+    rtype (0.6.8)
+    rtype-native (0.6.8)
+      rtype (= 0.6.8)
     rubocop (0.45.0)
       parser (>= 2.3.1.1, < 3.0)
       powerpack (~> 0.1)
@@ -441,6 +444,8 @@ DEPENDENCIES
   rspec
   rspec-rails
   rspec-sidekiq
+  rtype
+  rtype-native
   rubocop
   sass (~> 3.3.14)
   sass-rails
@@ -460,4 +465,4 @@ RUBY VERSION
    ruby 2.3.3p222
 
 BUNDLED WITH
-   1.14.6
+   1.15.0

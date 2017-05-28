@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module OrderOperations
     # This should be called when an OrderLineItem is:
@@ -6,14 +7,18 @@ module Api
     # - removed
     # - quantity is changed.
     class AddAutomaticDiscounts
+      include ::AssertParameters
+
+      # rtype([{ user: User, host: [Event, Organization] }, {}] => Any)
+      rtype([Order] => Any)
       def initialize(order)
         @order = order
+
+        assert!(order, :user)
+        assert!(order, :host)
       end
 
       def run
-        user = @order.user
-        host = @order.host
-
         return unless may_be_eligable_for_automatic_discount?
 
         # Currently, only organization discounts are supported.
