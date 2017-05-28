@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class ApplicationRecord < ActiveRecord::Base
+  self.abstract_class = true
+
   # TODO: remove AR monkey-patch in config/initializers
   def has_errors?
     !errors.empty?
