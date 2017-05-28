@@ -34,6 +34,8 @@ services:
       - db:db.local
       - redis
       - redis:redis.local
+    env_file:
+      - .env
     environment:
       - RAILS_ENV=development
       - REDIS_URL=redis://redis.local:6379

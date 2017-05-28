@@ -191,7 +191,8 @@ common: &default_settings
 development:
   <<: *default_settings
   # Turn on communication to New Relic service in development mode
-  monitor_mode: false
+  monitor_mode: true
+  agent_enabled: true
   app_name: ÆONVERA (Development)
 
   # Rails Only - when running in Developer Mode, the New Relic Agent will
@@ -199,8 +200,8 @@ development:
   # executed since starting the mongrel.
   # NOTE: There is substantial overhead when running in developer mode.
   # Do not use for production or load testing.
-  developer_mode: false
-  monitor_mode: false
+  developer_mode: true
+  monitor_mode: true
 
 test:
   <<: *default_settings

@@ -29,6 +29,13 @@ module Api
   #     def resource_params; end
   #   end
   # end
+  #
+  # NOTE: there are callbacks provided:
+  #       - before_create
+  #       - before_update
+  #       - before_destroy
+  #       error handling / control flow rejecting is up to the implementation
+  #       of these hooks. It's recommended to raise an exception.
   class UserResourceController < ::APIController
     # A Class Inheriting from this class must set resource_class
     # e.g.: self.resource_class = ::StepDefinitions::CoachingLoopStep
@@ -51,17 +58,21 @@ module Api
       search = resource_proxy.ransack(params[:q])
       results = search.result
 
-      render jsonapi: results, include: params[:include]
+      render_jsonapi_collection(results)
     end
 
     def show
-      render jsonapi: resource_proxy.find(params[:id]), include: params[:include]
+      model = resource_proxy.find(params[:id])
+      render_jsonapi(model)
     end
 
     def create
       model = resource_proxy.new(create_params)
-      if model.save
-        render jsonapi: model, status: :created
+
+      result = run_callbacks_for(:create, model) { model.save }
+
+      if result
+        render_jsonapi(model, status: :created)
       else
         render jsonapi: model.errors, status: :unprocessable_entity
       end
@@ -70,8 +81,12 @@ module Api
     def update
       model = resource_proxy.find(params[:id])
 
-      if model.update(update_params)
-        render jsonapi: model
+      result = run_callbacks_for(:update, model) do
+        model.update(update_params)
+      end
+
+      if result
+        render_jsonapi(model)
       else
         render jsonapi: model.errors, status: :unprocessable_entity
       end
@@ -79,12 +94,36 @@ module Api
 
     def destroy
       model = resource_proxy.find(params[:id])
-      model.destroy
+
+      run_callbacks_for(:destroy, model) { model.destroy }
 
       head :no_content
     end
 
     protected
+
+    def render_jsonapi(model, options = {})
+      render_options = { jsonapi: model, include: params[:include] }
+
+      render_options[:serializer] = serializer_class if serializer_class
+
+      render(render_options.merge(options))
+    end
+
+    def render_jsonapi_collection(results, options = {})
+      render_options = { jsonapi: results, include: params[:include] }
+
+      render_options[:each_serializer] = serializer_class if serializer_class
+
+      render(render_options.merge(options))
+    end
+
+    def run_callbacks_for(action_name, model)
+      before_name = "before_#{action_name}"
+      send(before_name, model) if respond_to?(before_name)
+
+      yield
+    end
 
     def update_params
       resource_params

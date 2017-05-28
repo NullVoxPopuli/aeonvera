@@ -56,6 +56,7 @@ module AeonVera
 
     config.autoload_paths += [config.root.join('lib')]
     config.autoload_paths += %W(#{config.root}/app/services)
+    config.autoload_paths += %W(#{config.root}/app/core)
 
     config.generators do |g|
       g.test_framework :rspec

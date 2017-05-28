@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class EventAttendanceSerializer < AttendanceSerializer
     has_one :housing_request

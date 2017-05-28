@@ -19,6 +19,7 @@ class APIController < ActionController::Base
   rescue_from StandardError, with: :server_error
   rescue_from ActionController::RoutingError, with: :routing_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from AeonVera::Errors::BeforeHookFailed, with: :client_error
 
   # TODO: Change this to a 401 (instead of 404)
   rescue_from SkinnyControllers::DeniedByPolicy, with: :not_found

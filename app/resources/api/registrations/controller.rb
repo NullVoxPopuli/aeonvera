@@ -3,7 +3,7 @@
 module Api
   class RegistrationsController < UserResourceController
     self.resource_class = EventAttendance
-    self.serializer_class = EventAttendanceSerializer
+    self.serializer_class = RegistrationSerializer
     self.parent_resource_method = :current_user
     self.association_name_for_parent_resource = :event_attendances
 
@@ -21,6 +21,15 @@ module Api
         # TODO: upgrade to rails 5
         render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
       end
+    end
+
+    protected
+
+    def before_destroy(model)
+      paids = model.orders.map(&:paid)
+      allowed_to_destroy = paids.empty? || paids.all?
+
+      raise AeonVera::Errors::BeforeHookFailed unless allowed_to_destroy
     end
 
     def resource_params

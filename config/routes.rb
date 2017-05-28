@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 AeonVera::Application.routes.draw do
-  constraints(Subdomain) do
-    match '(*any)' => redirect { |_params, request|
-      url = request.url
-      Subdomain.redirect_url_for(url)
-    }, via: [:get]
-  end
-
   if Rails.env.development?
     require 'sidekiq/web'
     require 'sidekiq-scheduler/web'
@@ -142,12 +135,6 @@ AeonVera::Application.routes.draw do
   namespace :auth do
     get 'paypal/callback', to: 'paypal#callback'
   end
-
-  # legacy routes
-  get '/terms_of_service', to: redirect('welcome/tos')
-  get '/privacy', to: redirect('/welcome/privacy')
-  get '/calendar', to: redirect('/upcoming-events')
-  get '/scenes', to: redirect('/communities')
 
   # redirect everything to ember
   #
