@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 class APIController < ActionController::Base
-  include CommonApplicationController
-  include JsonApiErrors
-  include ModelRendering
+  include Controllers::CurrentUser
+  include Controllers::JsonApiErrors
+  include Controllers::ModelRendering
 
   respond_to :json
 
@@ -71,5 +71,11 @@ class APIController < ActionController::Base
         model.errors.add(field, error)
       end
     end
+  end
+
+
+  def set_time_zone
+    return unless current_user && current_user.time_zone.present?
+    Time.zone = current_user.time_zone
   end
 end

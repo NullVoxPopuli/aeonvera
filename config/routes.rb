@@ -140,6 +140,6 @@ AeonVera::Application.routes.draw do
   #
   # But only if it doesn't start with /api/
   # http://www.rubular.com/r/AUxFqYLOf8
-  get '/*path' => 'marketing#index', fullpath: /^\/((?!api\/).)*$/
-  root to: 'marketing#index'
+  get '/*path' => 'ember#index', fullpath: /^\/((?!api\/).)*$/
+  root to: 'ember#index'
 end

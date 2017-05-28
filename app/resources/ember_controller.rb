@@ -1,5 +1,5 @@
 # Main entry point to the app / ember
-class MarketingController < ActionController::Base
+class EmberController < ActionController::Base
   def index
     # get ember from redis
     ember_index = APICache.store.get('aeonvera:index:current-content')

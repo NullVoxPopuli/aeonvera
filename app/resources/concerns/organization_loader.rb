@@ -1,3 +1,4 @@
+# TODO: remove
 module OrganizationLoader
   def set_organization(id: nil)
     id = (id or params[:organization_id] or params[:id])

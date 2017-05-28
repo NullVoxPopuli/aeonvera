@@ -1,3 +1,4 @@
+# TODO: remove
 module SetsOrganization
   extend ActiveSupport::Concern
 

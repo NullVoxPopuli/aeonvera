@@ -1,3 +1,4 @@
+# TODO: remove
 module EventLoader
   def event(id: nil)
     id = (id or params[:hosted_event_id] or params[:event_id] or params[:id])
