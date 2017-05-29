@@ -68,8 +68,8 @@ describe Api::OrderLineItemsController, type: :request do
             params[:data][:attributes][:price] = 0.01
             post '/api/order_line_items', params, @headers
 
-            ap JSON.parse(response.body)
-            expect(json_api_data[:attributes][:price]).to eq package.current_price
+            result = json_api_data['attributes']['price'].to_f
+            expect(result).to eq package.current_price
           end
 
           it 'correctly adjusts the price with no prior items' do
@@ -81,8 +81,8 @@ describe Api::OrderLineItemsController, type: :request do
           end
 
           it 'correctly adjusts the price with a prior item' do
-            some_item = create(:line_item, price: 12)
-            add_to_order!(order, some_item)
+            some_item = create(:line_item, price: 12, host: event)
+            add_to_order!(order, some_item, price: 12)
             expect(order.order_line_items.length).to eq 1
 
             post '/api/order_line_items', params, @headers

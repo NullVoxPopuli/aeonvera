@@ -15,7 +15,7 @@ end
 
 def add_to_order!(order, line_item, quantity: 1, price: 0)
   add_to_order(order, line_item, quantity: quantity, price: price).save
-  order.save
+  order.save!
 end
 
 # simulates not saving

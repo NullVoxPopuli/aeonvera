@@ -77,13 +77,9 @@ module Api
       end
 
       def price
-        if line_item.is_a?(Discount)
-          0 - line_item.value
-        elsif line_item.respond_to?(:current_price)
-          line_item.current_price
-        elsif line_item.respond_to?(:price)
-          line_item.price
-        end
+        return 0 - line_item.value if line_item.is_a?(Discount)
+        return line_item.current_price if line_item.respond_to?(:current_price)
+        return line_item.price if line_item.respond_to?(:price)
 
         0
       end
