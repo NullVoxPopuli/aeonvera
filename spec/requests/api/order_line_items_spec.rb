@@ -44,6 +44,43 @@ describe Api::OrderLineItemsController, type: :request do
       end
 
       context 'when creating an order line item' do
+        context 'of type: Package' do
+          let(:package) { create(:package, event: event) }
+          let(:params) { {
+            data: {
+              type: 'order-line-items',
+              attributes: { quantity: 1, price: package.current_price },
+              relationships: {
+                'line-item': { data: { type: 'packages', id: package.id } },
+                order: { data: { type: 'orders', id: order.id } }
+              }
+            }
+          } }
+
+          it 'can add an item to the order' do
+            post '/api/order_line_items', params, @headers
+            expect(response.status).to eq 201
+          end
+
+          it 'correctly adjusts the price with no prior items' do
+            post '/api/order_line_items', params, @headers
+            order.reload
+
+            expect(order.order_line_items.length).to eq 1
+            expect(order.sub_total).to eq package.current_price
+          end
+
+          it 'correctly adjusts the price with a prior item' do
+            some_item = create(:line_item, price: 12)
+            add_to_order!(order, some_item)
+            post '/api/order_line_items', params, @headers
+
+            order.reload
+            expect(order.order_line_items.length).to eq 2
+            expect(order.sub_total).to eq package.current_price + 12
+          end
+        end
+
         it 'includes the discount and restraints in the response' do
           # add a package to the order that we can apply the discount to
           package = create(:package, event: event)
@@ -67,6 +104,7 @@ describe Api::OrderLineItemsController, type: :request do
           }
 
           post '/api/order_line_items', params, @headers
+
           # includes the discount, and the discount's restraints
           expect(json_api_included.length).to eq 2
         end

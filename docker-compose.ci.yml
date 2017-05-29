@@ -7,14 +7,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     networks:
-     - backend
+     - ci_backend
 
   redis:
     image: redis:3.2
     networks:
-     - backend
-    ports:
-      - "26379:6379"
+     - ci_backend
   web:
     build:
       context: .
@@ -23,17 +21,13 @@ services:
     volumes:
       - .:/web
       - ./backups:/backups
-    ports:
-      - "4301:4301"
     networks:
-     - backend
+     - ci_backend
     links:
       - db
       - db:db.local
       - redis
       - redis:redis.local
-    env_file:
-      - .env
     environment:
       - RAILS_ENV=test
       - REDIS_URL=redis://redis.local:6379
@@ -44,5 +38,5 @@ services:
       - DATABASE_PASSWORD=postgres
       - DATABASE_PORT=5432
 networks:
-  backend:
+  ci_backend:
     driver: bridge

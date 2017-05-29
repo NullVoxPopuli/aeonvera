@@ -77,12 +77,24 @@ module Api
       end
 
       def price
-        line_item.current_price
+        if line_item.is_a?(Discount)
+          0 - line_item.value
+        elsif line_item.respond_to?(:current_price)
+          line_item.current_price
+        elsif line_item.respond_to?(:price)
+          line_item.price
+        end
+
+        0
       end
 
       def line_item
-        # Does type matter here? are there multiple tables?
-        @line_item ||= ::LineItem.find(params_for_action[:line_item_id])
+        # Not everything purchasable is a line item.
+        # TODO: consider making everything a line item?
+        @line_item ||= begin
+          klass = params_for_action[:line_item_type].safe_constantize || ::LineItem
+          klass.find(params_for_action[:line_item_id])
+        end
       end
 
       def check_params!

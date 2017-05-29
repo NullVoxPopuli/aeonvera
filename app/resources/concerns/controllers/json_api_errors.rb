@@ -16,6 +16,7 @@ module Controllers
     end
 
     def not_found(id_key = nil)
+      return routing_error(id_key) if id_key.is_a?(StandardError)
       id = params[:id]
       id = params[id_key] || params[:id] if id_key
 
@@ -46,7 +47,18 @@ module Controllers
       jsonapi_error(404,
         code: 404,
         detail: exception.message,
-        title: 'Route Not Found',
+        title: 'Route/Resource Not Found',
+        meta: {
+          exception_class: exception.class.name,
+          backtrace: exception.backtrace
+        })
+    end
+
+    def denied_by_policy_error(exception)
+      jsonapi_error(404,
+        code: 404,
+        detail: exception.message,
+        title: 'Denied By Policy',
         meta: {
           exception_class: exception.class.name,
           backtrace: exception.backtrace

@@ -100,6 +100,9 @@ group :development, :test do
   # hopefully eventually used in AMS...
   gem 'case_transform'
   # gem 'case_transform-rust-extensions', require: 'case_transform'
+
+  # Parallel Tests, cause Impatience
+  gem 'parallel_tests'
 end
 
 group :test do

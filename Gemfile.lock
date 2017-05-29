@@ -215,6 +215,9 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (~> 0.3.0)
+    parallel (1.11.2)
+    parallel_tests (2.14.1)
+      parallel
     paranoia (2.2.0)
       activerecord (>= 4.0, < 5.1)
     parser (2.3.2.0)
@@ -428,6 +431,7 @@ DEPENDENCIES
   oj
   oj_mimic_json
   paperclip (~> 5.0.0.beta2)
+  parallel_tests
   paranoia (~> 2.0)
   pg
   pry-byebug

@@ -25,12 +25,12 @@ if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
   #
   # Locally, run
   #  bundle exec sidekiq -q default -q mailers -q daemons
-
-  Thread.new do
-    cli = Sidekiq::CLI.instance
-    cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
-    cli.run
-  end
+  # 
+  # Thread.new do
+  #   cli = Sidekiq::CLI.instance
+  #   cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
+  #   cli.run
+  # end
 else
   Sidekiq::Scheduler.enabled = false
   puts "Sidekiq::Scheduler.enabled is #{Sidekiq::Scheduler.enabled.inspect}"

@@ -114,7 +114,9 @@ module Api
       end
 
       def may_be_eligable_for_automatic_discount?
-        @order.user.is_member_of?(organization) && organization&.membership_discounts.present?
+        return false unless organization
+
+        @order.user.is_member_of?(organization) && organization.membership_discounts.present?
       end
     end
   end
