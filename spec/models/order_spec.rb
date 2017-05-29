@@ -129,38 +129,6 @@ describe Order do
     end
   end
 
-
-  describe "#before_create" do
-
-    it "payer_id is not set" do
-      Order.any_instance.stub(:total).and_return(1.00)
-      o = create(:order, host: create(:organization))
-      o.payer_id.should_not == "0"
-    end
-
-    context "total is not 0" do
-      let(:order){
-        Order.any_instance.stub(:total).and_return(1.0)
-        create(:order, host: create(:organization))
-      }
-
-      it "is not paid after creation" do
-        order.paid?.should == false
-      end
-
-    end
-
-    context "total is 0" do
-      it "is paid afetr creation" do
-        order = build(:order, host: create(:organization))
-        allow(order).to receive(:total){ 0.0 }
-        order.save
-        order.paid?.should == true
-      end
-
-    end
-  end
-
   describe "#force_paid!" do
     it "becomes paid" do
       o = Order.new
@@ -185,22 +153,6 @@ describe Order do
       expect(o.owes).to eq 0
     end
 
-  end
-
-  describe '#check_stripe_validity' do
-    it 'is invalid (somehow)' do
-      o = Order.new
-      o.host = create(:organization)
-      allow(o).to receive(:total){ 10 }
-      o.payment_method = Payable::Methods::STRIPE
-      o.paid = true
-      o.buyer_email = 'a@a.a'
-      o.buyer_name = 'test test'
-      paid_amount = nil
-      o.save
-
-      expect(o.paid).to eq false
-    end
   end
 
   describe 'sub_total' do

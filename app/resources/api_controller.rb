@@ -3,6 +3,8 @@ class APIController < ActionController::Base
   include Controllers::CurrentUser
   include Controllers::JsonApiErrors
   include Controllers::ModelRendering
+  include Controllers::StrongParameters
+  include Controllers::ErrorHandlers
 
   respond_to :json
 
@@ -16,45 +18,12 @@ class APIController < ActionController::Base
   before_filter :authenticate_user_from_token!
   before_action :set_time_zone
 
-  rescue_from StandardError, with: :server_error
-  rescue_from ActionController::RoutingError, with: :routing_error
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  rescue_from AeonVera::Errors::BeforeHookFailed, with: :client_error
-
-  # TODO: Change this to a 401 (instead of 404)
-  rescue_from SkinnyControllers::DeniedByPolicy, with: :not_found
-
   def error_route
     # JSONAPI formatted routing error
-    raise ActionController::RoutingError.new(params[:path])
+    raise ActionController::RoutingError, params[:path]
   end
 
   protected
-
-  def deserialize_params(polymorphic: [], embedded: [])
-    ActiveModelSerializers::Deserialization
-      .jsonapi_parse(params, embedded: embedded, polymorphic: polymorphic)
-  end
-
-  # wrapper around normal strong parameters that includes Deserialization
-  # for JSON API parameters.
-  # all parameters hitting this controller should be JSON API formatted.
-  #
-  # example:
-  # whitelistable_params do |whitelister|
-  #   whitelister.permit(:name, :price)
-  # end
-  def whitelistable_params(polymorphic: [], embedded: [])
-    deserialized = deserialize_params(
-      polymorphic: polymorphic,
-      embedded: embedded
-    )
-
-    whitelister = ActionController::Parameters.new(deserialized)
-    whitelister = yield(whitelister) if block_given?
-
-    EmberTypeInflector.to_rails(whitelister)
-  end
 
   def set_default_response_format
     request.format = :json unless params[:format]
@@ -72,7 +41,6 @@ class APIController < ActionController::Base
       end
     end
   end
-
 
   def set_time_zone
     return unless current_user && current_user.time_zone.present?

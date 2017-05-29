@@ -37,6 +37,7 @@ module Controllers
         detail: exception.message,
         title: 'The backend responded with an error',
         meta: {
+          exception_class: exception.class.name,
           backtrace: exception.backtrace
         })
     end
@@ -47,6 +48,7 @@ module Controllers
         detail: exception.message,
         title: 'Route Not Found',
         meta: {
+          exception_class: exception.class.name,
           backtrace: exception.backtrace
         })
     end
@@ -57,6 +59,7 @@ module Controllers
         detail: exception.message,
         title: 'Client Error',
         meta: {
+          exception_class: exception.class.name,
           backtrace: exception.backtrace
         })
     end

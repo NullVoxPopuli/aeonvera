@@ -243,7 +243,7 @@ class Order < ApplicationRecord
     params = {
       paid: true,
       check_number:        data[:check_number],
-      payment_method:      data[:payment_method],
+      payment_method:      data[:payment_method] || Payable::Methods::CASH,
       paid_amount:         data[:amount] || paid_amount || 0,
       net_amount_received: data[:amount] || net_amount_received || 0,
       notes:               data[:notes],
