@@ -58,8 +58,18 @@ describe Api::OrderLineItemsController, type: :request do
           } }
 
           it 'can add an item to the order' do
-            post '/api/order_line_items', params, @headers
+            expect { post '/api/order_line_items', params, @headers }
+              .to change(OrderLineItem, :count).by 1
+
             expect(response.status).to eq 201
+          end
+
+          it 'does not allow price forgery' do
+            params[:data][:attributes][:price] = 0.01
+            post '/api/order_line_items', params, @headers
+
+            ap JSON.parse(response.body)
+            expect(json_api_data[:attributes][:price]).to eq package.current_price
           end
 
           it 'correctly adjusts the price with no prior items' do
@@ -73,6 +83,8 @@ describe Api::OrderLineItemsController, type: :request do
           it 'correctly adjusts the price with a prior item' do
             some_item = create(:line_item, price: 12)
             add_to_order!(order, some_item)
+            expect(order.order_line_items.length).to eq 1
+
             post '/api/order_line_items', params, @headers
 
             order.reload
