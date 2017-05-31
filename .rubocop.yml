@@ -16,6 +16,9 @@ Style/StringLiterals:
 Style/FrozenStringLiteralComment:
   Enabled: true
 
+Style/NumericPredicate:
+  Enabled: false
+
 Metrics/AbcSize:
   Max: 35 # TODO: Lower to 15
 

@@ -177,6 +177,33 @@ describe Order do
     end
   end
 
+  describe '#total' do
+    describe 'for a single item' do
+      it 'inherits the event fee setting' do
+        event = create(:event, make_attendees_pay_fees: true)
+        o = create(:order, host: event, payment_method: Payable::Methods::STRIPE)
+        package = create(:package, event: event, initial_price: 100)
+        add_to_order!(o, package)
+
+        o.reload
+        expect(o.is_fee_absorbed).to eq false
+        expect(o.sub_total).to eq 100
+        expect(o.total).to eq 104.1
+      end
+
+      it 'absorbs the fee by default' do
+        event = create(:event, make_attendees_pay_fees: false)
+        o = create(:order, host: event, payment_method: Payable::Methods::STRIPE)
+        package = create(:package, event: event)
+        add_to_order!(o, package)
+
+        o.reload
+        expect(o.is_fee_absorbed).to eq true
+        expect(o.total).to eq package.current_price
+      end
+    end
+  end
+
   describe 'package + discount' do
     let(:event){ create(:event) }
     let(:order){ Order.new(event: event) }

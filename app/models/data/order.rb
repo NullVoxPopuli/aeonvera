@@ -98,7 +98,24 @@ class Order < ApplicationRecord
   validates :host, presence: true
   validate :require_attendance_if_has_competitions
 
-  # validates :attendance, presence: true, if: 'host_type=="Event"'
+  before_create do |instance|
+    # Set is_fee_absorbed to whatever the event is set to.
+    # This will require an update to to make the order different
+    # from the event / org.
+    # NOTE: that kind of change must be authorized by an owner/collaborator
+    #
+    # Order defaults to true
+    # - Scenario 1:
+    #   Order absorbs fees, Event does not
+    # - Scenario 2:
+    #   Order absorbs fees, Event also does
+    # - Scenario 3:
+    #   Order does not absorb fees, Event does not
+    # - Scenario 4:
+    #   Order does not absorb fees, Event does.
+    instance.is_fee_absorbed = !host.make_attendees_pay_fees? if host
+    true
+  end
 
   before_save do |instance|
     instance.sync_current_payment_aggregations

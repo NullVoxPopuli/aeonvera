@@ -1,6 +1,6 @@
 version: '2'
 services:
-  db:
+  postgres:
     image: postgres:9.6
     environment:
       POSTGRES_DB: aeonvera_test
@@ -24,15 +24,15 @@ services:
     networks:
      - ci_backend
     links:
-      - db
-      - db:db.local
+      - postgres
+      - postgres:postgres-test.local
       - redis
-      - redis:redis.local
+      - redis:redis-test.local
     environment:
       - RAILS_ENV=test
-      - REDIS_URL=redis://redis.local:6379
+      - REDIS_URL=redis://redis-test.local:6379
 
-      - DATABASE_HOST=db.local
+      - DATABASE_HOST=postgres-test.local
       - DATABASE_NAME=aeonvera_test
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres

@@ -40,9 +40,8 @@ describe Api::LevelsController, type: :controller do
       create(:level, event: event)
       create(:level, event: event)
 
-      expect{
-        get :index
-      }.to raise_error
+      get :index
+      expect(response.status).to eq 400
     end
   end
 
