@@ -14,6 +14,7 @@ module Api
       :created_at, :user_email, :user_name,
       :payment_received_at,
       :total_in_cents,
+      :total, :sub_total,
       :check_number,
       :notes,
       :stripe_refunds,

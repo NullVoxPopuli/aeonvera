@@ -39,7 +39,8 @@ module Api
           :city, :state, :phone_number,
           :interested_in_volunteering,
           :dance_orientation,
-          :host_id, :host_type
+          :host_id, :host_type,
+          :level_id
         )
       end
     end
