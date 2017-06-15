@@ -33,7 +33,7 @@ module EmberTypeInflector
     Event.name, Organization.name, Discount.name,
     HousingRequest.name, HousingProvision.name,
     EventAttendance.name, Attendance.name,
-    User.name, 'Member'
+    User.name, 'Member', 'Registration'
   ].freeze
 
   def ember_type_to_rails(key)
