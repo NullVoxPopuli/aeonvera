@@ -59,10 +59,17 @@ module Api
       end
 
       def existing_order_line_item
-        @existing_order_line_item ||= order.order_line_item_for(
-          params_for_action[:line_item_id].to_i,
-          params_for_action[:line_item_type]
-        )
+        @existing_order_line_item ||= begin
+          oli = order.order_line_item_for(
+            params_for_action[:line_item_id].to_i,
+            params_for_action[:line_item_type]
+          )
+
+          size = params_for_action[:size]
+
+          # nil means no match!
+          (oli && size && size != oli.size) ? nil : oli
+        end
       end
 
       def order_line_item_params
