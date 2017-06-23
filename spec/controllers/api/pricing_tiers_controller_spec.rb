@@ -22,9 +22,8 @@ describe Api::PricingTiersController, type: :controller do
     it 'requires the event id to be specified' do
       event = create(:event, user: user)
 
-      expect{
-        get :index
-      }.to raise_error
+      get :index
+      expect(response.status).to eq 400
     end
   end
 

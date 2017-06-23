@@ -1,17 +1,11 @@
+# frozen_string_literal: true
 AeonVera::Application.routes.draw do
-  constraints(Subdomain) do
-    match '(*any)' => redirect { |_params, request|
-      url = request.url
-      new_url = Subdomain.redirect_url_for(url)
-    }, via: [:get]
-  end
-
   if Rails.env.development?
     require 'sidekiq/web'
     require 'sidekiq-scheduler/web'
 
     mount Sidekiq::Web => '/sidekiq'
-    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    mount LetterOpenerWeb::Engine, at: '/letter_opener'
   end
 
   # for our frontend ui.
@@ -67,6 +61,7 @@ AeonVera::Application.routes.draw do
     resources :line_items
 
     resources :orders do
+      resources :order_line_items
       member do
         # breaking pure REST :-(
         # it's better than hacking a bunch of if conditionals
@@ -74,6 +69,10 @@ AeonVera::Application.routes.draw do
         get :refresh_stripe
         put :refund_payment
         put :mark_paid
+      end
+
+      collection do
+        post :find_by_token
       end
     end
 
@@ -123,6 +122,8 @@ AeonVera::Application.routes.draw do
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
     resources :users, only: [:show, :update, :destroy]
+
+    match '*path', to: 'resource#error_route', via: :all
   end
 
   namespace :oauth do
@@ -135,16 +136,10 @@ AeonVera::Application.routes.draw do
     get 'paypal/callback', to: 'paypal#callback'
   end
 
-  # legacy routes
-  get '/terms_of_service', to: redirect('welcome/tos')
-  get '/privacy', to: redirect('/welcome/privacy')
-  get '/calendar', to: redirect('/upcoming-events')
-  get '/scenes', to: redirect('/communities')
-
   # redirect everything to ember
   #
   # But only if it doesn't start with /api/
   # http://www.rubular.com/r/AUxFqYLOf8
-  get '/*path' => 'marketing#index', fullpath: /^\/((?!api\/).)*$/
-  root to: 'marketing#index'
+  get '/*path' => 'ember#index', fullpath: /^\/((?!api\/).)*$/
+  root to: 'ember#index'
 end

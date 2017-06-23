@@ -1,7 +1,7 @@
 module Api
   module Users
     class PasswordsController < Devise::PasswordsController
-      include DeviseOverrides
+      include Controllers::DeviseOverrides
       respond_to :html, :json
 
       # prepend_before_filter :logout, only: :edit

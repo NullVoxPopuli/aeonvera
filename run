@@ -1,28 +1,12 @@
 #!/bin/bash
+if [[ -n "$1" ]]; then
+  echo "Running Command: $*"
+  docker-compose -f docker-compose.dev.yml run --rm web $*
+else
+  echo "Booting Environment..."
+  # make extra sure that the images are built
+  docker-compose -f docker-compose.dev.yml build
 
-export S3_BUCKET_NAME=aeonvera-dev
-echo 'S3_BUCKET_NAME:'
-echo $S3_BUCKET_NAME
-echo ''
-
-echo 'S3_ACCESS_KEY_ID:'
-echo $S3_ACCESS_KEY_ID
-echo '' 
-
-echo 'S3_SECRET_ACCESS_KEY:'
-echo $S3_SECRET_ACCESS_KEY
-echo ''
-
-
-export pgstatus="$(service postgresql status | grep inactive)"
-if [ "$($pgstatus)" ] 
-then
-  sudo /etc/init.d/postgresql start
-  echo ''
+  # start up everything
+  docker-compose -f docker-compose.dev.yml run --rm --service-ports web
 fi
-
-
-echo 'starting...'
-echo ''
-
-rails s

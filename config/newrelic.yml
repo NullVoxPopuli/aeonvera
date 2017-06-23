@@ -192,6 +192,7 @@ development:
   <<: *default_settings
   # Turn on communication to New Relic service in development mode
   monitor_mode: false
+  agent_enabled: false
   app_name: ÆONVERA (Development)
 
   # Rails Only - when running in Developer Mode, the New Relic Agent will

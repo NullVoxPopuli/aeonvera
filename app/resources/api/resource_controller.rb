@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 module Api
-  class ResourceController < APIController
+  class ResourceController < ::APIController
     include SkinnyControllers::Diet
 
     respond_to :json, :csv

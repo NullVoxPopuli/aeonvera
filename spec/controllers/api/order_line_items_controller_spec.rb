@@ -6,7 +6,7 @@ describe Api::OrderLineItemsController, type: :controller do
     before(:each) do
       @organization = create(:organization)
       @user = create_confirmed_user
-      @membership_option = create(:membership_option, host: @organization)
+      @membership_option = create(:membership_option, host: @organization, price: 10)
       login_through_api(@user)
       @order = create(:order, user: @user, host: @organization)
     end

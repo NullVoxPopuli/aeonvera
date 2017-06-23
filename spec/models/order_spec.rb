@@ -129,38 +129,6 @@ describe Order do
     end
   end
 
-
-  describe "#before_create" do
-
-    it "payer_id is not set" do
-      Order.any_instance.stub(:total).and_return(1.00)
-      o = create(:order, host: create(:organization))
-      o.payer_id.should_not == "0"
-    end
-
-    context "total is not 0" do
-      let(:order){
-        Order.any_instance.stub(:total).and_return(1.0)
-        create(:order, host: create(:organization))
-      }
-
-      it "is not paid after creation" do
-        order.paid?.should == false
-      end
-
-    end
-
-    context "total is 0" do
-      it "is paid afetr creation" do
-        order = build(:order, host: create(:organization))
-        allow(order).to receive(:total){ 0.0 }
-        order.save
-        order.paid?.should == true
-      end
-
-    end
-  end
-
   describe "#force_paid!" do
     it "becomes paid" do
       o = Order.new
@@ -187,22 +155,6 @@ describe Order do
 
   end
 
-  describe '#check_stripe_validity' do
-    it 'is invalid (somehow)' do
-      o = Order.new
-      o.host = create(:organization)
-      allow(o).to receive(:total){ 10 }
-      o.payment_method = Payable::Methods::STRIPE
-      o.paid = true
-      o.buyer_email = 'a@a.a'
-      o.buyer_name = 'test test'
-      paid_amount = nil
-      o.save
-
-      expect(o.paid).to eq false
-    end
-  end
-
   describe 'sub_total' do
     it 'totals negative amounts' do
       event = create(:event)
@@ -222,6 +174,33 @@ describe Order do
 
       expect(o.sub_total).to eq package.current_price
       expect(o.total).to eq package.current_price
+    end
+  end
+
+  describe '#total' do
+    describe 'for a single item' do
+      it 'inherits the event fee setting' do
+        event = create(:event, make_attendees_pay_fees: true)
+        o = create(:order, host: event, payment_method: Payable::Methods::STRIPE)
+        package = create(:package, event: event, initial_price: 100)
+        add_to_order!(o, package)
+
+        o.reload
+        expect(o.is_fee_absorbed).to eq false
+        expect(o.sub_total).to eq 100
+        expect(o.total).to eq 104.1
+      end
+
+      it 'absorbs the fee by default' do
+        event = create(:event, make_attendees_pay_fees: false)
+        o = create(:order, host: event, payment_method: Payable::Methods::STRIPE)
+        package = create(:package, event: event)
+        add_to_order!(o, package)
+
+        o.reload
+        expect(o.is_fee_absorbed).to eq true
+        expect(o.total).to eq package.current_price
+      end
     end
   end
 

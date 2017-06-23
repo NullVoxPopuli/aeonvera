@@ -13,11 +13,19 @@ gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
 gem 'attr_encrypted' # column encryption
 
+ # type checking
+gem 'rtype'
+gem 'rtype-native'
+
 gem 'goldiloader' # automatic includes on everything (AR)
 gem 'skinny_controllers' # , path: '../skinny_controllers' # controllers, chill out!
 # gem 'rails_module_unification', github: 'NullVoxPopuli/rails_module_unification'#, path: '../rails_module_unification'
 gem 'drawers' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
+
+gem "dry-validation"
+gem 'reform' # Non-Model Validation
+
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
 gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
@@ -92,6 +100,9 @@ group :development, :test do
   # hopefully eventually used in AMS...
   gem 'case_transform'
   # gem 'case_transform-rust-extensions', require: 'case_transform'
+
+  # Parallel Tests, cause Impatience
+  gem 'parallel_tests'
 end
 
 group :test do

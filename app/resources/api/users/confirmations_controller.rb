@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module Api
   module Users
     class ConfirmationsController < Devise::ConfirmationsController
-      include DeviseOverrides
+      include Controllers::DeviseOverrides
       respond_to :html, :json
 
       # POST /resource/confirmation

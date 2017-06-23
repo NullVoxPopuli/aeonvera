@@ -153,7 +153,7 @@ module Payable
 
   def should_apply_fee?
     sub_total > 0 &&
-      host.make_attendees_pay_fees? &&
+      !is_fee_absorbed &&
       (payment_method == Payable::Methods::STRIPE ||
        payment_method == Payable::Methods::PAYPAL)
   end

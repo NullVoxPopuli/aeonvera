@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class OrderLineItemsController < Api::ResourceController
     def index
@@ -5,11 +6,11 @@ module Api
     end
 
     def create
-      render_model('line_item.restraints', success_status: 201)
+      render_model('order,line_item.restraints', success_status: 201)
     end
 
     def update
-      render_model('line_item')
+      render_model('line_item,order')
     end
 
     def mark_as_picked_up
@@ -23,7 +24,8 @@ module Api
         whitelister.permit(
           :line_item_id, :line_item_type, :order_id,
           :price, :quantity,
-          :partner_name, :dance_orientation, :size
+          :partner_name, :dance_orientation, :size,
+          :discount_code
         )
       end
     end

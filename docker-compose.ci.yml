@@ -1,0 +1,42 @@
+version: '2'
+services:
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_DB: aeonvera_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+     - ci_backend
+
+  redis:
+    image: redis:3.2
+    networks:
+     - ci_backend
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: bundle exec rails s -p 4301 -b '0.0.0.0'
+    volumes:
+      - .:/web
+      - ./backups:/backups
+    networks:
+     - ci_backend
+    links:
+      - postgres
+      - postgres:postgres-test.local
+      - redis
+      - redis:redis-test.local
+    environment:
+      - RAILS_ENV=test
+      - REDIS_URL=redis://redis-test.local:6379
+
+      - DATABASE_HOST=postgres-test.local
+      - DATABASE_NAME=aeonvera_test
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_PORT=5432
+networks:
+  ci_backend:
+    driver: bridge

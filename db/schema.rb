@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161204144608) do
+ActiveRecord::Schema.define(version: 20170517015411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,12 @@ ActiveRecord::Schema.define(version: 20161204144608) do
     t.integer  "transferred_to_user_id"
     t.datetime "transferred_at"
     t.string   "transfer_reason"
+    t.string   "attendee_first_name"
+    t.string   "attendee_last_name"
+    t.string   "phone_number"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
   end
 
   add_index "attendances", ["attendee_id"], name: "index_attendances_on_attendee_id", using: :btree
@@ -56,19 +62,6 @@ ActiveRecord::Schema.define(version: 20161204144608) do
   create_table "attendances_discounts", force: :cascade do |t|
     t.integer "attendance_id"
     t.integer "discount_id"
-  end
-
-  create_table "attendees", force: :cascade do |t|
-    t.string   "first_name",                 limit: 255
-    t.string   "last_name",                  limit: 255
-    t.string   "phone_number",               limit: 255
-    t.integer  "dancer_orientation"
-    t.boolean  "interested_in_volunteering"
-    t.integer  "event_id"
-    t.integer  "package_id"
-    t.integer  "level_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "collaborations", force: :cascade do |t|
@@ -136,11 +129,6 @@ ActiveRecord::Schema.define(version: 20161204144608) do
   end
 
   add_index "custom_fields", ["host_id", "host_type"], name: "index_custom_fields_on_host_id_and_host_type", using: :btree
-
-  create_table "discounted_items", force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "discounts", force: :cascade do |t|
     t.string   "name",                   limit: 255
@@ -376,6 +364,7 @@ ActiveRecord::Schema.define(version: 20161204144608) do
     t.decimal  "current_net_amount_received",             default: 0.0,    null: false
     t.decimal  "current_total_fee_amount",                default: 0.0,    null: false
     t.integer  "created_by_id"
+    t.boolean  "is_fee_absorbed",                         default: true
   end
 
   add_index "orders", ["created_by_id"], name: "index_orders_on_created_by_id", using: :btree
