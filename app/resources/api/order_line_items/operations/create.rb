@@ -76,9 +76,12 @@ module Api
         @order_line_item_params ||= begin
           attributes = OrderLineItem.column_names
           oli_params = params_for_action.select { |c| attributes.include?(c) }
+          given_quantity = oli_params[:quantity]
+          quantity = given_quantity.to_i > 0 ? given_quantity : 1
+
           oli_params.merge(
             price: price,
-            quantity: 1
+            quantity: quantity
           )
         end
       end

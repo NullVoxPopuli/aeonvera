@@ -118,7 +118,7 @@ describe Api::OrderLineItemsController, type: :request do
           post '/api/order_line_items', params, @headers
 
           # includes the discount, and the discount's restraints
-          expect(json_api_included.length).to eq 2
+          expect(json_api_included.length).to eq 3
         end
       end
     end
