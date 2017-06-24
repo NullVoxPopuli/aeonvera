@@ -1,11 +1,21 @@
+image: docker
+
+services:
+  - docker:dind
+
+before_script:
+  - apk add --no-cache py-pip
+  - pip install docker-compose
+
+
 stages:
 - ci
 - deploy
-- clean
+#- clean
 
-clean:
-  stage: clean
-  script: docker-compose -f docker-compose.ci.yml down --remove-orphans
+#clean:
+#  stage: clean
+#  script: docker-compose -f docker-compose.ci.yml down --remove-orphans
 
 "Build, Quality, and Deploy":
   stage: ci
