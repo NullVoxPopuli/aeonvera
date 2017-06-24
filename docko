@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# A script to make working with docker/compose to have
+# less typing.
+#
+# For local development only.
+#
+# this file can be sourced, so you don't have to do ./ before running every command
+# > . ./docko
+# then
+# rundocko db-setup
+
+config=docker-compose.dev.yml
+
+function docko-dev {
+  docker-compose -f $config $*
+}
+
+function docko-test {
+  docker-compose -f docker-compose.ci.yml $*
+}
+
+function docko-test-run {
+  docko-test run --rm --service-ports web $*
+}
+
+function rundocko {
+
+  # First arg
+  given_command=$1
+  # The rest of the args
+  arguments=${@:2}
+
+  case $given_command in
+    build)    docko-dev build $arguments;;
+    down)     docko-dev down --remove-orphans;;
+    up)       docko-dev up;;
+    rake)     docko-dev run --rm web rake $arguments;;
+    bash)     docko-dev run --rm web bash;;
+    dev)      docko-dev run --rm --service-ports web $arguments;;
+    c)        docko-dev run --rm web rails console;;
+
+    # Local Database Management
+    db-setup)  docko-dev run --rm web rake db:create db:schema:load;;
+    db-reset)  docko-dev run --rm web rake db:drop db:create db:schema:load;;
+    db-import) ./scripts/import-db-backup.sh;;
+
+    # Testing
+    test)     docko-test-run $arguments ;;
+
+    *) echo 'command not recognized';;
+  esac
+}
+
+# Also allow non-sourced running
+if [ $1 ]; then
+  rundocko $*
+fi
