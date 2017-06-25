@@ -34,7 +34,8 @@ production:
   #  - "Build and Quality"
   script:
     - >
-      echo $HEROKU_APP_NAME;
+      if [ -n "$HEROKU_APP_NAME" ]; then echo 'HEROKU_APP_NAME present'; fi;
+      if [ -n "$HEROKU_API_KEY" ]; then echo 'HEROKU_API_KEY present'; fi;
       ./scripts/ci/deploy.sh
 
   environment:
