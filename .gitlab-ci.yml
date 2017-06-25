@@ -17,7 +17,7 @@ stages:
 #  stage: clean
 #  script: docker-compose -f docker-compose.ci.yml down --remove-orphans
 
-"Build, Quality, and Deploy":
+"Build, Quality":
   stage: ci
   script:
     - ./scripts/ci/build.sh
@@ -26,6 +26,21 @@ stages:
   artifacts:
     paths:
       - coverage/
+
+production:
+  stage: deploy
+  image: ruby:2.3.3
+  dependencies:
+    - "Build, Quality, and Deploy"
+  script:
+    - echo "HEROKU_APP_NAME=$HEROKU_PRODUCTION_APP_NAME" >> .env
+    - echo "HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY" >> .env
+    - ./script/ci/deploy.sh
+  environment:
+    name: production
+    url: https://aeonvera.com
+  only:
+    - master
 
 # https://about.gitlab.com/2016/11/03/publish-code-coverage-report-with-gitlab-pages/
 pages:
