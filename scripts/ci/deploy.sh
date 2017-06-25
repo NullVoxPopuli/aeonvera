@@ -1,5 +1,3 @@
-. .env
-
 gem install dpl
 dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
 curl -n -X POST \
