@@ -33,9 +33,9 @@ production:
     - echo "HEROKU_APP_NAME=$HEROKU_PRODUCTION_APP_NAME" >> .env
     - echo "HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY" >> .env
     - >
-      export HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY
-      export HEROKU_APP_NAME=$HEROKU_PRODUCTION_APP_NAME
-      echo $HEROKU_APP_NAME
+      export HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY;
+      export HEROKU_APP_NAME=$HEROKU_PRODUCTION_APP_NAME;
+      echo $HEROKU_APP_NAME;
       ./scripts/ci/deploy.sh
 
   environment:
