@@ -32,7 +32,7 @@ production:
   script:
     - echo "HEROKU_APP_NAME=$HEROKU_PRODUCTION_APP_NAME" >> .env
     - echo "HEROKU_API_KEY=$HEROKU_PRODUCTION_API_KEY" >> .env
-    - ./script/ci/deploy.sh
+    - ./scripts/ci/deploy.sh
   environment:
     name: production
     url: https://aeonvera.com
