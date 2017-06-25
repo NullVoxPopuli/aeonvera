@@ -25,13 +25,13 @@ stages:
       - coverage/
 
 production:
-  stage: ci
+  stage: deploy
   image: ruby:2.3.3
   variables:
     HEROKU_API_KEY: $HEROKU_PRODUCTION_API_KEY
     HEROKU_APP_NAME: $HEROKU_PRODUCTION_APP_NAME
-  #dependencies:
-  #  - "Build and Quality"
+  dependencies:
+    - "Build and Quality"
   script:
     - >
       if [ -n "$HEROKU_APP_NAME" ]; then echo 'HEROKU_APP_NAME present'; fi;
