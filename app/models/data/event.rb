@@ -275,7 +275,7 @@ class Event < ApplicationRecord
   def is_accessible_as_collaborator?(user)
     return false unless user
     return true if hosted_by == user
-    return true if user.collaborated_event_ids.include?(id)
+    return true if user.collaborated_event_ids&.include?(id)
 
     false
   end

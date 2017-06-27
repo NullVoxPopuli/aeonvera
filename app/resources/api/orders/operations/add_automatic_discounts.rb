@@ -14,11 +14,18 @@ module Api
       def initialize(order)
         @order = order
 
-        assert!(order, :user)
+        # Only the host is required.
+        # but the lack of a user will prevent
+        # #run from doing anything
         assert!(order, :host)
       end
 
       def run
+        # A user/buyer MUST be required in order to receive an automatic discount
+        # (those who are not logged in don't get a user, and therefor
+        #  don't get automatic discounts)
+        return unless @order.user
+
         return unless may_be_eligable_for_automatic_discount?
 
         # Currently, only organization discounts are supported.

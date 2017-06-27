@@ -46,6 +46,17 @@ puts "!Env: #{Rails.env}:#{ENV['RAILS_ENV']}"
 Time.zone = 'Central Time (US & Canada)'
 
 RSpec.configure do |config|
+  config.after(:each, type: :request) do |example|
+    if example.exception
+      begin
+        ap JSON.parse(response.body)
+      rescue => e
+        # probably not j son
+      end
+    end
+  end
+
+
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added
   # metadata to specs based on their location on the filesystem. This was both
   # confusing to new users and not desirable for some veteran users.

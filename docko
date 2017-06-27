@@ -47,6 +47,7 @@ function rundocko {
 
     # Testing
     test)     docko-test-run $arguments ;;
+    rspec)    docko-test-run bundle exec rspec $arguments ;;
 
     *) echo 'command not recognized';;
   esac

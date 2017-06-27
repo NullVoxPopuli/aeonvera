@@ -3,6 +3,7 @@ module Api
   module OrderLineItemOperations
     class Update < SkinnyControllers::Operation::Base
       def run
+        return unless allowed_to_update_order_line_item?
         model.assign_attributes(params_for_action)
 
         did_change_quantity = model.quantity_changed?
@@ -11,6 +12,24 @@ module Api
         end
 
         model
+      end
+
+      private
+
+      def authorized_via_token?
+        model.order.payment_token == params[:payment_token]
+      end
+
+      def allowed_to_update_order_line_item?
+        return true if allowed?
+
+        return false unless authorized_via_token?
+
+        temp_user = OpenStruct.new(id: params[:payment_token])
+
+        policy_class
+          .new(temp_user, model)
+          .update?
       end
     end
   end

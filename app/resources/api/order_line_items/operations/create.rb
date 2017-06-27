@@ -5,7 +5,7 @@ module Api
       def run
         @model = discount_code? ? add_discount! : create_line_item!
 
-        return unless allowed?
+        return unless allowed_to_create_order_line_item?
         @model.save
 
         # Check if automatic discounts need to be added.
@@ -111,13 +111,39 @@ module Api
 
       def order
         @order ||= begin
-          raise 'Must provide order_id' unless params_for_action[:order_id]
+          id = params_for_action[:order_id]
+          token = params[:payment_token]
 
-          ::Api::OrderOperations::Read.new(
+          raise 'Must provide order_id or token' unless id || token
+
+          o = ::Api::OrderOperations::Read.new(
             current_user,
-            id: params_for_action[:order_id]
-          ).run
+            id: id
+          ).run if current_user
+
+          o ||= Order.find_by_payment_token(token) if token
+
+          raise "Order not found for id #{id} nor token #{token}, or you do not have permission to access it" unless o
+
+          o
         end
+      end
+
+      def allowed_to_create_order_line_item?
+        return true if allowed?
+
+        return false unless authorized_via_token?
+
+        # If we have a token, we need to create
+        # a fake user to use with the policy
+        temp_user = OpenStruct.new(id: params[:payment_token])
+        policy_class
+          .new(temp_user, model)
+          .create?
+      end
+
+      def authorized_via_token?
+        order.payment_token == params[:payment_token]
       end
     end
   end

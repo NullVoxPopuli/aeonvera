@@ -31,6 +31,80 @@ describe Api::OrdersController, type: :request do
       delete "/api/orders/#{order.id}"
       expect(response.status).to eq 401
     end
+
+
+    context 'but does have a payment_token' do
+      let(:token) { 'abc123' }
+
+      it 'cannot view all orders' do
+        get '/api/orders', { payment_token: token }
+
+        expect(response.status).to eq 404
+      end
+
+      it 'orders from others are not included' do
+        create(:order)
+        get '/api/orders', { payment_token: token }
+
+        json = JSON.parse(response.body)
+        errors = json['errors']
+        data = json['data']
+
+        expect(data).to be_nil
+        expect(errors).to_not be_empty
+      end
+
+      it 'cannot view someone elses order' do
+        o = create(:order)
+
+        get "/api/orders/#{o.id}", { payment_token: token }
+
+        json = JSON.parse(response.body)
+        expect(response.status).to eq 404
+        expect(json['data']).to be_nil
+      end
+
+      it 'cannot refund someone elses order' do
+        order = create(:order, attendance: create(:attendance))
+        put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full', payment_token: token }
+        expect(response.status).to eq 404
+      end
+
+      it 'can view own order' do
+        order = create(:order, payment_token: token)
+
+        get "/api/orders/#{order.id}", { payment_token: token }
+
+        json = JSON.parse(response.body)
+
+        expect(response.status).to eq 200
+        expect(json['data']).to_not be_nil
+      end
+
+      it 'cannot refund own order' do
+        order = create(:order, payment_token: token)
+        put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full', payment_token: token }
+        expect(response.status).to eq 404
+      end
+
+      it 'can delete unpaid order' do
+        order = create(:order, payment_token: token)
+        expect(order.paid).to eq false
+
+        delete "/api/orders/#{order.id}", { payment_token: token }
+
+        expect(response.status).to eq 200
+      end
+
+      it 'can not delete paid order' do
+        order = create(:order, payment_token: token, paid: true)
+        expect(order.paid).to eq true
+
+        delete "/api/orders/#{order.id}", { payment_token: token }
+
+        expect(response.status).to eq 200
+      end
+    end
   end
 
   context 'user owns the event' do
@@ -78,6 +152,7 @@ describe Api::OrdersController, type: :request do
       delete "/api/orders/#{order.id}", {}, auth_header_for(owner)
       expect(response.status).to eq 404
     end
+
   end
 
   context 'is logged in' do
