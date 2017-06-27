@@ -58,7 +58,7 @@ module Api
     # Note te self, if a before_action helper
     # renders are redirects, the callback chain is halted
     def handle_via_token?
-      return unless params[:payment_token]
+      return unless params[:payment_token].present?
 
       @model = Order.find_by_payment_token(params[:payment_token])
 
