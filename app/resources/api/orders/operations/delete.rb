@@ -1,12 +1,11 @@
 # frozen_string_literal: true
+
 module Api
-  module OrderLineItemOperations
+  module OrderOperations
     class Delete < SkinnyControllers::Operation::Base
       def run
-        return unless allowed_to_delete_order_line_item?
+        return unless allowed_to_delete_order?
         model.destroy
-
-        ::Api::OrderOperations::AddAutomaticDiscounts.new(model.order.reload).run
 
         model
       end
@@ -14,10 +13,10 @@ module Api
       private
 
       def authorized_via_token?
-        model.order.payment_token == params[:payment_token]
+        model.payment_token == params[:payment_token]
       end
 
-      def allowed_to_delete_order_line_item?
+      def allowed_to_delete_order?
         return true if allowed?
 
         return false unless authorized_via_token?

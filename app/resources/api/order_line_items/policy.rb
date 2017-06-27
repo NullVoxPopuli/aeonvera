@@ -3,7 +3,7 @@ module Api
   class OrderLineItemPolicy < SkinnyControllers::Policy::Base
     def read_all?
       order = object.first.order
-      order.user_id == user.id ||
+      order.user_id == user&.id ||
         order.host.is_accessible_to?(user)
     end
 
@@ -41,7 +41,12 @@ module Api
     end
 
     def owner?
-      order.user_id == user.id
+      order.user_id == user_id ||
+        (order.payment_token != nil && order.payment_token == user_id)
+    end
+
+    def user_id
+      user.try(:id)
     end
 
     def order

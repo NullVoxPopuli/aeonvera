@@ -2,25 +2,36 @@ module Api
   module OrderOperations
     class Update < SkinnyControllers::Operation::Base
       def run
-        if allowed_to_update?
-          pay if is_paying?
-          modify if is_updating?
-        else
-          # TODO: how to send error?
-          raise 'not authorized'
-        end
+        check_allowed!
+
+        pay if is_paying?
+        modify if is_updating?
 
         model
       end
 
       private
 
-      def allowed_to_update?
-        # need to check if this token is present in the params
-        unloggedin_token = params_for_action[:payment_token]
-        actual_token = model.payment_token
+      def check_allowed!
+        return if allowed_to_update?
 
-        allowed? || unloggedin_token == actual_token
+        raise SkinnyControllers::DeniedByPolicy, 'unauthorized'
+      end
+
+      def authorized_via_token?
+        model.payment_token == params[:payment_token]
+      end
+
+      def allowed_to_update?
+        return true if allowed?
+
+        return false unless authorized_via_token?
+
+        temp_user = OpenStruct.new(id: params[:payment_token])
+
+        policy_class
+          .new(temp_user, model)
+          .update?
       end
 
       def is_paying?

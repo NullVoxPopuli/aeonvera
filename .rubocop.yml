@@ -6,6 +6,11 @@ AllCops:
   DisplayStyleGuide: true
   TargetRubyVersion: 2.3
 
+# sometimes, it's nice to be explicit with the difference between named args
+# and a hash parameter
+Style/BracesAroundHashParameters:
+  Enabled: false
+
 # Prefer short-arrow syntax (->) to the full `lambda` keyword
 Style/Lambda:
   Enabled: false

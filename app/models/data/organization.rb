@@ -106,6 +106,11 @@ class Organization < ApplicationRecord
     "//#{domain}.#{APPLICATION_CONFIG[:domain][Rails.env]}"
   end
 
+  def is_accessible_to?(user)
+    # do buyers of lessons need to be included?
+    is_accessible_as_collaborator?(user)
+  end
+
   # a higher level of access
   def is_accessible_as_collaborator?(user)
     return false unless user

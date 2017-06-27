@@ -23,7 +23,8 @@ describe Api::OrderOperations::Update do
         })
         allow(operation).to receive(:update)
 
-        operation.run
+        expect { operation.run }
+          .to raise_error
       end
 
       it 'is allowed' do
@@ -34,12 +35,12 @@ describe Api::OrderOperations::Update do
           payment_token: '123',
           payment_method: 'Stripe',
           metadata: { name: 'a', email: 'a'})
-        operation = Api::OrderOperations::Update.new(nil, {
-          id: order.id, payment_token: '123', payment_method: 'Stripe'
-        })
+        params = { id: order.id, payment_token: '123', payment_method: 'Stripe' }
+        operation = Api::OrderOperations::Update.new(nil, params, params)
         allow(operation).to receive(:update)
 
-        operation.run
+        expect { operation.run }
+          .to_not raise_error
       end
 
       it 'is not allowed' do
@@ -53,16 +54,15 @@ describe Api::OrderOperations::Update do
         @order.save
 
         expect(@order.paid).to eq false
-        operation = Api::OrderOperations::Update.new(nil, {
+        operation = Api::OrderOperations::Update.new(@order.user, {
           id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10,
           checkout_token: 'cash' # doesn't super matter, cause the control flow is based
           # on the payment_method (which is an actual property)
         })
         expect(operation).to receive(:pay).and_call_original
 
-        expect{
-            model = operation.run
-        }.to change(ActionMailer::Base.deliveries, :count).by 1
+        expect { model = operation.run }
+          .to change(ActionMailer::Base.deliveries, :count).by 1
 
       end
     end

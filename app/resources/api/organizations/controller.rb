@@ -1,6 +1,6 @@
 module Api
   class OrganizationsController < Api::ResourceController
-    before_filter :must_be_logged_in, except: [:index]
+    before_filter :must_be_logged_in, except: [:index, :show]
 
     def index
       # TODO: add a `self.parent = :method` to SkinnyControllers

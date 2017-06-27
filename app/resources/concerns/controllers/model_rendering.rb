@@ -30,25 +30,34 @@ module Controllers
     def render_json_response(include_param, success_status = 200, error_condition = nil)
       raise ActiveRecord::RecordNotFound if model.nil?
 
-      if error_condition && error_condition.call(model)
-        render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
-      else
-        options = {
-          json: model,
-          include: include_param,
-          status: success_status
-        }
+      return render_jsonapi_error(model) if error_present?(error_condition, model)
 
-        if self.class.serializer
-          if model.respond_to?(:each)
-            options[:each_serializer] = self.class.serializer
-          else
-            options[:serializer] = self.class.serializer
-          end
+      options = {
+        json: model,
+        include: include_param,
+        status: success_status
+      }
+
+      if self.class.serializer
+        if model.respond_to?(:each)
+          options[:each_serializer] = self.class.serializer
+        else
+          options[:serializer] = self.class.serializer
         end
-
-        render options
       end
+
+      render options
     end
+
+    private
+
+    def error_present?(condition, model)
+      condition && condition.call(model)
+    end
+
+    def render_jsonapi_error(model)
+      render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
+    end
+
   end
 end
