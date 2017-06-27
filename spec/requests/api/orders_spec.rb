@@ -177,6 +177,30 @@ describe Api::OrdersController, type: :request do
       expect(response.status).to eq 404
     end
 
+    context 'can create an order' do
+      let(:organization) { create(:organization) }
+      let(:params) { {
+        data: {
+          type: 'order',
+          attributes: { },
+          relationships: {
+            host: { data: { type: 'Organization', id: organization.id } }
+          }
+        }
+      } }
+
+      it 'can create an order' do
+        expect { post '/api/orders', params, auth_header_for(user) }
+          .to change(Order, :count).by 1
+        expect(response.status).to eq 200
+      end
+
+      it 'can create an order - blank payment_token is ignored' do
+        post '/api/orders', params, auth_header_for(user)
+        expect(response.status).to eq 200
+      end
+    end
+
     it 'cannot refund someone elses order' do
       order = create(:order, attendance: create(:attendance))
       put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(user)
