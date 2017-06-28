@@ -26,7 +26,7 @@ describe Api::OrderLineItemsController, type: :controller do
             order: {
               data: {
                 id: @order.id,
-                type: 'order'
+                type: 'orders'
               }
             },
             line_item: {

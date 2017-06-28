@@ -10,11 +10,15 @@ module Api
     end
 
     def create
-      render_model('order,line_item.restraints', success_status: 201)
+      render_model('order.order_line_items.line_item,line_item.restraints', success_status: 201)
     end
 
     def update
-      render_model('line_item,order')
+      render_model('line_item,order.order_line_items')
+    end
+
+    def destroy
+      render_model('order.order_line_items')
     end
 
     def mark_as_picked_up

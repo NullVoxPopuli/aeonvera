@@ -7,7 +7,7 @@ module CsvGeneration
 
     if fields_from_params
       fields = JSONAPI::IncludeDirective.new(fields_from_params).to_hash
-      options[:fields] = ActiveModelSerializers::KeyTransform.underscore(fields)
+      options[:fields] = CaseTransform.underscore(fields)
     end
     hash = if skip_serialization
              model

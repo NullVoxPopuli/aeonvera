@@ -3,7 +3,7 @@ module Api
   class OrderSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
 
-    type 'order'
+    type 'orders'
 
     attributes :id,
       :host_id, :host_type,

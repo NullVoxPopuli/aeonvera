@@ -4,7 +4,7 @@ module Api
     include PublicAttributes::LineItemAttributes
     include SharedAttributes::Stock
 
-    type 'shirt'
+    type 'shirts'
     attributes :sizes
 
     has_many :order_line_items

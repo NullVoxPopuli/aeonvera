@@ -38,6 +38,7 @@ function rundocko {
     rake)     docko-dev run --rm web rake $arguments;;
     bash)     docko-dev run --rm web bash;;
     dev)      docko-dev run --rm --service-ports web $arguments;;
+    run)      docko-dev run --rm web $arguments;;
     c)        docko-dev run --rm web rails console;;
 
     # Local Database Management

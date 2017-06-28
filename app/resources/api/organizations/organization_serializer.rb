@@ -1,5 +1,7 @@
 module Api
   class OrganizationSerializer < ActiveModel::Serializer
+    type 'organizations'
+
     attributes :id, :name, :tagline,
       :city, :state, :beta, :owner_id,
       :domain, :url,

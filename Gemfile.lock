@@ -33,10 +33,11 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_model_serializers (0.10.3)
+    active_model_serializers (0.10.5)
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
-      jsonapi (= 0.1.1.beta2)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.2)
     activejob (4.2.8)
       activesupport (= 4.2.8)
       globalid (>= 0.3.0)
@@ -167,7 +168,7 @@ GEM
     hashie (3.4.6)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.8.1)
+    i18n (0.8.4)
     inflecto (0.0.2)
     jimson-temp (0.9.5)
       blankslate (>= 3.1.2)
@@ -176,10 +177,9 @@ GEM
       rest-client (~> 1.0)
     jmespath (1.2.4)
       json_pure (>= 1.8.1)
-    json (1.8.6)
+    json (2.1.0)
     json_pure (1.8.3)
-    jsonapi (0.1.1.beta2)
-      json (~> 1.8)
+    jsonapi-renderer (0.1.2)
     launchy (2.4.3)
       addressable (~> 2.3)
     letter_opener (1.4.1)
@@ -199,13 +199,13 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.3)
     mimemagic (0.3.1)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.2.0)
     minitest (5.10.2)
     multi_json (1.12.1)
     netrc (0.11.0)
     newrelic_rpm (3.11.2.286)
-    nokogiri (1.7.2)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.8.0)
+      mini_portile2 (~> 2.2.0)
     oj (2.17.5)
     oj_mimic_json (1.0.1)
     orm_adapter (0.5.0)
@@ -401,7 +401,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_model_serializers
+  active_model_serializers (= 0.10.5)
   annotate
   api_cache!
   arbre

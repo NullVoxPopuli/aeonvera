@@ -31,6 +31,10 @@ module Api
       super
     end
 
+    def show
+      render_model('order_line_items.line_item')
+    end
+
     def create
       render_model('order_line_items.line_item')
     end
