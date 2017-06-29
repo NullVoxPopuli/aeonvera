@@ -77,6 +77,9 @@ module Api
           # if this succeeds, the order will be saved
           update_stripe
         end
+
+        # TODO: make async
+        OrderOperations::CheckForMembership.new(model.id).call
       end
 
       def update_stripe

@@ -66,6 +66,10 @@ Style/MissingElse:
 Style/EmptyElse:
   EnforcedStyle: empty
 
+Style/MultilineBlockLayout:
+  Exclude:
+    - spec/**/*
+
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
 

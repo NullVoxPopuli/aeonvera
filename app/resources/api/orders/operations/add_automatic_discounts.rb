@@ -61,12 +61,15 @@ module Api
 
             order_line_item = @order.order_line_item_for_item(discount)
             quantity = order_line_items
-              .select { |oli| oli.line_item_type == discount.affects }
-              .map(&:quantity)
-              .inject(:+)
+                       .select { |oli| oli.line_item_type == discount.affects }
+                       .map(&:quantity)
+                       .inject(:+)
 
             # TODO: also handle discount#restrained_to?(specific item)
-            (order_line_item.destroy; next) if quantity == 0
+            if quantity == 0
+              order_line_item.destroy
+              next
+            end
 
             if order_line_item
               order_line_item.update(quantity: quantity)
@@ -95,10 +98,10 @@ module Api
           affects = MembershipDiscount.arel_table[:affects]
 
           organization.membership_discounts
-            .where(affects.in(types))
-            # TODO: for when the upgrade to rails 5 is finished
-            # .or(organization.membership_discounts
-            #   .where(affects: nil))
+                      .where(affects.in(types))
+          # TODO: for when the upgrade to rails 5 is finished
+          # .or(organization.membership_discounts
+          #   .where(affects: nil))
         end
       end
 
@@ -122,8 +125,19 @@ module Api
 
       def may_be_eligable_for_automatic_discount?
         return false unless organization
+        return false unless organization.membership_discounts.present?
+        return true if @order.user.is_member_of?(organization)
 
-        @order.user.is_member_of?(organization) && organization.membership_discounts.present?
+        current_order_contains_membership_purchase?
+      end
+
+      def current_order_contains_membership_purchase?
+        options = organization.membership_options
+
+        options
+          .map { |option| @order.order_line_item_for_item(option) }
+          .map(&:present?)
+          .any?
       end
     end
   end

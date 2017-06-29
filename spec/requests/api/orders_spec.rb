@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::OrdersController, type: :request do
@@ -31,7 +32,6 @@ describe Api::OrdersController, type: :request do
       delete "/api/orders/#{order.id}"
       expect(response.status).to eq 401
     end
-
 
     context 'but does have a payment_token' do
       let(:token) { 'abc123' }
@@ -152,7 +152,6 @@ describe Api::OrdersController, type: :request do
       delete "/api/orders/#{order.id}", {}, auth_header_for(owner)
       expect(response.status).to eq 404
     end
-
   end
 
   context 'is logged in' do
@@ -182,7 +181,7 @@ describe Api::OrdersController, type: :request do
       let(:params) { {
         data: {
           type: 'order',
-          attributes: { },
+          attributes: {},
           relationships: {
             host: { data: { type: 'Organization', id: organization.id } }
           }
@@ -224,6 +223,94 @@ describe Api::OrdersController, type: :request do
       order = create(:order, host: event, attendance: create(:attendance, attendee: user))
       get "/api/orders/#{order.id}", {}, auth_header_for(user)
       expect(response.status).to eq 200
+    end
+
+    context 'can pay for own order' do
+      let!(:organization) { create(:organization) }
+      let!(:user) { create(:user) }
+      let!(:order) { create(:order, host: organization, user: user, payment_method: Payable::Methods::STRIPE) }
+      let!(:lesson) { create(:lesson, host: organization, price: 45) }
+
+      context 'when buying a membership option' do
+        let!(:membership_option) { create(:membership_option, host: organization, price: 25) }
+        let!(:membership_discount) {
+          create(:membership_discount,
+            host: organization,
+            value: 7,
+            affects: LineItem::Lesson.name,
+            kind: Discount::DOLLARS_OFF)
+        }
+
+        before(:each) do
+          add_to_order!(order, lesson)
+          add_to_order!(order, membership_option)
+          Api::OrderOperations::AddAutomaticDiscounts.new(order).run
+
+          order.reload
+          expect(order.order_line_items.count).to eq 3
+        end
+
+        let(:stripe_successful_payment_params) do
+          {
+            'data' => {
+              'id' => '3385',
+              'attributes' => {
+                'paid_amount' => 53,
+                'payment_method' => Payable::Methods::STRIPE,
+                'checkout-token' => 'tok_some_payment_token',
+                'checkout-email' => 'preston@aeonvera.com'
+              },
+              'relationships' => {
+                'host' => { 'data' => { 'type' => 'organizations', 'id' => '1' } },
+                'order-line-items' => {
+                  'data' => [
+                    { 'id' => '4625', 'type' => 'order-line-items' },
+                    { 'id' => '4624', 'type' => 'order-line-items' },
+                    { 'id' => '4623', 'type' => 'order-line-items' }
+                  ]
+                },
+                'attendance' => { 'data' => nil },
+                'user' => { 'data' => { 'type' => 'users', 'id' => 'current-user' } },
+                'pricing-tier' => { 'data' => nil }
+              },
+              'type' => 'orders'
+            }
+          }
+        end
+
+        before(:each) do
+          # 'disable' the stripe stuff -- not tested here
+          allow_any_instance_of(Order).to receive(:sync_current_payment_aggregations)
+          allow_any_instance_of(Api::OrderOperations::Update).to receive(:update_stripe) {
+            order.update(
+              paid: true,
+              net_amount_received: -1,
+              paid_amount: -1,
+              total_fee_amount: -1
+            )
+          }
+        end
+
+        it 'makes sure that the param input is valid for paying for an order' do
+          expect {
+            patch "/api/orders/#{order.id}", stripe_successful_payment_params, auth_header_for(user)
+          }.to change(order, :paid)
+        end
+
+        it 'creates a membership renewal' do
+          expect {
+            patch "/api/orders/#{order.id}", stripe_successful_payment_params, auth_header_for(user)
+          }.to change(MembershipRenewal, :count).by(1)
+        end
+
+        it 'makes the user a member of the organization' do
+          expect(user.is_member_of?(organization)).to eq false
+
+          patch "/api/orders/#{order.id}", stripe_successful_payment_params, auth_header_for(user)
+
+          expect(user.is_member_of?(organization)).to eq true
+        end
+      end
     end
   end
 end

@@ -125,6 +125,83 @@ describe Api::OrderLineItemsController, type: :request do
     end
   end
 
+  context 'Organization: when logged in' do
+    context 'user is not a member' do
+      context 'adding a membership' do
+        let!(:organization) { create(:organization) }
+        let!(:user) { create(:user) }
+        let!(:order) { create(:order, host: organization, user: user) }
+        let!(:lesson) { create(:lesson, host: organization, price: 45) }
+        let!(:membership_option) { create(:membership_option, host: organization, price: 25) }
+        let!(:membership_discount) {
+          create(:membership_discount,
+            host: organization,
+            value: 7,
+            affects: LineItem::Lesson.name,
+            kind: Discount::DOLLARS_OFF)
+        }
+
+        let!(:lesson_params) { {
+          data: {
+            type: 'order-line-items',
+            attributes: { quantity: 1 },
+            relationships: {
+              'line-item': { data: { type: 'lesson', id: lesson.id } },
+              order: { data: { type: 'orders', id: order.id } }
+            }
+          }
+        } }
+
+        let!(:membership_params) { {
+          data: {
+            type: 'order-line-items',
+            attributes: { quantity: 1 },
+            relationships: {
+              'line-item': { data: { type: 'membership-options', id: membership_option.id } },
+              order: { data: { type: 'orders', id: order.id } }
+            }
+          }
+        } }
+
+        it 'applies the auto-discount when a membership is added to a lesson' do
+          add_to_order!(order, lesson)
+          expect(order.order_line_items.length).to eq 1
+
+          post '/api/order_line_items', membership_params, auth_header_for(user)
+
+          expect(response.status).to eq 201
+
+          order.reload
+          expected_value = lesson.current_price -
+            membership_discount.value +
+            membership_option.current_price
+
+          # lesson, discount, membership
+          expect(order.order_line_items.count).to eq 3
+          expect(expected_value).to eq order.total
+        end
+
+        it 'applies the auto-discount when a lesson is added to a membership' do
+          add_to_order!(order, membership_option)
+          expect(order.order_line_items.length).to eq 1
+
+          post '/api/order_line_items', lesson_params, auth_header_for(user)
+
+          expect(response.status).to eq 201
+
+          order.reload
+          expected_value = lesson.current_price -
+            membership_discount.value +
+            membership_option.current_price
+
+          # lesson, discount, membership
+          expect(order.order_line_items.count).to eq 3
+          expect(expected_value).to eq order.total
+        end
+      end
+    end
+  end
+
   context 'Organization: is not logged in' do
     context 'user owns the order via payment token' do
       let(:order) { create(:order, host: organization, payment_token: '123abc') }
