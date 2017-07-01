@@ -36,6 +36,17 @@
 #
 
 class Shirt < LineItem::Shirt
+  # this will need to go away when I get rid of this class.
+  # namespaces are easy in ember :-)
+  has_attached_file :picture,
+    preserve_files: true,
+    keep_old_files: true,
+    path: '/assets/line_item/shirt/:id/picture_:style.:extension',
+    styles: {
+      thumb: '128x128>',
+      medium: '300x300>'
+    }
+
   class << self
     def sti_name
       LineItem::Shirt.name
