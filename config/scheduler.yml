@@ -1,6 +1,9 @@
-membership_renewal_reminder_job:
+MembershipReminderJob:
   every: ["1d"]
-  class: MembershipReminderJob
   queue: daemons
-  args:
   description: "Membership Renewal Reminder"
+
+OrderCleanupJob:
+  every: ["1d"]
+  queue: daemons
+  description: "Cleans invalid and old orders"

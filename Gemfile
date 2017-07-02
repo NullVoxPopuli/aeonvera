@@ -35,10 +35,11 @@ gem 'will_paginate', '~> 3.1.0' # pagination
 # Background Tasks
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
-gem 'sidekiq-rollbar'
+# gem 'sidekiq-rollbar'
 
 # Cache
-gem 'redis'
+# gem 'redis'
+gem 'redis-rails', '5.0.2'
 gem 'api_cache', github: 'NullVoxPopuli/api_cache'
 
 # JSON serialization

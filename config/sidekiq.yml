@@ -6,3 +6,4 @@
   - mailers
   - default
   - daemons
+  - rollbar

@@ -19,4 +19,4 @@ RUN bundle install
 
 ADD . /web
 
-CMD bundle exec rails s -p 3000
+#CMD bundle exec rails s -p 3000

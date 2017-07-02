@@ -4,6 +4,7 @@ module Api
     type 'upcoming_event'
     attributes :id, :name, :location,
       :registration_opens_at, :starts_at, :ends_at, :url,
+      :domain,
       :logo_url_thumb, :logo_url_medium, :logo_url
 
 

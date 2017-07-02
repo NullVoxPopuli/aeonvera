@@ -32,6 +32,7 @@ module AeonVera
     config.active_job.queue_adapter = :sidekiq
 
 
+    config.cache_store = :redis_store, ENV['REDIS_URL'] if ENV['REDIS_URL']
     # Upgrading from rails 4.1.x to 4.2.x
     # Currently, Active Record suppresses errors raised within
     # `after_rollback`/`after_commit` callbacks and only print them to the logs.

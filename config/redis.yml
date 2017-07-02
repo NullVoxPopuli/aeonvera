@@ -1,12 +1,6 @@
 development:
-  host: localhost
-  port: 6379
-development_remote:
-  host: localhost
-  port: 6379
-development_public:
-  host: localhost
-  port: 6379
+  host: <%= ENV['REDIS_HOST'] %>
+  port: <%= ENV['REDIS_PORT'] %>
 test:
   host: localhost
   port: 6379

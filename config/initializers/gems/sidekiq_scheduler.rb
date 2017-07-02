@@ -15,7 +15,8 @@ if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
   Sidekiq.configure_server do |config|
     config.on(:startup) do
       # In case we have lots of crons, migrating to this yml might be a good idea
-      config = YAML.load_file(File.expand_path('../../scheduler.yml', __FILE__))
+      config_path = Rails.root.join('config', 'scheduler.yml')
+      config = YAML.load_file(config_path)
       Sidekiq.schedule = config
       Sidekiq::Scheduler.reload_schedule!
     end
@@ -25,12 +26,15 @@ if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
   #
   # Locally, run
   #  bundle exec sidekiq -q default -q mailers -q daemons
-  # 
-  # Thread.new do
-  #   cli = Sidekiq::CLI.instance
-  #   cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
-  #   cli.run
-  # end
+
+  if ENV['THREADED_SIDEKIQ']
+    Rails.logger.info('Starting Sidekiq in a thread...')
+    Thread.new do
+      cli = Sidekiq::CLI.instance
+      cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
+      cli.run
+    end
+  end
 else
   Sidekiq::Scheduler.enabled = false
   puts "Sidekiq::Scheduler.enabled is #{Sidekiq::Scheduler.enabled.inspect}"

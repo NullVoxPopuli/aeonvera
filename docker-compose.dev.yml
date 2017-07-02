@@ -15,36 +15,55 @@ services:
     image: redis:3.2
     networks:
      - backend
-    ports:
-      - "26379:6379"
-  web:
+
+  rails: &rails
     build:
       context: .
       dockerfile: ./Dockerfile
-    command: bundle exec rails s -p 4301 -b '0.0.0.0'
+    networks:
+     - backend
+    env_file:
+      - .env
     volumes:
       - .:/web
       - ./backups:/backups
-    ports:
-      - "4301:4301"
-    networks:
-     - backend
-    links:
-      - db
-      - db:db.local
-      - redis
-      - redis:redis.local
-    env_file:
-      - .env
     environment:
+      # simulating heroku usage
+      - THREADED_SIDEKIQ=true
+
       - RAILS_ENV=development
       - REDIS_URL=redis://redis.local:6379
+      - REDIS_PROVIDER=redis://redis.local:6379
+      - REDIS_HOST=redis.local
+      - REDIS_PORT=6379
 
       - DATABASE_HOST=db.local
       - DATABASE_NAME=aeonvera_development
       - DATABASE_USERNAME=postgres
       - DATABASE_PASSWORD=postgres
       - DATABASE_PORT=5432
+
+  web:
+    <<: *rails
+    command: bundle exec rails s -p 4301 -b '0.0.0.0'
+    ports:
+      - "4301:4301"
+    links:
+      - db
+      - worker
+      - db:db.local
+      - redis
+      - redis:redis.local
+
+  worker:
+    <<: *rails
+    command: bundle exec sidekiq
+    links:
+      - db
+      - db:db.local
+      - redis
+      - redis:redis.local
+
 networks:
   backend:
     driver: bridge

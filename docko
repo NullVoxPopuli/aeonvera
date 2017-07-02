@@ -34,6 +34,7 @@ function rundocko {
   case $given_command in
     build)    docko-dev build $arguments;;
     down)     docko-dev down --remove-orphans;;
+    stop)     docko-dev stop;;
     up)       docko-dev up;;
     rake)     docko-dev run --rm web rake $arguments;;
     bash)     docko-dev run --rm web bash;;
