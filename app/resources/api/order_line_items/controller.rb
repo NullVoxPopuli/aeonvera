@@ -39,8 +39,9 @@ module Api
     end
 
     def update_order_line_item_params
-      whitelistable_params do |whitelister|
+      whitelistable_params(polymorphic: [:line_item]) do |whitelister|
         whitelister.permit(
+          :line_item_id, :line_item_type,
           :price, :quantity,
           :partner_name, :dance_orientation, :size
         )

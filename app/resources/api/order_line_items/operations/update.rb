@@ -5,6 +5,7 @@ module Api
       def run
         return unless allowed_to_update_order_line_item?
         model.assign_attributes(params_for_action)
+        update_price
 
         did_change_quantity = model.quantity_changed?
         if model.save && did_change_quantity
@@ -15,6 +16,16 @@ module Api
       end
 
       private
+
+      def update_price
+        return unless changed_line_item?
+
+        model.price = model.line_item.current_price
+      end
+
+      def changed_line_item?
+        model.line_item_id_changed? || model.line_item_type_changed?
+      end
 
       def authorized_via_token?
         model.order.payment_token == params[:payment_token]

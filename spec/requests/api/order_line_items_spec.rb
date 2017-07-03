@@ -122,6 +122,48 @@ describe Api::OrderLineItemsController, type: :request do
           expect(json_api_included.length).to eq 5
         end
       end
+
+      context 'when updating an order line item' do
+        context 'of type: Package' do
+          let(:package) { create(:package, event: event, initial_price: 50) }
+          let(:other_package) { create(:package, event: event, initial_price: 40) }
+          let!(:order_line_item) {
+            create(:order_line_item,
+              line_item: package,
+              order: order,
+              quantity: 1,
+              price: package.current_price)
+          }
+          let(:params) { {
+            data: {
+              type: 'order-line-items',
+              attributes: { },
+              relationships: {
+                'line-item': { data: { type: 'packages', id: other_package.id } },
+                order: { data: { type: 'orders', id: order.id } }
+              }
+            }
+          } }
+
+          context 'changes the selected package' do
+            before(:each) do
+              expect { patch("/api/order_line_items/#{order_line_item.id}", params, @headers) }
+                .to_not change(OrderLineItem, :count)
+            end
+
+            it 'sets the new package' do
+              expect(response).to have_relation_to(other_package, 'line-item')
+            end
+
+            it 'updates the price' do
+              attributes = json_api_data['attributes']
+              price = attributes['price']
+
+              expect(price).to eq other_package.current_price.to_s
+            end
+          end
+        end
+      end
     end
   end
 
@@ -231,7 +273,7 @@ describe Api::OrderLineItemsController, type: :request do
               id: oli.id,
               attributes: { quantity: 5 },
               relationships: {
-                'line-item': { type: 'lessons', id: lesson1.id }
+                'line-item': { data: { type: 'lessons', id: lesson1.id } }
               }
             }
           )
