@@ -44,6 +44,59 @@ describe Api::OrderLineItemsController, type: :request do
       end
 
       context 'when creating an order line item' do
+        context 'of type: Shirt' do
+          let(:shirt) { create(:shirt,
+            host: event,
+            price: 15,
+            metadata: {
+              sizes: ['S', 'M', 'L'],
+              prices: { 'S': '10', 'M': '12' },
+              inventory: { 'S': '0', 'M': '0', 'L': '0' }
+          } ) }
+          let(:params) { {
+            data: {
+              type: 'order-line-items',
+              attributes: { quantity: 1, size: 'S' },
+              relationships: {
+                'line-item': { data: { type: 'shirts', id: shirt.id } },
+                order: { data: { type: 'orders', id: order.id } }
+              }
+            }
+          }}
+
+          context 'add an item to the order' do
+            it 'creates an order line item' do
+              expect { post '/api/order_line_items', params, @headers }
+                .to change(OrderLineItem, :count).by 1
+
+              expect(response.status).to eq 201
+            end
+
+            it 'relates the shirt' do
+              expect { post '/api/order_line_items', params, @headers }
+                .to change(OrderLineItem, :count).by 1
+
+              expect(json_response)
+                .to have_relation_to(shirt, { relation: 'line-item', type: 'shirts' })
+            end
+
+            it 'uses the price of the size, rather than the line-item' do
+              post '/api/order_line_items', params, @headers
+
+              expect(json_response).to have_attribute('size', 'S')
+              expect(json_response).to have_attribute('price', '10.0')
+            end
+
+            it 'falls back to the price of the line-item if the shirt has none' do
+              params[:data][:attributes][:size] = 'L'
+              post '/api/order_line_items', params, @headers
+
+              expect(json_response).to have_attribute('size', 'L')
+              expect(json_response).to have_attribute('price', '15.0')
+            end
+          end
+        end
+
         context 'of type: Package' do
           let(:package) { create(:package, event: event) }
           let(:params) { {
@@ -152,7 +205,7 @@ describe Api::OrderLineItemsController, type: :request do
             end
 
             it 'sets the new package' do
-              expect(json_response).to have_relation_to(other_package, 'line-item')
+              expect(json_response).to have_relation_to(other_package, { relation: 'line-item' })
             end
 
             it 'updates the price' do

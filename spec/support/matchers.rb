@@ -33,8 +33,11 @@ RSpec::Matchers.define :have_used_serializer do |klass, resource|
   end
 end
 
-RSpec::Matchers.define :have_relation_to do |expected_ar_instance, relation_name = nil|
-  resource_type = expected_ar_instance.class.name.underscore.dasherize.pluralize
+RSpec::Matchers.define :have_relation_to do |expected_ar_instance, options = {}|
+  relation_name = options[:relation]
+  resource_type = options[:type]
+
+  resource_type ||= expected_ar_instance.class.name.underscore.dasherize.pluralize
   relation_name ||= resource_type.singularize
 
   expected_type = resource_type
@@ -49,8 +52,8 @@ RSpec::Matchers.define :have_relation_to do |expected_ar_instance, relation_name
     expect(relation['id'].to_s).to eq(expected_id.to_s)
   end
 
-  failure_message do |actual|
-    relation = json_response.dig('data', 'relationships', relation_name, 'data')
+  failure_message do |json|
+    relation = json.dig('data', 'relationships', relation_name, 'data')
 
     raise "relation not found: #{relation_name}" unless relation
 
@@ -58,5 +61,23 @@ RSpec::Matchers.define :have_relation_to do |expected_ar_instance, relation_name
     actual_id = relation['id']
 
     "expected id and type of #{expected_id} and #{expected_type}, but received #{actual_id} and #{actual_type}"
+  end
+end
+
+RSpec::Matchers.define :have_attribute do |attribute_name, value = :__not_used|
+  check_value = value != :__not_used
+
+  match do |json|
+    attribute = json.dig('data', 'attributes', attribute_name)
+
+    expect(attribute).to be_present
+    expect(attribute).to eq value if check_value
+  end
+
+  failure_message do |json|
+    attribute = json.dig('data', 'attributes', attribute_name)
+
+    return "expected #{attribute_name} to be present" unless attribute
+    return "expected #{attribute_name} to have a value of #{value}, but was #{attribute}" if check_value
   end
 end

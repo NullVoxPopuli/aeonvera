@@ -88,10 +88,21 @@ module Api
 
       def price
         return 0 - line_item.value if line_item.is_a?(Discount)
+        return shirt_price if use_shirt_price?
         return line_item.current_price if line_item.respond_to?(:current_price)
         return line_item.price if line_item.respond_to?(:price)
 
         0
+      end
+
+      def shirt_price
+        size = params_for_action[:size]
+
+        line_item.price_for_size(size) || line_item.price
+      end
+
+      def use_shirt_price?
+        params_for_action[:size] && line_item.is_a?(::LineItem::Shirt)
       end
 
       def line_item
