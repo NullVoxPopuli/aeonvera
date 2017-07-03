@@ -152,7 +152,7 @@ describe Api::OrderLineItemsController, type: :request do
             end
 
             it 'sets the new package' do
-              expect(response).to have_relation_to(other_package, 'line-item')
+              expect(json_response).to have_relation_to(other_package, 'line-item')
             end
 
             it 'updates the price' do

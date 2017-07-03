@@ -40,8 +40,7 @@ RSpec::Matchers.define :have_relation_to do |expected_ar_instance, relation_name
   expected_type = resource_type
   expected_id = expected_ar_instance.id
 
-  match do |response|
-    json = JSON.parse(response.body)
+  match do |json|
     relation = json.dig('data', 'relationships', relation_name, 'data')
 
     raise "relation not found: #{relation_name}" unless relation
@@ -51,8 +50,7 @@ RSpec::Matchers.define :have_relation_to do |expected_ar_instance, relation_name
   end
 
   failure_message do |actual|
-    json = JSON.parse(response.body)
-    relation = json.dig('data', 'relationships', relation_name, 'data')
+    relation = json_response.dig('data', 'relationships', relation_name, 'data')
 
     raise "relation not found: #{relation_name}" unless relation
 
