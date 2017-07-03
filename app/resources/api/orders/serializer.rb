@@ -29,6 +29,7 @@ module Api
       include_data true
       object.order_line_items.loaded? ? object.order_line_items : OrderLineItem.none
     end
+
     belongs_to :host
     belongs_to :attendance
     belongs_to :pricing_tier
