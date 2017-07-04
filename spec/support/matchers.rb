@@ -69,9 +69,10 @@ RSpec::Matchers.define :have_attribute do |attribute_name, value = :__not_used|
 
   match do |json|
     attribute = json.dig('data', 'attributes', attribute_name)
+    exists = expect(attribute).to be_present
 
-    expect(attribute).to be_present
-    expect(attribute).to eq value if check_value
+    return expect(attribute).to eq value if check_value
+    return exists
   end
 
   failure_message do |json|
@@ -79,5 +80,7 @@ RSpec::Matchers.define :have_attribute do |attribute_name, value = :__not_used|
 
     return "expected #{attribute_name} to be present" unless attribute
     return "expected #{attribute_name} to have a value of #{value}, but was #{attribute}" if check_value
+
+    "#{attribute_name} exists, but has a value of #{attribute}"
   end
 end

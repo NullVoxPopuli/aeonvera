@@ -13,7 +13,7 @@ module Api
         if obj.errors.present?
           render json: obj, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
         else
-          render jsonapi: obj
+          render jsonapi: obj, serializer: Api::UserSerializer
         end
       end
 
