@@ -131,4 +131,8 @@ group :test do
   gem 'simplecov', require: false
   # Coverage Reporting
   gem 'codeclimate-test-reporter'
+
+
+  # JSONAPI Validation
+  gem 'jsonapi-parser', require: 'jsonapi/parser'
 end

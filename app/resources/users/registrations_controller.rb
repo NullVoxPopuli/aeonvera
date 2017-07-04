@@ -2,6 +2,14 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
   respond_to :html, :json
+  # overrides devise's respond_with
+  def respond_with(obj, *_args)
+    if obj.respond_to?(:errors) && obj.errors.present?
+      render json: obj, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
+    else
+      render json: obj, serializer: Api::UserSerializer
+    end
+  end
 
   def destroy
     if resource.upcoming_events.count > 0

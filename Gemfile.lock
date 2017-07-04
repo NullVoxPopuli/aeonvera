@@ -180,6 +180,7 @@ GEM
       json_pure (>= 1.8.1)
     json (2.1.0)
     json_pure (1.8.3)
+    jsonapi-parser (0.1.1)
     jsonapi-renderer (0.1.2)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -438,6 +439,7 @@ DEPENDENCIES
   fuubar
   goldiloader
   i18n
+  jsonapi-parser
   letter_opener_web
   mail
   metahash-rb

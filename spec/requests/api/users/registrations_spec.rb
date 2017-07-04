@@ -12,21 +12,30 @@ describe Api::Users::RegistrationsController, type: :request do
   end
 
   context 'create' do
-    it 'creates an account' do
-      expect {
-        post '/api/users', {
-          data: {
-            attributes: {
-              first_name: 'First',
-              last_name: 'Last',
-              email: 'emailyMcEmailFace@email.email',
-              password: 'password',
-              password_confirmation: 'password'
-            }
+    context 'with a valid payload' do
+      let(:params) { {
+        data: {
+          attributes: {
+            first_name: 'First',
+            last_name: 'Last',
+            email: 'emailyMcEmailFace@email.email',
+            password: 'password',
+            password_confirmation: 'password'
           }
         }
-        expect(response.status).to eq 200
-      }.to change(User, :count).by 1
+      } }
+
+      it 'returns a valid jsonapi document' do
+        expect { JSONAPI.parse_response!(json_response) }
+          .to_not raise_error(JSONAPI::Parser::InvalidDocument)
+      end
+
+      it 'creates an account' do
+        expect {
+          post '/api/users', params
+          expect(response.status).to eq 200
+        }.to change(User, :count).by 1
+      end
     end
 
     it 'has case-insensitive email addresses' do
