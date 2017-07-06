@@ -12,7 +12,16 @@ Sidekiq::Scheduler.enabled = true
 Sidekiq::Scheduler.dynamic = true
 
 if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
+  redis_conn = proc {
+    config = URI.parse(ENV['REDIS_URL'])
+    ap config.host
+    ap config.port
+    ap config.password
+    Redis.new(host: config.host, port: config.port, password: config.password)
+  }
+
   Sidekiq.configure_server do |config|
+    config.redis = ConnectionPool.new(size: 1, &redis_conn)
     config.on(:startup) do
       # In case we have lots of crons, migrating to this yml might be a good idea
       config_path = Rails.root.join('config', 'scheduler.yml')
