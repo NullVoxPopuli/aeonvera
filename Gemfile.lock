@@ -205,7 +205,6 @@ GEM
     minitest (5.10.2)
     multi_json (1.12.1)
     netrc (0.11.0)
-    newrelic_rpm (3.11.2.286)
     nokogiri (1.8.0)
       mini_portile2 (~> 2.2.0)
     oj (2.17.5)
@@ -357,6 +356,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    scout_apm (2.1.26)
     sidekiq (5.0.3)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -443,7 +443,6 @@ DEPENDENCIES
   letter_opener_web
   mail
   metahash-rb
-  newrelic_rpm
   oj
   oj_mimic_json
   paperclip (~> 5.0.0.beta2)
@@ -468,6 +467,7 @@ DEPENDENCIES
   rubocop
   sass (~> 3.3.14)
   sass-rails
+  scout_apm
   sidekiq
   sidekiq-scheduler
   simplecov

@@ -60,7 +60,8 @@ gem 'aws-sdk' # Upload Storage on S3
 # validation
 gem 'date_validator'
 
-gem 'newrelic_rpm' # app performance monitoring
+# app performance monitoring
+gem 'scout_apm'
 
 ############
 # JS, CSS and Icons (For Emails)
