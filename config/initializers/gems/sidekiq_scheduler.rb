@@ -13,12 +13,16 @@ Sidekiq::Scheduler.dynamic = true
 
 Thread.new do
   # wait long enough for redis to boot
-  sleep(2)
+  # sleep(2)
 
   redis_conn = proc {
     config = URI.parse(ENV['REDIS_URL'])
     Redis.new(host: config.host, port: config.port, password: config.password)
   }
+
+  Sidekiq.configure_client do |config|
+    config.redis = ConnectionPool.new(size: 5, &redis_conn)
+  end
 
   Sidekiq.configure_server do |config|
     config.redis = ConnectionPool.new(size: 5, &redis_conn)
@@ -31,10 +35,6 @@ Thread.new do
     end
   end
 
-  Rails.logger.info('Starting Sidekiq in a thread...')
-  cli = Sidekiq::CLI.instance
-  cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
-  cli.run
 end if ENV['THREADED_SIDEKIQ']
 
 Sidekiq::Web.use(Rack::Auth::Basic) do |username, password|
