@@ -59,10 +59,16 @@ module HasMemberships
   end
 
   def first_renewal_for_membership(membership_option)
-    membership_option.renewals.where(user_id: id).first
+    relation = membership_option.renewals
+    return relation.select { |r| r.user_id == id }.first if relation.loaded?
+
+    relation.where(user_id: id).first
   end
 
   def latest_renewal_for_membership(membership_option)
-    membership_option.renewals.where(user_id: id).last
+    relation = membership_option.renewals
+    return relation.select { |r| r.user_id == id }.last if relation.loaded?
+
+    relation.where(user_id: id).last
   end
 end

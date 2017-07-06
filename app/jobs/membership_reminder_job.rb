@@ -9,7 +9,7 @@ class MembershipReminderJob < ApplicationJob
   def perform
     now = Time.now
 
-    Organization.all.each do |org|
+    Organization.includes([members: [:renewals], membership_options: [renewals: [:user]]]).all.each do |org|
       org.members.each do |member|
         renewal = member.latest_active_renewal(org)
 
@@ -21,6 +21,7 @@ class MembershipReminderJob < ApplicationJob
     end
   end
 
+  # remind one week before their membership expires, but not after
   def should_send_email(renewal, now)
     expires_at = renewal.expires_at
     when_to_remind = expires_at - ONE_WEEK

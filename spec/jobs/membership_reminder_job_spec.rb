@@ -34,4 +34,15 @@ describe MembershipReminderJob do
     MembershipReminderJob.perform_now
     expect(ActionMailer::Base.deliveries.first).to_not be_nil
   end
+
+  it 'does not spend if the expiration has hit' do
+    create(:membership_renewal,
+      membership_option: membership_option,
+      user: user,
+      start_date: 1.year.ago - 1.day)
+
+    ActionMailer::Base.deliveries.clear
+    MembershipReminderJob.perform_now
+    expect(ActionMailer::Base.deliveries.first).to be_nil
+  end
 end

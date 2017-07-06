@@ -1,5 +1,5 @@
 MembershipReminderJob:
-  every: ["1d"]
+  every: ["2d"]
   queue: daemons
   description: "Membership Renewal Reminder"
 
