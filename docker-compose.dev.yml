@@ -13,6 +13,8 @@ services:
 
   redis:
     image: redis:3.2
+    ports:
+    - '6379:19679'
     networks:
      - backend
 
@@ -54,19 +56,19 @@ services:
       - "4301:4301"
     links:
       - db
-      - worker
+      # - worker
       - db:db.local
       - redis
       - redis:redis.local
 
-  worker:
-    <<: *rails
-    command: bundle exec sidekiq
-    links:
-      - db
-      - db:db.local
-      - redis
-      - redis:redis.local
+  # worker:
+  #   <<: *rails
+  #   command: bundle exec sidekiq
+  #   links:
+  #     - db
+  #     - db:db.local
+  #     - redis
+  #     - redis:redis.local
 
 networks:
   backend:
