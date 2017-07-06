@@ -14,6 +14,9 @@ Sidekiq::Scheduler.dynamic = true
 if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
   redis_conn = proc {
     config = URI.parse(ENV['REDIS_URL'])
+    ap config.host
+    ap config.port
+    ap config.password
     Redis.new(host: config.host, port: config.port, password: config.password)
   }
 

@@ -2,12 +2,13 @@ stages:
 - ci
 - deploy
 
-tags:
-  - docker
-
 rspec:
   stage: ci
   image: ruby:2.3.3
+
+  tags:
+    - docker
+
   services:
     - postgres
     - redis
@@ -52,6 +53,10 @@ rspec:
 production:
   stage: deploy
   image: ruby:2.3.3
+
+  tags:
+    - docker
+
   variables:
     HEROKU_API_KEY: $HEROKU_PRODUCTION_API_KEY
     HEROKU_APP_NAME: $HEROKU_PRODUCTION_APP_NAME
