@@ -17,7 +17,7 @@ environment ENV['RACK_ENV'] || 'development'
 # Dont have to worry about Sidekiq's connection to Redis because connections are only created when needed. As long as we are not
 # queuing workers when rails is booting, there will be no redis connections to disconnect, so it should be fine.
 before_fork do
-  @sidekiq_pid ||= spawn('bundle exec sidekiq')
+  # @sidekiq_pid ||= spawn('bundle exec sidekiq')
   puts 'Puma master process about to fork. Closing existing Active record connections.'
   ActiveRecord::Base.connection.disconnect!
 end
