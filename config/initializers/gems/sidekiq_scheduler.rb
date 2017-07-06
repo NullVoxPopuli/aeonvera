@@ -11,17 +11,17 @@ puts "defined?(Puma) is #{defined?(Puma).inspect}"
 Sidekiq::Scheduler.enabled = true
 Sidekiq::Scheduler.dynamic = true
 
-if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
+Thread.new do
+  # wait long enough for redis to boot
+  sleep(2)
+
   redis_conn = proc {
     config = URI.parse(ENV['REDIS_URL'])
-    ap config.host
-    ap config.port
-    ap config.password
     Redis.new(host: config.host, port: config.port, password: config.password)
   }
 
   Sidekiq.configure_server do |config|
-    config.redis = ConnectionPool.new(size: 1, &redis_conn)
+    config.redis = ConnectionPool.new(size: 5, &redis_conn)
     config.on(:startup) do
       # In case we have lots of crons, migrating to this yml might be a good idea
       config_path = Rails.root.join('config', 'scheduler.yml')
@@ -31,23 +31,11 @@ if defined?(Rails::Server) || defined?(Unicorn) || defined?(Puma)
     end
   end
 
-  # Using Heroku Worker
-  #
-  # Locally, run
-  #  bundle exec sidekiq -q default -q mailers -q daemons
-
-  if ENV['THREADED_SIDEKIQ']
-    Rails.logger.info('Starting Sidekiq in a thread...')
-    Thread.new do
-      cli = Sidekiq::CLI.instance
-      cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
-      cli.run
-    end
-  end
-else
-  Sidekiq::Scheduler.enabled = false
-  puts "Sidekiq::Scheduler.enabled is #{Sidekiq::Scheduler.enabled.inspect}"
-end
+  Rails.logger.info('Starting Sidekiq in a thread...')
+  cli = Sidekiq::CLI.instance
+  cli.parse(['-C', './config/sidekiq.yml', '-L', 'log/sidekiq.log'])
+  cli.run
+end if ENV['THREADED_SIDEKIQ']
 
 Sidekiq::Web.use(Rack::Auth::Basic) do |username, password|
   # Protect against timing attacks:
