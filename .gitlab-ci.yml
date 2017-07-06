@@ -2,6 +2,9 @@ stages:
 - ci
 - deploy
 
+tags:
+  - docker
+
 rspec:
   stage: ci
   image: ruby:2.3.3
