@@ -63,6 +63,10 @@ gem 'date_validator'
 # app performance monitoring
 gem 'scout_apm'
 
+# fast web server
+gem 'puma'
+
+
 ############
 # JS, CSS and Icons (For Emails)
 ############
@@ -94,8 +98,6 @@ group :development, :test do
   gem 'pry-byebug'
   # pretty logs!
   gem 'formatted_rails_logger'
-  # fast web server
-  gem 'puma'
   # linting
   gem 'rubocop'
 
