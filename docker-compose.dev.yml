@@ -43,6 +43,9 @@ services:
       - DATABASE_PASSWORD=postgres
       - DATABASE_PORT=5432
 
+      - SIDEKIQ_USERNAME=devuser
+      - SIDEKIQ_PASSWORD=1234
+
   web:
     <<: *rails
     command: bundle exec rails s -p 4301 -b '0.0.0.0'

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 AeonVera::Application.routes.draw do
-  if Rails.env.development?
-    require 'sidekiq/web'
-    require 'sidekiq-scheduler/web'
+  require 'sidekiq/web'
+  require 'sidekiq-scheduler/web'
 
-    mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => '/sidekiq'
+
+  if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: '/letter_opener'
   end
 
