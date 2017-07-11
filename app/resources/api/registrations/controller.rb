@@ -25,6 +25,18 @@ module Api
 
     protected
 
+    # TODO: this is complicated....
+    # def resource_proxy
+    #   EventAttendance.includes(
+    #     :housing_request,
+    #     :housing_provision,
+    #     { host: [:pricing_tiers, :packages] },
+    #     { orders: [order_line_items: [:line_item] ] },
+    #     :level,
+    #     :custom_field_responses
+    #   ).where(attendee: current_user)
+    # end
+
     def before_destroy(model)
       paids = model.orders.map(&:paid)
       allowed_to_destroy = paids.empty? || paids.all?

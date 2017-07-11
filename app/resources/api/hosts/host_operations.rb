@@ -20,6 +20,22 @@ module Api
         host = Event.find_by_domain(subdomain)
         # if the event doesn't exist, see if we have an organization
         host ||= Organization.find_by_domain(subdomain)
+
+        if host.is_a?(Event)
+          # reload with eagerness
+          host = Event.includes(
+            :packages,
+            :competitions,
+            :levels,
+            :pricing_tiers,
+            :custom_fields,
+            :line_items,
+            :shirts,
+            :sponsorships
+          ).find(host.id)
+        end
+
+        host
       end
     end
   end

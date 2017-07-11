@@ -157,44 +157,68 @@ module Api
 
     def resource_proxy
       @resource_proxy ||= begin
-        # parent resource not defined, use resource_class
-        return resource_class unless parent_resource_method
+        determined_resource = _determine_resource
 
-        # parent_resource_method doesn't exist, use resource_class
-        return resource_class unless respond_to?(parent_resource_method)
+        # if params[:include]
+        #   preloaded = JSONAPI::IncludeDirective.new(
+        #     params[:include],
+        #     allow_wildcard: true
+        #   )
+        #   ap preloaded
+        #   determined_resource.preload(preloaded)
+        # end
 
-        # eval the parent_resource_method
-        parent_object = send(parent_resource_method)
-
-        use_association_name = association_name_for_parent_resource &&
-          parent_object.respond_to?(association_name_for_parent_resource)
-
-        return parent_object.send(association_name_for_parent_resource) if use_association_name
-
-        if association_name_for_parent_resource
-          raise "\
-            association_name_for_parent_resource specified, but #{parent_resource_method}\
-            does not respond_to? #{association_name_for_parent_resource}"
-        end
-
-        # use the resource_class to determine the association name
-        # Rails 5
-        # association_name = parent_object
-        #                    .reflect_on_all_associations
-        #                    .select { |a| a.klass == resource_class }
-        #                    .first.name
-        #
-        # # TODO: maybe specify relationship name? and filter on that instead?
-        # #       - this would be required if there are multiple relationships with the same class
-
-        # Rails 4
-        association_name = parent_object
-                           ._reflections.map { |r| r[1] } # yay private methods
-                           .select { |r| r.klass == resource_class }
-                           .first.name
-
-        parent_object.send(association_name)
+        determined_resource
       end
+    end
+
+    def _determine_resource
+      # parent resource not defined, use resource_class
+      return resource_class unless parent_resource_method
+
+      # parent_resource_method doesn't exist, use resource_class
+      return resource_class unless respond_to?(parent_resource_method)
+
+      return _parent_object.send(association_name_for_parent_resource) if _use_association_name?
+
+      if association_name_for_parent_resource
+        raise "\
+          association_name_for_parent_resource specified, but #{parent_resource_method}\
+          does not respond_to? #{association_name_for_parent_resource}"
+      end
+
+      # use the resource_class to determine the association name
+      association_name = _association_name_for(_parent_object)
+
+      _parent_object.send(association_name)
+    end
+
+    def _parent_object
+      # eval the parent_resource_method
+      @_parent_object ||= send(parent_resource_method)
+    end
+
+    def _use_association_name?
+      association_name_for_parent_resource &&
+        _parent_object.respond_to?(association_name_for_parent_resource)
+    end
+
+    def _association_name_for(parent_object)
+      # use the resource_class to determine the association name
+      # Rails 5
+      # association_name = parent_object
+      #                    .reflect_on_all_associations
+      #                    .select { |a| a.klass == resource_class }
+      #                    .first.name
+      #
+      # # TODO: maybe specify relationship name? and filter on that instead?
+      # #       - this would be required if there are multiple relationships with the same class
+
+      # Rails 4
+      parent_object
+        ._reflections.map { |r| r[1] } # yay private methods
+        .select { |r| r.klass == resource_class }
+        .first.name
     end
   end
 end
