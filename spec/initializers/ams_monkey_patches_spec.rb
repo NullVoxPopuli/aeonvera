@@ -23,7 +23,7 @@ describe 'AMS monkey patches' do
         id: nil,
         housing_capacity: 10,
         attendance: {
-          attendee_name: "Æonvera User Test"
+          attendee_name: "æonvera User Test"
         }
       }
 
@@ -51,14 +51,14 @@ describe 'AMS monkey patches' do
           id: nil,
           housing_capacity: 10,
           attendance: {
-            attendee_name: "Æonvera User Test"
+            attendee_name: "æonvera User Test"
           }
         },
         {
           id: nil,
           housing_capacity: 10,
           attendance: {
-            attendee_name: "Æonvera User Test"
+            attendee_name: "æonvera User Test"
           }
         }
       ]
