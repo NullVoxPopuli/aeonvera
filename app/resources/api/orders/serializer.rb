@@ -33,6 +33,11 @@ module Api
     belongs_to :host
     belongs_to :attendance
     belongs_to :pricing_tier
+    belongs_to :registration
+
+    def registration
+      object.attendance
+    end
 
     def stripe_refunds
       object.stripe_refunds.map do |refund|

@@ -12,6 +12,7 @@ module Api
           :requires_track,
           :event_id,
           :ignore_pricing_tiers,
+          :description,
           :current_price
 
         belongs_to :event

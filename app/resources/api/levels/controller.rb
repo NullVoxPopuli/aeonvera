@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class LevelsController < Api::EventResourceController
     private
@@ -6,12 +7,11 @@ module Api
       params
         .require(:data)
         .require(:attributes)
-        .permit(:name, :requirement)
+        .permit(:name, :requirement, :description)
     end
 
     def create_level_params
       create_params_with(update_level_params, host: false)
     end
-
   end
 end

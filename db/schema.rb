@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170710100134) do
+ActiveRecord::Schema.define(version: 20170711103135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,6 +284,7 @@ ActiveRecord::Schema.define(version: 20170710100134) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.text     "description"
   end
 
   add_index "levels", ["event_id"], name: "index_levels_on_event_id", using: :btree
@@ -427,6 +428,7 @@ ActiveRecord::Schema.define(version: 20170710100134) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.boolean  "ignore_pricing_tiers",             default: false, null: false
+    t.text     "description"
   end
 
   add_index "packages", ["event_id"], name: "index_packages_on_event_id", using: :btree

@@ -5,6 +5,11 @@ module Api
 
     belongs_to :event
     has_many :attendances
+    has_many :registrations
+
+    def registrations
+      object.attendances
+    end
 
     def number_of_follows
       object.attendances.follows.count
