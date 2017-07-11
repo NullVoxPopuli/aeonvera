@@ -4,7 +4,7 @@ stages:
 
 rspec:
   stage: ci
-  image: ruby:2.3.3
+  image: ruby:2.4.1
 
   tags:
     - docker
@@ -52,7 +52,7 @@ rspec:
 
 production:
   stage: deploy
-  image: ruby:2.3.3
+  image: ruby:2.4.1
 
   tags:
     - docker
