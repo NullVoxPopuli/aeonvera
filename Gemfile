@@ -62,6 +62,11 @@ gem 'date_validator'
 
 # app performance monitoring
 gem 'scout_apm'
+# GC Tuning
+gem 'tunemygc'
+# Auto-scaling Tuning
+gem 'rails_autoscale_agent'
+
 
 # fast web server
 gem 'puma'
