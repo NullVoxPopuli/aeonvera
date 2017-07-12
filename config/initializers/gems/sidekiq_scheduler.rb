@@ -21,11 +21,11 @@ Thread.new do
   }
 
   Sidekiq.configure_client do |config|
-    config.redis = ConnectionPool.new(size: 5, &redis_conn)
+    config.redis = ConnectionPool.new(size: 2, &redis_conn)
   end
 
   Sidekiq.configure_server do |config|
-    config.redis = ConnectionPool.new(size: 5, &redis_conn)
+    config.redis = ConnectionPool.new(size: 2, &redis_conn)
     config.on(:startup) do
       # In case we have lots of crons, migrating to this yml might be a good idea
       config_path = Rails.root.join('config', 'scheduler.yml')
