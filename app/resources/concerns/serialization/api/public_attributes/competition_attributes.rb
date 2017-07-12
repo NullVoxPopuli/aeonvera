@@ -9,7 +9,7 @@ module Api
           :initial_price, :at_the_door_price, :current_price,
           :kind, :kind_name,
           :requires_orientation, :requires_partner,
-          :event_id, :description
+          :event_id, :description, :nonregisterable
       end
 
       def requires_orientation

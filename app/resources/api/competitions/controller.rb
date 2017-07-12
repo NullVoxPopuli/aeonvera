@@ -11,7 +11,7 @@ module Api
       whitelistable_params do |whitelister|
         whitelister.permit(
           :name, :initial_price, :at_the_door_price, :kind,
-          :description
+          :description, :nonregisterable
         )
       end
     end
@@ -21,7 +21,7 @@ module Api
         whitelister.permit(
           :name, :initial_price,
           :at_the_door_price, :kind, :event_id,
-          :description
+          :description, :nonregisterable
         )
       end
     end

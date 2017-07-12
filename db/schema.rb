@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170711103135) do
+ActiveRecord::Schema.define(version: 20170712032052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,13 +106,14 @@ ActiveRecord::Schema.define(version: 20170711103135) do
     t.string   "name",              limit: 255
     t.decimal  "initial_price"
     t.decimal  "at_the_door_price"
-    t.integer  "kind",                          null: false
+    t.integer  "kind",                                          null: false
     t.text     "metadata"
     t.integer  "event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.text     "description"
+    t.boolean  "nonregisterable",               default: false, null: false
   end
 
   add_index "competitions", ["event_id"], name: "index_competitions_on_event_id", using: :btree
