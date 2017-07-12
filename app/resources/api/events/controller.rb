@@ -2,6 +2,11 @@ module Api
   class EventsController < Api::ResourceController
     def index; show; end
 
+    def show
+      params[:fields] = { levels: [:id, :name, :requirement, :description] }
+      super
+    end
+
     private
 
     def update_event_params

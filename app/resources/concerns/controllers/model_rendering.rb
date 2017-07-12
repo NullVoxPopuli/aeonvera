@@ -35,6 +35,7 @@ module Controllers
       options = {
         json: model,
         include: include_param,
+        fields: params[:fields] || {},
         status: success_status
       }
 
