@@ -13,8 +13,6 @@ services:
 
   redis:
     image: redis:3.2
-    ports:
-    - '6379:19679'
     networks:
      - backend
 
