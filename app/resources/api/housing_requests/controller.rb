@@ -16,7 +16,7 @@ module Api
     end
 
     def create_housing_request_params
-      whitelistable_params(polymorphic: [:attendance, :host]) do |whitelister|
+      whitelisted = whitelistable_params(polymorphic: [:attendance, :host]) do |whitelister|
         whitelister.permit(
           :need_transportation, :can_provide_transportation,
           :transportation_capacity, :name,
@@ -27,6 +27,10 @@ module Api
           requested_roommates: [], unwanted_roommates: []
         )
       end
+
+      whitelisted[:attendance_type] = 'Attendance'
+
+      whitelisted
     end
   end
 end

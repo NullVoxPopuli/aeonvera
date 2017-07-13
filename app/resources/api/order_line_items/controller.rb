@@ -10,7 +10,23 @@ module Api
     end
 
     def create
-      render_model('order.order_line_items.line_item,line_item.restraints', success_status: 201)
+      # params[:fields] = { orders: [
+      #   :id,
+      #     :is_fee_absorbed,
+      #     :paid_amount, :net_amount_received, :total_fee_amount,
+      #     :paid, :payment_method,
+      #     :host_name,
+      #     :user_email, :user_name,
+      #     :payment_received_at,
+      #     :total_in_cents,
+      #     :total, :sub_total,
+      #     :stripe_refunds,
+      #     :current_paid_amount,
+      #     :current_total_fee_amount,
+      #     :current_net_amount_received,
+      #     :registration
+      #   ] }
+      render_model('order.order_line_items.line_item,line_item.restraints,order.registration', success_status: 201)
     end
 
     def update

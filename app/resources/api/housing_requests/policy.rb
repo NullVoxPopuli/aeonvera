@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Api
   class HousingRequestPolicy < SkinnyControllers::Policy::Base
-
     # Below are all the available permissions. Each permission corresponds
     # to an action in the controller.
     # Default functionality is to return true (allow) -- so the methods
@@ -19,24 +19,23 @@ module Api
 
     # HousingRequestsController#show
     def read?
-      is_user_a_collaborator? or is_the_attendee?
+      is_user_a_collaborator? || is_the_attendee?
     end
 
     # HousingRequestsController#create
     def create?
-      is_user_a_collaborator?
+      is_user_a_collaborator? || is_the_attendee?
     end
 
     # HousingRequestsController#update
     def update?
-      is_user_a_collaborator?
+      is_user_a_collaborator? || is_the_attendee?
     end
 
     # HousingRequestsController#destroy
     def delete?
-      is_user_a_collaborator?
+      is_user_a_collaborator? || is_the_attendee?
     end
-
 
     private
 
@@ -48,6 +47,5 @@ module Api
     def is_the_attendee?
       object.attendance.attendee_id == user.id
     end
-
   end
 end
