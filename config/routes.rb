@@ -39,6 +39,7 @@ AeonVera::Application.routes.draw do
     end
     resources :membership_renewals
     resources :membership_options
+    resources :membership_discounts
 
     # per event
     # ideally this stuff would be nested under events
