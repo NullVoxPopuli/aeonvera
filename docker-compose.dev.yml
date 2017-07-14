@@ -48,8 +48,8 @@ services:
 
   web:
     <<: *rails
-    # command: bundle exec rails s -p 4301 -b '0.0.0.0'
-    command: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:4301
+    command: bundle exec rails s -p 4301 -b '0.0.0.0'
+    # command: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:4301
     ports:
       - "4301:4301"
     links:
