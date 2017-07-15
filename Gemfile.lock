@@ -169,7 +169,7 @@ GEM
       activesupport (>= 3.2, < 5.1)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.8.4)
+    i18n (0.8.6)
     inflecto (0.0.2)
     jimson-temp (0.9.5)
       blankslate (>= 3.1.2)
@@ -374,7 +374,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
-    skinny_controllers (0.10.2)
+    skinny_controllers (0.10.6)
       activesupport
     slim (3.0.7)
       temple (~> 0.7.6)

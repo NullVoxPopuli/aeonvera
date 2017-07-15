@@ -42,7 +42,7 @@ module Controllers
           backtrace: exception.backtrace
         })
 
-      Rollbar.error(exception, user_email: current_user.try(&:email), params: params)
+      Rollbar.error(exception, user_email: current_user&.email, params: params)
     end
 
     def routing_error(exception)
