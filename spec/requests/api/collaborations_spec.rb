@@ -131,6 +131,20 @@ describe Api::CollaborationsController, type: :request do
             get '/api/collaborations?' + host_params, {}, @headers
             expect(response.status).to eq 200
           end
+
+          context 'scope' do
+            before(:each) do
+              create_list(
+                :collaboration, 5,
+                collaborated: create(:event),
+                user: create(:user))
+            end
+
+            it 'is scoped to the event' do
+              get '/api/collaborations?' + host_params, {}, @headers
+              expect(json_api_data.length).to eq 1
+            end
+          end
         end
       end
 

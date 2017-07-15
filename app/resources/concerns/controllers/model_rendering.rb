@@ -3,6 +3,9 @@ module Controllers
   module ModelRendering
     extend ActiveSupport::Concern
 
+    DEFAULT_OK_OPTIONS = { status: :ok }
+    DEFAULT_ERROR_OPTIONS = { status: :unprocessable_entity }
+
     included do
       class << self
         attr_accessor :serializer
@@ -10,6 +13,21 @@ module Controllers
     end
 
     protected
+
+    def render_jsonapi_model(model, options: {}, succeeded: nil)
+      succeeded ||= model.respond_to?(:errors) ? model.errors.blank? : succeeded
+
+      if succeeded
+        render_jsonapi(
+          model,
+          DEFAULT_OK_OPTIONS.merge(options))
+      else
+        render(
+          DEFAULT_ERROR_OPTIONS
+            .merge(options)
+            .merge(jsonapi: model.errors))
+      end
+    end
 
     def render_model(include_param = nil, success_status: 200)
       render_json_response(

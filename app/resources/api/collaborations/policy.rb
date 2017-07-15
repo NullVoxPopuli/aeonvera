@@ -22,6 +22,10 @@ module Api
     def read_all?
       # for read_all, the host/parent is passed
       # TODO: should this use the host policy?
+
+      # we don't care if they can see an empty array
+      return true if object.empty?
+
       object.map(&:collaborated).uniq.map do |host|
         host&.is_accessible_as_collaborator?(user)
       end.presence&.all?

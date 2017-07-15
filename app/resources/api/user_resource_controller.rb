@@ -66,8 +66,8 @@ module Api
       render_jsonapi(model)
     end
 
-    def create
-      model = resource_proxy.new(create_params)
+    def create(model = nil)
+      model ||= resource_proxy.new(create_params)
 
       result = run_callbacks_for(:create, model) { model.save }
 

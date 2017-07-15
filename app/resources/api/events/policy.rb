@@ -1,7 +1,23 @@
 module Api
   class EventPolicy < SkinnyControllers::Policy::Base
+    include ::OwnershipChecks
+
+    def read?(role = nil)
+      return super unless role
+
+      if role == :admin
+        is_at_least_a_collaborator?(object)
+      end
+    end
+
+
     class SubConfiguration < SkinnyControllers::Policy::Base
       include ::OwnershipChecks
+
+      def read_all?
+        return true if object.nil? || object.empty?
+        super
+      end
 
       def read?(o = object)
         parent(o).is_accessible_to? user

@@ -36,6 +36,7 @@ function rundocko {
     down)     docko-dev down --remove-orphans;;
     stop)     docko-dev stop;;
     up)       docko-dev up;;
+    run)      docko-dev run --rm web $arguments;;
     rake)     docko-dev run --rm web rake $arguments;;
     bash)     docko-dev run --rm web bash;;
     dev)      docko-dev run --rm --service-ports web $arguments;;
@@ -48,8 +49,9 @@ function rundocko {
     db-import) ./scripts/import-db-backup.sh;;
 
     # Testing
-    test)     docko-test-run $arguments ;;
-    rspec)    docko-test-run bundle exec rspec $arguments ;;
+    test)         docko-test-run $arguments;;
+    test-prepare) docko-test-run rake db:schema:load;;
+    rspec)        docko-test-run bundle exec rspec $arguments ;;
 
     *) echo 'command not recognized';;
   esac
