@@ -35,20 +35,20 @@ module Api
     # end
     #
     # # CollaborationsController#index
-    class ReadAll < SkinnyControllers::Operation::Base
-      include HelperOperations::Helpers
-      def run
-        model if allowed?
-      end
-
-      def find_model
-        host.collaborations
-      end
-
-      def host
-        @host ||= host_from_params(params)
-      end
-    end
+    # class ReadAll < SkinnyControllers::Operation::Base
+    #   include HelperOperations::Helpers
+    #   def run
+    #     model if allowed?
+    #   end
+    #
+    #   def find_model
+    #     host.collaborations
+    #   end
+    #
+    #   def host
+    #     @host ||= host_from_params(params)
+    #   end
+    # end
 
     #
     # # CollaborationsController#show

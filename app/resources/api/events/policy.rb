@@ -5,7 +5,9 @@ module Api
     def read?(role = nil)
       return super unless role
 
-      if role == :admin
+      if role == Roles::ADMIN
+        is_at_least_a_collaborator?(object)
+      elsif role == Roles::COLLABORATOR
         is_at_least_a_collaborator?(object)
       end
     end

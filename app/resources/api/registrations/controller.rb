@@ -7,6 +7,7 @@ module Api
     self.parent_resource_method = :current_user
     self.association_name_for_parent_resource = :event_attendances
 
+
     def create
       model = resource_proxy.new(create_params)
       form = RegistrationForms::Create.new(model)

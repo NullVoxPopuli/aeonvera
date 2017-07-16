@@ -45,6 +45,10 @@ AeonVera::Application.routes.draw do
     # ideally this stuff would be nested under events
     get 'hosts/:subdomain', to: 'hosts#show'
     resources :hosts
+    namespace :events do
+      resources :registrations
+    end
+
     resources :events
     resources :sponsorships
 
