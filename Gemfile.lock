@@ -261,8 +261,6 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
-    rails_autoscale_agent (0.3.0)
-      activesupport (>= 3.2)
     railties (4.2.8)
       actionpack (= 4.2.8)
       activesupport (= 4.2.8)
@@ -401,7 +399,6 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.7)
-    tunemygc (1.0.69)
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
     uber (0.1.0)
@@ -456,7 +453,6 @@ DEPENDENCIES
   puma
   rack-cors
   rails (~> 4.2)
-  rails_autoscale_agent
   ransack
   redis-rails (= 5.0.2)
   reform
@@ -480,7 +476,6 @@ DEPENDENCIES
   sprockets-rails (= 2.3.3)
   stripe
   stripe-ruby-mock (~> 2.2.1)
-  tunemygc
   uglifier
   will_paginate (~> 3.1.0)
 
