@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module Events
     module RegistrationOperations
@@ -9,7 +10,12 @@ module Api
           # because registrations need to be viewable for users, too
           # TODO: remove attendance, replace with registration
           EventAttendance
-            .includes(:package, :level)
+            .includes(
+              :package, :level,
+              :custom_field_responses,
+              :housing_request, :housing_provision,
+              orders: [order_line_items: [:order, :line_item]]
+            )
             .where(host_id: event.id, host_type: Event.name)
         end
 
@@ -26,11 +32,9 @@ module Api
         end
 
         def check_allowed!
-          kind = params_for_action[:host_type]
-
           result = ::Api::EventPolicy
-                    .new(current_user, event)
-                    .read?(Roles::COLLABORATOR)
+                   .new(current_user, event)
+                   .read?(Roles::COLLABORATOR)
 
           raise SkinnyControllers::DeniedByPolicy, 'You are not a collaborator' unless result
         end
