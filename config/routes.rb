@@ -17,7 +17,6 @@ AeonVera::Application.routes.draw do
     resources :integrations, except: [:update, :index]
 
     # Various Event information / summaries
-    resources :registered_events # personally registured events for current user
     resources :upcoming_events # public calendar
     resources :hosted_events # TODO: Is this used?
     resources :registerable_events # TODO: is this used?
@@ -123,7 +122,13 @@ AeonVera::Application.routes.draw do
 
     # for new user creation / registration / signing up
     put '/users/', to: 'users#create'
-    resources :users, only: [:show, :update, :destroy]
+
+    resources :users, only: [:show, :update, :destroy] do
+      collection do
+        # personally registured events for current user
+        resources :registered_events, controller: 'users/registered_events'
+      end
+    end
 
     match '*path', to: 'resource#error_route', via: :all
   end
