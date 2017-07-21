@@ -5,7 +5,7 @@ module Api
       def run
         @model = discount_code? ? add_discount! : create_line_item!
 
-        return unless allowed_to_create_order_line_item?
+        check_allowed!
         @model.save
 
         # Check if automatic discounts need to be added.
@@ -140,12 +140,15 @@ module Api
         end
       end
 
+      def check_allowed!
+        raise SkinnyControllers::DeniedByPolicy unless allowed_to_create_order_line_item?
+      end
+
       def allowed_to_create_order_line_item?
         return true if allowed?
-
         return false unless authorized_via_token?
 
-        # If we have a token, we need to create
+        # If we have a token (no logged in user), we need to create
         # a fake user to use with the policy
         temp_user = OpenStruct.new(id: params[:payment_token])
         policy_class

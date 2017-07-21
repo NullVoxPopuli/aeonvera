@@ -57,8 +57,8 @@ module Controllers
     end
 
     def denied_by_policy_error(exception)
-      jsonapi_error(404,
-        code: 404,
+      jsonapi_error(403,
+        code: 403,
         detail: exception.message,
         title: 'Denied By Policy',
         meta: {

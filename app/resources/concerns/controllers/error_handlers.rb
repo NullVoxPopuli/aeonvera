@@ -13,7 +13,6 @@ module Controllers
 
       rescue_from AeonVera::Errors::BeforeHookFailed, with: :client_error
 
-      # TODO: Change this to a 401 (instead of 404)
       rescue_from SkinnyControllers::DeniedByPolicy, with: :denied_by_policy_error
     end
   end

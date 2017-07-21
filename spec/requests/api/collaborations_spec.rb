@@ -191,7 +191,7 @@ describe Api::CollaborationsController, type: :request do
 
           it 'cannot update' do
             put "/api/collaborations/#{collaboration.id}", fake_json_api, @headers
-            expect(response.status).to eq 404
+            expect(response.status).to eq 403
           end
 
           it 'cannot destroy' do
@@ -244,7 +244,7 @@ describe Api::CollaborationsController, type: :request do
           it 'cannot update' do
             put "/api/collaborations/#{collaboration.id}", fake_json_api, @headers
 
-            expect(response.status).to eq 404
+            expect(response.status).to eq 403
           end
 
           it 'cannot destroy' do
@@ -254,7 +254,7 @@ describe Api::CollaborationsController, type: :request do
 
           it 'cannot read all' do
             get '/api/collaborations?' + host_params, {}, @headers
-            expect(response.status).to eq 404
+            expect(response.status).to eq 403
           end
         end
 

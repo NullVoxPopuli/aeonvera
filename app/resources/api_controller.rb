@@ -7,11 +7,9 @@ class APIController < ActionController::Base
   include Controllers::ErrorHandlers
 
   respond_to :json
-
-  before_action :set_default_response_format
-
   protect_from_forgery with: :null_session
 
+  before_action :set_default_response_format
   skip_before_filter :verify_authenticity_token
 
   # used by ember - over https in production, clear text otherwise

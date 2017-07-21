@@ -99,7 +99,7 @@ describe Api::RestraintsController, type: :request do
 
           expect {
             post '/api/restraints', create_params, @headers
-            expect(response.status).to eq 404
+            expect(response.status).to eq 403
           }.to change(Restraint, :count).by 0
         end
 

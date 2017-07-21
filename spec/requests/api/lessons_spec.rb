@@ -115,7 +115,7 @@ describe Api::LessonsController, type: :request do
         }
 
         post '/api/lessons', create_params, @headers
-        expect(response.status).to eq 404
+        expect(response.status).to eq 403
       end
 
       context 'data exists' do
@@ -142,12 +142,12 @@ describe Api::LessonsController, type: :request do
 
         it 'can not delete' do
           delete "/api/lessons/#{lesson.id}", {}, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
 
         it 'can not update' do
           put "/api/lessons/#{lesson.id}", fake_json_api, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
       end
     end

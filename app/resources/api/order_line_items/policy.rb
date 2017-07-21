@@ -37,7 +37,7 @@ module Api
     private
 
     def paid?
-      object.persisted? && order.paid?
+      order&.paid?
     end
 
     def owner?

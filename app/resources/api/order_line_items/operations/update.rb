@@ -3,7 +3,8 @@ module Api
   module OrderLineItemOperations
     class Update < SkinnyControllers::Operation::Base
       def run
-        return unless allowed_to_update_order_line_item?
+        check_allowed!
+
         model.assign_attributes(params_for_action)
         update_price
 
@@ -29,6 +30,10 @@ module Api
 
       def authorized_via_token?
         model.order.payment_token == params[:payment_token]
+      end
+
+      def check_allowed!
+        raise SkinnyControllers::DeniedByPolicy unless allowed_to_update_order_line_item?
       end
 
       def allowed_to_update_order_line_item?

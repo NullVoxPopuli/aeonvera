@@ -217,6 +217,64 @@ describe Api::OrderLineItemsController, type: :request do
           end
         end
       end
+
+      context 'and the order is paid for' do
+        context 'of type: Shirt' do
+          let(:shirt) { create(:shirt,
+            host: event,
+            price: 15,
+            metadata: {
+              sizes: ['S', 'M', 'L'],
+              prices: { 'S': '10', 'M': '12' },
+              inventory: { 'S': '0', 'M': '0', 'L': '0' }
+          } ) }
+
+          before(:each) do
+            @existing = add_to_order!(order, create(:shirt, host: event))
+            order.paid = true
+            order.save
+          end
+
+          context 'when creating' do
+            let(:params) { {
+              data: {
+                type: 'order-line-items',
+                attributes: { quantity: 1, size: 'S' },
+                relationships: {
+                  'line-item': { data: { type: 'shirts', id: shirt.id } },
+                  order: { data: { type: 'orders', id: order.id } }
+                }
+              }
+            }}
+
+            it 'is not allowed' do
+              expect { post '/api/order_line_items', params, @headers }
+                .to change(OrderLineItem, :count).by 0
+
+              expect(response.status).to eq 403
+            end
+          end
+
+          context 'when updating' do
+            it 'is not allowed' do
+              put(
+                "/api/order_line_items/#{@existing.id}", {
+                  data: {
+                    id: @existing.id,
+                    attributes: { quantity: 5 },
+                    relationships: {
+                      'line-item': { data: { type: 'shirts', id: shirt.id } },
+                      order: { data: { type: 'orders', id: order.id } }
+                    }
+                  }
+                }, @headers
+              )
+
+              expect(response.status).to eq 403
+            end
+          end
+        end
+      end
     end
   end
 

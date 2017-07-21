@@ -102,7 +102,7 @@ describe Api::NotesController, type: :request do
         it 'wants all notes' do
           create(:note, host: organization)
           get "/api/notes?host_id=#{organization.id}&host_type=#{organization.class.name}", {}, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
       end
 
@@ -117,7 +117,7 @@ describe Api::NotesController, type: :request do
 
         it 'is denied' do
           post '/api/notes', create_params, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
       end
 
@@ -129,7 +129,7 @@ describe Api::NotesController, type: :request do
 
         it 'is denied' do
           put "/api/notes/#{note.id}", update_params, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
       end
 
@@ -138,7 +138,7 @@ describe Api::NotesController, type: :request do
 
         it 'in denied' do
           delete "/api/notes/#{note.id}", {}, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
       end
 
@@ -147,7 +147,7 @@ describe Api::NotesController, type: :request do
 
         it 'is denied' do
           get "/api/notes/#{note.id}", {}, @headers
-          expect(response.status).to eq 404
+          expect(response.status).to eq 403
         end
       end
     end
