@@ -89,11 +89,22 @@ module AeonVera
 
     # http://edgeguides.rubyonrails.org/api_app.html#choosing-middleware
     # http://guides.rubyonrails.org/rails_on_rack.html#internal-middleware-stack
-    config.middleware.delete 'ActionDispatch::Cookies'
-    config.middleware.delete 'ActionDispatch::Session::CookieStore'
-    config.middleware.delete 'ActionDispatch::Flash'
-    config.middleware.delete 'Rack::Lock'
-    config.middleware.delete 'ActionDispatch::Static'
+    useless = [
+      'ActionDispatch::Cookies',
+      'ActionDispatch::Session::CookieStore',
+      'ActionDispatch::Flash',
+      'Rack::Lock',
+      'ActionDispatch::Static',
+      'ActiveRecord::Migration::CheckPending',
+      'Rack::Head',
+      'Rack::Runtime',
+      'Rack::ConditionalGet',
+      'Rack::ETag'
+    ]
+
+    useless.each { |middleware| config.middleware.delete(middleware) }
+    # Required by Devise. SIGH
+    # config.middleware.delete 'Warden::Manager'
 
     config.middleware.insert_before 0, 'Rack::Cors' do
       allow do

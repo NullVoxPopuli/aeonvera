@@ -261,6 +261,8 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
+    rails-middleware_timer (0.1)
+      rails (>= 4.0)
     railties (4.2.8)
       actionpack (= 4.2.8)
       activesupport (= 4.2.8)
@@ -453,6 +455,7 @@ DEPENDENCIES
   puma
   rack-cors
   rails (~> 4.2)
+  rails-middleware_timer
   ransack
   redis-rails (= 5.0.2)
   reform

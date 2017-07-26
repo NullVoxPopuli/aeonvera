@@ -64,19 +64,6 @@ ActiveRecord::Schema.define(version: 20170712032052) do
     t.integer "discount_id"
   end
 
-  create_table "attendees", force: :cascade do |t|
-    t.string   "first_name",                 limit: 255
-    t.string   "last_name",                  limit: 255
-    t.string   "phone_number",               limit: 255
-    t.integer  "dancer_orientation"
-    t.boolean  "interested_in_volunteering"
-    t.integer  "event_id"
-    t.integer  "package_id"
-    t.integer  "level_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "collaborations", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "collaborated_id"
@@ -144,11 +131,6 @@ ActiveRecord::Schema.define(version: 20170712032052) do
   end
 
   add_index "custom_fields", ["host_id", "host_type"], name: "index_custom_fields_on_host_id_and_host_type", using: :btree
-
-  create_table "discounted_items", force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "discounts", force: :cascade do |t|
     t.string   "name",                   limit: 255
