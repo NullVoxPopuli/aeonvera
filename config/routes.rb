@@ -127,6 +127,7 @@ AeonVera::Application.routes.draw do
       collection do
         # personally registured events for current user
         resources :registered_events, controller: 'users/registered_events'
+        resources :registrations, controller: 'users/registrations'
       end
     end
 
