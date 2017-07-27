@@ -39,7 +39,7 @@ describe Api::UsersController, type: :request do
     end
 
     it 'is prevented when the user is attending an event' do
-      create(:attendance, attendee: user)
+      create(:registration, attendee: user)
       params = {
         password: user.password
       }

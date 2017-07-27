@@ -4,7 +4,7 @@ describe Api::OrderOperations::MarkPaid do
   let(:klass){ Api::OrderOperations::MarkPaid }
   let(:owner){ create_confirmed_user }
   let(:event){ create(:event, hosted_by: owner) }
-  let(:attendance){ create(:attendance, host: event) }
+  let(:attendance){ create(:registration, host: event) }
   let(:package){ create(:package, event: event) }
 
   context 'order is paid' do

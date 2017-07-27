@@ -87,7 +87,7 @@ describe Order do
       end
 
       it 'is on the attendance' do
-        o = create(:order, attendance: create(:attendance))
+        o = create(:order, attendance: create(:registration))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_email)
       end
@@ -116,7 +116,7 @@ describe Order do
       end
 
       it 'is on the attendance' do
-        o = create(:order, attendance: create(:attendance))
+        o = create(:order, attendance: create(:registration))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_name)
       end

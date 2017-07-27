@@ -6,7 +6,7 @@ describe Api::OrderLineItemsController, type: :request do
 
   context 'Event: is logged in' do
     let(:order) {
-      create(:order, host: event, attendance: create(:attendance, host: event), user: stray_user)
+      create(:order, host: event, attendance: create(:registration, host: event), user: stray_user)
     }
 
     context 'user owns the event' do

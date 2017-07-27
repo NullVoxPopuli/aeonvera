@@ -8,7 +8,7 @@ RSpec.describe Api::EventsController, type: :controller do
           fail
           @event = create(:event, hosted_by: @user)
 
-          @attendance = create(:attendance, host: @event)
+          @attendance = create(:registration, host: @event)
           @order = create(:order, attendance: @attendance, event: @event, paid: true)
           allow_any_instance_of(Order).to receive(:net_received){ 10 }
         end
@@ -34,7 +34,7 @@ RSpec.describe Api::EventsController, type: :controller do
         end
 
         it 'does not include unpaind, non-attending orders in unpaid revenue' do
-          attendance = create(:attendance, event: @event)
+          attendance = create(:registration, event: @event)
           order = create(:order, attendance: attendance, event: @event)
 
           # make not attending

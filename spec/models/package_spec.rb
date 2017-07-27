@@ -51,7 +51,7 @@ describe Package do
     it "changes based on the number of registrants for this event" do
       tier = create(:pricing_tier, registrants: 10, event: event)
       20.times do
-        create(:attendance, event: event)
+        create(:registration, event: event)
       end
 
       expected = package.initial_price + tier.increase_by_dollars
@@ -76,7 +76,7 @@ describe Package do
       tier2 = create(:pricing_tier, date: 2.day.ago, event: event)
 
       11.times do
-        create(:attendance, event: event)
+        create(:registration, event: event)
       end
 
       expect(event.current_tier).to eq tier2

@@ -39,6 +39,17 @@ module Api
           raise SkinnyControllers::DeniedByPolicy, 'You are not a collaborator' unless result
         end
       end
+
+      class Update < SkinnyControllers::Operation::Base
+        def run
+          model.update(params_for_action) if allowed?
+          model
+        end
+      end
+
+      class Checkin < Update
+        # TODO: only event collaborators can check someone in
+      end
     end
   end
 end

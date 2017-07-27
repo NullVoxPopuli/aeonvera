@@ -51,8 +51,6 @@ class Organization < ApplicationRecord
   has_many :collaborations, as: :collaborated
   has_many :collaborators, through: :collaborations, source: :user
 
-  has_many :attendances, as: :host, class_name: OrganizationAttendance.name
-
   has_many :notes, as: :host
   has_many :integrations,
     dependent: :destroy,

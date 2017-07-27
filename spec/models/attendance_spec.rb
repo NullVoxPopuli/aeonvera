@@ -39,7 +39,7 @@ describe Attendance do
   describe 'associations' do
     describe 'custom_field_responses' do
       it 'destroys when the attendance is destroyed' do
-        a = create(:attendance)
+        a = create(:registration)
         create(:custom_field_response, writer: a)
 
         expect do
@@ -83,14 +83,14 @@ describe Attendance do
     let(:event) { create(:event) }
 
     it 'returns the transfer name if set' do
-      attendance = create(:attendance, event: event, transferred_to_name: 'Luke')
+      attendance = create(:registration, event: event, transferred_to_name: 'Luke')
 
       expect(attendance.attendee_name).to eq 'Luke'
     end
 
     it 'returns the name of the user' do
       user = create(:user)
-      attendance = create(:attendance, event: event, attendee: user)
+      attendance = create(:registration, event: event, attendee: user)
 
       expect(attendance.attendee_name).to eq user.name.titleize
     end

@@ -10,7 +10,7 @@ RSpec.describe Api::RafflesController, type: :controller do
     it 'includes the purchasers' do
       raffle = create(:raffle, event: @event)
       ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: {'number_of_tickets' => 1})
-      attendance = create(:attendance, event: @event)
+      attendance = create(:registration, event: @event)
       order = create(:order, attendance: attendance, host: @event)
       create(:order_line_item,
         order: order,
@@ -40,7 +40,7 @@ RSpec.describe Api::RafflesController, type: :controller do
 
       it 'chooses a new winner' do
         # gotta create some ticket purchases
-        attendance = create(:attendance, event: @event)
+        attendance = create(:registration, event: @event)
         order = create(:order, attendance: attendance, host: @event)
         create(:order_line_item,
           order: order,

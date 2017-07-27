@@ -53,7 +53,7 @@ class LineItem < ApplicationRecord
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
-  alias attendances purchasers
+  alias registrations purchasers
 
   alias_attribute :current_price, :price
 

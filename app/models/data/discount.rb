@@ -40,10 +40,6 @@ class Discount < ApplicationRecord
   belongs_to :organization, class_name: Organization.name,
   	foreign_key: "host_id", foreign_type: "host_type"
 
-  has_and_belongs_to_many :attendances,
-    join_table: "attendances_discounts",
-    association_foreign_key: "attendance_id", foreign_key: "discount_id"
-
   # discounts depend on the restrainted item (such as a package)
   has_many :restraints, as: :dependable
   has_many :allowed_packages, through: :restraints,

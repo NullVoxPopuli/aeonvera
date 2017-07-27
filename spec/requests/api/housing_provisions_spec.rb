@@ -9,7 +9,7 @@ describe Api::HousingProvisionsController, type: :request do
     context 'and is registering' do
       let!(:user) { create_confirmed_user }
       let!(:event) { create(:event) }
-      let!(:attendance) { create(:attendance, host: event, attendee: user) }
+      let!(:attendance) { create(:registration, host: event, attendee: user) }
       let(:payload) {
         {
           'data' => {
@@ -78,7 +78,7 @@ describe Api::HousingProvisionsController, type: :request do
         user = create_confirmed_user
         auth_header_for(user)
         @event = create(:event, hosted_by: user)
-        @attendance = create(:attendance, host: @event)
+        @attendance = create(:registration, host: @event)
         @housing_provision = create(:housing_provision, host: @event, attendance: @attendance)
         create(:housing_provision, host: @event, attendance: @attendance)
       end

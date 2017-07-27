@@ -2,7 +2,7 @@
 module Api
   # the objects for this is built in raffle#ticket_purchase_data
   class RaffleTicketPurchaserSerializer < ActiveModel::Serializer
-    attributes :id, :attendance_id, :name, :number_of_tickets_purchased
+    attributes :id, :registration_id, :name, :number_of_tickets_purchased
 
     def id
       object.attendance_id

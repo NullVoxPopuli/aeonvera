@@ -8,7 +8,7 @@ describe Api::OrderOperations::Update do
 
   context 'with the intent to pay' do
     let(:event){ create_event }
-    let(:attendance){ create(:attendance, event: event) }
+    let(:attendance){ create(:registration, event: event) }
 
     context 'run' do
       it 'is not allowed' do
@@ -144,7 +144,7 @@ describe Api::OrderOperations::Update do
     let(:event){ create(:event) }
     let(:package){ create(:package, event: event) }
     let(:competition){ create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
-    let(:attendance){ create(:attendance, host: event, package: package, attendee: user) }
+    let(:attendance){ create(:registration, host: event, package: package, attendee: user) }
 
     let(:order){ create(:order, host: event, user: user, attendance: attendance) }
     let(:item1){ create(:order_line_item, order: order, line_item: package, price: package.current_price, quantity: 1) }

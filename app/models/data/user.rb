@@ -53,13 +53,10 @@ class User < ApplicationRecord
 
   has_many :organizations, foreign_key: 'owner_id'
   has_many :hosted_events, class_name: 'Event', foreign_key: 'hosted_by_id'
-  has_many :event_attendances,
-    -> { where("attendance_type = '#{EventAttendance.name}'") },
-    foreign_key: 'attendee_id',
-    class_name: EventAttendance.name
 
-  has_many :attended_events, through: :event_attendances, source: :host, source_type: Event.name
-  has_many :attendances, foreign_key: 'attendee_id'
+  has_many :registrations, foreign_key: 'attendee_id'
+  has_many :attended_events, through: :registrations, source: :host, source_type: Event.name
+
   has_many :collaborated_events, through: :collaborations, source: :collaborated, source_type: Event.name
   has_many :collaborated_organizations, through: :collaborations, source: :collaborated, source_type: Organization.name
   has_many :collaborations
@@ -91,12 +88,9 @@ class User < ApplicationRecord
   end
 
   # @return [Attendance] the attendance record for this user for the specified event
-  def attendance_for_event(event)
-    attendances.where(host: event).first
+  def registration_for_event(event)
+    registrations.where(host: event).first
   end
-
-  alias attendance_for_host attendance_for_event
-  alias attendance_for_organization attendance_for_event
 
   # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
   # Overriding the find_for_database_authentication method allows you to edit database authentication ;

@@ -67,7 +67,7 @@ module Api
 
       def attendance
         # use find_by_id to not raise exception, and return nil if not found
-        @attendance ||= host.attendances.find_by_id(params_for_action[:attendance_id])
+        @attendance ||= host.attendances.find_by_id(params_for_action[:registration_id])
       end
 
       def host

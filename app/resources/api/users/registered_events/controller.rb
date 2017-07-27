@@ -6,7 +6,7 @@ module Api
 
       def index
         registrations = current_user
-                        .event_attendances
+                        .registrations
                         .includes(orders: [:order_line_items])
 
         render(
@@ -17,7 +17,7 @@ module Api
 
       def show
         registration = current_user
-                       .attendances
+                       .registrations
                        .includes(orders: [:order_line_items])
                        .find(params[:id])
 

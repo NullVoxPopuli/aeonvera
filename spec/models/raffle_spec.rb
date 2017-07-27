@@ -20,7 +20,7 @@ describe Raffle do
       @event = create(:event)
       raffle = create(:raffle, event: @event)
       raffle_ticket = create(:raffle_ticket, raffle: raffle, host: @event)
-      @attendance = create(:attendance, host: @event)
+      @attendance = create(:registration, host: @event)
       order = create(:order, host: @event, attendance: @attendance)
       create(:order_line_item, line_item: raffle_ticket, order: order)
 

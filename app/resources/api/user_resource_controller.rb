@@ -8,7 +8,7 @@ module Api
   #     self.resource_class = Attendance
   #     self.serializer_class = RegistrationSummarySerializer
   #     self.parent_resource_method = :current_user
-  #     self.association_name_for_parent_resource = :attendances
+  #     self.association_name_for_parent_resource = :registrations
   #
   #     def index
   #       search = current_user.attendances.ransack(params[:q])

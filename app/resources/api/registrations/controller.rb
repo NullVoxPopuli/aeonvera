@@ -2,10 +2,10 @@
 
 module Api
   class RegistrationsController < UserResourceController
-    self.resource_class = EventAttendance
+    self.resource_class = Registration
     self.serializer_class = RegistrationSerializer
     self.parent_resource_method = :current_user
-    self.association_name_for_parent_resource = :event_attendances
+    self.association_name_for_parent_resource = :registrations
 
 
     def create

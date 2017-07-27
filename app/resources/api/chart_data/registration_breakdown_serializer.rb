@@ -18,8 +18,8 @@ module Api
       end
 
       def breakdown
-        leads = object.attendances.leads
-        follows = object.attendances.follows
+        leads = object.registrations.leads
+        follows = object.registrations.follows
         [
           {
             name: 'Leads',

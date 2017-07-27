@@ -69,20 +69,15 @@ class Event < ApplicationRecord
   has_many :orders, as: :host
   has_many :order_line_items, through: :orders, source: :order_line_items
 
-  has_many :attendances,
-    -> { where(attending: true).order('attendances.created_at DESC') },
-    as: :host, class_name: 'EventAttendance'
+  has_many :registrations,
+    -> { where(attending: true).order('registrations.created_at DESC') },
+    as: :host, class_name: 'Registration'
 
-  alias event_attendances attendances
+  has_many :cancelled_registrations,
+    -> { where(attending: false).order('registrations.created_at DESC') },
+    as: :host, class_name: 'Registration'
 
-  has_many :cancelled_attendances,
-    -> { where(attending: false).order('attendances.created_at DESC') },
-    as: :host, class_name: 'EventAttendance'
-
-  has_many :all_attendances,
-    -> { order('attendances.created_at DESC') },
-    as: :host, class_name: 'Attendance'
-  has_many :attendees, through: :attendances
+  has_many :attendees, through: :registrations
   has_many :collaborations, as: :collaborated
   has_many :collaborators, through: :collaborations, source: :user
 
@@ -153,7 +148,7 @@ class Event < ApplicationRecord
   end
 
   def recent_registrations
-    attendances.limit(5).order('created_at DESC')
+    registrations.limit(5).order('created_at DESC')
   end
 
   def registration_opens_at
@@ -232,7 +227,7 @@ class Event < ApplicationRecord
   end
 
   def unpaid_total
-    attendances.map(&:amount_owed).inject(:+)
+    registrations.map(&:amount_owed).inject(:+)
   end
 
   def revenue

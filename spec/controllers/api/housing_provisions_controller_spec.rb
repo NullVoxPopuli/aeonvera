@@ -4,7 +4,7 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
   let(:event) { create(:event) }
   before(:each) do
     login_through_api
-    @attendance = create(:attendance, host: event, attendee: @user)
+    @attendance = create(:registration, host: event, attendee: @user)
   end
 
   context 'create' do

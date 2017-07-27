@@ -94,7 +94,7 @@ module Api
     def create_order_params
       whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
-          :attendance_id, :host_id, :host_type,
+          :registration_id, :host_id, :host_type,
           :pricing_tier_id,
           :payment_method,
           :user_email, :user_name,
@@ -106,7 +106,7 @@ module Api
     def update_order_params
       whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
-          :attendance_id, :host_id, :host_type, :payment_method,
+          :registration_id, :host_id, :host_type, :payment_method,
           :user_email, :user_name,
 
           # specifically for payment

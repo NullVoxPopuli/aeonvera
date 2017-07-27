@@ -32,7 +32,7 @@ class HousingProvision < ApplicationRecord
   include SoftDeletable
 
   belongs_to :host, polymorphic: true
-  belongs_to :attendance, -> { with_deleted }, polymorphic: true
+  belongs_to :registration, -> { with_deleted }, polymorphic: true
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
@@ -46,7 +46,7 @@ class HousingProvision < ApplicationRecord
     column_names,
     exclude: [
       :updated_at, :created_at,
-      :attendance_id, :attendance_type,
+      :registration_id, :registration_type,
       :id,
       :host_id, :host_type
     ]

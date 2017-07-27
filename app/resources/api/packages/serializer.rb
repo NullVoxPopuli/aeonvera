@@ -5,7 +5,7 @@ module Api
     attributes :number_of_leads, :number_of_follows
 
     belongs_to :event
-    has_many :attendances
+    has_many :registrations
 
 
     def number_of_leads

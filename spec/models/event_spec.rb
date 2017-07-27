@@ -91,7 +91,7 @@ describe Event do
 
     it 'is if registered' do
       user = create(:user)
-      attendance = create(:attendance, event: event, attendee: user)
+      attendance = create(:registration, event: event, attendee: user)
       expect(event.is_accessible_to?(user)).to eq true
     end
 
@@ -213,7 +213,7 @@ describe Event do
         it 'advances to the next tier' do
           tier = create(:pricing_tier, event: event, registrants: 3, date: nil)
           3.times do
-            create(:attendance, event: event)
+            create(:registration, event: event)
           end
 
           expect(event.current_tier).to_not eq opening_tier
@@ -226,7 +226,7 @@ describe Event do
           future = create(:pricing_tier, event: event, registrants: 16, date: nil)
 
           12.times do
-            create(:attendance, event: event)
+            create(:registration, event: event)
           end
 
           expect(event.current_tier).to_not eq opening_tier
@@ -241,7 +241,7 @@ describe Event do
           current = create(:pricing_tier, event: event, registrants: 16, date: nil)
 
           16.times do
-            create(:attendance, event: event)
+            create(:registration, event: event)
           end
 
           expect(event.current_tier).to_not eq opening_tier

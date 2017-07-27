@@ -212,7 +212,7 @@ FactoryGirl.define do
     order
   end
 
-  factory :attendance, class: EventAttendance do
+  factory :registration do
     host factory: :event
     attendee
     pricing_tier
@@ -232,9 +232,6 @@ FactoryGirl.define do
       # attendance.host = create(:event, hosted_by: attendance.attendee) unless attendance.host.present?
       attendance.dance_orientation = 0
     end
-  end
-
-  factory :organization_attendance, class: OrganizationAttendance do
   end
 
   factory :attendee, class: User do

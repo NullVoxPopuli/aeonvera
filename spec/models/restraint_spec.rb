@@ -36,7 +36,7 @@ describe Restraint do
       create(:restraint, restrictable: package, dependable: discount)
 
       # build order
-      @attendance = create(:attendance,
+      @attendance = create(:registration,
         event: event,
         pricing_tier: event.opening_tier
       )

@@ -32,7 +32,6 @@ module EmberTypeInflector
     MembershipDiscount.name, Package.name, Competition.name,
     Event.name, Organization.name, Discount.name,
     HousingRequest.name, HousingProvision.name,
-    EventAttendance.name, Attendance.name,
     User.name, 'Member', 'Registration'
   ].freeze
 

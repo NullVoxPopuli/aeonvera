@@ -18,7 +18,7 @@
 
 class Pass < ApplicationRecord
   belongs_to :event
-  belongs_to :attendance
+  belongs_to :registration
 
   belongs_to :discountable, polymorphic: true
 

@@ -37,7 +37,7 @@
 class Order < ApplicationRecord
   # default_scope do
   #   includes(
-  #     :user, :attendance, :pricing_tier,
+  #     :user, :registration, :pricing_tier,
   #     order_line_items: [:line_item]
   #   )
   # end
@@ -56,7 +56,7 @@ class Order < ApplicationRecord
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
-  belongs_to :attendance
+  belongs_to :registration
   # A user is always going to be the person paying.
   # and should always be the same as the user that attendance is attached to.
   belongs_to :user
@@ -80,7 +80,7 @@ class Order < ApplicationRecord
   end
 
   accepts_nested_attributes_for :order_line_items
-  accepts_nested_attributes_for :attendance
+  accepts_nested_attributes_for :registration
 
   scope :unpaid, -> { where(paid: false) }
   scope :paid, -> { where(paid: true) }

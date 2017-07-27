@@ -3,15 +3,15 @@ module Api
     include PublicAttributes::PricingTierAttributes
     attributes :number_of_leads, :number_of_follows
 
-    has_many :attendances
+    has_many :registrations
     belongs_to :event
 
     def number_of_follows
-      object.attendances.follows.count
+      object.registrations.follows.count
     end
 
     def number_of_leads
-      object.attendances.leads.count
+      object.registrations.leads.count
     end
   end
 end

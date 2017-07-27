@@ -40,7 +40,7 @@ describe Discount do
     it 'calculates based on orders' do
       e = create(:event)
       d = create(:discount, host: e)
-      o = create(:order, host: e, attendance: create(:attendance, host: e))
+      o = create(:order, host: e, attendance: create(:registration, host: e))
       create(:order_line_item, line_item: d, order: o)
 
       expect(d.times_used).to eq 1

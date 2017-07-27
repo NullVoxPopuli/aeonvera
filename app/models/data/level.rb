@@ -21,20 +21,10 @@ class Level < ApplicationRecord
 
   belongs_to :user
   belongs_to :event
-  has_many :attendances, -> { where(attending: true).order("attendances.created_at DESC") }
-  has_many :event_attendances, -> { where(attending: true).order("attendances.created_at DESC") }
   belongs_to :package
+  has_many :registrations, -> { where(attending: true).order("registrations.created_at DESC") }
 
   validates :name, presence: true
-
-  #before_destroy { |level|
-  #  result = level.attendances.size == 0
-  #  if result
-  #    level.errors.add(:base, "There are attendees with this level.")
-  #    return false
-  #  end
-  #}
-
 
   NOTHING = 0
   AUDITION = 1

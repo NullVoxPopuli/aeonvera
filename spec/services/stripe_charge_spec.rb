@@ -11,7 +11,7 @@ describe StripeTasks::ChargeCard do
       @event = event = create_event
       package = create(:package, event: event)
       integration = create_integration(owner: event)
-      order = create(:order, host: event, attendance: create(:attendance, event: event))
+      order = create(:order, host: event, attendance: create(:registration, event: event))
       add_to_order(order, package)
 
       token = stripe_helper.generate_card_token

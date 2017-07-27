@@ -13,7 +13,7 @@ describe Api::PricingTierPolicy do
     ->(method){
       event = create(:event)
       tier = create(:pricing_tier, event: event)
-      attendance = create(:attendance, host: event, pricing_tier: tier)
+      attendance = create(:registration, host: event, pricing_tier: tier)
 
       policy = Api::PricingTierPolicy.new(attendance.attendee, tier)
       policy.send(method)

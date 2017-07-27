@@ -4,6 +4,6 @@ module Api
 
     type 'events'
 
-    has_many :attendances, serializer: AttendanceSerializer
+    has_many :registrations, serializer: RegistrationSerializer
   end
 end

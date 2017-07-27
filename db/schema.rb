@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170712032052) do
+ActiveRecord::Schema.define(version: 20170726232318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,45 +23,6 @@ ActiveRecord::Schema.define(version: 20170712032052) do
     t.string   "uid",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "attendances", force: :cascade do |t|
-    t.integer  "attendee_id"
-    t.integer  "host_id"
-    t.integer  "level_id"
-    t.integer  "package_id"
-    t.integer  "pricing_tier_id"
-    t.boolean  "interested_in_volunteering"
-    t.boolean  "needs_housing"
-    t.boolean  "providing_housing"
-    t.text     "metadata"
-    t.datetime "checked_in_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "attending",                              default: true, null: false
-    t.string   "dance_orientation",          limit: 255
-    t.string   "host_type",                  limit: 255
-    t.string   "attendance_type",            limit: 255
-    t.string   "transferred_to_name"
-    t.integer  "transferred_to_user_id"
-    t.datetime "transferred_at"
-    t.string   "transfer_reason"
-    t.string   "attendee_first_name"
-    t.string   "attendee_last_name"
-    t.string   "phone_number"
-    t.string   "city"
-    t.string   "state"
-    t.string   "zip"
-  end
-
-  add_index "attendances", ["attendee_id"], name: "index_attendances_on_attendee_id", using: :btree
-  add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree
-  add_index "attendances", ["host_id", "host_type"], name: "index_attendances_on_host_id_and_host_type", using: :btree
-
-  create_table "attendances_discounts", force: :cascade do |t|
-    t.integer "attendance_id"
-    t.integer "discount_id"
   end
 
   create_table "attendees", force: :cascade do |t|
@@ -470,6 +431,39 @@ ActiveRecord::Schema.define(version: 20170712032052) do
     t.datetime "updated_at"
     t.integer  "winner_id"
   end
+
+  create_table "registrations", force: :cascade do |t|
+    t.integer  "attendee_id"
+    t.integer  "host_id"
+    t.integer  "level_id"
+    t.integer  "package_id"
+    t.integer  "pricing_tier_id"
+    t.boolean  "interested_in_volunteering"
+    t.boolean  "needs_housing"
+    t.boolean  "providing_housing"
+    t.text     "metadata"
+    t.datetime "checked_in_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "attending",                              default: true, null: false
+    t.string   "dance_orientation",          limit: 255
+    t.string   "host_type",                  limit: 255
+    t.string   "registration_type",          limit: 255
+    t.string   "transferred_to_name"
+    t.integer  "transferred_to_user_id"
+    t.datetime "transferred_at"
+    t.string   "transfer_reason"
+    t.string   "attendee_first_name"
+    t.string   "attendee_last_name"
+    t.string   "phone_number"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+  end
+
+  add_index "registrations", ["attendee_id"], name: "index_registrations_on_attendee_id", using: :btree
+  add_index "registrations", ["host_id", "host_type"], name: "index_registrations_on_host_id_and_host_type", using: :btree
 
   create_table "restraints", force: :cascade do |t|
     t.integer "dependable_id"

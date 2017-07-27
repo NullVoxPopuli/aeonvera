@@ -10,12 +10,12 @@ module Api
       class OrderSerializer < ActiveModel::Serializer
         attributes :id, :user_email, :user_name, :payment_received_at, :created_at
 
-        class AttendanceSerializer < ActiveModel::Serializer
+        class RegistrationSerializer < ActiveModel::Serializer
           attributes :id
         end
 
         # we just want to get to the associated attendance id
-        belongs_to :attendance, serializer: Api::CompetitionSerializer::OrderLineItemSerializer::OrderSerializer::AttendanceSerializer
+        belongs_to :registration, serializer: Api::CompetitionSerializer::OrderLineItemSerializer::OrderSerializer::RegistrationSerializer
 
         def user_email; object.buyer_email; end
         def user_name; object.buyer_name; end
@@ -31,24 +31,26 @@ module Api
 
     # attendances are not required for these, so we can't constrain
     has_many :order_line_items, serializer: Api::CompetitionSerializer::OrderLineItemSerializer
-    # has_many :attendances
+    # has_many :registrations
 
 
-    def order_line_items_with_attendances
+    def order_line_items_with_registrations
       return @order_line_items if @order_line_items
+
       attending = Attendance.arel_table[:attending]
       @order_line_items = object
-        .order_line_items.joins(order: :attendance)
+        .order_line_items.joins(order: :registration)
         .where(attending.eq(true))
     end
 
-    def attendances
-      return @attendances if @attendances
-      @attendances = order_line_items_with_attendances
-        .map{ |order_line_item| order_line_item.order.attendance }
-        .uniq{ |attendance| attendance.id }
+    def registrations
+      return @registrations if @registrations
 
-      @attendances
+      @registrations = order_line_items_with_registrations
+        .map{ |order_line_item| order_line_item.order.attendance }
+        .uniq{ |registration| registration.id }
+
+      @registrations
     end
 
     def number_of_registrants
@@ -56,13 +58,13 @@ module Api
     end
 
     def number_of_leads
-      order_line_items_with_attendances
+      order_line_items_with_registrations
         .where(dance_orientation: Attendance::LEAD)
         .count
     end
 
     def number_of_follows
-      order_line_items_with_attendances
+      order_line_items_with_registrations
         .where(dance_orientation: Attendance::FOLLOW)
         .count
     end

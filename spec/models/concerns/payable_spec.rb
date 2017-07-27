@@ -21,7 +21,7 @@ end
 describe Payable do
   before(:each) do
     @event = create(:event, make_attendees_pay_fees: false)
-    @attendance = create(:attendance, event: @event)
+    @attendance = create(:registration, event: @event)
     @attendance.save!
     @payment = create(:order, host: @event, attendance: @attendance)
   end

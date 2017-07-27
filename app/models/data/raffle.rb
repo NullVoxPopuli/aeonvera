@@ -30,12 +30,12 @@ class Raffle < ApplicationRecord
            source: :order_line_items
 
   has_many :ticket_purchasers,
-           class_name: Attendance.name,
+           class_name: Registration.name,
            through: :raffle_tickets,
            source: :purchasers
 
   belongs_to :winner,
-             class_name: 'Attendance'
+             class_name: 'Registration'
 
   def choose_winner
     build_participant_weights.sample
@@ -47,13 +47,13 @@ class Raffle < ApplicationRecord
   end
 
   def ticket_holders
-    event.attendances.participating_in_raffle(id)
+    event.registrations.participating_in_raffle(id)
   end
 
   # @return [Array<OrderLineItem>]
   def purchased_tickets
     raffle_tickets
-      .includes(order_line_items: [:line_item, { order: :attendance }])
+      .includes(order_line_items: [:line_item, { order: :registration }])
       .map(&:order_line_items).flatten
   end
 

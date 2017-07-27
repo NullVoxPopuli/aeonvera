@@ -5,7 +5,7 @@ RSpec.describe Api::EventAttendancesController, type: :controller do
   context 'is not logged in' do
     it 'requires login to view the current users attendance' do
       event = create(:event)
-      attendance = create(:attendance,
+      attendance = create(:registration,
                           host: event,
                           level: create(:level),
                           package: create(:package),
@@ -35,7 +35,7 @@ RSpec.describe Api::EventAttendancesController, type: :controller do
 
     context 'show' do
       it 'returns a single attendance' do
-        @cancelled = create(:attendance,
+        @cancelled = create(:registration,
                             host: @event,
                             level: create(:level),
                             package: create(:package),
@@ -46,7 +46,7 @@ RSpec.describe Api::EventAttendancesController, type: :controller do
       end
 
       it 'returns a non-cancelled attendance' do
-        @non_cancelled = create(:attendance,
+        @non_cancelled = create(:registration,
                             host: @event,
                             level: create(:level),
                             package: create(:package),

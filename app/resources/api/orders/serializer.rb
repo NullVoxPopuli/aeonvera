@@ -31,7 +31,7 @@ module Api
     end
 
     belongs_to :host
-    belongs_to :attendance
+    belongs_to :registration
     belongs_to :pricing_tier
     belongs_to :registration
 

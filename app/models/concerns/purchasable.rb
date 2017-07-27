@@ -11,7 +11,7 @@ module Purchasable
 
     has_many :purchasers,
       through: :orders,
-      source: :attendance,
+      source: :registration,
       inverse_of: :purchased_items
   end
 end

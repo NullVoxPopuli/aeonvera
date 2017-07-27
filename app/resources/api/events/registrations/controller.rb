@@ -15,6 +15,11 @@ module Api
           each_serializer: ::Api::RegistrationSerializer
         )
       end
+
+
+      def checkin
+        render_model
+      end
     end
   end
 end

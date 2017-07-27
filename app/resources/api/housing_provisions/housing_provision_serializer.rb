@@ -13,6 +13,6 @@ module Api
 
 
     belongs_to :host
-    belongs_to :attendance, serializer: EventAttendanceSerializer
+    belongs_to :registration, serializer: RegistrationSerializer
   end
 end

@@ -20,7 +20,7 @@ class PricingTier < ApplicationRecord
 
   has_many :packages
   belongs_to :event
-  has_many :attendances, -> { where(attending: true).order('attendances.created_at DESC') }
+  has_many :registrations, -> { where(attending: true).order('registrations.created_at DESC') }
   has_many :orders
 
   has_and_belongs_to_many :packages,
@@ -96,7 +96,7 @@ class PricingTier < ApplicationRecord
     # account for race condition where Date.today doesn't eval to the same date
     result = true if date && date <= Date.today + 1.minute
 
-    result = true if registrants && registrants <= event.attendances.count
+    result = true if registrants && registrants <= event.registrations.count
 
     result
   end

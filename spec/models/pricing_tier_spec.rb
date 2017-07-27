@@ -180,7 +180,7 @@ describe PricingTier do
           pt3 = create(:pricing_tier, event: event, registrants: 40, date: nil)
 
           20.times do
-            create(:attendance, event: event)
+            create(:registration, event: event)
           end
 
           expect(pt.should_apply_amount?).to eq true
@@ -240,7 +240,7 @@ describe PricingTier do
         pt.save
 
         11.times do
-          create(:attendance, event: event)
+          create(:registration, event: event)
         end
 
         pt.current_price(package).should == (
@@ -257,7 +257,7 @@ describe PricingTier do
         pt2 = create(:pricing_tier, event: event, date: Date.today - 30.days)
 
         11.times do
-          create(:attendance, event: event)
+          create(:registration, event: event)
         end
         #
         # # reload due to memoization

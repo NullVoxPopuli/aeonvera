@@ -7,9 +7,9 @@ module Api
       :number_of_leads, :number_of_follows, :number_of_shirts_sold,
       :revenue, :unpaid, :event_id
 
-    has_many :event_attendances
+    has_many :registrations
 
-    def event_attendances
+    def registrations
       object.recent_registrations
     end
 

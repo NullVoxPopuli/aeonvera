@@ -9,7 +9,7 @@ describe AttendanceMailer do
 
       @user = create(:user)
       @event = create(:event, user: @user)
-      @attendance = create(:attendance, event: @event, attendee: @user)
+      @attendance = create(:registration, event: @event, attendee: @user)
       @order = create(:order, event: @event, user: @user, attendance: @attendance)
 
       ActionMailer::Base.deliveries.clear
@@ -29,10 +29,7 @@ describe AttendanceMailer do
       @organization = create(:organization)
       @user = create(:user)
 
-      @order = create(:order,
-        host: @organization,
-        user: @user,
-        attendance: create(:organization_attendance, attendee: @user, host: @organization ))
+      @order = create(:order, host: @organization, user: @user)
 
       ActionMailer::Base.deliveries.clear
       expect{
