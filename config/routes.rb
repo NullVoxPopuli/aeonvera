@@ -108,13 +108,13 @@ AeonVera::Application.routes.draw do
     devise_for :users, # skip: :sessions,
       controllers: {
         # password resets
-        passwords: 'api/users/passwords',
+        passwords: 'api/users/devise/passwords',
         # email confirmations
-        confirmations: 'api/users/confirmations',
+        confirmations: 'api/users/devise/confirmations',
         # creating new account
-        registrations: 'api/users/registrations',
+        registrations: 'api/users/devise/account_registrations',
         # logging in
-        sessions: 'api/users/sessions'
+        sessions: 'api/users/devise/sessions'
       }
 
     # accepting invitations to work on an event / org

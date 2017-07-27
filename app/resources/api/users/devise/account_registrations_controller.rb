@@ -5,7 +5,7 @@
 # see: https://github.com/plataformatec/devise/blob/master/app/controllers/devise/registrations_controller.rb
 module Api
   module Users
-    class RegistrationsController < Devise::RegistrationsController
+    class AccountRegistrationsController < Devise::RegistrationsController
       # skip_before_filter :authenticate_user!
       protected
 
