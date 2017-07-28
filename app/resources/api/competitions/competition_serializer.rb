@@ -37,7 +37,7 @@ module Api
     def order_line_items_with_registrations
       return @order_line_items if @order_line_items
 
-      attending = Attendance.arel_table[:attending]
+      attending = Registration.arel_table[:attending]
       @order_line_items = object
         .order_line_items.joins(order: :registration)
         .where(attending.eq(true))
@@ -59,13 +59,13 @@ module Api
 
     def number_of_leads
       order_line_items_with_registrations
-        .where(dance_orientation: Attendance::LEAD)
+        .where(dance_orientation: Registration::LEAD)
         .count
     end
 
     def number_of_follows
       order_line_items_with_registrations
-        .where(dance_orientation: Attendance::FOLLOW)
+        .where(dance_orientation: Registration::FOLLOW)
         .count
     end
   end

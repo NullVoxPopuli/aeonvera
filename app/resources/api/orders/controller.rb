@@ -40,7 +40,7 @@ module Api
     end
 
     def update
-      render_model('order_line_items.line_item,attendance')
+      render_model('order_line_items.line_item,registration')
     end
 
     def refresh_stripe
@@ -52,9 +52,9 @@ module Api
     end
 
     def mark_paid
-      # attendance has to be included here for the checkin-screen.
-      # because owning money is stored on the attendance. :-\
-      render_model('attendance')
+      # registration has to be included here for the checkin-screen.
+      # because owning money is stored on the registration. :-\
+      render_model('registration')
     end
 
     private

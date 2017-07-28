@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # == Schema Information
 #
-# Table name: attendances
+# Table name: registrations
 #
 #  id                         :integer          not null, primary key
 #  attendee_id                :integer
@@ -20,7 +20,7 @@
 #  attending                  :boolean          default(TRUE), not null
 #  dance_orientation          :string(255)
 #  host_type                  :string(255)
-#  attendance_type            :string(255)
+#  registration_type            :string(255)
 #  transferred_to_name        :string
 #  transferred_to_user_id     :integer
 #  transferred_at             :datetime
@@ -28,17 +28,17 @@
 #
 # Indexes
 #
-#  index_attendances_on_attendee_id                                (attendee_id)
-#  index_attendances_on_host_id_and_host_type                      (host_id,host_type)
-#  index_attendances_on_host_id_and_host_type_and_attendance_type  (host_id,host_type,attendance_type)
+#  index_registrations_on_attendee_id                                (attendee_id)
+#  index_registrations_on_host_id_and_host_type                      (host_id,host_type)
+#  index_registrations_on_host_id_and_host_type_and_registration_type  (host_id,host_type,registration_type)
 #
 
 require 'spec_helper'
 
-describe Attendance do
+describe Registration do
   describe 'associations' do
     describe 'custom_field_responses' do
-      it 'destroys when the attendance is destroyed' do
+      it 'destroys when the registration is destroyed' do
         a = create(:registration)
         create(:custom_field_response, writer: a)
 
@@ -50,15 +50,15 @@ describe Attendance do
 
     describe 'order_line_items' do
       it 'has an order_line_item' do
-        attendance = Attendance.new
-        attendance.save(validate: false)
-        order = Order.new(attendance: attendance)
+        registration = Registration.new
+        registration.save(validate: false)
+        order = Order.new(registration: registration)
         order.save(validate: false)
         order_line_item = OrderLineItem.new(order: order)
         order_line_item.save(validate: false)
 
-        attendance.reload
-        expect(attendance.order_line_items).to include(order_line_item)
+        registration.reload
+        expect(registration.order_line_items).to include(order_line_item)
       end
     end
 
@@ -66,15 +66,15 @@ describe Attendance do
       it 'has raffle tickets' do
         raffle_ticket = LineItem::RaffleTicket.new
         raffle_ticket.save(validate: false)
-        attendance = Attendance.new
-        attendance.save(validate: false)
-        order = Order.new(attendance: attendance)
+        registration = Registration.new
+        registration.save(validate: false)
+        order = Order.new(registration: registration)
         order.save(validate: false)
         order_line_item = OrderLineItem.new(order: order, line_item_id: raffle_ticket.id, line_item_type: raffle_ticket.class.name)
         order_line_item.save(validate: false)
 
-        attendance.reload
-        expect(attendance.raffle_tickets).to include(raffle_ticket)
+        registration.reload
+        expect(registration.raffle_tickets).to include(raffle_ticket)
       end
     end
   end
@@ -83,16 +83,16 @@ describe Attendance do
     let(:event) { create(:event) }
 
     it 'returns the transfer name if set' do
-      attendance = create(:registration, event: event, transferred_to_name: 'Luke')
+      registration = create(:registration, event: event, transferred_to_name: 'Luke')
 
-      expect(attendance.attendee_name).to eq 'Luke'
+      expect(registration.attendee_name).to eq 'Luke'
     end
 
     it 'returns the name of the user' do
       user = create(:user)
-      attendance = create(:registration, event: event, attendee: user)
+      registration = create(:registration, event: event, attendee: user)
 
-      expect(attendance.attendee_name).to eq user.name.titleize
+      expect(registration.attendee_name).to eq user.name.titleize
     end
   end
 end

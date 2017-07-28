@@ -28,7 +28,7 @@ module Api
              .includes(
                :user,
                :host,
-               attendance: [:attendee], order_line_items: [:line_item]
+               registration: [:attendee], order_line_items: [:line_item]
              )
       end
     end

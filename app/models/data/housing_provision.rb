@@ -12,8 +12,8 @@
 #  has_pets                   :boolean          default(FALSE), not null
 #  smokes                     :boolean          default(FALSE), not null
 #  notes                      :text
-#  attendance_id              :integer
-#  attendance_type            :string(255)
+#  registration_id              :integer
+#  registration_type            :string(255)
 #  host_id                    :integer
 #  host_type                  :string(255)
 #  created_at                 :datetime
@@ -23,7 +23,7 @@
 #
 # Indexes
 #
-#  index_housing_provisions_on_attendance_id_and_attendance_type  (attendance_id,attendance_type)
+#  index_housing_provisions_on_registration_id_and_registration_type  (registration_id,registration_type)
 #  index_housing_provisions_on_host_id_and_host_type              (host_id,host_type)
 #
 
@@ -32,7 +32,7 @@ class HousingProvision < ApplicationRecord
   include SoftDeletable
 
   belongs_to :host, polymorphic: true
-  belongs_to :registration, -> { with_deleted }, polymorphic: true
+  belongs_to :registration, -> { with_deleted }
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
@@ -52,10 +52,10 @@ class HousingProvision < ApplicationRecord
     ]
 
   def attendee_name
-    attendance.try(:attendee_name) || 'Attendee Not Found or Not Associated'
+    registration.try(:attendee_name) || 'Attendee Not Found or Not Associated'
   end
 
   def attendee_email
-    attendance.try(:attendee).try(:email) || ''
+    registration.try(:attendee).try(:email) || ''
   end
 end

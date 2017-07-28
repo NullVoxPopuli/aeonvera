@@ -36,7 +36,7 @@ module Api
     belongs_to :registration
 
     def registration
-      object.attendance
+      object.registration
     end
 
     def stripe_refunds

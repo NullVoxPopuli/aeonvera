@@ -8,15 +8,15 @@ module Api
     has_many :registrations
 
     def registrations
-      object.attendances
+      object.registrations
     end
 
     def number_of_follows
-      object.attendances.follows.count
+      object.registrations.follows.count
     end
 
     def number_of_leads
-      object.attendances.leads.count
+      object.registrations.leads.count
     end
   end
 end

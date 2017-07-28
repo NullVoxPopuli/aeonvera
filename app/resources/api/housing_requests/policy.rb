@@ -45,7 +45,7 @@ module Api
     end
 
     def is_the_attendee?
-      object.attendance.attendee_id == user.id
+      object.registration.attendee_id == user.id
     end
   end
 end

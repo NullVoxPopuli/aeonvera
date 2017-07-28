@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 # == Schema Information
 #
-# Table name: attendances
+# Table name: registrations
 #
 #  id                         :integer          not null, primary key
 #  attendee_id                :integer
@@ -20,7 +20,7 @@
 #  attending                  :boolean          default(TRUE), not null
 #  dance_orientation          :string(255)
 #  host_type                  :string(255)
-#  attendance_type            :string(255)
+#  registration_type            :string(255)
 #  transferred_to_name        :string
 #  transferred_to_user_id     :integer
 #  transferred_at             :datetime
@@ -34,14 +34,14 @@
 #
 # Indexes
 #
-#  index_attendances_on_attendee_id                                (attendee_id)
-#  index_attendances_on_host_id_and_host_type                      (host_id,host_type)
-#  index_attendances_on_host_id_and_host_type_and_attendance_type  (host_id,host_type,attendance_type)
+#  index_registrations_on_attendee_id                                (attendee_id)
+#  index_registrations_on_host_id_and_host_type                      (host_id,host_type)
+#  index_registrations_on_host_id_and_host_type_and_registration_type  (host_id,host_type,registration_type)
 #
 
 # Rules about an Attendance
 # - Only one unpaid order at a time
-#   - if the attendance owes money, there will be an unpaid order
+#   - if the registration owes money, there will be an unpaid order
 # - Must belong to a host (Event, Organization, etc)
 class Registration < ApplicationRecord
   self.inheritance_column = 'registration_type'
@@ -65,7 +65,7 @@ class Registration < ApplicationRecord
   belongs_to :package
   belongs_to :pricing_tier
 
-  # for an attendance, we don't care if any of our
+  # for an registration, we don't care if any of our
   # references are deleted, we want to know what they were
   def attendee; User.unscoped { super }; end
   def package; Package.unscoped { super }; end
@@ -108,13 +108,13 @@ class Registration < ApplicationRecord
   }
 
   scope :without_orders, -> {
-    joins('LEFT OUTER JOIN "orders" ON "orders"."attendance_id" = "registrations"."id"')
-      .where('orders.attendance_id IS NULL').uniq
+    joins('LEFT OUTER JOIN "orders" ON "orders"."registration_id" = "registrations"."id"')
+      .where('orders.registration_id IS NULL').uniq
   }
 
   scope :unpaid, -> {
-    joins('LEFT OUTER JOIN "orders" ON "orders"."attendance_id" = "registrations"."id"')
-      .where('orders.attendance_id IS NULL OR orders.paid != true').uniq
+    joins('LEFT OUTER JOIN "orders" ON "orders"."registration_id" = "registrations"."id"')
+      .where('orders.registration_id IS NULL OR orders.paid != true').uniq
   }
   #
   # scope :created_after, ->(time) { where('created_at > ?', time) }
@@ -287,7 +287,7 @@ class Registration < ApplicationRecord
     result
   end
 
-  # if an attendance doesn't have an order, calculate things at
+  # if an registration doesn't have an order, calculate things at
   # the current prices
   def total_cost
     total = 0

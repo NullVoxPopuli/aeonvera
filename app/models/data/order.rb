@@ -7,7 +7,7 @@
 #  payment_token               :string(255)
 #  payer_id                    :string(255)
 #  metadata                    :text
-#  attendance_id               :integer
+#  registration_id               :integer
 #  host_id                     :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
@@ -58,7 +58,7 @@ class Order < ApplicationRecord
 
   belongs_to :registration
   # A user is always going to be the person paying.
-  # and should always be the same as the user that attendance is attached to.
+  # and should always be the same as the user that registration is attached to.
   belongs_to :user
   belongs_to :created_by, class_name: User.name
 
@@ -96,7 +96,7 @@ class Order < ApplicationRecord
   validates :buyer_email, presence: true
   validates :buyer_name, presence: true
   validates :host, presence: true
-  validate :require_attendance_if_has_competitions
+  validate :require_registration_if_has_competitions
 
   before_create do |instance|
     # Set is_fee_absorbed to whatever the event is set to.
@@ -137,12 +137,12 @@ class Order < ApplicationRecord
     false
   end
 
-  def require_attendance_if_has_competitions
+  def require_registration_if_has_competitions
     return true unless has_competition?
 
-    unless (name_from_metadata || attendance.try(:attendee_name)) &&
-        (email_from_metadata || attendance.try(:attendee_email))
-      errors.add(:base, 'Registrant attendance or buyer name and email are required when purchasing a competition.')
+    unless (name_from_metadata || registration.try(:attendee_name)) &&
+        (email_from_metadata || registration.try(:attendee_email))
+      errors.add(:base, 'Registrant registration or buyer name and email are required when purchasing a competition.')
     end
   end
 
@@ -164,11 +164,11 @@ class Order < ApplicationRecord
   end
 
   def buyer_name
-    name_from_metadata || attendance.try(:attendee_name) || user.try(:name) || created_by.try(:name)
+    name_from_metadata || registration.try(:attendee_name) || user.try(:name) || created_by.try(:name)
   end
 
   def buyer_email
-    email_from_metadata || attendance.try(:attendee_email) || user.try(:email) || created_by.try(:email)
+    email_from_metadata || registration.try(:attendee_email) || user.try(:email) || created_by.try(:email)
   end
 
   # TODO: do I want these to actually be fields?
@@ -280,7 +280,7 @@ class Order < ApplicationRecord
               'Total Fees', 'Net Received', 'Line Items']
       all.each do |order|
         order_user = order.user
-        order_attendee = order.attendance
+        order_attendee = order.registration
 
         line_item_list = order.order_line_items.map do |i|
           "#{i.quantity} x #{i.name} @ #{i.price}"

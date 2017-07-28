@@ -8,11 +8,11 @@ module Api
       :my_event
 
     def number_of_leads
-      object.attendances.leads.count
+      object.registrations.leads.count
     end
 
     def number_of_follows
-      object.attendances.follows.count
+      object.registrations.follows.count
     end
 
     def number_of_shirts_sold

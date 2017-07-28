@@ -10,12 +10,26 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
     add_index :registrations, :attendee_id
     add_index :registrations, [:host_id, :host_type]
 
+    rename_column :housing_requests, :attendance_id, :registration_id
+    rename_column :housing_provisions, :attendance_id, :registration_id
+    remove_column :housing_requests, :attendance_type
+    remove_column :housing_provisions, :attendance_type
+
+    rename_column :orders, :attendance_id, :registration_id
+
     drop_table :attendances_discounts
 
     set_type
   end
 
   def down
+    rename_column :orders, :registration_id, :attendance_id
+
+    rename_column :housing_requests, :registration_id, :attendance_id
+    rename_column :housing_provisions, :registration_id, :attendance_id
+    add_column :housing_requests, :attendance_type, :string
+    add_column :housing_provisions, :attendance_type, :string
+
     remove_index :registrations, :attendee_id
     remove_index :registrations, [:host_id, :host_type]
 
