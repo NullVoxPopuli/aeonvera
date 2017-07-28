@@ -59,7 +59,7 @@ describe Package do
     end
 
     it 'does not change if the tiers are not yet eligible' do
-      event.attendances.destroy_all
+      event.registrations.destroy_all
 
       # The Delorean replicates a long lasting issue that Travis discovered
       Delorean.time_travel_to(10.days.from_now) do

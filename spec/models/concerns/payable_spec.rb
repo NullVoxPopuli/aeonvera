@@ -21,9 +21,9 @@ end
 describe Payable do
   before(:each) do
     @event = create(:event, make_attendees_pay_fees: false)
-    @attendance = create(:registration, event: @event)
-    @attendance.save!
-    @payment = create(:order, host: @event, attendance: @attendance)
+    @registration = create(:registration, event: @event)
+    @registration.save!
+    @payment = create(:order, host: @event, registration: @registration)
   end
 
   context "already_exists?" do
@@ -62,7 +62,7 @@ describe Payable do
     it 'is zero when the subtotal is zero' do
       package = create(:package, event: @event)
       discount = create(:discount, host: @event, value: 100, kind: Discount::PERCENT_OFF)
-      order = create(:order, host: @event, attendance: @attendance)
+      order = create(:order, host: @event, registration: @registration)
 
       add_to_order(order, package)
       add_to_order(order, discount)
@@ -75,7 +75,7 @@ describe Payable do
     it 'totals when the package has a value of 0' do
       package = create(:package, event: @event, initial_price: 0, at_the_door_price: 0)
       friday_dance = create(:line_item, event: @event, price: 25)
-      order = Order.new(host: @event, attendance: @attendance)
+      order = Order.new(host: @event, registration: @registration)
       add_to_order(order, package)
       add_to_order(order, friday_dance)
 

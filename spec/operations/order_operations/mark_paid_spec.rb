@@ -4,13 +4,13 @@ describe Api::OrderOperations::MarkPaid do
   let(:klass){ Api::OrderOperations::MarkPaid }
   let(:owner){ create_confirmed_user }
   let(:event){ create(:event, hosted_by: owner) }
-  let(:attendance){ create(:registration, host: event) }
+  let(:registration){ create(:registration, host: event) }
   let(:package){ create(:package, event: event) }
 
   context 'order is paid' do
     it 'does not change any of the attributes' do
       order = create(:order,
-        host: event, attendance: attendance,
+        host: event, registration: registration,
         payment_method: "Boop",  paid: true)
 
       params = {
@@ -25,7 +25,7 @@ describe Api::OrderOperations::MarkPaid do
 
   context 'order is unpaid' do
     it 'marks an order as paid' do
-      order = create(:order, host: event, attendance: attendance)
+      order = create(:order, host: event, registration: registration)
       add_to_order(order, package)
 
       params = {
@@ -38,7 +38,7 @@ describe Api::OrderOperations::MarkPaid do
     end
 
     it 'marks an order as paid with a total of 0' do
-      order = create(:order, host: event, attendance: attendance)
+      order = create(:order, host: event, registration: registration)
       add_to_order(order, package)
 
       params = {
@@ -52,7 +52,7 @@ describe Api::OrderOperations::MarkPaid do
     end
 
     it 'updates the payment_method' do
-      order = create(:order, host: event, attendance: attendance, payment_method: "Boop")
+      order = create(:order, host: event, registration: registration, payment_method: "Boop")
       add_to_order!(order, package)
       expect(order.paid).to eq false
 
@@ -66,7 +66,7 @@ describe Api::OrderOperations::MarkPaid do
     end
 
     it 'sets the check_number' do
-      order = create(:order, host: event, attendance: attendance)
+      order = create(:order, host: event, registration: registration)
       add_to_order!(order, package)
       expect(order.paid).to eq false
 
@@ -81,7 +81,7 @@ describe Api::OrderOperations::MarkPaid do
     end
 
     it 'sets the notes' do
-      order = create(:order, host: event, attendance: attendance)
+      order = create(:order, host: event, registration: registration)
       add_to_order!(order, package)
       expect(order.paid).to eq false
 
@@ -96,7 +96,7 @@ describe Api::OrderOperations::MarkPaid do
     end
 
     it 'marks an order as paid with persistence' do
-      order = create(:order, host: event, attendance: attendance)
+      order = create(:order, host: event, registration: registration)
 
       params = {
         id: order.id,
