@@ -105,7 +105,7 @@ describe Api::HousingProvisionsController, type: :request do
           {
             "data"=>{
               "attributes"=>{"housing-capacity"=>0, "number-of-showers"=>0, "can-provide-transportation"=>false, "transportation-capacity"=>0, "preferred-gender-to-host"=>"No Preference", "has-pets"=>false, "smokes"=>false, "notes"=>nil, "name"=>nil},
-              "relationships"=>{"host"=>{"data"=>{"type"=>"events", "id"=> @event.id}}, "registration"=>{"data"=>{"type"=>"event-registrations", "id"=>@registration.id}}},
+              "relationships"=>{"host"=>{"data"=>{"type"=>"events", "id"=> @event.id}}, "registration"=>{"data"=>{"type"=>"registrations", "id"=>@registration.id}}},
               "type"=>"housing-provisions"
             }
           }

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 
-describe Api::Users::PasswordsController, type: :request do
+describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
   let(:user) { create(:user, confirmed_at: Time.now) }
 
   context 'requests a password reset' do

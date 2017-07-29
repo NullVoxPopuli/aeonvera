@@ -98,8 +98,8 @@ AeonVera::Application.routes.draw do
     get '/charts/:id', to: 'chart_data#show'
 
     devise_scope :api_user do
-      get '/confirmation', to: 'users/confirmations#show'
-      post '/confirmation', to: 'users/confirmations#create'
+      get '/confirmation', to: 'users/devise_overrides/confirmations#show'
+      post '/confirmation', to: 'users/devise_overrides/confirmations#create'
     end
 
     resources :registrations
@@ -108,13 +108,13 @@ AeonVera::Application.routes.draw do
     devise_for :users, # skip: :sessions,
       controllers: {
         # password resets
-        passwords: 'api/users/devise/passwords',
+        passwords: 'api/users/devise_overrides/passwords',
         # email confirmations
-        confirmations: 'api/users/devise/confirmations',
+        confirmations: 'api/users/devise_overrides/confirmations',
         # creating new account
-        registrations: 'api/users/devise/account_registrations',
+        registrations: 'api/users/devise_overrides/account_registrations',
         # logging in
-        sessions: 'api/users/devise/sessions'
+        sessions: 'api/users/devise_overrides/sessions'
       }
 
     # accepting invitations to work on an event / org

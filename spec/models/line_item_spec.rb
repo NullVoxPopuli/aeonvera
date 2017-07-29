@@ -97,7 +97,7 @@ describe LineItem::RaffleTicket do
       it 'has purchasers' do
         skip('is there a way to make this work?')
         item = LineItem.new
-        registration = EventRegistration.new
+        registration = Registration.new
         order = Order.new(registration: registration)
         oli = OrderLineItem.new(order: order, line_item: item)
 
@@ -109,7 +109,7 @@ describe LineItem::RaffleTicket do
         item = LineItem.new
         item.save(validate: false)
 
-        registration = EventRegistration.new
+        registration = Registration.new
         registration.save(validate: false)
 
         order = Order.new(registration: registration)

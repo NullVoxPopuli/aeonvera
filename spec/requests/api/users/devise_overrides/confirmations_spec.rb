@@ -1,12 +1,12 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
-
-describe Api::Users::ConfirmationsController, type: :request do
+describe Api::Users::DeviseOverrides::ConfirmationsController, type: :request do
   let(:user) { create(:user) }
 
   before(:each) do
     @headers = {
-      "devise.mapping" => Devise.mappings[:api_user]
+      'devise.mapping' => Devise.mappings[:api_user]
     }
 
     host! APPLICATION_CONFIG[:domain][Rails.env]
@@ -15,6 +15,7 @@ describe Api::Users::ConfirmationsController, type: :request do
   context 'confirms the email address' do
     it 'clears the confirmation token' do
       get '/api/users/confirmation?confirmation_token=' + user.confirmation_token, {}, @headers
+      expect(response.status).to eq 200
 
       user.reload
       expect(user.confirmation_token).to be_nil
@@ -22,6 +23,7 @@ describe Api::Users::ConfirmationsController, type: :request do
 
     it 'sets confirmed at' do
       get '/api/confirmation?confirmation_token=' + user.confirmation_token
+      expect(response.status).to eq 200
 
       user.reload
       expect(user.confirmed_at).to_not be_nil
@@ -34,12 +36,15 @@ describe Api::Users::ConfirmationsController, type: :request do
       expect(user.confirmation_sent_at).to_not be_nil
       expect {
         post '/api/users/confirmation', user: { email: user.email }
+        expect(response.status).to eq 200
       }.to change(ActionMailer::Base.deliveries, :count).by 1
     end
 
     it 'changes the confirmation token' do
       old_token = user.confirmation_token
       post '/api/users/confirmation', user: { email: user.email }
+      expect(response.status).to eq 200
+
       user.reload
       expect(user.confirmation_token).to_not eq old_token
     end

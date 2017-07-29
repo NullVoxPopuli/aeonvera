@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::Users::RegistrationsController, type: :request do
+describe Api::Users::DeviseOverrides::AccountRegistrationsController, type: :request do
   let(:user) { create(:user) }
 
   before(:each) do

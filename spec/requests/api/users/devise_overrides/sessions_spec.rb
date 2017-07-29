@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::Users::SessionsController, type: :request do
+describe Api::Users::DeviseOverrides::SessionsController, type: :request do
   let(:user) { create(:user) }
 
   before(:each) do

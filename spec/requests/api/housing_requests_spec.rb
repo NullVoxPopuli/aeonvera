@@ -106,7 +106,7 @@ describe Api::HousingRequestsController, type: :request do
           {
             'data' => {
               'attributes' => {},
-              'relationships' => { 'host' => { 'data' => { 'type' => 'events', 'id' => @event.id } }, 'registration' => { 'data' => { 'type' => 'event-registrations', 'id' => @registration.id } } },
+              'relationships' => { 'host' => { 'data' => { 'type' => 'events', 'id' => @event.id } }, 'registration' => { 'data' => { 'type' => 'registrations', 'id' => @registration.id } } },
               'type' => 'housing-requests'
             }
           }

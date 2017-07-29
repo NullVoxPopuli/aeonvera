@@ -1,9 +1,10 @@
+# frozen_string_literal: true
 module Api
   class HousingProvisionsController < Api::EventResourceController
     private
 
     def update_housing_provision_params
-      whitelistable_params(polymorphic: [:registration, :registration, :host]) do |whitelister|
+      whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :housing_capacity, :number_of_showers, :can_provide_transportation,
           :transportation_capacity, :preferred_gender_to_host,
@@ -13,7 +14,7 @@ module Api
     end
 
     def create_housing_provision_params
-      whitelisted = whitelistable_params(polymorphic: [:registration, :registration, :host]) do |whitelister|
+      whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :housing_capacity, :number_of_showers, :can_provide_transportation,
           :transportation_capacity, :preferred_gender_to_host,
@@ -22,9 +23,6 @@ module Api
           :host_id, :host_type, :name
         )
       end
-
-      whitelisted[:registration_type] = 'Registration'
-      whitelisted
     end
   end
 end
