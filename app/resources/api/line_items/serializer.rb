@@ -1,5 +1,5 @@
 module Api
-  # object is actually an Attendance in this serializer
+  # object is actually an Registration in this serializer
   class LineItemSerializer < ActiveModel::Serializer
     include PublicAttributes::LineItemAttributes
     include SharedAttributes::Stock

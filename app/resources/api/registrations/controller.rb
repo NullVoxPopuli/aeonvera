@@ -28,7 +28,7 @@ module Api
 
     # TODO: this is complicated....
     # def resource_proxy
-    #   EventAttendance.includes(
+    #   Registration.includes(
     #     :housing_request,
     #     :housing_provision,
     #     { host: [:pricing_tiers, :packages] },

@@ -4,7 +4,7 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
   let(:event) { create(:event) }
   before(:each) do
     login_through_api
-    @attendance = create(:registration, host: event, attendee: @user)
+    @registration = create(:registration, host: event, attendee: @user)
   end
 
   context 'create' do
@@ -23,10 +23,10 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
             notes: 'Lots of couches'
           },
           relationships: {
-            attendance: {
+            registration: {
               data: {
-                id: @attendance.id,
-                type: 'event-attendances'
+                id: @registration.id,
+                type: 'event-registrations'
               }
             },
             host: {
@@ -48,7 +48,7 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
       @housing_provision = create(
         :housing_provision,
         host: event,
-        attendance: @attendance,
+        registration: @registration,
         preferred_gender_to_host: 'Robots')
     end
 

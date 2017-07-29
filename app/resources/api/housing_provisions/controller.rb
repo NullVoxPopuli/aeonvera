@@ -23,7 +23,7 @@ module Api
         )
       end
 
-      whitelisted[:registration_type] = 'Attendance'
+      whitelisted[:registration_type] = 'Registration'
       whitelisted
     end
   end

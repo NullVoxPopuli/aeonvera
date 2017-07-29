@@ -25,38 +25,6 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.datetime "updated_at"
   end
 
-  create_table "attendances", force: :cascade do |t|
-    t.integer  "attendee_id"
-    t.integer  "host_id"
-    t.integer  "level_id"
-    t.integer  "package_id"
-    t.integer  "pricing_tier_id"
-    t.boolean  "interested_in_volunteering"
-    t.boolean  "needs_housing"
-    t.boolean  "providing_housing"
-    t.text     "metadata"
-    t.datetime "checked_in_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "attending",                              default: true, null: false
-    t.string   "dance_orientation",          limit: 255
-    t.string   "host_type",                  limit: 255
-    t.string   "attendance_type",            limit: 255
-    t.string   "transferred_to_name"
-    t.integer  "transferred_to_user_id"
-    t.datetime "transferred_at"
-    t.string   "transfer_reason"
-  end
-
-  add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree
-  add_index "attendances", ["host_id", "host_type"], name: "index_attendances_on_host_id_and_host_type", using: :btree
-
-  create_table "attendances_discounts", force: :cascade do |t|
-    t.integer "attendance_id"
-    t.integer "discount_id"
-  end
-
   create_table "attendees", force: :cascade do |t|
     t.string   "first_name",                 limit: 255
     t.string   "last_name",                  limit: 255
@@ -83,17 +51,6 @@ ActiveRecord::Schema.define(version: 20170726232318) do
 
   add_index "collaborations", ["collaborated_id", "collaborated_type"], name: "index_collaborations_on_collaborated_id_and_collaborated_type", using: :btree
   add_index "collaborations", ["user_id"], name: "index_collaborations_on_user_id", using: :btree
-
-  create_table "competition_responses", force: :cascade do |t|
-    t.integer  "attendance_id"
-    t.integer  "competition_id"
-    t.string   "dance_orientation", limit: 255
-    t.string   "partner_name",      limit: 255
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "attendance_type",   limit: 255, default: "EventAttendance"
-  end
 
   create_table "competitions", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -223,8 +180,7 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.boolean  "has_pets",                               default: false, null: false
     t.boolean  "smokes",                                 default: false, null: false
     t.text     "notes"
-    t.integer  "attendance_id"
-    t.string   "attendance_type",            limit: 255
+    t.integer  "registration_id"
     t.integer  "host_id"
     t.string   "host_type",                  limit: 255
     t.datetime "created_at"
@@ -233,7 +189,6 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.datetime "deleted_at"
   end
 
-  add_index "housing_provisions", ["attendance_id", "attendance_type"], name: "index_housing_provisions_on_attendance_id_and_attendance_type", using: :btree
   add_index "housing_provisions", ["host_id", "host_type"], name: "index_housing_provisions_on_host_id_and_host_type", using: :btree
 
   create_table "housing_requests", force: :cascade do |t|
@@ -247,8 +202,7 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.text     "unwanted_roommates"
     t.string   "preferred_gender_to_house_with", limit: 255
     t.text     "notes"
-    t.integer  "attendance_id"
-    t.string   "attendance_type",                limit: 255
+    t.integer  "registration_id"
     t.integer  "host_id"
     t.string   "host_type",                      limit: 255
     t.integer  "housing_provision_id"
@@ -258,7 +212,6 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.datetime "deleted_at"
   end
 
-  add_index "housing_requests", ["attendance_id", "attendance_type"], name: "index_housing_requests_on_attendance_id_and_attendance_type", using: :btree
   add_index "housing_requests", ["host_id", "host_type"], name: "index_housing_requests_on_host_id_and_host_type", using: :btree
 
   create_table "integrations", force: :cascade do |t|
@@ -361,7 +314,7 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.string   "payment_token",               limit: 255
     t.string   "payer_id",                    limit: 255
     t.text     "metadata"
-    t.integer  "attendance_id"
+    t.integer  "registration_id"
     t.integer  "host_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -438,7 +391,7 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.integer  "percent_off"
     t.integer  "discountable_id"
     t.string   "discountable_type", limit: 255
-    t.integer  "attendance_id"
+    t.integer  "registration_id"
     t.integer  "event_id"
     t.integer  "user_id"
     t.datetime "created_at"

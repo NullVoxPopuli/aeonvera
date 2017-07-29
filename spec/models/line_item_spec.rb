@@ -97,22 +97,22 @@ describe LineItem::RaffleTicket do
       it 'has purchasers' do
         skip('is there a way to make this work?')
         item = LineItem.new
-        attendance = EventAttendance.new
-        order = Order.new(attendance: attendance)
+        registration = EventRegistration.new
+        order = Order.new(registration: registration)
         oli = OrderLineItem.new(order: order, line_item: item)
 
         purchaser = item.purchasers.first
-        expect(purchaser).to eq attendance
+        expect(purchaser).to eq registration
       end
 
       it 'relates when persisted' do
         item = LineItem.new
         item.save(validate: false)
 
-        attendance = EventAttendance.new
-        attendance.save(validate: false)
+        registration = EventRegistration.new
+        registration.save(validate: false)
 
-        order = Order.new(attendance: attendance)
+        order = Order.new(registration: registration)
         order.save(validate: false)
 
         oli = OrderLineItem.new(order: order, line_item: item)
@@ -120,7 +120,7 @@ describe LineItem::RaffleTicket do
 
         item.reload
         purchaser = item.purchasers.first
-        expect(purchaser).to eq attendance
+        expect(purchaser).to eq registration
       end
 
     end

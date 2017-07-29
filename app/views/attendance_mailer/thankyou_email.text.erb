@@ -2,14 +2,14 @@
 	<%= @event.name %>
 <% end %>
 
-<%= @attendance.attendee_name %>,
+<%= @registration.attendee_name %>,
 Thank you for registering <%= @preposition %> <%= @event.name %>!
 
 The organizers are aware of your registration, and should be happy to see you at their event.
 
 
 Order Summary
-<%= render partial: "/orders/summary", locals: { order: @order, attendance: @attendance, buttons: false } %>
+<%= render partial: "/orders/summary", locals: { order: @order, registration: @registration, buttons: false } %>
 
 If you have any questions about <%= @event.name %>,
 feel free to email the event organizers.

@@ -2,7 +2,7 @@
 	<%= @event.name %>
 <% end %>
 
-<%= @attendance.attendee_name %>, <br>
+<%= @registration.attendee_name %>, <br>
 Thank you for registering <%= @preposition %> <%= @event.name %>! <br>
 <br>
 The organizers are aware of your registration, and should be happy to see you at their event.
@@ -11,7 +11,7 @@ The organizers are aware of your registration, and should be happy to see you at
 <h3>
   Order Summary
 </h3>
-<%= render partial: "/orders/summary", locals: { order: @order, attendance: @attendance, buttons: false } %>
+<%= render partial: "/orders/summary", locals: { order: @order, registration: @registration, buttons: false } %>
 <br>
 <br>
 If you have any questions about <%= @event.name %>,

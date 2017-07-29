@@ -19,7 +19,7 @@ module UserOperations
       if current_user.upcoming_events.count.positive?
         current_user.errors.add(
           :base,
-          'You cannot delete your account when you are about to attend an event. You will first have to cancel all your attendances'
+          'You cannot delete your account when you are about to attend an event. You will first have to cancel all your registrations'
         )
       else
         current_user.destroy

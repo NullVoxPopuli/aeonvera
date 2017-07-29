@@ -20,7 +20,7 @@ module Api
     end
 
     def type
-      object.attendance_type
+      object.registration_type
     end
   end
 end

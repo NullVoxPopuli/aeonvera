@@ -6,7 +6,7 @@
 #  payment_token               :string(255)
 #  payer_id                    :string(255)
 #  metadata                    :text
-#  attendance_id               :integer
+#  registration_id               :integer
 #  host_id                     :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
@@ -57,7 +57,7 @@ describe Order do
 
   describe 'validations' do
 
-    describe 'attendance' do
+    describe 'registration' do
       it 'is required when there is a competition' do
         event = create(:event)
         competition = create(:competition, event: event)
@@ -86,8 +86,8 @@ describe Order do
         expect(o.errors.keys).to_not include(:buyer_email)
       end
 
-      it 'is on the attendance' do
-        o = create(:order, attendance: create(:registration))
+      it 'is on the registration' do
+        o = create(:order, registration: create(:registration))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_email)
       end
@@ -115,8 +115,8 @@ describe Order do
         expect(o.errors.keys).to_not include(:buyer_name)
       end
 
-      it 'is on the attendance' do
-        o = create(:order, attendance: create(:registration))
+      it 'is on the registration' do
+        o = create(:order, registration: create(:registration))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_name)
       end

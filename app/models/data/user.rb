@@ -87,7 +87,7 @@ class User < ApplicationRecord
     )
   end
 
-  # @return [Attendance] the attendance record for this user for the specified event
+  # @return [Registration] the registration record for this user for the specified event
   def registration_for_event(event)
     registrations.where(host: event).first
   end

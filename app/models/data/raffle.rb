@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: raffles
@@ -16,26 +17,26 @@ class Raffle < ApplicationRecord
   belongs_to :event
 
   has_many :raffle_tickets,
-           class_name: LineItem::RaffleTicket.name,
-           foreign_key: 'reference_id'
+    class_name: LineItem::RaffleTicket.name,
+    foreign_key: 'reference_id'
 
   has_many :tickets,
-           class_name: LineItem::RaffleTicket.name,
-           foreign_key: 'reference_id'
+    class_name: LineItem::RaffleTicket.name,
+    foreign_key: 'reference_id'
 
   # order line items
   has_many :ticket_purchases,
-           class_name: OrderLineItem.name,
-           through: :raffle_tickets,
-           source: :order_line_items
+    class_name: OrderLineItem.name,
+    through: :raffle_tickets,
+    source: :order_line_items
 
   has_many :ticket_purchasers,
-           class_name: Registration.name,
-           through: :raffle_tickets,
-           source: :purchasers
+    class_name: Registration.name,
+    through: :raffle_tickets,
+    source: :purchasers
 
   belongs_to :winner,
-             class_name: 'Registration'
+    class_name: 'Registration'
 
   def choose_winner
     build_participant_weights.sample
@@ -62,24 +63,24 @@ class Raffle < ApplicationRecord
   # it's ok to return a array with objects in it, because we
   # are not going to store the result of this
   #
-  # @return [Array<Attendance>]
+  # @return [Array<Registration>]
   def build_participant_weights
     result = []
 
     purchased_tickets.each do |order_line_item|
       ticket = order_line_item.line_item
-      attendance = order_line_item.order.attendance
+      registration = order_line_item.order.registration
 
       total_tickets = ticket.number_of_tickets * order_line_item.quantity
       total_tickets.times do |_time|
-        result << attendance
+        result << registration
       end
     end
 
     result
   end
 
-  # @param [Attendance] ticket_holder
+  # @param [Registration] ticket_holder
   def tickets_for_ticket_holder(ticket_holder)
     ticket_holder.raffle_tickets.map(&:number_of_tickets).inject(:+)
   end

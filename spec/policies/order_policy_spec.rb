@@ -5,7 +5,7 @@ describe Api::OrderPolicy do
     context 'accessing data from an event' do
       let(:event) { create(:event) }
       let(:other_user) { create(:user) }
-      let(:order) { create(:order, host: event, attendance: create(:registration, host: event)) }
+      let(:order) { create(:order, host: event, registration: create(:registration, host: event)) }
 
       let(:policy) { Api::OrderPolicy.new(other_user, order) }
 

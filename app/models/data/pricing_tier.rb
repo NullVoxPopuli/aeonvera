@@ -43,7 +43,6 @@ class PricingTier < ApplicationRecord
   scope :before, ->(object) {
     if object.is_a?(PricingTier)
       table = object.class.arel_table
-      attendance_table = Attendance.arel_table
 
       where(
 

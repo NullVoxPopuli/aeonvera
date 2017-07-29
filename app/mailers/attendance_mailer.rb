@@ -1,18 +1,19 @@
-class AttendanceMailer < ActionMailer::Base
-  default from: APPLICATION_CONFIG["support_email"]
+# frozen_string_literal: true
+class RegistrationMailer < ActionMailer::Base
+  default from: APPLICATION_CONFIG['support_email']
 
-  layout "email"
+  layout 'email'
 
   def thankyou_email(order: nil)
-    build_email(order: order, subject: Proc.new{
+    build_email(order: order, subject: proc do
       "Thank you for registering #{@preposition} #{@event.name}"
-    })
+    end)
   end
 
   def payment_received_email(order: nil)
-    build_email(order: order, subject: Proc.new{
+    build_email(order: order, subject: proc do
       "Payment Received #{@preposition} #{@event.name}"
-    })
+    end)
   end
 
   private
@@ -20,18 +21,18 @@ class AttendanceMailer < ActionMailer::Base
   def build_email(order: nil, subject: nil)
     @order = order
     @event = order.host
-    @attendance = Attendance.with_deleted.find(order.attendance_id)
-    @preposition = @event.is_a?(Event) ? "for" : "with"
+    @registration = Registration.with_deleted.find(order.registration_id)
+    @preposition = @event.is_a?(Event) ? 'for' : 'with'
 
-    attendee = @attendance.attendee
+    attendee = @registration.attendee
 
-    email = attendee.present? ? attendee.email : @attendance.metadata["email"]
+    email = attendee.present? ? attendee.email : @registration.metadata['email']
 
     if email.present?
       mail(
         to: email,
         subject: subject.call
-        )
+      )
       end
   end
 end

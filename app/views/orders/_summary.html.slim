@@ -1,10 +1,10 @@
-- event = attendance.host
+- event = registration.host
 - show_net_received = local_assigns.try(:[], :net_received) || false
 
 = render partial: '/orders/summary_table', locals: local_assigns.merge(show_net_received: show_net_received, event: event)
 
 - if show_net_received
-  = link_to "Resend Receipt", resend_receipt_hosted_event_attendance_path(hosted_event: event, id: attendance.id, order_id: order.id), class: "button small", method: :post
+  = link_to "Resend Receipt", resend_receipt_hosted_event_registration_path(hosted_event: event, id: registration.id, order_id: order.id), class: "button small", method: :post
 
 
 .right
@@ -14,9 +14,9 @@
 
 - if buttons
   - if event.has_payment_processor?
-    - if (not attendance.owes_nothing?)
+    - if (not registration.owes_nothing?)
       -if !event.over?
-        = render partial: '/orders/payment_button', locals: { order: order, attendance: @attendance }
+        = render partial: '/orders/payment_button', locals: { order: order, registration: @registration }
 
     - else
       span.button.small.success

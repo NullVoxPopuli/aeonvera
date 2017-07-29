@@ -2,7 +2,7 @@
 module Api
   class CompetitionsController < Api::EventResourceController
     def index
-      render json: model, include: 'order_line_items.order.attendance'
+      render json: model, include: 'order_line_items.order.registration'
     end
 
     private

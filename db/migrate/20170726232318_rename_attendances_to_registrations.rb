@@ -16,13 +16,16 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
     remove_column :housing_provisions, :attendance_type
 
     rename_column :orders, :attendance_id, :registration_id
+    rename_column :passes, :attendance_id, :registration_id
 
     drop_table :attendances_discounts
+    drop_table :competition_responses
 
     set_type
   end
 
   def down
+    rename_column :passes, :registration_id, :attendance_id
     rename_column :orders, :registration_id, :attendance_id
 
     rename_column :housing_requests, :registration_id, :attendance_id

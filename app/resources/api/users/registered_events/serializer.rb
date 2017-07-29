@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Api
   module Users
-    # object is actually an Attendance in this serializer
+    # object is actually an Registration in this serializer
     class RegisteredEventSerializer < ActiveModel::Serializer
       type 'users/registered-events'
 

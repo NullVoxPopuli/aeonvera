@@ -93,7 +93,7 @@ describe OrderLineItem do
     context 'cannot have the same line_item ref as other order_line_item' do
       it 'does not save' do
         package = create(:package)
-        order = create(:order, host: package.event, attendance: create(:registration))
+        order = create(:order, host: package.event, registration: create(:registration))
         create(:order_line_item, line_item: package, order: order)
         expect {
           create(:order_line_item, line_item: package, order: order)
@@ -105,8 +105,8 @@ describe OrderLineItem do
 
       it 'allows adding a different order' do
         package = create(:package)
-        order = create(:order, host: package.event, attendance: create(:registration))
-        order2 = create(:order, host: package.event, attendance: create(:registration))
+        order = create(:order, host: package.event, registration: create(:registration))
+        order2 = create(:order, host: package.event, registration: create(:registration))
         expect {
           create(:order_line_item, line_item: package, order: order)
           create(:order_line_item, line_item: package, order: order2)

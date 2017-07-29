@@ -169,7 +169,7 @@ describe PricingTier do
       end
 
       it 'calculates current price of a package' do
-        allow_any_instance_of(Event).to receive(:attendances){ double(count: 20)}
+        allow_any_instance_of(Event).to receive(:registrations){ double(count: 20)}
         expect(package.current_price).to eq package.initial_price + pt.increase_by_dollars
       end
 

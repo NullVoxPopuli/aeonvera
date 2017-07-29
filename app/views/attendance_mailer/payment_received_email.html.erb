@@ -3,13 +3,13 @@
 <% end %>
 
 
-<%= @attendance.attendee_name %>, <br>
+<%= @registration.attendee_name %>, <br>
 Your payment <%= @preposition %> <%= @event.name %> has been received. <br>
 <br>
 <h3>
   Order Summary
 </h3>
-<%= render partial: "/orders/summary", locals: { order: @order, attendance: @attendance, buttons: false } %>
+<%= render partial: "/orders/summary", locals: { order: @order, registration: @registration, buttons: false } %>
 <br>
 <br>
 If you have any questions about <%= @event.name %>,

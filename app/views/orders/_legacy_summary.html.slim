@@ -29,13 +29,13 @@ table width="100%"
   | Prices as of:&nbsp;
   = order.created_at.to_s(:long)
 - if buttons
-  - event = attendance.event
+  - event = registration.event
   - if event.has_payment_processor?
-    - if (not attendance.owes_nothing?)
-      - @order = attendance.orders.unpaid.first
+    - if (not registration.owes_nothing?)
+      - @order = registration.orders.unpaid.first
       - if event.has_payment_processor?(Integration::STRIPE) && !event.over?
-        = form_tag(hosted_event_payments_path(hosted_event_id: @attendance.event.id, order_id: @order.id)) do
-          = stripe_checkout_script(@attendance.event.name, order.total)
+        = form_tag(hosted_event_payments_path(hosted_event_id: @registration.event.id, order_id: @order.id)) do
+          = stripe_checkout_script(@registration.event.name, order.total)
     - else
       span.button.small.success
         | You are Registered!

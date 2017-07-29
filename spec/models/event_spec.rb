@@ -91,7 +91,7 @@ describe Event do
 
     it 'is if registered' do
       user = create(:user)
-      attendance = create(:registration, event: event, attendee: user)
+      registration = create(:registration, event: event, attendee: user)
       expect(event.is_accessible_to?(user)).to eq true
     end
 

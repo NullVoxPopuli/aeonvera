@@ -228,9 +228,9 @@ FactoryGirl.define do
       }
     end
 
-    after(:build) do |attendance, _evaluator|
-      # attendance.host = create(:event, hosted_by: attendance.attendee) unless attendance.host.present?
-      attendance.dance_orientation = 0
+    after(:build) do |registration, _evaluator|
+      # registration.host = create(:event, hosted_by: registration.attendee) unless registration.host.present?
+      registration.dance_orientation = 0
     end
   end
 

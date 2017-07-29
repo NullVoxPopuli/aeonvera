@@ -8,38 +8,38 @@ RSpec.describe Api::EventsController, type: :controller do
           fail
           @event = create(:event, hosted_by: @user)
 
-          @attendance = create(:registration, host: @event)
-          @order = create(:order, attendance: @attendance, event: @event, paid: true)
+          @registration = create(:registration, host: @event)
+          @order = create(:order, registration: @registration, event: @event, paid: true)
           allow_any_instance_of(Order).to receive(:net_received){ 10 }
         end
 
-        it 'attending attendance is included in total' do
+        it 'attending registration is included in total' do
 
           get :revenue, id: @event.id
-          attendances = assigns(:attendances)
-          expect(attendances).to include(@attendance)
+          registrations = assigns(:registrations)
+          expect(registrations).to include(@registration)
 
           expect(assigns(:total)).to eq 10
         end
 
-        it 'non-attending attendance is not included in total' do
-          @attendance.destroy
-          @attendance.save
+        it 'non-attending registration is not included in total' do
+          @registration.destroy
+          @registration.save
 
           get :revenue, id: @event.id
-          attendances = assigns(:attendances)
-          expect(attendances).to_not include(@attendance)
+          registrations = assigns(:registrations)
+          expect(registrations).to_not include(@registration)
 
           expect(assigns(:total)).to eq 0
         end
 
         it 'does not include unpaind, non-attending orders in unpaid revenue' do
-          attendance = create(:registration, event: @event)
-          order = create(:order, attendance: attendance, event: @event)
+          registration = create(:registration, event: @event)
+          order = create(:order, registration: registration, event: @event)
 
           # make not attending
-          attendance.destroy
-          attendance.save
+          registration.destroy
+          registration.save
 
           get :revenue, id: @event.id
           expect(assigns(:owed)).to eq 0

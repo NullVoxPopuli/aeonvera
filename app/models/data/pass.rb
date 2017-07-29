@@ -9,7 +9,7 @@
 #  percent_off       :integer
 #  discountable_id   :integer
 #  discountable_type :string(255)
-#  attendance_id     :integer
+#  registration_id     :integer
 #  event_id          :integer
 #  user_id           :integer
 #  created_at        :datetime
@@ -27,6 +27,6 @@ class Pass < ApplicationRecord
   end
 
   def attendee_name
-    attendance&.attendee_name
+    registration&.attendee_name
   end
 end

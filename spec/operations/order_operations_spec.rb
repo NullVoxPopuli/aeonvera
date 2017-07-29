@@ -5,8 +5,8 @@ describe Api::OrderOperations do
   context 'SendReceipt' do
     context 'run' do
       it 'is allowed' do
-        attendance = create(:registration)
-        order = create(:order, attendance: attendance)
+        registration = create(:registration)
+        order = create(:order, registration: registration)
 
         operation = Api::OrderOperations::SendReceipt.new(order.user, {id: order.id})
         allow(operation).to receive(:allowed?){ true }

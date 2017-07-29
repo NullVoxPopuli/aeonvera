@@ -4,7 +4,7 @@ module Api
 
     def index
       @events = current_user.hosted_and_collaborated_events.includes(
-        :pricing_tiers, orders: [:order_line_items], attendances: [:attendee])
+        :pricing_tiers, orders: [:order_line_items], registrations: [:attendee])
       render json: @events, each_serializer: HostedEventSerializer, root: :hosted_events
     end
 

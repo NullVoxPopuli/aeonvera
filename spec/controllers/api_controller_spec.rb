@@ -29,7 +29,7 @@ describe APIController do
             "line-item"=>{"data"=>{"type"=>"lessons", "id"=>3}},
             "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
           "type"=>"order-line-items"}]},
-        "attendance"=>{"data"=>nil},
+        "registration"=>{"data"=>nil},
         "user"=>{"data"=>nil}},
       "type"=>"orders"}, "order"=>{}}
   }

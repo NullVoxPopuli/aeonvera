@@ -36,7 +36,7 @@ describe Restraint do
       create(:restraint, restrictable: package, dependable: discount)
 
       # build order
-      @attendance = create(:registration,
+      @registration = create(:registration,
         event: event,
         pricing_tier: event.opening_tier
       )
@@ -44,12 +44,12 @@ describe Restraint do
 
 
     it 'is applied to the assigned package' do
-      @attendance.package = package
-      @attendance.save!
+      @registration.package = package
+      @registration.save!
       @order = create(:order,
-        attendance: @attendance,
+        registration: @registration,
         host: event,
-        user: @attendance.attendee
+        user: @registration.attendee
       )
 
       add_to_order(@order, package)
@@ -62,12 +62,12 @@ describe Restraint do
     end
 
     it 'is applied to an order without the assigned package' do
-      @attendance.package = wrong_package = create(:package, initial_price: 34, event: event)
-      @attendance.save!
+      @registration.package = wrong_package = create(:package, initial_price: 34, event: event)
+      @registration.save!
       order = create(:order,
-        attendance: @attendance,
+        registration: @registration,
         host: event,
-        user: @attendance.attendee
+        user: @registration.attendee
       )
 
       add_to_order(order, wrong_package)
@@ -83,12 +83,12 @@ describe Restraint do
     end
 
     it 'no restraint is applied when no discount is present' do
-      @attendance.package = package
-      @attendance.save!
+      @registration.package = package
+      @registration.save!
       @order = create(:order,
-        attendance: @attendance,
+        registration: @registration,
         host: event,
-        user: @attendance.attendee
+        user: @registration.attendee
       )
 
       add_to_order(@order, package)
@@ -99,12 +99,12 @@ describe Restraint do
     end
 
     it 'is only applied to the assigned package' do
-      @attendance.package = package
-      @attendance.save!
+      @registration.package = package
+      @registration.save!
       @order = create(:order,
-        attendance: @attendance,
+        registration: @registration,
         host: event,
-        user: @attendance.attendee
+        user: @registration.attendee
       )
 
       add_to_order(@order, package)

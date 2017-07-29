@@ -4,11 +4,11 @@
 
 - orders.each do |order|
   - if order.is_legacy?
-   = render partial: 'orders/legacy_summary', locals: {order: order, attendance: attendance, buttons: buttons  }
+   = render partial: 'orders/legacy_summary', locals: {order: order, registration: registration, buttons: buttons  }
   - else
     - if (buttons && (not order.paid?) && current_event.accept_only_electronic_payments?)
       - order.update!(payment_method: Payable::Methods::STRIPE)
-    = render partial: 'orders/summary', locals: { order: order, attendance: attendance, buttons: buttons, net_received: show_net_received }
+    = render partial: 'orders/summary', locals: { order: order, registration: registration, buttons: buttons, net_received: show_net_received }
 
     - if !order.paid? && show_discount_field
       - if order.total.to_i != 0
@@ -21,7 +21,7 @@
               .columns.small-9
                 = text_field_tag :discount, "", placeholder: "acme-competition-winner"
               .columns.small-3
-                = link_to "Apply", apply_discount_register_path(attendance, order_id: order.id), class: "button tiny postfix", id: "discount_for_#{order.id}", method: :post
+                = link_to "Apply", apply_discount_register_path(registration, order_id: order.id), class: "button tiny postfix", id: "discount_for_#{order.id}", method: :post
           .clearfix
           javascript:
             $(function(){

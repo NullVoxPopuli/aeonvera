@@ -14,7 +14,7 @@ module Api
           attributes :id
         end
 
-        # we just want to get to the associated attendance id
+        # we just want to get to the associated registration id
         belongs_to :registration, serializer: Api::CompetitionSerializer::OrderLineItemSerializer::OrderSerializer::RegistrationSerializer
 
         def user_email; object.buyer_email; end
@@ -29,7 +29,7 @@ module Api
     end
 
 
-    # attendances are not required for these, so we can't constrain
+    # registrations are not required for these, so we can't constrain
     has_many :order_line_items, serializer: Api::CompetitionSerializer::OrderLineItemSerializer
     # has_many :registrations
 
@@ -47,7 +47,7 @@ module Api
       return @registrations if @registrations
 
       @registrations = order_line_items_with_registrations
-        .map{ |order_line_item| order_line_item.order.attendance }
+        .map{ |order_line_item| order_line_item.order.registration }
         .uniq{ |registration| registration.id }
 
       @registrations

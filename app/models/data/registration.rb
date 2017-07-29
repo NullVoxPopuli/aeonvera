@@ -39,7 +39,7 @@
 #  index_registrations_on_host_id_and_host_type_and_registration_type  (host_id,host_type,registration_type)
 #
 
-# Rules about an Attendance
+# Rules about an Registration
 # - Only one unpaid order at a time
 #   - if the registration owes money, there will be an unpaid order
 # - Must belong to a host (Event, Organization, etc)

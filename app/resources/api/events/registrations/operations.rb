@@ -8,8 +8,8 @@ module Api
 
           # This can't be scoped to the event,
           # because registrations need to be viewable for users, too
-          # TODO: remove attendance, replace with registration
-          EventAttendance
+          # TODO: remove registration, replace with registration
+          Registration
             .includes(
               :package, :level,
               :custom_field_responses,

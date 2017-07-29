@@ -13,9 +13,9 @@ describe Api::PackagePolicy do
     ->(method){
       event = create(:event)
       package = create(:package, event: event)
-      attendance = create(:registration, host: event, package: package)
+      registration = create(:registration, host: event, package: package)
 
-      policy = Api::PackagePolicy.new(attendance.attendee, package)
+      policy = Api::PackagePolicy.new(registration.attendee, package)
       policy.send(method)
     }
   }

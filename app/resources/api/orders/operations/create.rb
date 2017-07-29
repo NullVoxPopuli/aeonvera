@@ -57,7 +57,7 @@ module Api
           created_by: current_user,
 
           # nil or will be set
-          registration: registration # .becomes(Attendance)
+          registration: registration # .becomes(Registration)
         )
       end
 

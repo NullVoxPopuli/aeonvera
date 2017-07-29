@@ -5,11 +5,11 @@ module Api
     attributes :id, :registration_id, :name, :number_of_tickets_purchased
 
     def id
-      object.attendance_id
+      object.registration_id
     end
 
-    def attendance_id
-      object.attendance_id
+    def registration_id
+      object.registration_id
     end
 
     def name

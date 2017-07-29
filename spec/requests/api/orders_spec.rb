@@ -7,7 +7,7 @@ describe Api::OrdersController, type: :request do
   end
 
   context 'is not logged in' do
-    let(:order) { create(:order, attendance: create(:registration)) }
+    let(:order) { create(:order, registration: create(:registration)) }
     it 'cannot view an existing order' do
       get "/api/orders/#{order.id}"
       expect(response.status).to eq 404
@@ -65,7 +65,7 @@ describe Api::OrdersController, type: :request do
       end
 
       it 'cannot refund someone elses order' do
-        order = create(:order, attendance: create(:registration))
+        order = create(:order, registration: create(:registration))
         put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full', payment_token: token }
         expect(response.status).to eq 404
       end
@@ -110,7 +110,7 @@ describe Api::OrdersController, type: :request do
   context 'user owns the event' do
     let(:owner) { create_confirmed_user }
     let(:event) { create(:event, hosted_by: owner) }
-    let(:order) { create(:order, host: event, attendance: create(:registration, host: event)) }
+    let(:order) { create(:order, host: event, registration: create(:registration, host: event)) }
 
     before { StripeMock.start }
     after { StripeMock.stop }
@@ -158,20 +158,20 @@ describe Api::OrdersController, type: :request do
     let(:user) { create_confirmed_user }
 
     it 'can view all their orders' do
-      create(:order, user: user, attendance: create(:registration, attendee: user))
+      create(:order, user: user, registration: create(:registration, attendee: user))
       get '/api/orders', {}, auth_header_for(user)
       expect(response.status).to eq 200
       expect(json_api_data.count).to eq 1
     end
 
     it 'orders from others are not included' do
-      create(:order, attendance: create(:registration))
+      create(:order, registration: create(:registration))
       get '/api/orders', {}, auth_header_for(user)
       expect(json_api_data).to be_empty
     end
 
     it 'cannot view someone elses order' do
-      order = create(:order, attendance: create(:registration))
+      order = create(:order, registration: create(:registration))
       get "/api/orders/#{order.id}", {}, auth_header_for(user)
       expect(response.status).to eq 404
     end
@@ -201,26 +201,26 @@ describe Api::OrdersController, type: :request do
     end
 
     it 'cannot refund someone elses order' do
-      order = create(:order, attendance: create(:registration))
+      order = create(:order, registration: create(:registration))
       put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(user)
       expect(response.status).to eq 404
     end
 
     it 'can view own order' do
-      order = create(:order, user: user, attendance: create(:registration, attendee: user))
+      order = create(:order, user: user, registration: create(:registration, attendee: user))
       get "/api/orders/#{order.id}", {}, auth_header_for(user)
       expect(response.status).to eq 200
     end
 
     it 'cannot refund own order' do
-      order = create(:order, user: user, attendance: create(:registration, attendee: user))
+      order = create(:order, user: user, registration: create(:registration, attendee: user))
       put "/api/orders/#{order.id}/refund_payment", { refund_type: 'full' }, auth_header_for(user)
       expect(response.status).to eq 404
     end
 
     it 'can view the order of an owned event' do
       event = create(:event, hosted_by: user)
-      order = create(:order, host: event, attendance: create(:registration, attendee: user))
+      order = create(:order, host: event, registration: create(:registration, attendee: user))
       get "/api/orders/#{order.id}", {}, auth_header_for(user)
       expect(response.status).to eq 200
     end
@@ -269,7 +269,7 @@ describe Api::OrdersController, type: :request do
                     { 'id' => '4623', 'type' => 'order-line-items' }
                   ]
                 },
-                'attendance' => { 'data' => nil },
+                'registration' => { 'data' => nil },
                 'user' => { 'data' => { 'type' => 'users', 'id' => 'current-user' } },
                 'pricing-tier' => { 'data' => nil }
               },

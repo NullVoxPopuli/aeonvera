@@ -6,10 +6,10 @@ describe 'AMS monkey patches' do
     it 'shows relationship fields' do
       user = build(:user)
       event = build(:event)
-      attendance = build(:attendance, attendee: user, host: event)
-      housing_provision = build(:housing_provision, attendance: attendance, host: event)
+      registration = build(:registration, attendee: user, host: event)
+      housing_provision = build(:housing_provision, registration: registration, host: event)
 
-      fields = [:id, :housing_capacity, { attendance: [:attendee_name] }]
+      fields = [:id, :housing_capacity, { registration: [:attendee_name] }]
       options = {
         adapter: :attributes,
         key_transform: :underscore,
@@ -22,7 +22,7 @@ describe 'AMS monkey patches' do
       expected = {
         id: nil,
         housing_capacity: 10,
-        attendance: {
+        registration: {
           attendee_name: "æonvera User Test"
         }
       }
@@ -33,11 +33,11 @@ describe 'AMS monkey patches' do
     it 'shows relationship fields for multiple objects' do
       user = build(:user)
       event = build(:event)
-      attendance = build(:attendance, attendee: user, host: event)
-      housing_provision = build(:housing_provision, attendance: attendance, host: event)
+      registration = build(:registration, attendee: user, host: event)
+      housing_provision = build(:housing_provision, registration: registration, host: event)
 
-      # fields = { housing_provisions: [ :id, :housing_capacity, { attendance: [ :attendee_name ] } ] }
-      fields = [:id, :housing_capacity, { attendance: [:attendee_name] }]
+      # fields = { housing_provisions: [ :id, :housing_capacity, { registration: [ :attendee_name ] } ] }
+      fields = [:id, :housing_capacity, { registration: [:attendee_name] }]
       options = {
         adapter: :attributes,
         key_transform: :underscore,
@@ -50,14 +50,14 @@ describe 'AMS monkey patches' do
         {
           id: nil,
           housing_capacity: 10,
-          attendance: {
+          registration: {
             attendee_name: "æonvera User Test"
           }
         },
         {
           id: nil,
           housing_capacity: 10,
-          attendance: {
+          registration: {
             attendee_name: "æonvera User Test"
           }
         }

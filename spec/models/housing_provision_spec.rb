@@ -11,8 +11,8 @@
 #  has_pets                   :boolean          default(FALSE), not null
 #  smokes                     :boolean          default(FALSE), not null
 #  notes                      :text
-#  attendance_id              :integer
-#  attendance_type            :string(255)
+#  registration_id              :integer
+#  registration_type            :string(255)
 #  host_id                    :integer
 #  host_type                  :string(255)
 #  created_at                 :datetime
@@ -22,7 +22,7 @@
 #
 # Indexes
 #
-#  index_housing_provisions_on_attendance_id_and_attendance_type  (attendance_id,attendance_type)
+#  index_housing_provisions_on_registration_id_and_registration_type  (registration_id,registration_type)
 #  index_housing_provisions_on_host_id_and_host_type              (host_id,host_type)
 #
 

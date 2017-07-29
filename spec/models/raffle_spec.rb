@@ -20,8 +20,8 @@ describe Raffle do
       @event = create(:event)
       raffle = create(:raffle, event: @event)
       raffle_ticket = create(:raffle_ticket, raffle: raffle, host: @event)
-      @attendance = create(:registration, host: @event)
-      order = create(:order, host: @event, attendance: @attendance)
+      @registration = create(:registration, host: @event)
+      order = create(:order, host: @event, registration: @registration)
       create(:order_line_item, line_item: raffle_ticket, order: order)
 
       raffle.reload
@@ -31,7 +31,7 @@ describe Raffle do
     it 'chooses a winner' do
       expect(@raffle.winner).to be_nil
       @raffle.choose_winner!
-      expect(@raffle.winner).to eq @attendance
+      expect(@raffle.winner).to eq @registration
     end
   end
 end

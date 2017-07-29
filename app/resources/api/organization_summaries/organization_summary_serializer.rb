@@ -11,7 +11,7 @@ module Api
 
     has_many :orders
 
-    def attendances
+    def registrations
       object.orders.limit(5)
     end
 

@@ -8,14 +8,14 @@ describe Api::OrderOperations::Update do
 
   context 'with the intent to pay' do
     let(:event){ create_event }
-    let(:attendance){ create(:registration, event: event) }
+    let(:registration){ create(:registration, event: event) }
 
     context 'run' do
       it 'is not allowed' do
         order = create(:order,
           host: event,
           user: nil,
-          attendance: attendance,
+          registration: registration,
           payment_token: nil,
           metadata: { name: 'a', email: 'a'})
         operation = Api::OrderOperations::Update.new(nil, {
@@ -31,7 +31,7 @@ describe Api::OrderOperations::Update do
         order = create(:order,
           host: event,
           user: nil,
-          attendance: attendance,
+          registration: registration,
           payment_token: '123',
           payment_method: 'Stripe',
           metadata: { name: 'a', email: 'a'})
@@ -48,7 +48,7 @@ describe Api::OrderOperations::Update do
       end
 
       it 'sends an email' do
-        @order = create(:order, host: event, paid: false, attendance: attendance)
+        @order = create(:order, host: event, paid: false, registration: registration)
         package = create(:package, event: event)
         @order.order_line_items.create(line_item: package, price: package.current_price, quantity: 1)
         @order.save
@@ -75,7 +75,7 @@ describe Api::OrderOperations::Update do
       before(:each) do
         package = create(:package, event: event)
         integration = create_integration(owner: event)
-        @order = create(:order, host: event, attendance: attendance)
+        @order = create(:order, host: event, registration: registration)
         add_to_order(@order, package)
 
         @params = {
@@ -144,9 +144,9 @@ describe Api::OrderOperations::Update do
     let(:event){ create(:event) }
     let(:package){ create(:package, event: event) }
     let(:competition){ create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
-    let(:attendance){ create(:registration, host: event, package: package, attendee: user) }
+    let(:registration){ create(:registration, host: event, package: package, attendee: user) }
 
-    let(:order){ create(:order, host: event, user: user, attendance: attendance) }
+    let(:order){ create(:order, host: event, user: user, registration: registration) }
     let(:item1){ create(:order_line_item, order: order, line_item: package, price: package.current_price, quantity: 1) }
     let(:item2){ create(:order_line_item, order: order, line_item: competition, price: competition.current_price, quantity: 1) }
   end
