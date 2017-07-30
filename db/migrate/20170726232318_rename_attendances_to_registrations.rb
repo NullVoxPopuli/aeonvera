@@ -5,7 +5,7 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
     remove_index :attendances, name: :index_attendances_on_host_id_and_host_type
 
     rename_table :attendances, :registrations
-    rename_column :registrations, :attendance_type, :registration_type
+    remove_column :registrations, :attendance_type
 
     add_index :registrations, :attendee_id
     add_index :registrations, [:host_id, :host_type]
@@ -36,7 +36,7 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
     remove_index :registrations, :attendee_id
     remove_index :registrations, [:host_id, :host_type]
 
-    rename_column :registrations, :registration_type, :attendance_type
+    add_column :registrations, :attendance_type, :string
     rename_table :registrations, :attendances
 
     add_index "attendances", ["attendee_id"], name: "index_attendances_on_attendee_id", using: :btree

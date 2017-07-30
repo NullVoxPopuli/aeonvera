@@ -44,8 +44,6 @@
 #   - if the registration owes money, there will be an unpaid order
 # - Must belong to a host (Event, Organization, etc)
 class Registration < ApplicationRecord
-  self.inheritance_column = 'registration_type'
-
   include SoftDeletable
   include HasMetadata
   include CSVOutput

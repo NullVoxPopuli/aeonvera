@@ -12,6 +12,12 @@ module Api
         render_model('housing_request,housing_provision,custom_field_responses')
       end
 
+      def destroy
+        @model = model
+
+        head :no_content
+      end
+
       def create_registration_params
         whitelistable_params do |whitelister|
           whitelister.permit(

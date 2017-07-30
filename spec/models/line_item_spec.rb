@@ -101,6 +101,10 @@ describe LineItem::RaffleTicket do
         order = Order.new(registration: registration)
         oli = OrderLineItem.new(order: order, line_item: item)
 
+        order.order_line_items = [oli]
+        item.orders = [order]
+        item.order_line_items = [oli]
+
         purchaser = item.purchasers.first
         expect(purchaser).to eq registration
       end
