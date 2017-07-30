@@ -16,7 +16,7 @@ module Api
               :housing_request, :housing_provision,
               orders: [order_line_items: [:order, :line_item]]
             )
-            .where(host_id: event.id, host_type: Event.name)
+            .where(host_id: event.id)
         end
 
         private

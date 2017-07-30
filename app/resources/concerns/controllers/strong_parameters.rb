@@ -6,6 +6,11 @@ module Controllers
     def deserialize_params(polymorphic: [], embedded: [])
       ActiveModelSerializers::Deserialization
         .jsonapi_parse(params, embedded: embedded, polymorphic: polymorphic)
+    rescue => e
+      Rails.logger.info(e.message)
+      Rails.logger.info('Params likely not JSONAPI')
+
+      params
     end
 
     # wrapper around normal strong parameters that includes Deserialization

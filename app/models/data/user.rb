@@ -55,7 +55,7 @@ class User < ApplicationRecord
   has_many :hosted_events, class_name: 'Event', foreign_key: 'hosted_by_id'
 
   has_many :registrations, foreign_key: 'attendee_id'
-  has_many :attended_events, through: :registrations, source: :host, source_type: Event.name
+  has_many :attended_events, through: :registrations, source: :host
 
   has_many :collaborated_events, through: :collaborations, source: :collaborated, source_type: Event.name
   has_many :collaborated_organizations, through: :collaborations, source: :collaborated, source_type: Organization.name

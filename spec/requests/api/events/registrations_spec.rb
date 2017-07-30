@@ -13,10 +13,12 @@ describe Api::Events::RegistrationsController, type: :request do
   end
 
   context 'is logged in and owns the event' do
-    # it_behaves_like(
-    #   'resource_access_by_event_owner',
-    #   factory: :registration,
-    #   base_path: base_path
-    # )
+    it_behaves_like(
+      'resource_accessed_by_event_owner',
+      type: 'registrations',
+      factory: :registration,
+      base_path: base_path,
+      event_relationship_name: :host
+    )
   end
 end

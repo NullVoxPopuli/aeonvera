@@ -46,8 +46,13 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 9 # TODO: Lower to 7
 
-Style/AlignParameters:
-  EnforcedStyle: with_fixed_indentation
+Layout/AlignHash:
+  Enabled: true
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/AlignParameters:
+  EnforcedStyle: with_first_parameter
 
 Style/BlockDelimiters:
   Exclude:

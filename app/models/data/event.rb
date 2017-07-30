@@ -71,7 +71,7 @@ class Event < ApplicationRecord
 
   has_many :registrations,
     -> { where(attending: true).order('registrations.created_at DESC') },
-    as: :host, class_name: 'Registration'
+    foreign_key: :host_id, class_name: 'Registration'
 
   has_many :cancelled_registrations,
     -> { where(attending: false).order('registrations.created_at DESC') },

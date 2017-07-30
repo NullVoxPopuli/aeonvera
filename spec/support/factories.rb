@@ -214,9 +214,15 @@ FactoryGirl.define do
 
   factory :registration do
     host factory: :event
+    # event
     attendee
     pricing_tier
     package
+    attendee_first_name 'First'
+    attendee_last_name 'Last'
+    dance_orientation Registration::LEAD
+    city 'Indianapolis'
+    state 'IN'
     metadata do
       {
         'address' => {
@@ -229,6 +235,7 @@ FactoryGirl.define do
     end
 
     after(:build) do |registration, _evaluator|
+      registration.event = registration.host
       # registration.host = create(:event, hosted_by: registration.attendee) unless registration.host.present?
       registration.dance_orientation = 0
     end

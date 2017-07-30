@@ -212,6 +212,7 @@ describe Event do
 
         it 'advances to the next tier' do
           tier = create(:pricing_tier, event: event, registrants: 3, date: nil)
+
           3.times do
             create(:registration, event: event)
           end

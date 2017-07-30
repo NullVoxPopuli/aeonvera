@@ -55,9 +55,11 @@ class Registration < ApplicationRecord
   has_one :housing_provision
 
   belongs_to :attendee, class_name: 'User'
-  belongs_to :host, -> { unscope(where: :deleted_at) }, polymorphic: true
+  # TODO: remove
+  belongs_to :host, -> { unscope(where: :deleted_at) }, class_name: 'Event'
+
   belongs_to :event, class_name: Event.name,
-                     foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
+                     foreign_key: 'host_id'
 
   belongs_to :level
   belongs_to :package
@@ -129,8 +131,8 @@ class Registration < ApplicationRecord
   # validates :pricing_tier, presence: true
   validates :event, presence: true
   # TODO: these are gross
-  validates :dance_orientation, presence: true, if: ->(a) { a.event.ask_if_leading_or_following? }
-  validates :level, presence: true, if: proc { |a| (p = a.package) && p.requires_track? }
+  # validates :dance_orientation, presence: true, if: ->(a) { a.event.ask_if_leading_or_following? }
+  # validates :level, presence: true, if: proc { |a| (p = a.package) && p.requires_track? }
 
   # for CSV output
   csv_with_columns [
