@@ -13,6 +13,6 @@ module Api
 
 
     belongs_to :host
-    belongs_to :registration, serializer: RegistrationSerializer
+    # belongs_to :registration, serializer: RegistrationSerializer
   end
 end

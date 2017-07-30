@@ -18,33 +18,16 @@ module Api
         head :no_content
       end
 
-      def create_registration_params
-        whitelistable_params do |whitelister|
-          whitelister.permit(
-            # Attendance Attributes
-            :phone_number, :interested_in_volunteering,
-            :city, :state, :zip,
+      private
+
+      def resource_params
+        whitelistable_params(polymorphic: [:host]) do |w|
+          w.permit(
+            :attendee_first_name, :attendee_last_name,
+            :city, :state, :phone_number,
+            :interested_in_volunteering,
             :dance_orientation,
-            # To be deleted - these are used for searching for an existing user
-            # and then creating a new user if one doesn't exist
-            :attendee_email, :attendee_name,
-
-            # Relationships
-            :level_id, :pricing_tier_id,
-            :host_id, :host_type
-          )
-        end
-      end
-
-      def update_registration_params
-        whitelistable_params do |whitelister|
-          whitelister.permit(
-            # Attendance Attributes
-            :phone_number, :interested_in_volunteering,
-            :city, :state, :zip,
-            :dance_orientation,
-
-            # Relationships
+            :host_id, :host_type,
             :level_id
           )
         end
