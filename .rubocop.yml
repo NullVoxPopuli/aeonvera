@@ -48,8 +48,8 @@ Metrics/PerceivedComplexity:
 
 Layout/AlignHash:
   Enabled: true
-  EnforcedHashRocketStyle: table
-  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: separator
+  EnforcedColonStyle: separator
 
 Layout/AlignParameters:
   EnforcedStyle: with_first_parameter
@@ -83,3 +83,10 @@ Style/PredicateName:
 
 Style/ClassVars:
   Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: true
+  EnforcedStyle: brackets
