@@ -80,7 +80,7 @@ describe Api::Users::RegistrationsController, type: :request do
         put "#{base_path}/#{registration.id}", params, auth_header_for(user)
 
         expect(response.status).to eq 200
-        expect(json_api_data['attributes']['attendee_first_name']).to eq 'B'
+        expect(json_api_data['attributes']['attendee-first-name']).to eq 'B'
       end
     end
 
@@ -88,7 +88,7 @@ describe Api::Users::RegistrationsController, type: :request do
       let!(:registration) { create(:registration, attendee: user, host: event) }
 
       it 'deletes a registration' do
-        expect { delete "#{base_path}/#{registration.id}" }
+        expect { delete "#{base_path}/#{registration.id}", {}, auth_header_for(user) }
           .to change(Registration, :count).by(-1)
       end
     end

@@ -2,6 +2,8 @@
 module Api
   module Events
     class RegistrationsController < ResourceController
+      before_filter :must_be_logged_in
+
       def index
         model = RegistrationOperations::ReadAll
                 .run(current_user, params)

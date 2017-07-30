@@ -7,7 +7,7 @@ shared_examples 'unauthorized' do |options = {}|
 
   context 'index' do
     it 'is denied' do
-      get "#{base_path}"
+      get base_path
 
       expect(response.status).to eq 401
     end
@@ -24,7 +24,7 @@ shared_examples 'unauthorized' do |options = {}|
 
   context 'create' do
     it 'is denied' do
-      post "#{base_path}", {}
+      post base_path, {}
 
       expect(response.status).to eq 401
     end
