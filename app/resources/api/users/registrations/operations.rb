@@ -39,9 +39,9 @@ module Api
         #   ).where(attendee: current_user)
         # end
         def run
-          model = current_user.registrations.new(create_params)
+          model = current_user.registrations.new(params_for_action)
           form = RegistrationForms::Create.new(model)
-          valid = form.validate(create_params)
+          valid = form.validate(params_for_action)
 
           sync_form_and_model(form, model) unless valid
 

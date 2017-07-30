@@ -54,6 +54,8 @@ describe Api::Users::RegistrationsController, type: :request do
           attributes: {
             attendee_first_name: 'The',
             attendee_last_name: 'Last',
+            city: 'Indianapolis',
+            state: 'IN',
             dance_orientation: Registration::LEAD
           },
           relationships: { host: event }

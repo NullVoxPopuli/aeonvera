@@ -10,5 +10,18 @@ module HelperOperations
         Event.find(id)
       end
     end
+
+    def sync_form_and_model(form, model)
+      form.sync
+
+      form_errors = form.errors.messages
+      return if form_errors.blank?
+
+      form_errors.each do |field, errors|
+        Array[*errors].each do |error|
+          model.errors.add(field, error)
+        end
+      end
+    end
   end
 end

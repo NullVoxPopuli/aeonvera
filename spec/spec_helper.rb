@@ -57,6 +57,16 @@ RSpec.configure do |config|
     end
   end
 
+  config.after(:each, type: :controller) do |example|
+    if example.exception
+      begin
+        ap JSON.parse(response.body)
+      rescue => e
+        # probably not j son
+      end
+    end
+  end
+
 
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added
   # metadata to specs based on their location on the filesystem. This was both
