@@ -102,8 +102,6 @@ AeonVera::Application.routes.draw do
       post '/confirmation', to: 'users/devise_overrides/confirmations#create'
     end
 
-    resources :registrations
-
     get '/users/current-user', to: 'users#show'
     devise_for :users, # skip: :sessions,
       controllers: {

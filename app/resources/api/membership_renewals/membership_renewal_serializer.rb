@@ -9,7 +9,7 @@ module Api
       type 'membership_options'
     end
 
-    belongs_to :membership_option
+    belongs_to :membership_option, serializer: LineItem::MembershipOptionSerializer
     belongs_to :member, serializer: MemberSerializer
 
     def member

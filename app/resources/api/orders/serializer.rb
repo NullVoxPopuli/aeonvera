@@ -31,13 +31,8 @@ module Api
     end
 
     belongs_to :host
-    belongs_to :registration
     belongs_to :pricing_tier
-    belongs_to :registration
-
-    def registration
-      object.registration
-    end
+    belongs_to :registration, serializer: ::Api::Users::RegistrationSerializer
 
     def stripe_refunds
       object.stripe_refunds.map do |refund|

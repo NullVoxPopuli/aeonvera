@@ -4,8 +4,7 @@ module Api
     attributes :number_of_leads, :number_of_follows
 
     belongs_to :event
-    has_many :registrations
-    has_many :registrations
+    has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
 
     def registrations
       object.registrations

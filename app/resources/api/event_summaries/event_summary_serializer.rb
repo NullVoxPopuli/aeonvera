@@ -7,7 +7,7 @@ module Api
       :number_of_leads, :number_of_follows, :number_of_shirts_sold,
       :revenue, :unpaid, :event_id
 
-    has_many :registrations
+    has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
 
     def registrations
       object.recent_registrations

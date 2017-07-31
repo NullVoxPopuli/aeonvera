@@ -9,7 +9,7 @@ module Api
                :housing_provision_id
 
     belongs_to :host
-    belongs_to :registration
+    belongs_to :registration, serializer: ::Api::Users::RegistrationSerializer
     belongs_to :housing_provision
   end
 end

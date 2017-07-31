@@ -3,7 +3,7 @@ module Api
     include PublicAttributes::PricingTierAttributes
     attributes :number_of_leads, :number_of_follows
 
-    has_many :registrations
+    has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
     belongs_to :event
 
     def number_of_follows

@@ -5,6 +5,8 @@ module Api
     class RegistrationsController < ResourceController
       before_filter :must_be_logged_in
 
+      self.serializer = ::Api::Events::RegistrationSerializer
+
       def index
         model = RegistrationOperations::ReadAll
                 .run(current_user, params)
@@ -15,7 +17,7 @@ module Api
           jsonapi:         model,
           # TODO: come up with a way to whitelist includes
           includes:        params[:include],
-          each_serializer: ::Api::RegistrationSerializer
+          each_serializer: ::Api::Events::RegistrationSerializer
         )
       end
 

@@ -53,7 +53,7 @@ module Controllers
       return render_jsonapi_error(model) if error_present?(error_condition, model)
 
       options = {
-        json: model,
+        jsonapi: model,
         include: include_param,
         fields: params[:fields] || {},
         status: success_status
@@ -67,7 +67,7 @@ module Controllers
         end
       end
 
-      render options
+      render(options)
     end
 
     private
