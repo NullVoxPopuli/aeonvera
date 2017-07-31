@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class DiscountSerializer < ActiveModel::Serializer
     include PublicAttributes::DiscountAttributes
@@ -5,7 +6,7 @@ module Api
     attributes :package_ids
 
     has_many :allowed_packages
-    has_many :restraints#, serializer: RestraintSerializer
+    has_many :restraints # , serializer: RestraintSerializer
     has_many :order_line_items
     belongs_to :host
 

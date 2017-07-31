@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class RaffleTicketsController < Api::ResourceController
     # self.model_class = LineItem::RaffleTicket
@@ -23,12 +24,9 @@ module Api
     end
 
     def update_params
-
     end
 
     def create_params
-
     end
-
   end
 end

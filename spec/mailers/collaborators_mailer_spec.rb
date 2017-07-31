@@ -1,13 +1,13 @@
-require "spec_helper"
+# frozen_string_literal: true
+require 'spec_helper'
 
 describe CollaboratorsMailer do
-
   context 'invitation' do
     it 'creates an email' do
       user = create(:user)
       event = create(:event)
 
-      expect{
+      expect {
         CollaboratorsMailer.invitation(
           from: user, email_to: 'a@a.o',
           host: event, link: '/'
@@ -15,5 +15,4 @@ describe CollaboratorsMailer do
       }.to change(ActionMailer::Base.deliveries, :count).by 1
     end
   end
-
 end

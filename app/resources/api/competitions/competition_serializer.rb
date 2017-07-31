@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class CompetitionSerializer < ActiveModel::Serializer
     include PublicAttributes::CompetitionAttributes
@@ -17,8 +18,13 @@ module Api
         # we just want to get to the associated registration id
         belongs_to :registration, serializer: Api::CompetitionSerializer::OrderLineItemSerializer::OrderSerializer::RegistrationSerializer
 
-        def user_email; object.buyer_email; end
-        def user_name; object.buyer_name; end
+        def user_email
+          object.buyer_email
+        end
+
+        def user_name
+          object.buyer_name
+        end
       end
 
       class LineItemSerializer < ActiveModel::Serializer; end
@@ -28,27 +34,25 @@ module Api
       belongs_to :order, serializer: Api::CompetitionSerializer::OrderLineItemSerializer::OrderSerializer
     end
 
-
     # registrations are not required for these, so we can't constrain
     has_many :order_line_items, serializer: Api::CompetitionSerializer::OrderLineItemSerializer
     # has_many :registrations
-
 
     def order_line_items_with_registrations
       return @order_line_items if @order_line_items
 
       attending = Registration.arel_table[:attending]
       @order_line_items = object
-        .order_line_items.joins(order: :registration)
-        .where(attending.eq(true))
+                          .order_line_items.joins(order: :registration)
+                          .where(attending.eq(true))
     end
 
     def registrations
       return @registrations if @registrations
 
       @registrations = order_line_items_with_registrations
-        .map{ |order_line_item| order_line_item.order.registration }
-        .uniq{ |registration| registration.id }
+                       .map { |order_line_item| order_line_item.order.registration }
+                       .uniq(&:id)
 
       @registrations
     end

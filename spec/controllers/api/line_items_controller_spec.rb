@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::LineItemsController, type: :controller do
@@ -42,7 +43,8 @@ RSpec.describe Api::LineItemsController, type: :controller do
     before(:each) do
       @line_item = create(
         :line_item,
-        host: event)
+        host: event
+      )
     end
 
     it 'updates a line item' do

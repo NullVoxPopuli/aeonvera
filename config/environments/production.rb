@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 AeonVera::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -60,8 +61,7 @@ AeonVera::Application.configure do
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
-  config.assets.precompile += %w( email.css )
-
+  config.assets.precompile += %w(email.css)
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -80,24 +80,23 @@ AeonVera::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.default_url_options = { :host => 'aeonvera.com' }
+  config.action_mailer.default_url_options = { host: 'aeonvera.com' }
 
   config.roadie.provider = Roadie::FilesystemProvider.new('/assets', Rails.root.join('public', 'assets'))
 
   ActionMailer::Base.smtp_settings = {
-    :port =>           '587',
-    :address =>        'smtp.sparkpostmail.com',
-    :user_name =>      ENV['SPARKPOST_USERNAME'],
-    :password =>       ENV['SPARKPOST_PASSWORD'],
-    :domain =>         'aeonvera.com',
-    :authentication => :plain
+    port: '587',
+    address: 'smtp.sparkpostmail.com',
+    user_name: ENV['SPARKPOST_USERNAME'],
+    password: ENV['SPARKPOST_PASSWORD'],
+    domain: 'aeonvera.com',
+    authentication: :plain
   }
   ActionMailer::Base.delivery_method = :smtp
 
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
+  if ENV['RAILS_LOG_TO_STDOUT'].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
-
 end

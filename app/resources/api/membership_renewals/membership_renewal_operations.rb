@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 module Api
   module MembershipRenewalOperations
     class ReadAll < SkinnyControllers::Operation::Base
-
       def run
         # default 'model' functionality is avoided
         latest_renewals
@@ -21,13 +21,13 @@ module Api
       end
 
       def latest_renewals
-        sorted_renewals = renewals.sort_by{|r| [r.user_id,r.updated_at]}.reverse
+        sorted_renewals = renewals.sort_by { |r| [r.user_id, r.updated_at] }.reverse
 
         # unique picks the first option.
         # so, because the list is sorted by user id, then updated at,
         # for each user, the first renewal will be chosen...
         # and because it is descending, that means the most recent renewal
-        sorted_renewals.uniq{|r| r.user_id}
+        sorted_renewals.uniq(&:user_id)
       end
     end
 end

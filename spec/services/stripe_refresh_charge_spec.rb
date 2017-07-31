@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe StripeTasks::RefreshCharge do
   describe '#calculate_totals_after_refund' do
-
     it 'correctly derives the new totals' do
       order = Order.new(
         total_fee_amount: 4.29,
@@ -16,6 +16,5 @@ describe StripeTasks::RefreshCharge do
       expect(result[:net_amount_received]).to be_within(1e-12).of 84.85
       expect(result[:total_fee_amount]).to    be_within(1e-12).of 3.69
     end
-
   end
 end

@@ -1,21 +1,21 @@
+# frozen_string_literal: true
 module Api
   class OrganizationSerializer < ActiveModel::Serializer
     type 'organizations'
 
     attributes :id, :name, :tagline,
-      :city, :state, :beta, :owner_id,
-      :domain, :url,
-      :logo_file_name, :logo_content_type,
-      :logo_file_size, :logo_updated_at,
-      :logo_url_thumb, :logo_url_medium, :logo_url,
-      :has_stripe_integration,
-      :make_attendees_pay_fees,
-      :accept_only_electronic_payments,
-      :notify_email,
-      :email_all_purchases,
-      :email_membership_purchases,
-      :contact_email
-
+               :city, :state, :beta, :owner_id,
+               :domain, :url,
+               :logo_file_name, :logo_content_type,
+               :logo_file_size, :logo_updated_at,
+               :logo_url_thumb, :logo_url_medium, :logo_url,
+               :has_stripe_integration,
+               :make_attendees_pay_fees,
+               :accept_only_electronic_payments,
+               :notify_email,
+               :email_all_purchases,
+               :email_membership_purchases,
+               :contact_email
 
     def accept_only_electronic_payments
       true
@@ -49,7 +49,5 @@ module Api
     def has_stripe_integration
       object.integrations[:stripe].present?
     end
-
-
   end
 end

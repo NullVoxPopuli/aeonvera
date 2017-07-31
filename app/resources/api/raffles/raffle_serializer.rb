@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Api
   class RaffleSerializer < ActiveModel::Serializer
-
     attributes :id, :name, :winner, :winner_has_been_chosen
 
     belongs_to :event
@@ -12,7 +12,7 @@ module Api
       return @ticket_purchase_data if @ticket_purchase_data
       by_registration_id = {}
       # need registration_id, name, number_of_tickets_purchased (see serializer)
-      object.ticket_purchases.includes(:line_item, order: { registration: :attendee } ).map do |order_line_item|
+      object.ticket_purchases.includes(:line_item, order: { registration: :attendee }).map do |order_line_item|
         id = order_line_item.order.registration_id
         ticket = order_line_item.line_item
         registration = order_line_item.order.registration
@@ -26,14 +26,11 @@ module Api
     end
 
     def winner
-      if object.winner.present?
-        object.winner.attendee_name
-      end
+      object.winner.attendee_name if object.winner.present?
     end
 
     def winner_has_been_chosen
       object.winner.present?
     end
-
   end
 end

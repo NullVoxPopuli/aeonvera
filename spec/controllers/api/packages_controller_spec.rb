@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::PackagesController, type: :controller do
@@ -46,11 +47,12 @@ RSpec.describe Api::PackagesController, type: :controller do
       new_name = package.name + ' updated'
       json_api = {
         id: package.id,
-        "data":{"
-          id":"#{package.id}",
-          "attributes":{
-            "name": new_name
-          },"type":"packages"}}
+        "data": { "
+          id": package.id.to_s,
+                  "attributes": {
+                    "name": new_name
+                  }, "type": 'packages' }
+      }
 
       patch :update, json_api
 
@@ -69,11 +71,12 @@ RSpec.describe Api::PackagesController, type: :controller do
       new_name = package.name + ' updated'
       json_api = {
         id: package.id,
-        "data":{"
-          id":"#{package.id}",
-          "attributes":{
-            "name": new_name
-          },"type":"packages"}}
+        "data": { "
+          id": package.id.to_s,
+                  "attributes": {
+                    "name": new_name
+                  }, "type": 'packages' }
+      }
       patch :update, json_api
 
       json = JSON.parse(response.body)
@@ -82,5 +85,4 @@ RSpec.describe Api::PackagesController, type: :controller do
       expect(Package.find(package.id).name).to eq package.name
     end
   end
-
 end

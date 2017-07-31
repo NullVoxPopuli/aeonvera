@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: order_line_items
@@ -26,9 +27,7 @@ require 'spec_helper'
 
 describe OrderLineItem do
   describe 'validations' do
-
     context 'line_item host must match order host' do
-
       it 'has a competition and order from different events' do
         comp = Competition.new(event: Event.new)
         order = Order.new(host: Event.new)
@@ -47,7 +46,6 @@ describe OrderLineItem do
         expect(oli).to be_valid
         expect(oli.errors.full_messages).to be_blank
       end
-
     end
 
     context 'partner_name' do

@@ -5,9 +5,9 @@ module Api
     type 'organization_summary'
 
     attributes :id, :name, :domain, :organization_id,
-      :revenue_past_month, :net_received_past_month,
-      :unpaid_past_month, :new_memberships_past_month,
-      :logo_url_thumb
+               :revenue_past_month, :net_received_past_month,
+               :unpaid_past_month, :new_memberships_past_month,
+               :logo_url_thumb
 
     has_many :orders
 

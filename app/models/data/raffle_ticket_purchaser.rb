@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This model is only used for the raffle serializer
 class RaffleTicketPurchaser < ActiveModelSerializers::Model
   attr_accessor :id, :registration_id, :name, :number_of_tickets_purchased

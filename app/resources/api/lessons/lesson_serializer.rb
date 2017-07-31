@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   # object is actually an Registration in this serializer
   class LineItem::LessonSerializer < LineItemSerializer

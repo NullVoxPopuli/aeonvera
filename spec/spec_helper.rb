@@ -67,7 +67,6 @@ RSpec.configure do |config|
     end
   end
 
-
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added
   # metadata to specs based on their location on the filesystem. This was both
   # confusing to new users and not desirable for some veteran users.

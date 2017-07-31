@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module Api
   class CollaborationSerializer < ActiveModel::Serializer
     attributes :id, :email,
-      :user_name, :title, :created_at
+               :user_name, :title, :created_at
 
     belongs_to :host
 

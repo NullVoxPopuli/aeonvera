@@ -42,7 +42,7 @@ module Api
 
     def owner?
       order.user_id == user_id ||
-        (order.payment_token != nil && order.payment_token == user_id)
+        (!order.payment_token.nil? && order.payment_token == user_id)
     end
 
     def user_id

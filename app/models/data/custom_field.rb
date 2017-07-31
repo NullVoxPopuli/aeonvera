@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: custom_fields
@@ -44,5 +45,4 @@ class CustomField < ApplicationRecord
   KIND_RADIO = 7
   KIND_RANGE = 8
   KIND_PHONE = 9
-
 end

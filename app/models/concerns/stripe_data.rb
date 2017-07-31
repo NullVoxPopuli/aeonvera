@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module StripeData
   extend ActiveSupport::Concern
 
@@ -15,7 +16,6 @@ module StripeData
 
   # includes the fee breakdown
   def stripe_balance_transaction
-
   end
 
   def stripe_net_amount_paid

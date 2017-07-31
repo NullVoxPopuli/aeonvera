@@ -28,7 +28,7 @@ class OrderLineItem < ApplicationRecord
   # { with_deleted }
   # TODO BUG: https://github.com/rails/rails/pull/16531
   belongs_to :line_item, -> { unscope(where: :deleted_at) },
-    polymorphic: true, inverse_of: :order_line_items
+             polymorphic: true, inverse_of: :order_line_items
 
   # delegate :registration, to: :order, allow_nil: true
 

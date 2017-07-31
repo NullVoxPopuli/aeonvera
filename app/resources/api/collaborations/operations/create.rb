@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module CollaborationOperations
     class Create < SkinnyControllers::Operation::Base
@@ -32,7 +33,7 @@ module Api
         # to_query could be written as:
         # hash.to_a.map{ |i| i.join('=') }.join('&')
         domain = APPLICATION_CONFIG[:domain][Rails.env]
-        'https://' + domain  + '/collaboration?' + link_params.to_query
+        'https://' + domain + '/collaboration?' + link_params.to_query
       end
 
       def link_params

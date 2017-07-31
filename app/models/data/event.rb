@@ -60,9 +60,9 @@ class Event < ApplicationRecord
                                       source_type: Organization.name
 
   has_many :integrations,
-    dependent: :destroy,
-    extend: Extensions::Integrations,
-    as: :owner
+           dependent: :destroy,
+           extend: Extensions::Integrations,
+           as: :owner
 
   has_many :notes, as: :host
   has_many :custom_fields, as: :host
@@ -70,12 +70,12 @@ class Event < ApplicationRecord
   has_many :order_line_items, through: :orders, source: :order_line_items
 
   has_many :registrations,
-    -> { where(attending: true).order('registrations.created_at DESC') },
-    foreign_key: :host_id, class_name: 'Registration'
+           -> { where(attending: true).order('registrations.created_at DESC') },
+           foreign_key: :host_id, class_name: 'Registration'
 
   has_many :cancelled_registrations,
-    -> { where(attending: false).order('registrations.created_at DESC') },
-    as: :host, class_name: 'Registration'
+           -> { where(attending: false).order('registrations.created_at DESC') },
+           as: :host, class_name: 'Registration'
 
   has_many :attendees, through: :registrations
   has_many :collaborations, as: :collaborated
@@ -90,12 +90,12 @@ class Event < ApplicationRecord
   has_many :levels
   has_many :raffles
   has_many :line_items,
-    -> { where("item_type = '' OR item_type IS NULL") },
-    as: :host
+           -> { where("item_type = '' OR item_type IS NULL") },
+           as: :host
   has_many :shirts,
-    -> { where(item_type: 'LineItem::Shirt') },
-    class_name: 'LineItem',
-    as: :host
+           -> { where(item_type: 'LineItem::Shirt') },
+           class_name: 'LineItem',
+           as: :host
 
   # this way of sorting pricing ties does not put the opening tier in
   # the correct spot. That is fixed with a method

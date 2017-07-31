@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CSVOutput
   extend ActiveSupport::Concern
 
@@ -8,26 +9,24 @@ module CSVOutput
 
   def csv_field_values
     self.class.csv_fields.map do |method|
-      self.send(method)
+      send(method)
     end
   end
 
   module ClassMethods
-
     def csv_with_columns(list_of_columns, exclude: [])
       self.methods_for_csv_output = list_of_columns.map(&:to_sym)
       self.skip_methods_in_csv_output = exclude.map(&:to_sym)
     end
 
     def csv_fields
-      specified_fields = (self.methods_for_csv_output || []) -
-        (self.skip_methods_in_csv_output || [])
+      specified_fields = (methods_for_csv_output || []) -
+        (skip_methods_in_csv_output || [])
 
       (specified_fields.presence || column_names)
     end
 
     def to_csv(options = {})
-
       CSV.generate(options) do |csv|
         # convert fields to strings, and make them look nicer
         csv << csv_fields.map(&:to_s).map(&:titleize)

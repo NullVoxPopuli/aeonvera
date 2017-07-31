@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 AeonVera::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -32,11 +33,10 @@ AeonVera::Application.configure do
   # Version of your assets, change this if you want to expire all your assets.
   config.assets.version = '1.0'
 
-
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
-  config.assets.precompile += %w( email.css )
+  config.assets.precompile += %w(email.css)
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).
@@ -54,29 +54,26 @@ AeonVera::Application.configure do
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
-  #config.assets.debug = true
+  # config.assets.debug = true
 
   config.log_level = :debug
   config.logger = Logger.new(STDOUT)
 
-  config.action_mailer.default_url_options = { :host => 'aeonvera-staging.work' }
-
+  config.action_mailer.default_url_options = { host: 'aeonvera-staging.work' }
 
   config.roadie.provider = Roadie::FilesystemProvider.new('/assets', Rails.root.join('public', 'assets'))
 
   ActionMailer::Base.smtp_settings = {
-    :port =>           '587',
-    :address =>        'smtp.sparkpostmail.com',
-    :user_name =>      ENV['SPARKPOST_USERNAME'],
-    :password =>       ENV['SPARKPOST_PASSWORD'],
-    :domain =>         'aeonvera-staging.work',
-    :authentication => :plain
+    port: '587',
+    address: 'smtp.sparkpostmail.com',
+    user_name: ENV['SPARKPOST_USERNAME'],
+    password: ENV['SPARKPOST_PASSWORD'],
+    domain: 'aeonvera-staging.work',
+    authentication: :plain
   }
   ActionMailer::Base.delivery_method = :smtp
-
 
   config.after_initialize do
     BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
   end
-
 end

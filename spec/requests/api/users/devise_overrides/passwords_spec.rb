@@ -1,12 +1,12 @@
+# frozen_string_literal: true
 require 'rails_helper'
-
 
 describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
   let(:user) { create(:user, confirmed_at: Time.now) }
 
   context 'requests a password reset' do
     it 'sends an email' do
-      expect{
+      expect {
         post '/api/users/password', user: { email: user.email }
       }.to change(ActionMailer::Base.deliveries, :count).by 1
     end
@@ -31,7 +31,8 @@ describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
       put '/api/users/password', user: {
         password: '12345678',
         password_confirmation: '12345678',
-        reset_password_token: '123' }
+        reset_password_token: '123'
+      }
 
       user.reload
       expect(user.encrypted_password).to_not eq old_password
@@ -41,12 +42,12 @@ describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
       put '/api/users/password', user: {
         password: '12345678',
         password_confirmation: '12345678',
-        reset_password_token: '123' }
+        reset_password_token: '123'
+      }
 
       user.reload
       expect(user.reset_password_token).to be_nil
       expect(user.reset_password_sent_at).to be_nil
     end
   end
-
 end

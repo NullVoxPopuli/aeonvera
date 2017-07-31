@@ -13,7 +13,7 @@ gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
 gem 'attr_encrypted' # column encryption
 
- # type checking
+# type checking
 gem 'rtype'
 gem 'rtype-native'
 
@@ -23,7 +23,7 @@ gem 'skinny_controllers' # , path: '../skinny_controllers' # controllers, chill 
 gem 'drawers' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
 
-gem "dry-validation"
+gem 'dry-validation'
 gem 'reform' # Non-Model Validation
 
 gem 'paranoia', '~> 2.0' # soft deletion
@@ -70,10 +70,8 @@ gem 'scout_apm'
 # Auto-scaling Tuning
 # gem 'rails_autoscale_agent'
 
-
 # fast web server
 gem 'puma'
-
 
 ############
 # JS, CSS and Icons (For Emails)
@@ -139,7 +137,6 @@ group :test do
   gem 'simplecov', require: false
   # Coverage Reporting
   gem 'codeclimate-test-reporter'
-
 
   # JSONAPI Validation
   gem 'jsonapi-parser', require: 'jsonapi/parser'

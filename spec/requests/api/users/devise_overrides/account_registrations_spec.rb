@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::Users::DeviseOverrides::AccountRegistrationsController, type: :request do
@@ -83,7 +84,8 @@ describe Api::Users::DeviseOverrides::AccountRegistrationsController, type: :req
     it 'updates the name' do
       put '/api/users/registrations', { data: { attributes: {
         first_name: user.name + 'updated',
-        current_password: user.password } } }, @headers
+        current_password: user.password
+      } } }, @headers
 
       expect(response.status).to eq 200
 

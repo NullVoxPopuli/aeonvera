@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::HousingProvisionsController, type: :request do
@@ -72,7 +73,6 @@ describe Api::HousingProvisionsController, type: :request do
       end
     end
 
-
     context 'owns the event' do
       before(:each) do
         user = create_confirmed_user
@@ -103,10 +103,10 @@ describe Api::HousingProvisionsController, type: :request do
       context 'creating' do
         let(:payload) do
           {
-            "data"=>{
-              "attributes"=>{"housing-capacity"=>0, "number-of-showers"=>0, "can-provide-transportation"=>false, "transportation-capacity"=>0, "preferred-gender-to-host"=>"No Preference", "has-pets"=>false, "smokes"=>false, "notes"=>nil, "name"=>nil},
-              "relationships"=>{"host"=>{"data"=>{"type"=>"events", "id"=> @event.id}}, "registration"=>{"data"=>{"type"=>"registrations", "id"=>@registration.id}}},
-              "type"=>"housing-provisions"
+            'data' => {
+              'attributes' => { 'housing-capacity' => 0, 'number-of-showers' => 0, 'can-provide-transportation' => false, 'transportation-capacity' => 0, 'preferred-gender-to-host' => 'No Preference', 'has-pets' => false, 'smokes' => false, 'notes' => nil, 'name' => nil },
+              'relationships' => { 'host' => { 'data' => { 'type' => 'events', 'id' => @event.id } }, 'registration' => { 'data' => { 'type' => 'registrations', 'id' => @registration.id } } },
+              'type' => 'housing-provisions'
             }
           }
         end

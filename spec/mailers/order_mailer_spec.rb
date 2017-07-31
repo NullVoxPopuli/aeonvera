@@ -1,4 +1,5 @@
-require "spec_helper"
+# frozen_string_literal: true
+require 'spec_helper'
 
 RSpec.describe OrderMailer, type: :mailer do
   before(:each) do
@@ -9,7 +10,7 @@ RSpec.describe OrderMailer, type: :mailer do
     o = create(:order, user: @user, registration: create(:registration))
     ActionMailer::Base.deliveries.clear
 
-    expect{
+    expect {
       OrderMailer.receipt(for_order: o).deliver_now
     }.to change(ActionMailer::Base.deliveries, :count).by 1
   end
@@ -17,27 +18,27 @@ RSpec.describe OrderMailer, type: :mailer do
   it 'does not include the processing fee' do
     e = create(:event, make_attendees_pay_fees: false)
     o = create(:order, host: e, user: @user, registration: create(:registration))
-    allow(o).to receive(:total_fee_amount){ 5 }
+    allow(o).to receive(:total_fee_amount) { 5 }
 
     ActionMailer::Base.deliveries.clear
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
     body = email.body.raw_source
 
-    expect(body).to_not include("Processing Fee")
+    expect(body).to_not include('Processing Fee')
   end
 
   it 'does include the processing fee' do
     e = create(:event, make_attendees_pay_fees: true)
     o = create(:order, host: e, user: @user, registration: create(:registration))
-    allow(o).to receive(:total_fee_amount){ 5 }
+    allow(o).to receive(:total_fee_amount) { 5 }
 
     ActionMailer::Base.deliveries.clear
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
     body = email.body.raw_source
 
-    expect(body).to include("Processing Fee")
+    expect(body).to include('Processing Fee')
   end
 
   it 'shows the payment token when present' do
@@ -71,7 +72,7 @@ RSpec.describe OrderMailer, type: :mailer do
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
     body = email.body.raw_source
-    expect(body.gsub("\n", '')).to include('email  the organizers.')
+    expect(body.delete("\n")).to include('email  the organizers.')
   end
 
   describe 'organization email notifications' do
@@ -160,5 +161,4 @@ RSpec.describe OrderMailer, type: :mailer do
       expect(email.bcc).to be_nil
     end
   end
-
 end

@@ -4,7 +4,6 @@ module Api
   # to this controller must include a
   # payment_token param
   class OrderLineItemsController < Api::ResourceController
-
     def index
       render_models(params[:include])
     end
@@ -63,6 +62,5 @@ module Api
         )
       end
     end
-
   end
 end

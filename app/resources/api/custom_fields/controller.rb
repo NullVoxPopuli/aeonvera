@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class CustomFieldsController < Api::EventResourceController
     private
@@ -5,7 +6,8 @@ module Api
     def update_custom_field_params
       whitelistable_params do |whitelister|
         whitelister.permit(
-          :label, :kind, :default_value, :editable)
+          :label, :kind, :default_value, :editable
+        )
       end
     end
 
@@ -13,7 +15,8 @@ module Api
       whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :label, :kind, :default_value, :editable,
-          :host_id, :host_type)
+          :host_id, :host_type
+        )
       end
     end
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class PricingTiersController < Api::EventResourceController
     private
@@ -7,7 +8,8 @@ module Api
       whitelistable_params do |whitelister|
         whitelister.permit(
           :date,
-          :registrants, :increase_by_dollars)
+          :registrants, :increase_by_dollars
+        )
       end
     end
 
@@ -16,7 +18,8 @@ module Api
         whitelister.permit(
           :event_id,
           :date,
-          :registrants, :increase_by_dollars)
+          :registrants, :increase_by_dollars
+        )
       end
     end
   end

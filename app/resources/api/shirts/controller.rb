@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class ShirtsController < Api::EventResourceController
     # self.model_class = LineItem::Shirt

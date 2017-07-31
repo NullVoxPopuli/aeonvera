@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: line_items
@@ -37,12 +38,9 @@
 
 require 'spec_helper'
 
-
 describe LineItem::Shirt do
-
   describe '#price_for_size' do
-
-    let(:shirt){ create(:shirt) }
+    let(:shirt) { create(:shirt) }
 
     it 'gets the price for a size' do
       shirt.metadata['prices'] ||= {}
@@ -50,7 +48,5 @@ describe LineItem::Shirt do
       actual = shirt.price_for_size('XL')
       expect(actual).to eq 30
     end
-
   end
-
 end

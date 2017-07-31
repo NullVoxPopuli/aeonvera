@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: raffles
@@ -14,7 +15,6 @@
 require 'rails_helper'
 
 describe Raffle do
-
   describe '#choose_winner!' do
     before(:each) do
       @event = create(:event)

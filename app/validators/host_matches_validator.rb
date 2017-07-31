@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 # This prevents relationships from having differing parents
 # For example, on an order line item,
 # the order's host must be the same as the line item's host
 class HostMatchesValidator < ActiveModel::EachValidator
-
   def validate_each(record, attribute, value)
     return unless value # this should be handled by a presence validator
 
@@ -27,5 +27,4 @@ class HostMatchesValidator < ActiveModel::EachValidator
       end
     end
   end
-
 end

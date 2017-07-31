@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module HostOperations
     class Read < SkinnyControllers::Operation::Base

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::CustomFieldsController, type: :controller do
@@ -11,5 +12,4 @@ RSpec.describe Api::CustomFieldsController, type: :controller do
       get :show, id: @event.id
     end
   end
-
 end

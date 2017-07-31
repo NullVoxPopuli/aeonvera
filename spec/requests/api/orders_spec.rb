@@ -235,10 +235,10 @@ describe Api::OrdersController, type: :request do
         let!(:membership_option) { create(:membership_option, host: organization, price: 25) }
         let!(:membership_discount) {
           create(:membership_discount,
-            host: organization,
-            value: 7,
-            affects: LineItem::Lesson.name,
-            kind: Discount::DOLLARS_OFF)
+                 host: organization,
+                 value: 7,
+                 affects: LineItem::Lesson.name,
+                 kind: Discount::DOLLARS_OFF)
         }
 
         before(:each) do

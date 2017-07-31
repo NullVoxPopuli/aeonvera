@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module HasPaymentProcessor
   extend ActiveSupport::Concern
 
@@ -16,12 +17,11 @@ module HasPaymentProcessor
   # @param [String] kind optional
   # @return [Boolean] true if any processors exist
   # @return [Boolean] true if the specified processor exists
-  def has_payment_processor?(kind = "")
+  def has_payment_processor?(kind = '')
     if kind.present?
       integrations[kind].present?
     else
       integrations[Integration::STRIPE].present?
     end
   end
-
 end

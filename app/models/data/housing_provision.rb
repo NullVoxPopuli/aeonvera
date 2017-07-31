@@ -44,12 +44,12 @@ class HousingProvision < ApplicationRecord
     :attendee_email
   ] +
     column_names,
-    exclude: [
-      :updated_at, :created_at,
-      :registration_id, :registration_type,
-      :id,
-      :host_id, :host_type
-    ]
+                   exclude: [
+                     :updated_at, :created_at,
+                     :registration_id, :registration_type,
+                     :id,
+                     :host_id, :host_type
+                   ]
 
   def attendee_name
     registration.try(:attendee_name) || 'Attendee Not Found or Not Associated'

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::PricingTiersController, type: :controller do
-  let(:user)  { create_confirmed_user }
+  let(:user) { create_confirmed_user }
   before(:each) do
     login_through_api
   end
@@ -38,7 +39,6 @@ describe Api::PricingTiersController, type: :controller do
       data = json['data']
 
       expect(data['attributes']['increase-by-dollars']).to eq pricing_tier.increase_by_dollars.to_s
-
     end
   end
 
@@ -49,15 +49,17 @@ describe Api::PricingTiersController, type: :controller do
 
       json_api = {
         id: pricing_tier.id,
-        "data":{
-          "id":"#{pricing_tier.id}",
-          "attributes":{
-            "number_of_leads":28,
-            "number_of_follows":26,
+        "data": {
+          "id": pricing_tier.id.to_s,
+          "attributes": {
+            "number_of_leads": 28,
+            "number_of_follows": 26,
             "increase_by_dollars": 321,
-            "requirement":1
+            "requirement": 1
           },
-          "type":"pricing_tiers"}}
+          "type": 'pricing_tiers'
+        }
+      }
 
       patch :update, json_api
 
@@ -69,7 +71,7 @@ describe Api::PricingTiersController, type: :controller do
       event = create(:event, user: create(:user))
       pricing_tier = create(:pricing_tier, event: event)
 
-      json_api = {id: pricing_tier.id, "data":{"id":"#{pricing_tier.id}","attributes":{"number_of_leads":28,"number_of_follows":26,"increase_by_dollars": 123,"requirement":1},"type":"pricing_tiers"}}
+      json_api = { id: pricing_tier.id, "data": { "id": pricing_tier.id.to_s, "attributes": { "number_of_leads": 28, "number_of_follows": 26, "increase_by_dollars": 123, "requirement": 1 }, "type": 'pricing_tiers' } }
 
       patch :update, json_api
 
@@ -84,10 +86,10 @@ describe Api::PricingTiersController, type: :controller do
       force_login(event.hosted_by)
       pricing_tier = build(:pricing_tier, event: event)
 
-      json_api = {"data":{"attributes": pricing_tier.attributes ,"type":"pricing_tiers",
-        "relationships": {"event":{"data": {"id": pricing_tier.event_id}}}}}
+      json_api = { "data": { "attributes": pricing_tier.attributes, "type": 'pricing_tiers',
+                             "relationships": { "event": { "data": { "id": pricing_tier.event_id } } } } }
 
-      expect{
+      expect {
         post :create, json_api
       }.to change(PricingTier, :count).by(1)
     end
@@ -96,10 +98,10 @@ describe Api::PricingTiersController, type: :controller do
       event = create(:event, user: create(:user))
       pricing_tier = build(:pricing_tier, event: event)
 
-      json_api = {"data":{"attributes": pricing_tier.attributes ,"type":"pricing_tiers",
-        "relationships": {"event":{"data": {"id": pricing_tier.event_id}}}}}
+      json_api = { "data": { "attributes": pricing_tier.attributes, "type": 'pricing_tiers',
+                             "relationships": { "event": { "data": { "id": pricing_tier.event_id } } } } }
 
-      expect{
+      expect {
         post :create, json_api
       }.to change(PricingTier, :count).by(0)
     end

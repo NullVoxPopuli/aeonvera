@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 class CollaboratorsMailer < ActionMailer::Base
-  default from: APPLICATION_CONFIG["support_email"]
+  default from: APPLICATION_CONFIG['support_email']
 
-  layout "email"
+  layout 'email'
 
   def invitation(from: nil, email_to: nil, host: nil, link: nil)
     @user = from

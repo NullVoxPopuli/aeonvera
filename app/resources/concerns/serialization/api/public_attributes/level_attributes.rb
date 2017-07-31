@@ -6,8 +6,8 @@ module Api
 
       included do
         attributes :id, :event_id,
-          :name, :description,
-          :requirement, :deleted_at
+                   :name, :description,
+                   :requirement, :deleted_at
       end
     end
   end

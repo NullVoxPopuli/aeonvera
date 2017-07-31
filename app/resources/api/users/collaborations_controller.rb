@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # This controller only responds to update
 module Api
   module Users
@@ -17,7 +18,8 @@ module Api
         @accept_operation ||= CollaborationOperations::AcceptInvitation.new(
           current_user,
           params,
-          accept_params)
+          accept_params
+        )
       end
 
       private

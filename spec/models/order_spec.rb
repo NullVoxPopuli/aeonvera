@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: orders
@@ -35,10 +36,8 @@
 require 'spec_helper'
 
 describe Order do
-
   describe 'associations' do
     context 'line_Items' do
-
       it 'has line items' do
         discount = Discount.new
         discount.save(validate: false)
@@ -56,7 +55,6 @@ describe Order do
   end
 
   describe 'validations' do
-
     describe 'registration' do
       it 'is required when there is a competition' do
         event = create(:event)
@@ -107,7 +105,6 @@ describe Order do
         expect(o.errors.keys).to include(:buyer_name)
       end
 
-
       it 'is present in the metadata' do
         o = create(:order, host: create(:organization))
         o.buyer_name = 'test test'
@@ -129,30 +126,28 @@ describe Order do
     end
   end
 
-  describe "#force_paid!" do
-    it "becomes paid" do
+  describe '#force_paid!' do
+    it 'becomes paid' do
       o = Order.new
       o.paid?.should == false
     end
   end
 
   describe '#owes' do
-
     it 'has not been paid' do
       o = Order.new
-      allow(o).to receive(:total){ 10 }
+      allow(o).to receive(:total) { 10 }
 
       expect(o.owes).to eq 10
     end
 
     it 'has been paid' do
       o = Order.new
-      allow(o).to receive(:total){ 10 }
-      allow(o).to receive(:paid?){ true }
+      allow(o).to receive(:total) { 10 }
+      allow(o).to receive(:paid?) { true }
 
       expect(o.owes).to eq 0
     end
-
   end
 
   describe 'sub_total' do
@@ -205,10 +200,10 @@ describe Order do
   end
 
   describe 'package + discount' do
-    let(:event){ create(:event) }
-    let(:order){ Order.new(event: event) }
-    let(:discount){ create(:discount, host: event) }
-    let(:package){ create(:package, event: event) }
+    let(:event) { create(:event) }
+    let(:order) { Order.new(event: event) }
+    let(:discount) { create(:discount, host: event) }
+    let(:package) { create(:package, event: event) }
 
     it 'discounts a dollar amount' do
       discount.kind = Discount::DOLLARS_OFF
@@ -247,7 +242,6 @@ describe Order do
       expect(oli).to_not be_valid
       remove_invalid_items(order) # instead of saving, remove invalid
 
-
       expected = package.current_price
       expect(order.total).to eq expected
     end
@@ -264,10 +258,10 @@ describe Order do
     end
 
     context 'a tier is triggered, but is tied to a specific package' do
-      let(:tier){ create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
+      let(:tier) { create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
 
       before(:each) do
-        allow(event).to receive(:current_tier){tier}
+        allow(event).to receive(:current_tier) { tier }
       end
 
       it 'increases the price of a package' do
@@ -288,14 +282,13 @@ describe Order do
         expect(order.total).to eq expected
         expect(order.total).to_not eq different_package.initial_price
       end
-
     end
 
     context 'a tier has increased the price of a package' do
-      let(:tier){ create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
+      let(:tier) { create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
 
       before(:each) do
-        allow(event).to receive(:current_tier){tier}
+        allow(event).to receive(:current_tier) { tier }
         expect(package.current_price).to eq package.initial_price + tier.increase_by_dollars
       end
 
@@ -326,18 +319,12 @@ describe Order do
       end
 
       context 'other items are in the order' do
-
         it 'reduces the amount by a %' do
-
         end
 
         it 'reduces to free' do
-
         end
-
       end
-
     end
-
   end
 end

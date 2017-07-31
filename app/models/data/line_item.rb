@@ -58,13 +58,13 @@ class LineItem < ApplicationRecord
   alias_attribute :current_price, :price
 
   has_attached_file :picture,
-    preserve_files: true,
-    keep_old_files: true,
-    path: '/assets/:class/:id/picture_:style.:extension',
-    styles: {
-      thumb: '128x128>',
-      medium: '300x300>'
-    }
+                    preserve_files: true,
+                    keep_old_files: true,
+                    path: '/assets/:class/:id/picture_:style.:extension',
+                    styles: {
+                      thumb: '128x128>',
+                      medium: '300x300>'
+                    }
 
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
 

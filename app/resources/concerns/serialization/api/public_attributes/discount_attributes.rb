@@ -8,12 +8,12 @@ module Api
         type 'discounts'
 
         attributes :id, :code,
-          :amount, :kind, :discount_type,
-          :disabled,
-          :applies_to,
-          :host_id, :host_type,
-          :allowed_number_of_uses, :requires_student_id,
-          :times_used
+                   :amount, :kind, :discount_type,
+                   :disabled,
+                   :applies_to,
+                   :host_id, :host_type,
+                   :allowed_number_of_uses, :requires_student_id,
+                   :times_used
       end
     end
   end

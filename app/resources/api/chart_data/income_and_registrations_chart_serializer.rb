@@ -5,9 +5,9 @@ module Api
       type 'charts'
 
       attributes :id,
-        :incomes, :registrations,
-        :income_times,
-        :registration_times
+                 :incomes, :registrations,
+                 :income_times,
+                 :registration_times
 
       def id
         "#{object.id}-income-and-registrations"

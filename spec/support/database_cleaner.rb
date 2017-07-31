@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'database_cleaner'
 
 def using_sqlite3?
@@ -9,7 +10,6 @@ def using_postgresql?
 end
 
 RSpec.configure do |config|
-
   # config.use_transactional_examples = false
   config.use_transactional_fixtures = false
 
@@ -35,5 +35,4 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
-
 end

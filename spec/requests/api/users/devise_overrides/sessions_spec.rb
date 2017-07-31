@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::Users::DeviseOverrides::SessionsController, type: :request do
@@ -12,7 +13,6 @@ describe Api::Users::DeviseOverrides::SessionsController, type: :request do
   end
 
   describe 'login' do
-
     it 'logs in' do
       user = create(:user, confirmed_at: Time.now)
       post '/api/users/sign_in', { email: user.email, password: user.password }
@@ -35,6 +35,5 @@ describe Api::Users::DeviseOverrides::SessionsController, type: :request do
       post '/api/users/sign_in', { email: 'a@a.a', password: '123' }
       expect(response.status).to eq 401
     end
-
   end
 end

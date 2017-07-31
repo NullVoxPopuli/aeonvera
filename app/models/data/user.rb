@@ -43,13 +43,13 @@ class User < ApplicationRecord
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-    :recoverable, :rememberable, :trackable, :validatable,
-    :confirmable, :lockable # , :omniauthable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :confirmable, :lockable # , :omniauthable
 
   has_many :integrations,
-    dependent: :destroy,
-    extend: Extensions::Integrations,
-    as: :owner
+           dependent: :destroy,
+           extend: Extensions::Integrations,
+           as: :owner
 
   has_many :organizations, foreign_key: 'owner_id'
   has_many :hosted_events, class_name: 'Event', foreign_key: 'hosted_by_id'

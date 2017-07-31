@@ -3,9 +3,9 @@ module Api
   # object is actually an Organization in this serializer
   class RegistrationSummarySerializer < ActiveModel::Serializer
     attributes :id, :type, :host_name,
-      :date_registered, :owed_amount, :paid_amount,
-      :begins, :ends, :status,
-      :line_items
+               :date_registered, :owed_amount, :paid_amount,
+               :begins, :ends, :status,
+               :line_items
 
     def logo_url_thumb
       object.host.logo.url(:thumb)

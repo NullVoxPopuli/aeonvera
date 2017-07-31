@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::CompetitionsController, type: :controller do
-
   context 'not logged in' do
     context 'index' do
       it 'renders - nothing private about the competition list' do

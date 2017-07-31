@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # TODO: remove
 module SetsOrganization
   extend ActiveSupport::Concern

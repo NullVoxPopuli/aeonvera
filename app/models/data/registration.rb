@@ -67,33 +67,43 @@ class Registration < ApplicationRecord
 
   # for an registration, we don't care if any of our
   # references are deleted, we want to know what they were
-  def attendee; User.unscoped { super }; end
-  def package; Package.unscoped { super }; end
-  def level; Level.unscoped { super }; end
-  def event; Event.unscoped { super }; end
+  def attendee
+    User.unscoped { super }
+  end
+
+  def package
+    Package.unscoped { super }
+  end
+
+  def level
+    Level.unscoped { super }
+  end
+
+  def event
+    Event.unscoped { super }
+  end
 
   has_many :custom_field_responses, as: :writer, dependent: :destroy
   has_many :orders
   has_many :order_line_items, through: :orders
   has_many :purchased_items,
-    through: :order_line_items,
-    source: :line_item,
-    inverse_of: :purchasers
+           through: :order_line_items,
+           source: :line_item,
+           inverse_of: :purchasers
 
   has_many :raffle_tickets,
-    through: :order_line_items,
-    source: :line_item,
-    source_type: LineItem::RaffleTicket.name
+           through: :order_line_items,
+           source: :line_item,
+           source_type: LineItem::RaffleTicket.name
 
   scope :needing_housing, -> { where(needs_housing: true) }
   scope :providing_housing, -> { where(providing_housing: true) }
   scope :volunteers, -> { where(interested_in_volunteering: true) }
 
-
   has_many :raffle_tickets,
-    through: :order_line_items,
-    source: :line_item,
-    source_type: LineItem::RaffleTicket.name
+           through: :order_line_items,
+           source: :line_item,
+           source_type: LineItem::RaffleTicket.name
 
   scope :participating_in_raffle, ->(raffle_id) {
     joins(:raffle_tickets).where("reference_id = #{raffle_id}")
@@ -141,12 +151,14 @@ class Registration < ApplicationRecord
     :package_name,
     :level_name,
     :amount_owed,
-    :registered_at],
-    exclude: [
-      :updated_at, :created_at,
-      :registration_id, :registration_type,
-      :id,
-      :host_id, :host_type]
+    :registered_at
+  ],
+                   exclude: [
+                     :updated_at, :created_at,
+                     :registration_id, :registration_type,
+                     :id,
+                     :host_id, :host_type
+                   ]
 
   def add(object)
     send(object.class.name.demodulize.underscore.pluralize.to_s) << object

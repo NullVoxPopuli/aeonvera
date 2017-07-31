@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module CollaborationOperations
     module Helpers
@@ -28,7 +29,7 @@ module Api
         id, kind = params_for_action.values_at(:host_id, :host_type)
         host_op_class = "::Api::#{kind}Operations::Read".safe_constantize
 
-        host_op_class.call(current_user, { id: id }) if host_op_class
+        host_op_class&.call(current_user, { id: id })
       end
     end
   end

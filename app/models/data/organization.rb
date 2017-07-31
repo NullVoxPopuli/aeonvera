@@ -40,9 +40,9 @@ class Organization < ApplicationRecord
   belongs_to :hosted_by, class_name: 'User', foreign_key: :owner_id
   has_many :sponsorships, as: :sponsor
   has_many :sponsored_events,
-    through: :sponsorships,
-    source: :sponsored,
-    source_type: Event.name
+           through: :sponsorships,
+           source: :sponsored,
+           source_type: Event.name
 
   # has_many :events
   # has_many :dances, class_name: "LineItem::Dance"
@@ -53,9 +53,9 @@ class Organization < ApplicationRecord
 
   has_many :notes, as: :host
   has_many :integrations,
-    dependent: :destroy,
-    extend: Extensions::Integrations,
-    as: :owner
+           dependent: :destroy,
+           extend: Extensions::Integrations,
+           as: :owner
 
   has_many :line_items, as: :host
 
@@ -63,22 +63,22 @@ class Organization < ApplicationRecord
   has_many :membership_discounts, as: :host
 
   has_many :dances,
-    -> { where(item_type: LineItem::Dance.name) },
-    class_name: LineItem::Dance.name, as: :host
+           -> { where(item_type: LineItem::Dance.name) },
+           class_name: LineItem::Dance.name, as: :host
 
   has_many :lessons,
-    -> { where(item_type: LineItem::Lesson.name) },
-    class_name: LineItem::Lesson.name, as: :host
+           -> { where(item_type: LineItem::Lesson.name) },
+           class_name: LineItem::Lesson.name, as: :host
 
   has_many :membership_options,
-    -> { where(item_type: 'LineItem::MembershipOption') },
-    class_name: LineItem::MembershipOption.name, as: :host
+           -> { where(item_type: 'LineItem::MembershipOption') },
+           class_name: LineItem::MembershipOption.name, as: :host
 
   # Members are just Users that have a relationship to an organization via:
   #  User -> Membership Renewal -> Membership Option -> Organization
   has_many :members, -> { uniq },
-    through: :membership_options,
-    source: :members
+           through: :membership_options,
+           source: :members
 
   alias_attribute :user_id, :owner_id
 

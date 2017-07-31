@@ -6,9 +6,9 @@ module Api
       type 'users/registered-events'
 
       attributes :id, :name, :registered_at,
-        :amount_owed, :amount_paid,
-        :event_begins_at, :is_attending,
-        :url
+                 :amount_owed, :amount_paid,
+                 :event_begins_at, :is_attending,
+                 :url
 
       def is_attending
         object.attending?

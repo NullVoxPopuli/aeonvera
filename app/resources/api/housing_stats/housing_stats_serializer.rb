@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module Api
   class HousingStatsSerializer < ActiveModel::Serializer
     type 'housing_stats'
 
     attributes :id,
-      :requests, :provisions,
-      :assigned, :remaining
+               :requests, :provisions,
+               :assigned, :remaining
 
     has_many :housing_requests
     has_many :housing_provisions

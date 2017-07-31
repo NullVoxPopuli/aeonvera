@@ -15,6 +15,11 @@ module Api
                  :interested_in_volunteering,
                  :city, :state, :zip, :phone_number
 
+      # class HousingRequestSerializer < ActiveModel::Serializer
+      # end
+      # class HousingProvisionSerializer < ActiveModel::Serializer
+      # end
+
       has_one :housing_request
       has_one :housing_provision
       has_many :custom_field_responses

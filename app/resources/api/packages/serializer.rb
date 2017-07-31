@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   class PackageSerializer < ActiveModel::Serializer
     include PublicAttributes::PackageAttributes
@@ -6,7 +7,6 @@ module Api
 
     belongs_to :event
     has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
-
 
     def number_of_leads
       object.registrations.leads.count

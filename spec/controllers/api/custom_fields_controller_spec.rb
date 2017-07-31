@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::CustomFieldsController, type: :controller do
@@ -53,5 +54,4 @@ RSpec.describe Api::CustomFieldsController, type: :controller do
       json_api_update_with(@custom_field, json_api)
     end
   end
-
 end

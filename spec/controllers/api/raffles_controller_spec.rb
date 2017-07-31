@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::RafflesController, type: :controller do
@@ -9,13 +10,13 @@ RSpec.describe Api::RafflesController, type: :controller do
   context 'show' do
     it 'includes the purchasers' do
       raffle = create(:raffle, event: @event)
-      ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: {'number_of_tickets' => 1})
+      ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: { 'number_of_tickets' => 1 })
       registration = create(:registration, event: @event)
       order = create(:order, registration: registration, host: @event)
       create(:order_line_item,
-        order: order,
-        line_item: ticket_option,
-        quantity: 1)
+             order: order,
+             line_item: ticket_option,
+             quantity: 1)
 
       get :show, id: raffle.id, include: 'ticket_purchasers'
 
@@ -43,9 +44,9 @@ RSpec.describe Api::RafflesController, type: :controller do
         registration = create(:registration, event: @event)
         order = create(:order, registration: registration, host: @event)
         create(:order_line_item,
-          order: order,
-          line_item: @ticket_option,
-          quantity: 1)
+               order: order,
+               line_item: @ticket_option,
+               quantity: 1)
         # sanity, to make sure the test data is correct
         # For whatever reason, when this is uncommented, it *sometimes* fails...
         # (this expectation, that is... not sure what's up with that).

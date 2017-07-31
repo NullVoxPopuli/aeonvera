@@ -17,26 +17,26 @@ class Raffle < ApplicationRecord
   belongs_to :event
 
   has_many :raffle_tickets,
-    class_name: LineItem::RaffleTicket.name,
-    foreign_key: 'reference_id'
+           class_name: LineItem::RaffleTicket.name,
+           foreign_key: 'reference_id'
 
   has_many :tickets,
-    class_name: LineItem::RaffleTicket.name,
-    foreign_key: 'reference_id'
+           class_name: LineItem::RaffleTicket.name,
+           foreign_key: 'reference_id'
 
   # order line items
   has_many :ticket_purchases,
-    class_name: OrderLineItem.name,
-    through: :raffle_tickets,
-    source: :order_line_items
+           class_name: OrderLineItem.name,
+           through: :raffle_tickets,
+           source: :order_line_items
 
   has_many :ticket_purchasers,
-    class_name: Registration.name,
-    through: :raffle_tickets,
-    source: :purchasers
+           class_name: Registration.name,
+           through: :raffle_tickets,
+           source: :purchasers
 
   belongs_to :winner,
-    class_name: 'Registration'
+             class_name: 'Registration'
 
   def choose_winner
     build_participant_weights.sample

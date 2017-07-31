@@ -21,61 +21,61 @@ module Controllers
       id = params[id_key] || params[:id] if id_key
 
       jsonapi_error(404,
-        id: id,
-        code: 404,
-        title: 'not-found',
-        detail: 'Resource not found',
-        meta: {
-          params: params
-        })
+                    id: id,
+                    code: 404,
+                    title: 'not-found',
+                    detail: 'Resource not found',
+                    meta: {
+                      params: params
+                    })
 
       false
     end
 
     def server_error(exception)
       jsonapi_error(500,
-        code: 500,
-        detail: exception.message,
-        title: 'The backend responded with an error',
-        meta: {
-          exception_class: exception.class.name,
-          backtrace: exception.backtrace
-        })
+                    code: 500,
+                    detail: exception.message,
+                    title: 'The backend responded with an error',
+                    meta: {
+                      exception_class: exception.class.name,
+                      backtrace: exception.backtrace
+                    })
 
       Rollbar.error(exception, user_email: current_user.try(:email), params: params)
     end
 
     def routing_error(exception)
       jsonapi_error(404,
-        code: 404,
-        detail: exception.message,
-        title: 'Route/Resource Not Found',
-        meta: {
-          exception_class: exception.class.name,
-          backtrace: exception.backtrace
-        })
+                    code: 404,
+                    detail: exception.message,
+                    title: 'Route/Resource Not Found',
+                    meta: {
+                      exception_class: exception.class.name,
+                      backtrace: exception.backtrace
+                    })
     end
 
     def denied_by_policy_error(exception)
       jsonapi_error(403,
-        code: 403,
-        detail: exception.message,
-        title: 'Denied By Policy',
-        meta: {
-          exception_class: exception.class.name,
-          backtrace: exception.backtrace
-        })
+                    code: 403,
+                    detail: exception.message,
+                    title: 'Denied By Policy',
+                    meta: {
+                      exception_class: exception.class.name,
+                      backtrace: exception.backtrace
+                    })
     end
 
     def client_error(exception)
       jsonapi_error(400,
-        code: 400,
-        detail: exception.message,
-        title: 'Client Error',
-        meta: {
-          exception_class: exception.class.name,
-          backtrace: exception.backtrace
-        })
+                    code: 400,
+                    detail: exception.message,
+                    title: 'Client Error',
+                    meta: {
+                      exception_class: exception.class.name,
+                      backtrace: exception.backtrace
+                    })
     end
 
     def jsonapi_error(status, errors)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe Api::RestraintsController, type: :request do
@@ -6,7 +7,6 @@ describe Api::RestraintsController, type: :request do
   before(:each) do
     host! APPLICATION_CONFIG[:domain][Rails.env]
   end
-
 
   context 'is not logged in' do
     it 'cannot create' do

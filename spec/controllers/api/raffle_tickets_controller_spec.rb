@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::RaffleTicketsController, type: :controller do
@@ -13,7 +14,8 @@ RSpec.describe Api::RaffleTicketsController, type: :controller do
         :raffle_ticket,
         host: @event,
         raffle: @raffle,
-        metadata: {'number_of_tickets' => 1})
+        metadata: { 'number_of_tickets' => 1 }
+      )
     end
 
     it 'renders with the raffle ticket serializer' do
@@ -22,10 +24,10 @@ RSpec.describe Api::RaffleTicketsController, type: :controller do
       result = ActiveModelSerializers::SerializableResource.new(
         @ticket_option,
         serializer: Api::RaffleTicketSerializer,
-        adapter: :json_api).serializable_hash.as_json
+        adapter: :json_api
+      ).serializable_hash.as_json
 
       expect(json).to eq result
     end
   end
-
 end

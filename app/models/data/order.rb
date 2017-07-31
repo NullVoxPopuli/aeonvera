@@ -125,7 +125,7 @@ class Order < ApplicationRecord
     true
   end
 
-  def self.ransackable_scopes(auth_object = nil)
+  def self.ransackable_scopes(_auth_object = nil)
     [:order_line_items_line_item_id_eq, :order_line_items_line_item_type_like]
   end
 

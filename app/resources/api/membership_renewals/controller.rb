@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 # this works with membership renewals, but at the organization level.
 # membership renewals are bound to a membership option, hence the includes in index
 module Api
   class MembershipRenewalsController < Api::ResourceController
-
     def index
       render json: model, include: params[:include], each_serializer: MembershipRenewalSerializer
     end
@@ -16,6 +16,5 @@ module Api
 
       whitelisted.merge(user_id: whitelisted.delete(:member_id))
     end
-
   end
 end

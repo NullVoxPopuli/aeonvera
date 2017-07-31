@@ -1,5 +1,5 @@
+# frozen_string_literal: true
 def page!
-  save_and_open_page
 end
 
 def login(user = @user = create(:user))
@@ -13,7 +13,7 @@ def auth_header_for(user = @user = create(:user))
 end
 
 def force_login(user)
-  allow(controller).to receive(:current_user){ user }
+  allow(controller).to receive(:current_user) { user }
 end
 
 def confirmed_user(user = @user = create(:user))
@@ -59,7 +59,6 @@ def create_integration(params)
   i.save
   i
 end
-
 
 def event_path(path, params = {})
   ["hosted_events/#{path}", { hosted_event_id: @event.id.to_s }.merge(params)]

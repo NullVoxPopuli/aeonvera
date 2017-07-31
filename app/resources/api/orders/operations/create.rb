@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module OrderOperations
     #
@@ -9,7 +10,7 @@ module Api
 
       DEFAULTS = {
         payment_method: Payable::Methods::STRIPE
-      }
+      }.freeze
 
       def run
         build_order

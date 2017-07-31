@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe StripeTasks::ChargeCard do
-
   context 'charge_card!' do
     let(:stripe_helper) { StripeMock.create_test_helper }
     before { StripeMock.start }
@@ -15,7 +15,7 @@ describe StripeTasks::ChargeCard do
       add_to_order(order, package)
 
       token = stripe_helper.generate_card_token
-      @charge = ->{
+      @charge = -> {
         StripeTasks::ChargeCard.charge_card!(
           token,
           'whatever@idk.com',
@@ -23,7 +23,6 @@ describe StripeTasks::ChargeCard do
           secret_key: STRIPE_CONFIG['secret_key']
         )
       }
-
     end
 
     it 'succeeds' do
@@ -57,7 +56,7 @@ describe StripeTasks::ChargeCard do
 
   context 'statement_description' do
     it 'limits a string to 15 characters' do
-      text = "This is some long text about something"
+      text = 'This is some long text about something'
 
       result = StripeTasks::ChargeCard.statement_description(text)
       actual = result.length
@@ -74,5 +73,4 @@ describe StripeTasks::ChargeCard do
       expect(actual).to be < 15
     end
   end
-
 end

@@ -1,16 +1,17 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Api::PackagePolicy do
-  let(:by_owner){
-    ->(method){
+  let(:by_owner) {
+    ->(method) {
       package = create(:package)
       policy = Api::PackagePolicy.new(package.event.hosted_by, package)
       policy.send(method)
     }
   }
 
-  let(:by_registrant){
-    ->(method){
+  let(:by_registrant) {
+    ->(method) {
       event = create(:event)
       package = create(:package, event: event)
       registration = create(:registration, host: event, package: package)
@@ -21,7 +22,6 @@ describe Api::PackagePolicy do
   }
 
   context 'can be read?' do
-
     it 'by the event owner' do
       result = by_owner.call(:read?)
       expect(result).to eq true
@@ -68,5 +68,4 @@ describe Api::PackagePolicy do
       expect(result).to eq false
     end
   end
-
 end

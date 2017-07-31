@@ -5,8 +5,8 @@
 module Api
   class HostedEventSummarySerializer < ActiveModel::Serializer
     attributes :id, :name, :location,
-      :registration_opens_at, :starts_at, :ends_at, :url,
-      :total_registrations, :lead_registrations, :follow_registrations,
-      :shirts_sold
+               :registration_opens_at, :starts_at, :ends_at, :url,
+               :total_registrations, :lead_registrations, :follow_registrations,
+               :shirts_sold
   end
 end

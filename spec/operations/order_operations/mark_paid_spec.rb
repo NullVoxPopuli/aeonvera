@@ -1,17 +1,18 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Api::OrderOperations::MarkPaid do
-  let(:klass){ Api::OrderOperations::MarkPaid }
-  let(:owner){ create_confirmed_user }
-  let(:event){ create(:event, hosted_by: owner) }
-  let(:registration){ create(:registration, host: event) }
-  let(:package){ create(:package, event: event) }
+  let(:klass) { Api::OrderOperations::MarkPaid }
+  let(:owner) { create_confirmed_user }
+  let(:event) { create(:event, hosted_by: owner) }
+  let(:registration) { create(:registration, host: event) }
+  let(:package) { create(:package, event: event) }
 
   context 'order is paid' do
     it 'does not change any of the attributes' do
       order = create(:order,
-        host: event, registration: registration,
-        payment_method: "Boop",  paid: true)
+                     host: event, registration: registration,
+                     payment_method: 'Boop', paid: true)
 
       params = {
         id: order.id,
@@ -52,7 +53,7 @@ describe Api::OrderOperations::MarkPaid do
     end
 
     it 'updates the payment_method' do
-      order = create(:order, host: event, registration: registration, payment_method: "Boop")
+      order = create(:order, host: event, registration: registration, payment_method: 'Boop')
       add_to_order!(order, package)
       expect(order.paid).to eq false
 

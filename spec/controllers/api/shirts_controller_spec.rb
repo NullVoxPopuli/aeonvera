@@ -1,13 +1,11 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::ShirtsController, type: :controller do
-
   context 'not logged in' do
-
   end
 
   context 'logged in and is a collaborator' do
-
   end
 
   context 'logged in and the owner of the event' do
@@ -18,11 +16,9 @@ RSpec.describe Api::ShirtsController, type: :controller do
     end
 
     context 'index' do
-
     end
 
     context 'show' do
-
     end
 
     context 'update' do
@@ -107,5 +103,4 @@ RSpec.describe Api::ShirtsController, type: :controller do
       end
     end
   end
-
 end

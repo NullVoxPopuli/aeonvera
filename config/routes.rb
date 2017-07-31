@@ -5,9 +5,7 @@ AeonVera::Application.routes.draw do
 
   mount Sidekiq::Web => '/sidekiq'
 
-  if Rails.env.development?
-    mount LetterOpenerWeb::Engine, at: '/letter_opener'
-  end
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
   # for our frontend ui.
   # this should also enable the creation of
@@ -104,16 +102,16 @@ AeonVera::Application.routes.draw do
 
     get '/users/current-user', to: 'users#show'
     devise_for :users, # skip: :sessions,
-      controllers: {
-        # password resets
-        passwords: 'api/users/devise_overrides/passwords',
-        # email confirmations
-        confirmations: 'api/users/devise_overrides/confirmations',
-        # creating new account
-        registrations: 'api/users/devise_overrides/account_registrations',
-        # logging in
-        sessions: 'api/users/devise_overrides/sessions'
-      }
+               controllers: {
+                 # password resets
+                 passwords: 'api/users/devise_overrides/passwords',
+                 # email confirmations
+                 confirmations: 'api/users/devise_overrides/confirmations',
+                 # creating new account
+                 registrations: 'api/users/devise_overrides/account_registrations',
+                 # logging in
+                 sessions: 'api/users/devise_overrides/sessions'
+               }
 
     # accepting invitations to work on an event / org
     put '/users/collaborations', to: 'users/collaborations#update'

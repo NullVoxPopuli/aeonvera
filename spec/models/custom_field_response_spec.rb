@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: custom_field_responses
@@ -18,9 +19,7 @@
 
 require 'spec_helper'
 
-
 describe CustomFieldResponse do
-
   before(:each) do
     @field = create(:custom_field)
   end
@@ -37,6 +36,5 @@ describe CustomFieldResponse do
       @response.reload
       expect(@response.custom_field).to eq @field
     end
-
   end
 end

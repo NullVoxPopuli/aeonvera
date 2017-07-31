@@ -35,7 +35,7 @@ shared_examples 'resource_accessed_by_collaborator_with_full_access' do |options
            { event_id: event.id }.merge(
              jsonapi_params(type,
                             attributes: attributes_for(factory_name),
-                         relationships: { relationship_name => event })
+                            relationships: { relationship_name => event })
            ),
            auth_header_for(user))
 
@@ -51,7 +51,7 @@ shared_examples 'resource_accessed_by_collaborator_with_full_access' do |options
           { event_id: event.id }.merge(
             jsonapi_params(type,
                            id: object.id,
-                   attributes: attributes_for(factory_name))
+                           attributes: attributes_for(factory_name))
           ),
           auth_header_for(user))
 

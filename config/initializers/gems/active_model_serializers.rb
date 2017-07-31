@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'active_model_serializers'
 ActiveModelSerializers.config.adapter = :json_api
 ActiveModelSerializers.config.serializer_lookup_chain.unshift(
@@ -15,7 +16,7 @@ ActiveModelSerializers.config.serializer_lookup_chain.unshift(
 # Blegh...............
 module ActiveModelSerializers::Adapter::JsonApi::Deserialization
   class << self
-    def validate_payload(document, &block)
+    def validate_payload(_document)
       # TODO: modify this to accept embedded documents
       true
     end
@@ -62,7 +63,7 @@ module AttributeFieldHack
 
   # this is a little backwards, but it's needed until AMS has a more unified interface
   def apply_fields_whitelist(hash, fields)
-    return hash.map{ |e| apply_fields_whitelist(e, fields) } if hash.is_a?(Array)
+    return hash.map { |e| apply_fields_whitelist(e, fields) } if hash.is_a?(Array)
 
     requested_fields = hash.slice(*fields.keys)
     requested_fields.each_with_object({}) do |(k, v), h|

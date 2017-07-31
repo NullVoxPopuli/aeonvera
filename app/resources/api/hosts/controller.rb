@@ -1,8 +1,9 @@
+# frozen_string_literal: true
 module Api
   class HostsController < APIController
-    SHARED_RELATIONSHIPS       = 'integrations,'.freeze
-    EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount,sponsorships.sponsor'.freeze
-    ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'.freeze
+    SHARED_RELATIONSHIPS       = 'integrations,'
+    EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount,sponsorships.sponsor'
+    ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'
 
     before_action :ensure_host
 

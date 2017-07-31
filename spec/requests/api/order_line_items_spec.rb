@@ -46,13 +46,13 @@ describe Api::OrderLineItemsController, type: :request do
       context 'when creating an order line item' do
         context 'of type: Shirt' do
           let(:shirt) { create(:shirt,
-            host: event,
-            price: 15,
-            metadata: {
-              sizes: ['S', 'M', 'L'],
-              prices: { 'S': '10', 'M': '12' },
-              inventory: { 'S': '0', 'M': '0', 'L': '0' }
-          } ) }
+                               host: event,
+                               price: 15,
+                               metadata: {
+                                 sizes: %w(S M L),
+                                 prices: { 'S': '10', 'M': '12' },
+                                 inventory: { 'S': '0', 'M': '0', 'L': '0' }
+                               }) }
           let(:params) { {
             data: {
               type: 'order-line-items',
@@ -182,15 +182,15 @@ describe Api::OrderLineItemsController, type: :request do
           let(:other_package) { create(:package, event: event, initial_price: 40) }
           let!(:order_line_item) {
             create(:order_line_item,
-              line_item: package,
-              order: order,
-              quantity: 1,
-              price: package.current_price)
+                   line_item: package,
+                   order: order,
+                   quantity: 1,
+                   price: package.current_price)
           }
           let(:params) { {
             data: {
               type: 'order-line-items',
-              attributes: { },
+              attributes: {},
               relationships: {
                 'line-item': { data: { type: 'packages', id: other_package.id } },
                 order: { data: { type: 'orders', id: order.id } }
@@ -221,13 +221,13 @@ describe Api::OrderLineItemsController, type: :request do
       context 'and the order is paid for' do
         context 'of type: Shirt' do
           let(:shirt) { create(:shirt,
-            host: event,
-            price: 15,
-            metadata: {
-              sizes: ['S', 'M', 'L'],
-              prices: { 'S': '10', 'M': '12' },
-              inventory: { 'S': '0', 'M': '0', 'L': '0' }
-          } ) }
+                               host: event,
+                               price: 15,
+                               metadata: {
+                                 sizes: %w(S M L),
+                                 prices: { 'S': '10', 'M': '12' },
+                                 inventory: { 'S': '0', 'M': '0', 'L': '0' }
+                               }) }
 
           before(:each) do
             @existing = add_to_order!(order, create(:shirt, host: event))
@@ -288,10 +288,10 @@ describe Api::OrderLineItemsController, type: :request do
         let!(:membership_option) { create(:membership_option, host: organization, price: 25) }
         let!(:membership_discount) {
           create(:membership_discount,
-            host: organization,
-            value: 7,
-            affects: LineItem::Lesson.name,
-            kind: Discount::DOLLARS_OFF)
+                 host: organization,
+                 value: 7,
+                 affects: LineItem::Lesson.name,
+                 kind: Discount::DOLLARS_OFF)
         }
 
         let!(:lesson_params) { {
@@ -476,10 +476,8 @@ describe Api::OrderLineItemsController, type: :request do
           # If a discount were received, this would be 2
           expect { post '/api/order_line_items', params }
             .to change(OrderLineItem, :count).by(1)
-
         end
       end
     end
   end
-
 end

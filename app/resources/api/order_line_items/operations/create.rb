@@ -68,7 +68,7 @@ module Api
           size = params_for_action[:size]
 
           # nil means no match!
-          (oli && size && size != oli.size) ? nil : oli
+          oli && size && size != oli.size ? nil : oli
         end
       end
 
@@ -127,10 +127,12 @@ module Api
 
           raise 'Must provide order_id or token' unless id || token
 
-          o = ::Api::OrderOperations::Read.new(
-            current_user,
-            id: id
-          ).run if current_user
+          if current_user
+            o = ::Api::OrderOperations::Read.new(
+              current_user,
+              id: id
+            ).run
+          end
 
           o ||= Order.find_by_payment_token(token) if token
 

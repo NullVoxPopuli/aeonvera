@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rspec/expectations'
 
 def to_formatted_date(time)
@@ -24,10 +25,9 @@ end
 
 RSpec::Matchers.define :have_used_serializer do |klass, resource|
   match do |response_body|
-
     expected = ActiveModelSerializers::SerializableResource.new(resource, {
-      serializer: klass
-    }).serializable_hash.to_json
+                                                                  serializer: klass
+                                                                }).serializable_hash.to_json
 
     expect(response_body).to eq expected
   end

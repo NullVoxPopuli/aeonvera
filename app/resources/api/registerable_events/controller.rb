@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Api
   class RegisterableEventsController < APIController
-
     include EventLoader
 
     before_action :set_event, only: [:show]
@@ -13,6 +13,5 @@ module Api
     def show
       render json: @event
     end
-
   end
 end

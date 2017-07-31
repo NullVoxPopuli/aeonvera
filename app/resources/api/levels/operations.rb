@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 module Api
   module LevelOperations
     class Create < SkinnyControllers::Operation::Base
-
       def run
         level = Level.new(model_params)
 
@@ -16,7 +16,6 @@ module Api
     end
 
     class Update < SkinnyControllers::Operation::Base
-
       def run
         if allowed?
           update
@@ -32,8 +31,6 @@ module Api
         level.update(model_params)
         level
       end
-
     end
-
   end
 end

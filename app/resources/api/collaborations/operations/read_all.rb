@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Api
   module CollaborationOperations
     class ReadAll < SkinnyControllers::Operation::Base

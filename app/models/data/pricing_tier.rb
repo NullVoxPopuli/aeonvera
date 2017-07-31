@@ -24,8 +24,8 @@ class PricingTier < ApplicationRecord
   has_many :orders
 
   has_and_belongs_to_many :packages,
-    join_table: 'packages_pricing_tiers',
-    association_foreign_key: 'pricing_tier_id', foreign_key: 'package_id'
+                          join_table: 'packages_pricing_tiers',
+                          association_foreign_key: 'pricing_tier_id', foreign_key: 'package_id'
 
   has_many :restraints, as: :dependable
   has_many :allowed_packages, through: :restraints,
@@ -33,12 +33,12 @@ class PricingTier < ApplicationRecord
 
   validates :event, presence: true
   validates :date,
-    allow_blank: true,
-    date: {
-      # after: Proc.new{ |o| o.event.registration_opens_at - 1.day },
-      before: proc { |o| o.event ? o.event.ends_at : Date.today + 1000.years },
-      message: :invalid_date
-    }
+            allow_blank: true,
+            date: {
+              # after: Proc.new{ |o| o.event.registration_opens_at - 1.day },
+              before: proc { |o| o.event ? o.event.ends_at : Date.today + 1000.years },
+              message: :invalid_date
+            }
 
   scope :before, ->(object) {
     if object.is_a?(PricingTier)

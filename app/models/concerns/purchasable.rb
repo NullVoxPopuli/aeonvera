@@ -6,12 +6,12 @@ module Purchasable
     has_many :order_line_items, as: :line_item, inverse_of: :line_item
 
     has_many :orders,
-      through: :order_line_items,
-      source: :order
+             through: :order_line_items,
+             source: :order
 
     has_many :purchasers,
-      through: :orders,
-      source: :registration,
-      inverse_of: :purchased_items
+             through: :orders,
+             source: :registration,
+             inverse_of: :purchased_items
   end
 end

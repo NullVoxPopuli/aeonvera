@@ -1,6 +1,9 @@
+# frozen_string_literal: true
 module Api
   class EventsController < Api::ResourceController
-    def index; show; end
+    def index
+      show
+    end
 
     def show
       params[:fields] = { levels: [:id, :name, :requirement, :description] }
@@ -11,8 +14,8 @@ module Api
 
     def update_event_params
       whitelistable_params(embedded: [
-          :opening_tier, :sponsorship
-        ]) do |whitelister|
+                             :opening_tier, :sponsorship
+                           ]) do |whitelister|
         whitelister.permit(
           :name, :short_description, :domain,
           :starts_at, :ends_at,
@@ -45,6 +48,5 @@ module Api
     def create_event_params
       update_event_params
     end
-
   end
 end

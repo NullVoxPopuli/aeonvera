@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: restraints
@@ -17,13 +18,12 @@
 require 'spec_helper'
 
 describe Restraint do
-
   context 'a discount only affects a package' do
-    let(:event){ create(:event) }
-    let(:package){ create(:package, event: event) }
-    let(:discount){
+    let(:event) { create(:event) }
+    let(:package) { create(:package, event: event) }
+    let(:discount) {
       create(:discount, host: event,
-      kind: Discount::PERCENT_OFF, value: 100 )
+                        kind: Discount::PERCENT_OFF, value: 100)
     }
 
     before(:each) do
@@ -37,20 +37,17 @@ describe Restraint do
 
       # build order
       @registration = create(:registration,
-        event: event,
-        pricing_tier: event.opening_tier
-      )
+                             event: event,
+                             pricing_tier: event.opening_tier)
     end
-
 
     it 'is applied to the assigned package' do
       @registration.package = package
       @registration.save!
       @order = create(:order,
-        registration: @registration,
-        host: event,
-        user: @registration.attendee
-      )
+                      registration: @registration,
+                      host: event,
+                      user: @registration.attendee)
 
       add_to_order(@order, package)
       add_to_order(@order, discount)
@@ -65,10 +62,9 @@ describe Restraint do
       @registration.package = wrong_package = create(:package, initial_price: 34, event: event)
       @registration.save!
       order = create(:order,
-        registration: @registration,
-        host: event,
-        user: @registration.attendee
-      )
+                     registration: @registration,
+                     host: event,
+                     user: @registration.attendee)
 
       add_to_order(order, wrong_package)
       oli = add_to_order(order, discount)
@@ -86,10 +82,9 @@ describe Restraint do
       @registration.package = package
       @registration.save!
       @order = create(:order,
-        registration: @registration,
-        host: event,
-        user: @registration.attendee
-      )
+                      registration: @registration,
+                      host: event,
+                      user: @registration.attendee)
 
       add_to_order(@order, package)
 
@@ -102,10 +97,9 @@ describe Restraint do
       @registration.package = package
       @registration.save!
       @order = create(:order,
-        registration: @registration,
-        host: event,
-        user: @registration.attendee
-      )
+                      registration: @registration,
+                      host: event,
+                      user: @registration.attendee)
 
       add_to_order(@order, package)
       # add other stuff
@@ -120,15 +114,14 @@ describe Restraint do
       expected = competition.current_price
       expect(actual).to eq expected
     end
-
   end
 
-
   context 'a tier affects packages' do
-    let(:event){ create(:event) }
-    let(:package){ create(:package, event: event) }
-    let(:tier){ create(:pricing_tier, date: Date.yesterday,
-      event: event, increase_by_dollars: 11) }
+    let(:event) { create(:event) }
+    let(:package) { create(:package, event: event) }
+    let(:tier) { create(:pricing_tier, date: Date.yesterday,
+                                       event: event, increase_by_dollars: 11)
+    }
 
     before(:each) do
       # make sure all the cached relationships are up to date
@@ -157,11 +150,9 @@ describe Restraint do
           expect(actual).to eq expected
         end
       end
-
     end
 
     context 'with restraint' do
-
       before(:each) do
         create(:restraint, restrictable: package, dependable: tier)
       end

@@ -25,7 +25,7 @@ module Controllers
     def whitelistable_params(polymorphic: [], embedded: [])
       deserialized = deserialize_params(
         polymorphic: polymorphic,
-           embedded: embedded
+        embedded: embedded
       )
 
       whitelister = ActionController::Parameters.new(deserialized)

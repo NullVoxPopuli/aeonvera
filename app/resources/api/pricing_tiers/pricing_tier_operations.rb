@@ -1,7 +1,7 @@
+# frozen_string_literal: true
 module Api
   module PricingTierOperations
     class Create < SkinnyControllers::Operation::Base
-
       def run
         pricing_tier = PricingTier.new(model_params)
 
@@ -16,7 +16,6 @@ module Api
     end
 
     class Update < SkinnyControllers::Operation::Base
-
       def run
         if allowed?
           update
@@ -32,8 +31,6 @@ module Api
         pricing_tier.update(model_params)
         pricing_tier
       end
-
     end
-
   end
 end

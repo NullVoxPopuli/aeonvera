@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 RSpec.describe Api::HousingRequestsController, type: :controller do
@@ -44,7 +45,8 @@ RSpec.describe Api::HousingRequestsController, type: :controller do
       @housing_request = create(
         :housing_request,
         host: event,
-        preferred_gender_to_house_with: 'Robots')
+        preferred_gender_to_house_with: 'Robots'
+      )
     end
 
     it 'updates a housing request' do

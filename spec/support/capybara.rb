@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # require 'capybara/poltergeist'
 #
 # Capybara.server_port = 3001

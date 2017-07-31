@@ -1,26 +1,27 @@
+# frozen_string_literal: true
 require 'spec_helper'
 
 describe Api::OrderOperations::Update do
-  let(:klass){ Api::OrderOperations::Update }
+  let(:klass) { Api::OrderOperations::Update }
   # This is only for the parameter mapping
-  let(:controller){ Api::OrdersController.new }
-  let(:user){ create(:user) }
+  let(:controller) { Api::OrdersController.new }
+  let(:user) { create(:user) }
 
   context 'with the intent to pay' do
-    let(:event){ create_event }
-    let(:registration){ create(:registration, event: event) }
+    let(:event) { create_event }
+    let(:registration) { create(:registration, event: event) }
 
     context 'run' do
       it 'is not allowed' do
         order = create(:order,
-          host: event,
-          user: nil,
-          registration: registration,
-          payment_token: nil,
-          metadata: { name: 'a', email: 'a'})
+                       host: event,
+                       user: nil,
+                       registration: registration,
+                       payment_token: nil,
+                       metadata: { name: 'a', email: 'a' })
         operation = Api::OrderOperations::Update.new(nil, {
-          id: order.id, payment_method: 'Stripe'
-        })
+                                                       id: order.id, payment_method: 'Stripe'
+                                                     })
         allow(operation).to receive(:update)
 
         expect { operation.run }
@@ -29,12 +30,12 @@ describe Api::OrderOperations::Update do
 
       it 'is allowed' do
         order = create(:order,
-          host: event,
-          user: nil,
-          registration: registration,
-          payment_token: '123',
-          payment_method: 'Stripe',
-          metadata: { name: 'a', email: 'a'})
+                       host: event,
+                       user: nil,
+                       registration: registration,
+                       payment_token: '123',
+                       payment_method: 'Stripe',
+                       metadata: { name: 'a', email: 'a' })
         params = { id: order.id, payment_token: '123', payment_method: 'Stripe' }
         operation = Api::OrderOperations::Update.new(nil, params, params)
         allow(operation).to receive(:update)
@@ -55,15 +56,14 @@ describe Api::OrderOperations::Update do
 
         expect(@order.paid).to eq false
         operation = Api::OrderOperations::Update.new(@order.user, {
-          id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10,
-          checkout_token: 'cash' # doesn't super matter, cause the control flow is based
-          # on the payment_method (which is an actual property)
-        })
+                                                       id: @order.id, payment_method: Payable::Methods::CASH, paid_amount: 10,
+                                                       checkout_token: 'cash' # doesn't super matter, cause the control flow is based
+                                                       # on the payment_method (which is an actual property)
+                                                     })
         expect(operation).to receive(:pay).and_call_original
 
         expect { model = operation.run }
           .to change(ActionMailer::Base.deliveries, :count).by 1
-
       end
     end
 
@@ -112,7 +112,6 @@ describe Api::OrderOperations::Update do
       end
 
       context 'for a stripe order' do
-
         context 'only updates the model' do
           it 'when no checkout token is provided' do
             @params.delete(:checkout_token)
@@ -129,27 +128,22 @@ describe Api::OrderOperations::Update do
           end
         end
 
-
         it 'marks the order as paid' do
           order = @operation.run
           expect(order.paid?).to eq true
         end
       end
     end
-
-
   end
 
   context 'editing the contents of the order' do
-    let(:event){ create(:event) }
-    let(:package){ create(:package, event: event) }
-    let(:competition){ create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
-    let(:registration){ create(:registration, host: event, package: package, attendee: user) }
+    let(:event) { create(:event) }
+    let(:package) { create(:package, event: event) }
+    let(:competition) { create(:competition, event: event, kind: Competition::SOLO_JAZZ) }
+    let(:registration) { create(:registration, host: event, package: package, attendee: user) }
 
-    let(:order){ create(:order, host: event, user: user, registration: registration) }
-    let(:item1){ create(:order_line_item, order: order, line_item: package, price: package.current_price, quantity: 1) }
-    let(:item2){ create(:order_line_item, order: order, line_item: competition, price: competition.current_price, quantity: 1) }
+    let(:order) { create(:order, host: event, user: user, registration: registration) }
+    let(:item1) { create(:order_line_item, order: order, line_item: package, price: package.current_price, quantity: 1) }
+    let(:item2) { create(:order_line_item, order: order, line_item: competition, price: competition.current_price, quantity: 1) }
   end
-
-
 end

@@ -43,9 +43,9 @@ class LineItem::Shirt < LineItem
   end, foreign_key: :line_item_id
 
   ALL_SIZES = %w(XS S SM M L XL XXL XXXL).freeze
-  SIZES_KEY = 'sizes'.freeze
-  PRICES_KEY = 'prices'.freeze
-  INVENTORY_KEY = 'inventory'.freeze
+  SIZES_KEY = 'sizes'
+  PRICES_KEY = 'prices'
+  INVENTORY_KEY = 'inventory'
 
   # in array of available sizes
   # :metadata => {
@@ -116,5 +116,5 @@ class LineItem::Shirt < LineItem
     inventory.inject(0) { |r, (_k, v)| r + v.to_i }
   end
 
-  def initial_stock=(_v);end;
+  def initial_stock=(_v); end
 end

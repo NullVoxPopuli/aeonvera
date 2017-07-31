@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # == Schema Information
 #
 # Table name: line_items
@@ -38,7 +39,6 @@
 require 'rails_helper'
 
 describe LineItem::RaffleTicket do
-
   describe 'associations' do
     # when relationships get complicated... we unit test them.
     # that's how it works in real life, right?
@@ -63,7 +63,6 @@ describe LineItem::RaffleTicket do
         expect(items.first).to eq oli
       end
     end
-
 
     context 'orders' do
       it 'has orders' do
@@ -93,7 +92,6 @@ describe LineItem::RaffleTicket do
     end
 
     context 'purchasers' do
-
       it 'has purchasers' do
         skip('is there a way to make this work?')
         item = LineItem.new
@@ -126,9 +124,6 @@ describe LineItem::RaffleTicket do
         purchaser = item.purchasers.first
         expect(purchaser).to eq registration
       end
-
     end
-
   end
-
 end
