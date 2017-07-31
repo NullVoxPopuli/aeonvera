@@ -48,8 +48,8 @@ Metrics/PerceivedComplexity:
 
 Layout/AlignHash:
   Enabled: true
-  EnforcedHashRocketStyle: separator
-  EnforcedColonStyle: separator
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
 
 Layout/AlignParameters:
   EnforcedStyle: with_first_parameter

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 
 # require 'rails/all'
@@ -31,7 +32,6 @@ module AeonVera
 
     config.active_job.queue_adapter = :sidekiq
 
-
     config.cache_store = :redis_store, ENV['REDIS_URL'] if ENV['REDIS_URL']
     # Upgrading from rails 4.1.x to 4.2.x
     # Currently, Active Record suppresses errors raised within
@@ -56,11 +56,11 @@ module AeonVera
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
 
     config.autoload_paths += [config.root.join('lib')]
-    config.autoload_paths += %W(#{config.root}/app/services)
-    config.autoload_paths += %W(#{config.root}/app/core)
-    config.autoload_paths += %W(#{config.root}/app/resources/concerns)
-    config.autoload_paths += %W(#{config.root}/app/resources/concerns/serialization)
-    config.autoload_paths += %W(#{config.root}/app/models/data)
+    config.autoload_paths += %W[#{config.root}/app/services]
+    config.autoload_paths += %W[#{config.root}/app/core]
+    config.autoload_paths += %W[#{config.root}/app/resources/concerns]
+    config.autoload_paths += %W[#{config.root}/app/resources/concerns/serialization]
+    config.autoload_paths += %W[#{config.root}/app/models/data]
 
     config.generators do |g|
       g.test_framework :rspec
@@ -99,9 +99,9 @@ module AeonVera
       allow do
         origins '*'
         resource '*',
-          headers: :any,
-          methods: [:get, :post, :patch, :delete, :put, :options, :head],
-          credentials: true
+                 headers: :any,
+                 methods: [:get, :post, :patch, :delete, :put, :options, :head],
+                 credentials: false
       end
     end
   end

@@ -194,10 +194,6 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.5)
       mime-types (>= 1.16, < 4)
-    meta_instance (1.0.2)
-    metahash-rb (1.2.0)
-      activerecord (>= 3.0.0)
-      meta_instance
     method_source (0.8.2)
     mime-types (2.99.3)
     mimemagic (0.3.1)
@@ -440,9 +436,9 @@ DEPENDENCIES
   goldiloader
   i18n
   jsonapi-parser
+  jsonapi-renderer (= 0.1.2)
   letter_opener_web
   mail
-  metahash-rb
   oj
   oj_mimic_json
   paperclip (~> 5.0.0.beta2)
