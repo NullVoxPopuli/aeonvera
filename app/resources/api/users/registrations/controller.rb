@@ -5,6 +5,19 @@ module Api
     class RegistrationsController < APIController
       include SkinnyControllers::Diet
 
+      DEFAULT_INCLUDES = { orders: [:order_line_items] }.freeze
+
+      # TODO: compare with params[:fields]
+      ALLOWED_FIELDS = [
+        registration: Users::RegistrationSerializer::ATTRIBUTES,
+        level: [:id, :name],
+        order: OrderSerializer::BUYER_FIELDS,
+        housing_request: {},
+        housing_provision: HousingProvisionSerializer::PUBLIC_FIELDS,
+        shirt: ShirtSerializer::PUBLIC_FIELDS,
+        package: PackageSerializer::PUBLIC_FIELDS
+      ].freeze
+
       before_filter :must_be_logged_in
 
       def create
@@ -23,23 +36,29 @@ module Api
                 .result
 
         render(
-          jsonapi:         model,
+          jsonapi: model,
           # TODO: come up with a way to whitelist includes
-          includes:        [orders: [:order_line_items]],
+          includes: params[:include] || DEFAULT_INCLUDES,
+          fields: params[:fields] || ALLOWED_FIELDS,
           each_serializer: ::Api::Users::RegistrationSerializer
         )
       end
 
       def show
-        registration = current_user
-                       .registrations
-                       .includes(orders: [:order_line_items])
-                       .find(params[:id])
+        model = current_user
+                .registrations
+                .includes(orders: [:order_line_items])
+                .find(params[:id])
 
-        render(
-          jsonapi: registration,
-          serializer: ::Api::Users::RegistrationSerializer
-        )
+        json = ActiveModelSerializers::SerializableResource.new(
+          model,
+          include: params[:include] || DEFAULT_INCLUDES,
+          fields: params[:fields] || ALLOWED_FIELDS,
+          serializer: ::Api::Users::RegistrationSerializer,
+          adapter: :json_api
+        ).serializable_hash
+
+        render(json: json)
       end
 
       def destroy

@@ -1,9 +1,31 @@
 # frozen_string_literal: true
+
 module Api
   class OrderSerializer < ActiveModel::Serializer
     include Rails.application.routes.url_helpers
 
     type 'orders'
+
+    BUYER_ATTRIBUTES = [
+      :id,
+      :is_fee_absorbed,
+      :paid_amount, :total_fee_amount,
+      :paid, :payment_method,
+      :host_name, :host_url,
+      :created_at, :user_email, :user_name,
+      :payment_received_at,
+      :total_in_cents,
+      :total, :sub_total,
+      :check_number,
+      :notes,
+      :stripe_refunds,
+      :current_paid_amount,
+      :current_total_fee_amount
+    ].freeze
+
+    BUYER_RELATIONSHIPS = [:host, :order_line_items, :pricing_tier, :registration].freeze
+
+    BUYER_FIELDS = Array[*BUYER_ATTRIBUTES, *BUYER_RELATIONSHIPS]
 
     attributes :id,
                :host_id, :host_type,
@@ -24,7 +46,7 @@ module Api
 
     # never render the payment_token
 
-    has_many :order_line_items do
+    has_many :order_line_items, eath_serializer: ::Api::OrderLineItemSerializer do
       link(:related) { href api_order_order_line_items_path(order_id: object.id) }
       include_data true
       object.order_line_items.loaded? ? object.order_line_items : OrderLineItem.none

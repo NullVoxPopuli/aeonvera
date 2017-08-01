@@ -2,55 +2,56 @@
 
 module Api
   module Users
-    class RegistrationSerializer < ActiveModel::Serializer
+    class RegistrationSerializer < ApplicationResource
       type 'users/registrations'
 
-      attributes :id,
+      ATTRIBUTES = [
+        :id,
+        :attendee_name, :attendee_email, :dance_orientation,
+        :attendee_first_name, :attendee_last_name,
+        :amount_owed, :amount_paid, :registered_at,
+        :checked_in_at, :is_checked_in,
+        :level_name,
+        :interested_in_volunteering,
+        :city, :state, :zip, :phone_number,
+        :event_begins_at, :is_attending,
+        :url
+      ].freeze
+
+      RELATIONSHIPS = [
+        :event, :orders, :unpaid_order,
+        :level,
+        :custom_field_responses,
+        :housing_request, :housing_provision
+      ].freeze
+
+      FIELDS = Array[*ATTRIBUTES, *RELATIONSHIPS]
+
+      attributes(:id,
                  :attendee_name, :attendee_email, :dance_orientation,
                  :attendee_first_name, :attendee_last_name,
-                 :amount_owed, :amount_paid, :registered_at,
-                 :checked_in_at, :is_checked_in,
-                 :level_name,
+                 :amount_owed,
+                 :checked_in_at,
                  :interested_in_volunteering,
-                 :city, :state, :zip, :phone_number,
-                 :event_begins_at, :is_attending,
-                 :url
+                 :city, :state, :zip, :phone_number)
 
-      has_one :housing_request
-      has_one :housing_provision
-      has_many :custom_field_responses
+      attribute(:event_begins_at) { @object.event&.starts_at }
+      attribute(:url) { @object.host.url }
+      attribute(:registered_at) { @object.created_at }
+      attribute(:level_name) { @object.try(:level).try(:name) }
+      attribute(:amount_paid) { @object.paid_amount }
+      attribute(:is_attending) { @object.attending? }
+      attribute(:is_checked_in) { !!@object.checked_in_at }
 
-      has_many :orders
-      belongs_to :event, serializer: ::Api::EventSerializer
-      belongs_to :level, serializer: ::Api::LevelSerializer
-      belongs_to :unpaid_order
-      def is_attending
-        object.attending?
-      end
+      has_one :housing_request, class: ::Api::HousingRequestSerializer
+      has_one :housing_provision, class: ::Api::HousingProvisionSerializer
+      has_many :custom_field_responses, class: ::Api::CustomFieldSerializer
 
-      def amount_paid
-        object.paid_amount
-      end
+      belongs_to :event, class: ::Api::EventSerializer
+      belongs_to :level, class: ::Api::LevelSerializer
 
-      def registered_at
-        object.created_at
-      end
-
-      def level_name
-        object.try(:level).try(:name)
-      end
-
-      def event_begins_at
-        object.event&.starts_at
-      end
-
-      def is_checked_in
-        !!object.checked_in_at
-      end
-
-      def url
-        object.host.url
-      end
+      belongs_to :unpaid_order, class: ::Api::OrderSerializer
+      has_many :orders, class: ::Api::OrderSerializer
     end
   end
 end

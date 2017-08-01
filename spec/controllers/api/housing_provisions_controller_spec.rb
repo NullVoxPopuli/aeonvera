@@ -27,7 +27,7 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
             registration: {
               data: {
                 id: @registration.id,
-                type: 'registrations'
+                type: 'users/registrations'
               }
             },
             host: {
