@@ -1,7 +1,18 @@
 # frozen_string_literal: true
+
 module Api
   class CompetitionSerializer < ActiveModel::Serializer
     include PublicAttributes::CompetitionAttributes
+
+    PUBLIC_ATTRIBUTES = [:id, :name,
+                         :initial_price, :at_the_door_price, :current_price,
+                         :kind, :kind_name,
+                         :requires_orientation, :requires_partner,
+                         :description, :nonregisterable].freeze
+
+    PUBLIC_RELATIONSHIPS = [:event].freeze
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
+
     attributes :number_of_follows, :number_of_leads, :number_of_registrants
 
     # this mess is for getting the minimum data for a competition overview. gross.

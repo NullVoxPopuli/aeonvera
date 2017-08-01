@@ -1,7 +1,17 @@
 # frozen_string_literal: true
+
 module Api
   class DiscountSerializer < ActiveModel::Serializer
     include PublicAttributes::DiscountAttributes
+
+    PUBLIC_ATTRIBUTES = [:id, :code,
+                         :amount, :kind, :discount_type,
+                         :disabled,
+                         :applies_to,
+                         :requires_student_id].freeze
+
+    PUBLIC_RELATIONSHIPS = [:host].freeze
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
 
     attributes :package_ids
 

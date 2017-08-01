@@ -4,6 +4,10 @@ module Api
     include PublicAttributes::LineItemAttributes
     include SharedAttributes::Stock
 
+    PUBLIC_ATTRIBUTES = Array[*LineItemSerializer::PUBLIC_ATTRIBUTES, :sizes]
+    PUBLIC_RELATIONSHIPS = LineItemSerializer::PUBLIC_RELATIONSHIPS
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
+
     type 'shirts'
     attributes :sizes
 

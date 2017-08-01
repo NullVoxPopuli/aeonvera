@@ -1,20 +1,37 @@
 # frozen_string_literal: true
+
 module Api
   class HostsController < APIController
     SHARED_RELATIONSHIPS       = 'integrations,'
     EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount,sponsorships.sponsor'
     ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'
+    PUBLIC_EVENT_FIELDS = {
+      integrations: IntegrationSerializer::PUBLIC_FIELDS,
+      opening_tier: PricingTierSerializer::PUBLIC_FIELDS,
+      current_tier: PricingTierSerializer::PUBLIC_FIELDS,
+      custom_fields: CustomFieldSerializer::PUBLIC_FIELDS,
+      line_items: LineItemSerializer::PUBLIC_FIELDS,
+      shirts: ShirtSerializer::PUBLIC_FIELDS,
+      packages: PackageSerializer::PUBLIC_FIELDS,
+      levels: LevelSerializer::PUBLIC_FIELDS,
+      competitions: CompetitionSerializer::PUBLIC_FIELDS
+      # sponsorships: merged_fieldset(SponsorshipSerializer::PUBLIC_FIELDS, {
+      #                                 discount: DiscountSerializer::PUBLIC_FIELDS,
+      #                                 sponsor: [:id, :name]
+      #                               })
+    }.freeze
 
     before_action :ensure_host
 
     # TODO: is this ever used?
     def index
-      render json: [host_from_subdomain], each_serializer: each_serializer
+      render jsonapi: [host_from_subdomain], each_serializer: each_serializer
     end
 
     def show
-      render json: host_from_subdomain,
+      render jsonapi: host_from_subdomain,
              include: include_string,
+             fields: fields,
              serializer: each_serializer
     end
 
@@ -60,6 +77,15 @@ module Api
           EVENT_RELATIONSHIPS
         end
       )
+    end
+
+    def fields
+      klass = host_from_subdomain.class
+      if klass == Organization
+        {}
+      else
+        PUBLIC_EVENT_FIELDS
+      end
     end
   end
 end

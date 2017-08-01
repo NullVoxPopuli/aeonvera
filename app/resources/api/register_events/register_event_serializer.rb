@@ -24,7 +24,9 @@ module Api
     end
 
     class CustomFieldSerializer < ActiveModel::Serializer
-      include PublicAttributes::CustomFieldAttributes
+      attributes(::Api::CustomFieldSerializer::PUBLIC_ATTRIBUTES)
+
+      belongs_to :host
     end
   end
 end

@@ -31,4 +31,13 @@ class APIController < ActionController::Base
     return unless current_user && current_user.time_zone.present?
     Time.zone = current_user.time_zone
   end
+
+  def self.merged_fieldset(source, hash)
+    keys = hash.keys
+    fields = source.dup
+    fields.delete_if { |k, _v| keys.include?(k) }
+
+    fields.push(hash)
+    fields
+  end
 end

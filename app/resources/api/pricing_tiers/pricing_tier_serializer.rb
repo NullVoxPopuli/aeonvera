@@ -1,8 +1,14 @@
 # frozen_string_literal: true
+
 module Api
   class PricingTierSerializer < ActiveModel::Serializer
     include PublicAttributes::PricingTierAttributes
-    attributes :number_of_leads, :number_of_follows
+
+    PUBLIC_ATTRIBUTES = [:id, :increase_by_dollars, :date, :registrants, :is_opening_tier].freeze
+    PUBLIC_RELATIONSHIPS = [:event].freeze
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
+
+    attributes(*PUBLIC_FIELDS, :number_of_leads, :number_of_follows)
 
     has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
     belongs_to :event

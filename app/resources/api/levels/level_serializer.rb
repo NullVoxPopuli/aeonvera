@@ -1,7 +1,16 @@
 # frozen_string_literal: true
+
 module Api
   class LevelSerializer < ActiveModel::Serializer
     include PublicAttributes::LevelAttributes
+
+    PUBLIC_ATTRIBUTES = [:id, :event_id,
+                         :name, :description,
+                         :requirement].freeze
+
+    PUBLIC_RELATIONSHIPS = [:event].freeze
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
+
     attributes :number_of_leads, :number_of_follows
 
     belongs_to :event

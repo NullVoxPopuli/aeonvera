@@ -3,7 +3,7 @@
 module Api
   module Users
     class RegistrationSerializer < ActiveModel::Serializer
-      type 'registrations'
+      type 'users/registrations'
 
       attributes :id,
                  :attendee_name, :attendee_email, :dance_orientation,
@@ -11,14 +11,10 @@ module Api
                  :amount_owed, :amount_paid, :registered_at,
                  :checked_in_at, :is_checked_in,
                  :level_name,
-                 :event_id, :level_id,
                  :interested_in_volunteering,
-                 :city, :state, :zip, :phone_number
-
-      # class HousingRequestSerializer < ActiveModel::Serializer
-      # end
-      # class HousingProvisionSerializer < ActiveModel::Serializer
-      # end
+                 :city, :state, :zip, :phone_number,
+                 :event_begins_at, :is_attending,
+                 :url
 
       has_one :housing_request
       has_one :housing_provision
@@ -28,6 +24,9 @@ module Api
       belongs_to :event, serializer: ::Api::EventSerializer
       belongs_to :level, serializer: ::Api::LevelSerializer
       belongs_to :unpaid_order
+      def is_attending
+        object.attending?
+      end
 
       def amount_paid
         object.paid_amount
@@ -37,20 +36,20 @@ module Api
         object.created_at
       end
 
-      # def package_name
-      #   object.try(:package).try(:name)
-      # end
-
       def level_name
         object.try(:level).try(:name)
+      end
+
+      def event_begins_at
+        object.event&.starts_at
       end
 
       def is_checked_in
         !!object.checked_in_at
       end
 
-      def event_id
-        object.host_id
+      def url
+        object.host.url
       end
     end
   end
