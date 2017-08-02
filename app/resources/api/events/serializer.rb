@@ -32,5 +32,6 @@ module Api
     attribute(:logo_url) { @object.logo.url(:original) }
 
     has_many :registrations, class: Users::RegistrationSerializer
+    has_many :opening_tier, class: PricingTierSerializer
   end
 end
