@@ -14,6 +14,14 @@ module Controllers
 
     protected
 
+    def success_renderer
+      @success_renderer ||= JSONAPI::Serializable::SuccessRenderer.new
+    end
+
+    def error_renderer
+      @error_renderer ||= JSONAPI::Serializable::ErrorRenderer.new
+    end
+
     def render_jsonapi_model(model, options: {}, succeeded: nil)
       succeeded ||= model.respond_to?(:errors) ? model.errors.blank? : succeeded
 

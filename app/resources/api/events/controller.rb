@@ -8,19 +8,18 @@ module Api
 
     def show
       params[:fields] = {
-        events: [ :opening_tier, :current_tier, :integrations, :sponsorships ],
-        levels: [:id, :name, :requirement, :description] }
+        # events: [:opening_tier, :current_tier, :integrations, :sponsorships],
+        levels: [:id, :name, :requirement, :description]
+      }
 
       model = EventOperations::Read.new(current_user, params).run
-      json = ActiveModelSerializers::SerializableResource.new(
-        model,
-        include: params[:include],
-        fields: params[:fields],
-        adapter: :json_api,
-        serializer: EventSerializer
-      ).serializable_hash
+      hash = success_renderer
+             .render(model,
+                     include: params[:include],
+                     fields: params[:fields],
+                     class: EventSerializableResource)
 
-      render json: json
+      render json: hash
     end
 
     private

@@ -1,13 +1,17 @@
 # frozen_string_literal: true
+
 module Api
   class EventSummariesController < APIController
-    include SetsEvent
-
     def show
-      render json: @event,
-             serializer: EventSummarySerializer,
-             root: :event_summaries,
-             include: params[:include]
+      model = EventSummaryOperations::Read
+              .run(current_user, { event_id: params[:id] })
+      hash = success_renderer
+             .render(model,
+                     include: 'registrations',
+                     expose: { current_user: current_user },
+                     class: EventSummarySerializableResource)
+
+      render json: hash
     end
-end
+  end
 end

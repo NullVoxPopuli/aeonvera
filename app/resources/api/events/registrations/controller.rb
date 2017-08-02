@@ -13,12 +13,12 @@ module Api
                 .ransack(params[:q])
                 .result
 
-        render(
-          jsonapi:         model,
-          # TODO: come up with a way to whitelist includes
-          includes:        params[:include],
-          each_serializer: ::Api::Events::RegistrationSerializer
-        )
+        hash = success_renderer
+               .render(model,
+                       include: params[:include],
+                       class: ::Api::Events::RegistrationSerializableResource)
+
+        render json: hash
       end
 
       def checkin

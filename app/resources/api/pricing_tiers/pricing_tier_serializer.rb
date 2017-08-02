@@ -8,7 +8,7 @@ module Api
     PUBLIC_RELATIONSHIPS = [:event].freeze
     PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
 
-    attributes(*PUBLIC_FIELDS, :number_of_leads, :number_of_follows)
+    attributes(*PUBLIC_ATTRIBUTES, :number_of_leads, :number_of_follows)
 
     has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
     belongs_to :event
