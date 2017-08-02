@@ -13,7 +13,7 @@ module Api
                          :housing_request, :housing_provision,
                          orders: [
                            order_line_items: [
-                             line_item: [:restraints]
+                             line_item: [:order_line_items]
                            ]
                          ]
                        ).find(params[:id])

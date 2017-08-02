@@ -10,8 +10,8 @@ module Api
 
         Event
           .includes(
-            registrations: [orders: [order_line_items: [:line_item]]],
-            orders: [order_line_items: [:line_item]])
+            registrations: [orders: [order_line_items: [line_item: [:order_line_items]]]],
+            orders: [order_line_items: [line_item: [:order_line_items]]])
           .find(event.id)
       end
     end

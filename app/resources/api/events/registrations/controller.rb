@@ -21,6 +21,17 @@ module Api
         render json: hash
       end
 
+      def show
+        model = RegistrationOperations::Read.run(current_user, params)
+
+        hash = success_renderer
+               .render(model,
+                       include: params[:include],
+                       class: ::Api::Events::RegistrationSerializableResource)
+
+        render json: hash
+      end
+
       def checkin
         render_model
       end

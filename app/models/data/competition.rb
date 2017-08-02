@@ -55,10 +55,12 @@ class Competition < ApplicationRecord
   def requires_orientation?
     [JACK_AND_JILL, CROSSOVER_JACK_AND_JILL].include?(kind)
   end
+  alias_method :requires_orientation, :requires_orientation?
 
   def requires_partner?
     kind == STRICTLY
   end
+  alias_method :requires_partner, :requires_partner?
 
   def current_price
     initial_price
