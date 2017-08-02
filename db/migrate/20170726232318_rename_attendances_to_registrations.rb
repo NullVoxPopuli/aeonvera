@@ -20,8 +20,6 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
 
     drop_table :attendances_discounts
     drop_table :competition_responses
-
-    set_type
   end
 
   def down
@@ -42,9 +40,5 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
     add_index "attendances", ["attendee_id"], name: "index_attendances_on_attendee_id", using: :btree
     add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree
     add_index "attendances", ["host_id", "host_type"], name: "index_attendances_on_host_id_and_host_type", using: :btree
-  end
-
-  def set_type
-    Registration.update_all(registration_type: Registration.name )
   end
 end

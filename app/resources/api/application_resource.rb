@@ -2,6 +2,5 @@
 
 module Api
   class ApplicationResource < JSONAPI::Serializable::Resource
-    # make compatible with AMS here
   end
 end

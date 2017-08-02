@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require 'jsonapi/serializable'
+
 class APIController < ActionController::Base
   include Controllers::CurrentUser
   include Controllers::JsonApiErrors

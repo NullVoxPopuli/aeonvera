@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class EventsController < Api::ResourceController
     def index
@@ -6,8 +7,20 @@ module Api
     end
 
     def show
-      params[:fields] = { levels: [:id, :name, :requirement, :description] }
-      super
+      params[:fields] = {
+        events: [ :opening_tier, :current_tier, :integrations, :sponsorships ],
+        levels: [:id, :name, :requirement, :description] }
+
+      model = EventOperations::Read.new(current_user, params).run
+      json = ActiveModelSerializers::SerializableResource.new(
+        model,
+        include: params[:include],
+        fields: params[:fields],
+        adapter: :json_api,
+        serializer: EventSerializer
+      ).serializable_hash
+
+      render json: json
     end
 
     private

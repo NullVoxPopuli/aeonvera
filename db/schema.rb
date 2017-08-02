@@ -434,7 +434,6 @@ ActiveRecord::Schema.define(version: 20170726232318) do
     t.boolean  "attending",                              default: true, null: false
     t.string   "dance_orientation",          limit: 255
     t.string   "host_type",                  limit: 255
-    t.string   "registration_type",          limit: 255
     t.string   "transferred_to_name"
     t.integer  "transferred_to_user_id"
     t.datetime "transferred_at"

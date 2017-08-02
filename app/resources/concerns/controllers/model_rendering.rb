@@ -26,9 +26,13 @@ module Controllers
         render(
           DEFAULT_ERROR_OPTIONS
             .merge(options)
-            .merge(jsonapi: model.errors)
+            .merge(json: model.errors)
         )
       end
+    end
+
+    def render_jsonapi(model, options)
+      render({ json: model }.merge(options))
     end
 
     def render_model(include_param = nil, success_status: 200)

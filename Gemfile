@@ -49,7 +49,8 @@ gem 'api_cache', github: 'NullVoxPopuli/api_cache'
 # gem 'active_model_serializers', github: 'bf4/active_model_serializers', branch: 'smarter_association_id_lookup'
 gem 'active_model_serializers', '0.10.5'
 # held back due to JSONAPI document validations - Not every endpoint is JSONAPI
-gem 'jsonapi-renderer', '0.1.2'
+# gem 'jsonapi-renderer', '0.1.2'
+gem 'jsonapi-rb'
 
 gem 'oj'
 gem 'oj_mimic_json'
