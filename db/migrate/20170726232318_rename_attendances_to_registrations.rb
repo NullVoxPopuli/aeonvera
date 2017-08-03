@@ -20,9 +20,17 @@ class RenameAttendancesToRegistrations < ActiveRecord::Migration
 
     drop_table :attendances_discounts
     drop_table :competition_responses
+
+    CustomFieldResponse
+      .where(writer_type: 'Attendance')
+      .update_all(writer_type: 'Registration')
   end
 
   def down
+    CustomFieldResponse
+      .where(writer_type: 'Registration')
+      .update_all(writer_type: 'Attendance')
+
     rename_column :passes, :registration_id, :attendance_id
     rename_column :orders, :registration_id, :attendance_id
 

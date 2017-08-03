@@ -14,6 +14,10 @@ module Controllers
 
     protected
 
+    def success(resource, options = {})
+      success_renderer.render(resource, options)
+    end
+
     def success_renderer
       @success_renderer ||= JSONAPI::Serializable::SuccessRenderer.new
     end

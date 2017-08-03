@@ -245,12 +245,33 @@ class Event < ApplicationRecord
   end
 
   def shirts_sold
-    orders
-      .paid
-      .joins(:order_line_items)
-      .where(order_line_items: { line_item_type: LineItem::Shirt.name })
-      .map(&:order_line_items).flatten
-      .inject(0) { |total, oli| total + oli.quantity }
+    order_ids = orders.paid.pluck(:id)
+
+    OrderLineItem
+      .where(line_item_type: LineItem::Shirt.name, order_id: order_ids)
+      .pluck(:quantity)
+      .sum
+  end
+
+  # TODO: Extract Presenter
+  def number_of_housing_requests
+    @num_housing_requests ||= housing_requests.count(:id)
+  end
+
+  def number_of_housing_provisions
+    @num_housing_provisions ||= housing_provisions.pluck(:housing_capacity).sum || 0
+  end
+
+  def number_of_fulfilled_housing_requests
+    @number_of_fulfilled_housing_requests ||= begin
+      housing_provision_id = HousingRequest.arel_table[:housing_provision_id]
+
+      housing_requests.where(housing_provision_id.not_eq(nil)).count(:id)
+    end
+  end
+
+  def number_of_remaining_housing_requests
+    @num_remaining_housing_requests ||= housing_requests.where(housing_provision_id: nil).count(:id)
   end
 
   def shirts_available?

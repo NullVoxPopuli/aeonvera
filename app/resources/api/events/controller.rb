@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class EventsController < Api::ResourceController
+  class EventsController < ResourceController
     def index
       show
     end
