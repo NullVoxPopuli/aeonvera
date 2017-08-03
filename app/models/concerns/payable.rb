@@ -132,7 +132,7 @@ module Payable
       remaining_discounts << discount
     end
 
-    valid_order_line_items = order_line_items.select(&:valid?)
+    valid_order_line_items = order_line_items
     valid_order_line_items.each do |order_line_item|
       if order_line_item.line_item_type.include?('Discount')
         object = order_line_item.line_item

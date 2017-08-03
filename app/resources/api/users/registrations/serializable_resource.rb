@@ -26,8 +26,7 @@ module Api
 
       FIELDS = Array[*ATTRIBUTES, *RELATIONSHIPS]
 
-      attributes(:id,
-                 :attendee_name, :attendee_email, :dance_orientation,
+      attributes(:attendee_name, :attendee_email, :dance_orientation,
                  :attendee_first_name, :attendee_last_name,
                  :amount_owed,
                  :checked_in_at,
