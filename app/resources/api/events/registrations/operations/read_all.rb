@@ -14,7 +14,7 @@ module Api
                  :package, :level,
                  :custom_field_responses,
                  :housing_request, :housing_provision,
-                 orders: [order_line_items: [:order, :line_item]]
+                 orders: [order_line_items: [:order]]
                )
         end
       end

@@ -9,7 +9,10 @@ module Api
     def show
       params[:fields] = {
         # events: [:opening_tier, :current_tier, :integrations, :sponsorships],
-        levels: [:id, :name, :requirement, :description]
+        levels: [:id, :name, :requirement, :description],
+        'opening-tiers': [:date, :registrants, :increase_by_dollars, :is_opening_tier],
+        'pricing-tiers': [:date, :registrants, :increase_by_dollars, :is_opening_tier]
+
       }
 
       model = EventOperations::Read.new(current_user, params).run

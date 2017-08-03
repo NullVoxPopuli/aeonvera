@@ -84,7 +84,7 @@ class Registration < ApplicationRecord
   end
 
   has_many :custom_field_responses, as: :writer, dependent: :destroy
-  has_many :orders
+  has_many :orders, -> { includes(:order_line_items) }
   has_many :order_line_items, through: :orders
   has_many :purchased_items,
            through: :order_line_items,

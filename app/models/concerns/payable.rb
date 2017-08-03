@@ -133,16 +133,17 @@ module Payable
     end
 
     valid_order_line_items = order_line_items.select(&:valid?)
-    valid_order_line_items.each do |line_item|
-      if (object = line_item.line_item).is_a?(Discount)
+    valid_order_line_items.each do |order_line_item|
+      if order_line_item.line_item_type.include?('Discount')
+        object = order_line_item.line_item
         amount = amount_after_discount(
           amount,
           object,
-          order_line_item: line_item,
+          order_line_item: order_line_item,
           discounts_to_apply_at_end: discounts_to_apply_at_end
         )
       else
-        amount += (line_item.price * line_item.quantity)
+        amount += (order_line_item.price * order_line_item.quantity)
       end
     end
 
