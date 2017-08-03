@@ -12,6 +12,7 @@ gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
 gem 'attr_encrypted' # column encryption
+gem 'sqreen' # security
 
 # type checking
 gem 'rtype'

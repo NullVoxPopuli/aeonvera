@@ -6,6 +6,7 @@ module Api
     EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount,sponsorships.sponsor'
     ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'
     PUBLIC_EVENT_FIELDS = {
+      event: EventFields::PUBLIC_FIELDS,
       integrations: IntegrationSerializer::PUBLIC_FIELDS,
       opening_tier: PricingTierSerializer::PUBLIC_FIELDS,
       current_tier: PricingTierSerializer::PUBLIC_FIELDS,
@@ -13,7 +14,7 @@ module Api
       line_items: LineItemSerializer::PUBLIC_FIELDS,
       shirts: ShirtSerializer::PUBLIC_FIELDS,
       packages: PackageSerializer::PUBLIC_FIELDS,
-      levels: LevelSerializer::PUBLIC_FIELDS,
+      levels: LevelFields::PUBLIC_FIELDS,
       competitions: CompetitionSerializer::PUBLIC_FIELDS
       # sponsorships: merged_fieldset(SponsorshipSerializer::PUBLIC_FIELDS, {
       #                                 discount: DiscountSerializer::PUBLIC_FIELDS,
@@ -25,14 +26,14 @@ module Api
 
     # TODO: is this ever used?
     def index
-      render jsonapi: [host_from_subdomain], each_serializer: each_serializer
+      render json: success([host_from_subdomain], class: each_serializer)
     end
 
     def show
-      render jsonapi: host_from_subdomain,
-             include: include_string,
-             fields: fields,
-             serializer: each_serializer
+      render json: success(host_from_subdomain,
+                           include: include_string,
+                           fields: fields,
+                           class: each_serializer)
     end
 
     private
@@ -53,9 +54,9 @@ module Api
       klass = host_from_subdomain.class
 
       if klass == Event
-        RegisterEventSerializer
+        EventSerializableResource
       else
-        OrganizationSerializer
+        OrganizationSerializableResource
       end
     end
 

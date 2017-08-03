@@ -8,25 +8,27 @@ module Api
       DEFAULT_INCLUDES = { orders: [:order_line_items] }.freeze
 
       # TODO: compare with params[:fields]
-      ALLOWED_FIELDS = [
+      ALLOWED_FIELDS = {
         registration: Users::RegistrationSerializer::ATTRIBUTES,
-        level: [:id, :name],
+        level: LevelFields::PUBLIC_ATTRIBUTES,
         order: OrderSerializer::BUYER_FIELDS,
-        housing_request: {},
+        housing_request: [],
         housing_provision: HousingProvisionSerializer::PUBLIC_FIELDS,
         shirt: ShirtSerializer::PUBLIC_FIELDS,
         package: PackageSerializer::PUBLIC_FIELDS
-      ].freeze
+      }.freeze
 
       before_filter :must_be_logged_in
 
+      self.serializer = ::Api::Users::RegistrationSerializableResource
+
       def create
-        render_model('housing_request,housing_provision,custom_field_responses')
+        render_model('housing_request,housing_provision,custom_field_responses', jsonapi: true)
       end
 
       def update
         params[:fields] = { registration: {} }
-        render_model('housing_request,housing_provision,custom_field_responses')
+        render_model('housing_request,housing_provision,custom_field_responses', jsonapi: true)
       end
 
       def index
@@ -35,13 +37,11 @@ module Api
                 .ransack(params[:q])
                 .result
 
-        render(
-          jsonapi: model,
-          # TODO: come up with a way to whitelist includes
-          includes: params[:include] || DEFAULT_INCLUDES,
-          fields: params[:fields] || ALLOWED_FIELDS,
-          each_serializer: ::Api::Users::RegistrationSerializer
-        )
+        render json: success(model,
+                             # TODO: come up with a way to whitelist includes
+                             includes: params[:include] || DEFAULT_INCLUDES,
+                             fields: params[:fields] || ALLOWED_FIELDS,
+                             class: ::Api::Users::RegistrationSerializableResource)
       end
 
       def show
@@ -50,15 +50,10 @@ module Api
                 .includes(orders: [:order_line_items])
                 .find(params[:id])
 
-        json = ActiveModelSerializers::SerializableResource.new(
-          model,
-          include: params[:include] || DEFAULT_INCLUDES,
-          fields: params[:fields] || ALLOWED_FIELDS,
-          serializer: ::Api::Users::RegistrationSerializer,
-          adapter: :json_api
-        ).serializable_hash
-
-        render(json: json)
+        render json: success(model,
+                             include: params[:include] || DEFAULT_INCLUDES,
+                             fields: params[:fields] || ALLOWED_FIELDS,
+                             class: ::Api::Users::RegistrationSerializableResource)
       end
 
       def destroy

@@ -4,4 +4,5 @@ require 'drawers'
 
 Drawers.resource_suffixes = [*Drawers::DEFAULT_RESOURCE_SUFFIXES,
                              'SerializableResource',
-                             'Presenter']
+                             'Presenter',
+                             'Fields']

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Controllers
   module ModelRendering
     extend ActiveSupport::Concern
@@ -47,26 +48,42 @@ module Controllers
       render({ json: model }.merge(options))
     end
 
-    def render_model(include_param = nil, success_status: 200)
+    def render_model(include_param = nil, success_status: 200, jsonapi: false)
       render_json_response(
         include_param,
         success_status,
-        ->(model) { model.errors.present? }
+        ->(model) { model.errors.present? },
+        jsonapi: jsonapi
       )
     end
 
-    def render_models(include_param = nil, success_status: 200)
+    def render_models(include_param = nil, success_status: 200, jsonapi: false)
       render_json_response(
         include_param,
         success_status,
-        ->(model) { model.respond_to?(:errors) && model.errors.present? }
+        ->(model) { model.respond_to?(:errors) && model.errors.present? },
+        jsonapi: jsonapi
       )
     end
 
-    def render_json_response(include_param, success_status = 200, error_condition = nil)
+    def render_json_response(include_param, success_status = 200, error_condition = nil, jsonapi: false)
       raise ActiveRecord::RecordNotFound if model.nil?
 
       return render_jsonapi_error(model) if error_present?(error_condition, model)
+
+      if jsonapi
+        render_options = {
+          fields: params[:fields] || {},
+          include: include_param
+        }
+
+        render_options[:class] = self.class.serializer if self.class.serializer
+
+        return render(
+          status: success_status,
+          json: success(model, render_options)
+        )
+      end
 
       options = {
         jsonapi: model,

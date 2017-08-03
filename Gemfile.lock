@@ -196,6 +196,7 @@ GEM
       actionmailer (>= 3.2)
       letter_opener (~> 1.0)
       railties (>= 3.2)
+    libv8 (3.16.14.19)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.5)
@@ -293,6 +294,7 @@ GEM
       redis-store (>= 1.2, < 2)
     redis-store (1.3.0)
       redis (>= 2.2)
+    ref (2.0.0)
     reform (2.2.4)
       disposable (>= 0.4.1)
       representable (>= 2.4.0, < 3.1.0)
@@ -391,6 +393,9 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    sqreen (1.7.2)
+      execjs (>= 0.3.0)
+      therubyracer
     stripe (1.41.0)
       rest-client (~> 1.4)
     stripe-ruby-mock (2.2.4)
@@ -398,6 +403,9 @@ GEM
       jimson-temp
       stripe (>= 1.31.0, < 1.42)
     temple (0.7.7)
+    therubyracer (0.12.3)
+      libv8 (~> 3.16.14.15)
+      ref
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.7)
@@ -476,6 +484,7 @@ DEPENDENCIES
   skinny_controllers
   slim-rails
   sprockets-rails (= 2.3.3)
+  sqreen
   stripe
   stripe-ruby-mock (~> 2.2.1)
   uglifier

@@ -11,6 +11,7 @@ SimpleCov.start do
   add_group 'Policies', '.*polic.*'
   add_group 'Mailers', 'app/mailers'
   add_group 'Serializers', '.*serializer.*'
+  add_group 'SerializableResources', '.*serializable_resource.*'
   add_group 'Services', 'app/services'
 
   # filters.clear
