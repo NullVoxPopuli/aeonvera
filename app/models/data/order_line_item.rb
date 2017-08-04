@@ -45,6 +45,8 @@ class OrderLineItem < ApplicationRecord
 
   delegate :name, to: :line_item
 
+  after_save :update_order_sub_total
+
   def total
     price * quantity
   end
@@ -55,5 +57,9 @@ class OrderLineItem < ApplicationRecord
 
   def is_competition_requiring_orientation?
     line_item.is_a?(Competition) && line_item.requires_orientation?
+  end
+
+  def update_order_sub_total
+    order.ensure_sub_total_persisted
   end
 end

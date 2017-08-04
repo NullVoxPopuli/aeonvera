@@ -124,7 +124,18 @@ module Payable
     checks.first.try(:[], 'number')
   end
 
+  # In Dollars
   def sub_total
+    (sub_total_in_cents || ensure_sub_total_persisted) / 100
+  end
+
+  def ensure_sub_total_persisted
+    self.sub_total_in_cents = _calculate_sub_total * 100
+    save
+    sub_total_in_cents
+  end
+
+  def _calculate_sub_total
     return legacy_total if is_legacy?
     amount = 0
     remaining_discounts = []
