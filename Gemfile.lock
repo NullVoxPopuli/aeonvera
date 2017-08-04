@@ -202,7 +202,7 @@ GEM
     mime-types (2.99.3)
     mimemagic (0.3.1)
     mini_portile2 (2.2.0)
-    minitest (5.10.2)
+    minitest (5.10.3)
     multi_json (1.12.1)
     netrc (0.11.0)
     nokogiri (1.8.0)
@@ -219,8 +219,8 @@ GEM
     parallel (1.11.2)
     parallel_tests (2.14.1)
       parallel
-    paranoia (2.2.0)
-      activerecord (>= 4.0, < 5.1)
+    paranoia (2.3.1)
+      activerecord (>= 4.0, < 5.2)
     parser (2.3.2.0)
       ast (~> 2.2)
     pg (0.19.0)
@@ -447,7 +447,7 @@ DEPENDENCIES
   oj_mimic_json
   paperclip (~> 5.0.0.beta2)
   parallel_tests
-  paranoia (~> 2.0)
+  paranoia (~> 2.3)
   pg
   pry-byebug
   puma

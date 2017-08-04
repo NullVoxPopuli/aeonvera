@@ -26,7 +26,7 @@ gem 'devise' # User Authentication and management
 gem "dry-validation"
 gem 'reform' # Non-Model Validation
 
-gem 'paranoia', '~> 2.0' # soft deletion
+gem 'paranoia', '~> 2.3' # soft deletion
 gem 'mail'
 gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
 gem 'ransack' # search
