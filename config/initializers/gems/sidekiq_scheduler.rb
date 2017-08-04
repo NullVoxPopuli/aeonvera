@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 # config/initializers/sidekiq_scheduler.rb
 require 'sidekiq/scheduler'
-require 'sidekiq/cli'
 require 'sidekiq/web'
 
 puts "Sidekiq.server? is #{Sidekiq.server?.inspect}"
@@ -14,6 +13,7 @@ Sidekiq::Scheduler.dynamic = true
 
 if ENV['THREADED_SIDEKIQ']
   Thread.new do
+    # require 'sidekiq/cli'
     # wait long enough for redis to boot
     # sleep(2)
 

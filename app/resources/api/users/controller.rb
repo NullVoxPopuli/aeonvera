@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class UsersController < ResourceController
     before_action :must_be_logged_in, except: :create
@@ -6,7 +7,9 @@ module Api
     def show
       # this should never return any other user
       # there is no multi-user management.
-      render json: current_user, include: params[:include]
+      render json: success(current_user,
+                           include: params[:include],
+                           class: UserSerializableResource)
     end
 
     def destroy

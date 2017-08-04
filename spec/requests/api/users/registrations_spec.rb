@@ -80,7 +80,7 @@ describe Api::Users::RegistrationsController, type: :request do
         put "#{base_path}/#{registration.id}", params, auth_header_for(user)
 
         expect(response.status).to eq 200
-        expect(json_api_data['attributes']['attendee-first-name']).to eq 'B'
+        expect(json_api_data['attributes']['attendee_first_name']).to eq 'B'
       end
     end
 
