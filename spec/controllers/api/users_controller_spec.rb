@@ -7,7 +7,7 @@ describe Api::UsersController, type: :controller do
   end
 
   context 'show' do
-    it 'returns the current user' do
+    xit 'returns the current user' do
       force_login(user = create(:user))
       get :show, id: -1
 
