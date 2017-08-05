@@ -410,7 +410,7 @@ GEM
     unicode-display_width (1.1.1)
     warden (1.2.3)
       rack (>= 1.0)
-    will_paginate (3.1.5)
+    will_paginate (3.1.6)
 
 PLATFORMS
   ruby
@@ -477,7 +477,7 @@ DEPENDENCIES
   stripe
   stripe-ruby-mock (~> 2.2.1)
   uglifier
-  will_paginate (~> 3.1.0)
+  will_paginate (~> 3.1.6)
 
 RUBY VERSION
    ruby 2.4.1p111

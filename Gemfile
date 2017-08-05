@@ -31,7 +31,7 @@ gem 'mail'
 gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
-gem 'will_paginate', '~> 3.1.0' # pagination
+gem 'will_paginate', '~> 3.1.6' # pagination
 # Background Tasks
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
