@@ -2,12 +2,19 @@
 
 module Api
   class LevelSerializableResource < ApplicationResource
+    include SharedAttributes::HasRegistrations
+
     type 'levels'
 
-    attributes :name, :description, :requirement, :deleted_at
 
-    attribute(:number_of_follows) { @object.registrations.follows.size }
-    attribute(:number_of_leads) { @object.registrations.leads.size }
+    PUBLIC_ATTRIBUTES = [:id, :event_id,
+                         :name, :description,
+                         :requirement].freeze
+
+    PUBLIC_RELATIONSHIPS = [:event].freeze
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
+
+    attributes :name, :description, :requirement, :deleted_at
 
     belongs_to :event, class: '::Api::EventSerializableResource'
     has_many :registrations, class: '::Api::Users::RegistrationSerializer'

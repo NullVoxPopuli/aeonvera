@@ -17,7 +17,6 @@ AeonVera::Application.routes.draw do
     # Various Event information / summaries
     resources :upcoming_events # public calendar
     resources :hosted_events # TODO: Is this used?
-    resources :registerable_events # TODO: is this used?
     resources :event_summaries, only: [:show] # overview
 
     resources :notes

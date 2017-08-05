@@ -1,8 +1,13 @@
 # frozen_string_literal: true
+
 module Api
   class DiscountsController < Api::EventResourceController
     def index
       return super unless params[:q]
+
+      params[:fields] = {
+        discount: DiscountSerializableResource::PUBLIC_FIELDS
+      }
       search = Event.find(event_id).discounts.ransack(params[:q])
       render json: search.result, each_serializer: RegistrationDiscountSerializer
     end

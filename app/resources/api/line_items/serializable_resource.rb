@@ -2,7 +2,7 @@
 
 module Api
   # object is actually an Registration in this serializer
-  class LineItemSerializer < ActiveModel::Serializer
+  class LineItemSerializableResource < ApplicationResource
     include PublicAttributes::LineItemAttributes
     include SharedAttributes::Stock
 
@@ -17,7 +17,7 @@ module Api
     PUBLIC_RELATIONSHIPS = [:host].freeze
     PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
 
-    has_many :registrations, each_serializer: ::Api::Users::RegistrationSerializer
-    has_many :order_line_items
+    has_many :registrations, class: '::Api::Users::RegistrationSerializableResource'
+    has_many :order_line_items, class: '::Api::OrderLineItemSerializableResource'
   end
 end

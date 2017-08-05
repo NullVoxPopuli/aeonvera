@@ -5,15 +5,10 @@ module Api
       extend ActiveSupport::Concern
 
       included do
-        attributes :initial_stock, :remaining_stock, :number_purchased
-      end
+        attributes :initial_stock
 
-      def remaining_stock
-        object.initial_stock - number_purchased
-      end
-
-      def number_purchased
-        @number_purchased ||= object.order_line_items.count
+        attribute(:remaining_stock) { @object.initial_stock - @object.order_line_items.size}
+        attribute(:number_purchased) { @object.order_line_items.size }
       end
     end
   end

@@ -2,6 +2,10 @@
 
 module Api
   class CustomFieldSerializableResource < ApplicationResource
+    PUBLIC_ATTRIBUTES = [:id, :label, :kind, :default_value, :editable].freeze
+    PUBLIC_RELATIONSHIPS = [:host].freeze
+    PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
+
     type 'custom-fields'
 
     attributes :label, :kind, :default_value, :editable

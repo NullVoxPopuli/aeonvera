@@ -2,6 +2,8 @@
 
 module Api
   class PricingTierSerializableResource < ApplicationResource
+    include SharedAttributes::HasRegistrations
+
     type do
       @object.event.opening_tier == @object ? 'opening-tiers' : 'pricing-tiers'
     end
@@ -14,14 +16,6 @@ module Api
 
     has_many :registrations, class: '::Api::Users::RegistrationSerializableResource'
     belongs_to :event, class: '::Api::EventSerializableResource'
-
-    attribute(:number_of_follows) do
-      @object.registrations.follows.count
-    end
-
-    attribute(:number_of_leads) do
-      @object.registrations.leads.count
-    end
 
     attribute(:is_opening_tier) do
       @object == @object.event.opening_tier

@@ -2,9 +2,9 @@
 
 module Api
   class ShirtSerializableResource < ApplicationResource
-    type 'shirts'
+    include SharedAttributes::Stock
 
-    # include SharedAttributes::Stock
+    type 'shirts'
 
     PUBLIC_ATTRIBUTES = Array[*LineItemSerializer::PUBLIC_ATTRIBUTES, :sizes]
     PUBLIC_RELATIONSHIPS = LineItemSerializer::PUBLIC_RELATIONSHIPS

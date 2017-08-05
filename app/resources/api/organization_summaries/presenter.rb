@@ -1,26 +1,14 @@
 # frozen_string_literal: true
+
 module Api
-  # object is actually an Organization
-  class OrganizationSummarySerializer < ActiveModel::Serializer
-    type 'organization_summary'
+  class OrganizationSummaryPresenter
+    attr_reader :object
 
-    attributes :id, :name, :domain, :organization_id,
-               :revenue_past_month, :net_received_past_month,
-               :unpaid_past_month, :new_memberships_past_month,
-               :logo_url_thumb
+    delegate :logo_url, :logo_url_thumb, :logo_url_medium,
+             :orders, :name, :domain, to: :object
 
-    has_many :orders
-
-    def registrations
-      object.orders.limit(5)
-    end
-
-    def logo_url_thumb
-      object.logo.url(:thumb)
-    end
-
-    def organization_id
-      object.id
+    def initialize(object)
+      @object = object
     end
 
     def revenue_past_month
