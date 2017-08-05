@@ -6,8 +6,8 @@ module Api
 
     type 'shirts'
 
-    PUBLIC_ATTRIBUTES = Array[*LineItemSerializer::PUBLIC_ATTRIBUTES, :sizes]
-    PUBLIC_RELATIONSHIPS = LineItemSerializer::PUBLIC_RELATIONSHIPS
+    PUBLIC_ATTRIBUTES = Array[*LineItemSerializableResource::PUBLIC_ATTRIBUTES, :sizes]
+    PUBLIC_RELATIONSHIPS = LineItemSerializableResource::PUBLIC_RELATIONSHIPS
     PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
 
     attributes :name, :current_price, :price,

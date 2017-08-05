@@ -10,7 +10,7 @@ module Api
                               model_params_key: 'member',
                               association_name: 'members'
 
-    self.serializer = MemberSerializer
+    self.serializer = MemberSerializableResource
 
     before_action :must_be_logged_in
     before_action :enforce_search_parameters, only: [:index]

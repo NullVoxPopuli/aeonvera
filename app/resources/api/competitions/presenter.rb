@@ -4,7 +4,7 @@ module Api
   class CompetitionPresenter < ApplicationPresenter
     delegate :id, :name, :initial_price, :at_the_door_price, :current_price,
              :kind, :kind_name, :requires_partner, :requires_orientation,
-             :description, :nonregisterable, :event
+             :description, :nonregisterable, :event, to: :object
 
     def order_line_items
       @olis ||= @object.order_line_items

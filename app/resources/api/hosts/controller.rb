@@ -7,15 +7,15 @@ module Api
     ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'
     PUBLIC_EVENT_FIELDS = {
       event: EventFields::PUBLIC_FIELDS,
-      integrations: IntegrationSerializer::PUBLIC_FIELDS,
-      opening_tier: PricingTierSerializer::PUBLIC_FIELDS,
-      current_tier: PricingTierSerializer::PUBLIC_FIELDS,
-      custom_fields: CustomFieldSerializer::PUBLIC_FIELDS,
-      line_items: LineItemSerializer::PUBLIC_FIELDS,
-      shirts: ShirtSerializer::PUBLIC_FIELDS,
-      packages: PackageSerializer::PUBLIC_FIELDS,
+      integrations: IntegrationSerializableResource::PUBLIC_FIELDS,
+      opening_tier: PricingTierSerializableResource::PUBLIC_FIELDS,
+      current_tier: PricingTierSerializableResource::PUBLIC_FIELDS,
+      custom_fields: CustomFieldSerializableResource::PUBLIC_FIELDS,
+      line_items: LineItemSerializableResource::PUBLIC_FIELDS,
+      shirts: ShirtSerializableResource::PUBLIC_FIELDS,
+      packages: PackageSerializableResource::PUBLIC_FIELDS,
       levels: LevelFields::PUBLIC_FIELDS,
-      competitions: CompetitionSerializer::PUBLIC_FIELDS
+      competitions: CompetitionSerializableResource::PUBLIC_FIELDS
       # sponsorships: merged_fieldset(SponsorshipSerializer::PUBLIC_FIELDS, {
       #                                 discount: DiscountSerializer::PUBLIC_FIELDS,
       #                                 sponsor: [:id, :name]

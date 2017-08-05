@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 require 'active_model_serializers'
-ActiveModelSerializers.config.adapter = :json_api
-ActiveModelSerializers.config.serializer_lookup_chain.unshift(
-  lambda do |resource_class, _, namespace|
-    "#{namespace.name}::#{resource_class.name}Serializer" if namespace
-  end
-)
+# ActiveModelSerializers.config.adapter = :json_api
+# ActiveModelSerializers.config.serializer_lookup_chain.unshift(
+#   lambda do |resource_class, _, namespace|
+#     "#{namespace.name}::#{resource_class.name}Serializer" if namespace
+#   end
+# )
 
 # TODO: switch to unaltered when bf4's belongs_to PR is ready
 # ActiveModelSerializers.config.key_transform = :unaltered
@@ -74,7 +74,7 @@ module AttributeFieldHack
 end
 
 ActiveModelSerializers::Adapter::Attributes.prepend AttributeFieldHack
-
-ActiveSupport.on_load(:action_controller) do
-  require 'active_model_serializers/register_jsonapi_renderer'
-end
+#
+# ActiveSupport.on_load(:action_controller) do
+#   require 'active_model_serializers/register_jsonapi_renderer'
+# end

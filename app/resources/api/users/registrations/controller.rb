@@ -9,13 +9,13 @@ module Api
 
       # TODO: compare with params[:fields]
       ALLOWED_FIELDS = {
-        registration: Users::RegistrationSerializer::ATTRIBUTES,
+        registration: Users::RegistrationSerializableResource::ATTRIBUTES,
         level: LevelFields::PUBLIC_ATTRIBUTES,
-        order: OrderSerializer::BUYER_FIELDS,
+        order: OrderSerializableResource::BUYER_FIELDS,
         housing_request: [],
-        housing_provision: HousingProvisionSerializer::PUBLIC_FIELDS,
-        shirt: ShirtSerializer::PUBLIC_FIELDS,
-        package: PackageSerializer::PUBLIC_FIELDS
+        housing_provision: HousingProvisionSerializableResource::PUBLIC_FIELDS,
+        shirt: ShirtSerializableResource::PUBLIC_FIELDS,
+        package: PackageSerializableResource::PUBLIC_FIELDS
       }.freeze
 
       before_filter :must_be_logged_in

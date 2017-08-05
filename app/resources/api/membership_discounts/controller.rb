@@ -2,7 +2,7 @@
 module Api
   class MembershipDiscountsController < UserResourceController
     self.resource_class = ::MembershipDiscount
-    self.serializer_class = MembershipDiscountSerializer
+    self.serializer_class = MembershipDiscountSerializableResource
     # self.parent_resource_method = :organization
 
     private

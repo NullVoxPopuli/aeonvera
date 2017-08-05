@@ -17,7 +17,9 @@ module Controllers
 
     protected
 
-    def render_jsonapi(model, options)
+    def render_jsonapi(options: {}, model: nil)
+      model ||= self.model
+
       raise ActiveRecord::RecordNotFound if model.nil?
       return render_jsonapi_error(model) if errors_present?(model)
 

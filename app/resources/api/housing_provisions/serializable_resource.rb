@@ -32,6 +32,6 @@ module Api
 
     belongs_to :host, class: { Event: '::Api::EventSerializableResource',
                                Organization: '::Api::OrganizationSerializableResource' }
-    belongs_to :registration, class: '::Api::Users::RegistrationSerializer'
+    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource'
   end
 end
