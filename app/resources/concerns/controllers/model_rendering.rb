@@ -66,7 +66,7 @@ module Controllers
 
     private
 
-    def error_present?(model)
+    def errors_present?(model)
       model.respond_to?(:errors) && model.errors.present?
     end
 

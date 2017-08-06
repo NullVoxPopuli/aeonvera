@@ -21,7 +21,7 @@ module Api
 
         by_registration_id = {}
         # need registration_id, name, number_of_tickets_purchased (see serializer)
-        object.ticket_purchases.includes(:line_item, order: { registration: :attendee }).map do |order_line_item|
+        @object.ticket_purchases.includes(:line_item, order: { registration: :attendee }).map do |order_line_item|
           id = order_line_item.order.registration_id
           ticket = order_line_item.line_item
           registration = order_line_item.order.registration

@@ -26,8 +26,7 @@ RSpec.describe Api::RafflesController, type: :controller do
       expect(included.count).to be 1
       attributes = included.first['attributes']
 
-      expect(attributes['registration-id']).to eq registration.id
-      expect(attributes['number-of-tickets-purchased']).to eq 1
+      expect(attributes['number_of_tickets_purchased']).to eq 1
       expect(attributes['name']).to eq registration.attendee_name
     end
   end
@@ -68,7 +67,7 @@ RSpec.describe Api::RafflesController, type: :controller do
         data = json_api_data
         attributes = data['attributes']
         expect(attributes['winner']).to eq registration.attendee_name
-        expect(attributes['winner-has-been-chosen']).to eq true
+        expect(attributes['winner_has_been_chosen']).to eq true
       end
 
       it 'does not choose a new winner when there are no tickets' do
@@ -86,7 +85,7 @@ RSpec.describe Api::RafflesController, type: :controller do
 
         data = json_api_data
         attributes = data['attributes']
-        expect(attributes['winner-has-been-chosen']).to eq false
+        expect(attributes['winner_has_been_chosen']).to eq false
       end
     end
   end

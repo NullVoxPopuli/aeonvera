@@ -5,18 +5,18 @@ module Api
     before_filter :must_be_logged_in, except: [:index]
 
     def index
-      # TODO: integrate skinny_controllers with ransack to reduce queries?
       model = operation_class.new(current_user, params, index_params).run
 
       respond_to do |format|
-        format.json { render json: model, include: params[:include] }
+        format.json { render_jsonapi(model: model) }
         format.csv { send_data CsvGeneration.model_to_csv(model, params[:fields]) }
       end
     end
 
     def show
       model = operation_class.new(current_user, params, show_params).run
-      render json: model, include: params[:include]
+
+      render_jsonapi(model: model)
     end
 
     protected
