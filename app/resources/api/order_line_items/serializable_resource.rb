@@ -12,8 +12,12 @@ module Api
     belongs_to :order, class: '::Api::OrderSerializableResource'
     belongs_to :line_item, class: { Package: '::Api::PackageSerializableResource',
                                     Competition: '::Api::CompetitionSerializableResource',
-                                    'LineItem::Shirt': '::Api::ShirtSerializableResource',
                                     Discount: '::Api::DiscountSerializableResource',
-                                    LineItem: '::Api::LineItemSerializableResource' }
+                                    MembershipDiscount: '::Api::MembershipDiscountSerializableResource',
+                                    LineItem: '::Api::LineItemSerializableResource',
+                                    'LineItem::Shirt': '::Api::ShirtSerializableResource',
+                                    'LineItem::Lesson': '::Api::LessonSerializableResource',
+                                    'LineItem::MembershipOption': '::Api::MembershipOptionSerializableResource'
+                                  }
   end
 end
