@@ -75,7 +75,7 @@ gem 'puma'
 ############
 # JS, CSS and Icons (For Emails)
 ############
-gem 'sass', '~> 3.3.14'
+gem 'sass', '~> 3.4.25'
 gem 'sass-rails'
 gem 'foundation-rails'
 gem 'font-awesome-rails'
