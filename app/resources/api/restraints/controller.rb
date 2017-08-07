@@ -2,6 +2,7 @@
 module Api
   class RestraintsController < APIController
     include SkinnyControllers::Diet
+    self.serializer = RestraintSerializableResource
 
     before_filter :must_be_logged_in
 

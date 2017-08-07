@@ -1,9 +1,12 @@
 # frozen_string_literal: true
+
 module Api
   # Note that unless authenticated, all requests
   # to this controller must include a
   # payment_token param
   class OrdersController < Api::ResourceController
+    self.serializer = OrderSerializableResource
+
     before_action :check_authentication, only: [
       :index, :refund_payment, :refresh_stripe, :mark_paid,
       :destroy
@@ -24,7 +27,7 @@ module Api
       if params[:id]
         @model = OrderOperations::Read.new(current_user, params).run
 
-        render json: @model, include: params[:include]
+        render_jsonapi(model: @model)
         return
       end
 
@@ -32,29 +35,29 @@ module Api
     end
 
     def show
-      render_model('order_line_items.line_item')
+      render_jsonapi(options: { include: 'order_line_items.line_item' })
     end
 
     def create
-      render_model('order_line_items.line_item')
+      render_jsonapi(options: { include: 'order_line_items.line_item' })
     end
 
     def update
-      render_model('order_line_items.line_item,registration')
+      render_jsonapi(options: { include: 'order_line_items.line_item,registration' })
     end
 
     def refresh_stripe
-      render_model
+      render_jsonapi
     end
 
     def refund_payment
-      render_model
+      render_jsonapi
     end
 
     def mark_paid
       # registration has to be included here for the checkin-screen.
       # because owning money is stored on the registration. :-\
-      render_model('registration')
+      render_jsonapi(options: { include: 'registration' })
     end
 
     private
@@ -67,7 +70,7 @@ module Api
       @model = Order.find_by_payment_token(params[:payment_token])
 
       if @model
-        render_model('order_line_items.line_item')
+        render_jsonapi(model: @model, options: { include: 'order_line_items.line_item' })
       else
         not_found
       end

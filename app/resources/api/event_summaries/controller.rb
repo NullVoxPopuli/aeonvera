@@ -2,16 +2,16 @@
 
 module Api
   class EventSummariesController < APIController
+    self.serializer = EventSummarySerializableResource
+    self.default_include = 'registrations'
+
     def show
       model = EventSummaryOperations::Read
               .run(current_user, { event_id: params[:id] })
-      hash = success_renderer
-             .render(model,
-                     include: 'registrations',
-                     expose: { current_user: current_user },
-                     class: EventSummarySerializableResource)
 
-      render json: hash
+      render_jsonapi(model: model, options: {
+                       expose: { current_user: current_user }
+                     })
     end
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class CustomFieldsController < Api::EventResourceController
+    self.serializer = CustomFieldSerializableResource
+
     private
 
     def update_custom_field_params

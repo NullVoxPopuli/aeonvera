@@ -3,9 +3,9 @@
 module Api
   module Events
     class RegistrationsController < ResourceController
-      before_filter :must_be_logged_in
-
       self.serializer = ::Api::Events::RegistrationSerializableResource
+
+      before_filter :must_be_logged_in
 
       def index
         model = RegistrationOperations::ReadAll
@@ -13,23 +13,13 @@ module Api
                 .ransack(params[:q])
                 .result
 
-        hash = success_renderer
-               .render(model,
-                       include: params[:include],
-                       class: ::Api::Events::RegistrationSerializableResource)
-
-        render json: hash
+        render_jsonapi(model: model)
       end
 
       def show
         model = RegistrationOperations::Read.run(current_user, params)
 
-        hash = success_renderer
-               .render(model,
-                       include: params[:include],
-                       class: ::Api::Events::RegistrationSerializableResource)
-
-        render json: hash
+        render_jsonapi(model: model)
       end
 
       def checkin

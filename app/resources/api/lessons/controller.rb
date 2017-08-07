@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Api
   class LessonsController < Api::ResourceController
+    self.serializer = LessonSerializableResource
     # self.model_class = LineItem::Lesson
     # self.model_key = :lesson
 

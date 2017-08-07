@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class PricingTiersController < Api::EventResourceController
+    self.serializer = PricingTierSerializableResource
+
     private
 
     # The fields are named different on teh server than the client

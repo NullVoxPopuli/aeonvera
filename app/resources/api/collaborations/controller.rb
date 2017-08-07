@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # this is where collaborations are managed
 # collaborations are accepted at users/collaborations
 module Api

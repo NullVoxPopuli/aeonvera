@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class LevelsController < Api::EventResourceController
+    self.serializer = LevelSerializableResource
+
     private
 
     def update_level_params

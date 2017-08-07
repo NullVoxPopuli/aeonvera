@@ -11,7 +11,7 @@ module Api
         discount: DiscountSerializableResource::PUBLIC_FIELDS
       }
       search = Event.find(event_id).discounts.ransack(params[:q])
-      render json: search.result, each_serializer: RegistrationDiscountSerializer
+      render_jsonapi(model: search.result)
     end
 
     def event_id

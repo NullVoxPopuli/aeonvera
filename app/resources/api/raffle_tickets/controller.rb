@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Api
   class RaffleTicketsController < Api::ResourceController
+    self.serializer = RaffleTicketSerializableResource
     # self.model_class = LineItem::RaffleTicket
 
     # def index

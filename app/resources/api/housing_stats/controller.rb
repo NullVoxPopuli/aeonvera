@@ -2,12 +2,12 @@
 
 module Api
   class HousingStatsController < APIController
+    self.serializer = HousingStatsSerializableResource
     include SetsEvent
 
     def show
       presenter = HousingStatsPresenter.new(@event)
-      render json: success(presenter,
-                           class: ::Api::HousingStatsSerializableResource)
+      render_jsonapi(model: presenter)
     end
   end
 end

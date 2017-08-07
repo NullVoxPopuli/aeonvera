@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class OrganizationsController < Api::ResourceController
+    self.serializer = OrganizationSerializableResource
+
     before_filter :must_be_logged_in, except: [:index, :show]
 
     def index

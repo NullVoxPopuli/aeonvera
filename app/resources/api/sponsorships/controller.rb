@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class SponsorshipsController < Api::ResourceController
+    self.serializer = SponsorshipSerializableResource
+
     before_filter :must_be_logged_in, except: [:index]
 
     private

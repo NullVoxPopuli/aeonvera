@@ -110,7 +110,7 @@ def json_api_create_with(klass, params)
 end
 
 def json_api_update_with(obj, params)
-  params = CaseTransform.dash(params)
+  params = CaseTransform.underscore(params)
   patch :update, { id: obj.id }.merge(params)
 
   # expect(response.status).to eq 200

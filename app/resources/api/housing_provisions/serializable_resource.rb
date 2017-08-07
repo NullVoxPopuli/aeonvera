@@ -5,7 +5,7 @@ module Api
     type 'housing-provisions'
 
     PUBLIC_ATTRIBUTES = [
-      :id, :name,
+      :id,
       :housing_capacity,
       :number_of_showers,
       :can_provide_transportation,
@@ -20,8 +20,7 @@ module Api
 
     PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
 
-    attributes(:name,
-               :housing_capacity,
+    attributes(:housing_capacity,
                :number_of_showers,
                :can_provide_transportation,
                :transportation_capacity,
@@ -31,7 +30,12 @@ module Api
                :notes)
 
     belongs_to :host, class: { Event: '::Api::EventSerializableResource',
-                               Organization: '::Api::OrganizationSerializableResource' }
-    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource'
+                               Organization: '::Api::OrganizationSerializableResource' } do
+      linkage always: true
+    end
+
+    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource' do
+      linkage always: true
+    end
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 module Api
   class LineItemsController < Api::EventResourceController
+    self.serializer = LineItemSerializableResource
+
     private
 
     def update_line_item_params

@@ -3,6 +3,14 @@
 module Api
   class HousingProvisionsController < Api::EventResourceController
     self.serializer = HousingProvisionSerializableResource
+    self.default_fields = {
+      housing_provisions: [
+        :name, :housing_capacity, :number_of_showers,
+        :can_provide_transportation, :transportation_capacity,
+        :preferred_gender_to_host, :has_pets,
+        :smokes, :notes, :host, :registration
+      ]
+    }
 
     private
 

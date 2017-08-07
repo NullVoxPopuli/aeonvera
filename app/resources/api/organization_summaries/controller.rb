@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 module Api
   class OrganizationSummariesController < APIController
+    self.serializer = OrganizationSummarySerializableResource
+
     include SetsOrganization
 
     def show
-      render json: @organization,
-             serializer: OrganizationSummarySerializer,
-             root: :event_summaries,
-             include: params[:include]
+      render_jsonapi(model: @organization)
     end
   end
 end
