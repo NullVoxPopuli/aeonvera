@@ -3,6 +3,7 @@
 # collaborations are accepted at users/collaborations
 module Api
   class CollaborationsController < Api::ResourceController
+    self.serializer = CollaborationSerializableResource
     # include ::HelperOperations::Helpers
     # include ::SkinnyControllers::Diet
 

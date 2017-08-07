@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+
 module Api
   class ShirtsController < Api::EventResourceController
+    self.serializer = ShirtSerializableResource
+
     # self.model_class = LineItem::Shirt
     # self.model_key = 'shirt'
 

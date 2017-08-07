@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+
 module Api
   class HousingRequestsController < Api::EventResourceController
+    self.serializer = HousingRequestSerializableResource
+
     private
 
     def update_housing_request_params

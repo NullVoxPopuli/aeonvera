@@ -2,6 +2,8 @@
 
 module Api
   class DiscountsController < Api::EventResourceController
+    self.serializer = DiscountSerializableResource
+
     def index
       return super unless params[:q]
 
