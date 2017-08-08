@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class RestraintsController < APIController
     include SkinnyControllers::Diet
@@ -7,19 +8,19 @@ module Api
     before_filter :must_be_logged_in
 
     def index
-      render json: model
+      render_jsonapi
     end
 
     def create
-      render_model
+      render_jsonapi
     end
 
     def update
-      render_model
+      render_jsonapi
     end
 
     def destroy
-      render json: model
+      render_jsonapi
     end
 
     private

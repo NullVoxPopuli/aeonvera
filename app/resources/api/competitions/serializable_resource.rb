@@ -22,6 +22,8 @@ module Api
                :description, :nonregisterable
 
     has_many :order_line_items, class: '::Api::OrderLineItemSerializableResource'
-    belongs_to :event, class: '::Api::EventSerializableResource'
+    belongs_to :event, class: '::Api::EventSerializableResource' do
+      linkage always: true
+    end
   end
 end

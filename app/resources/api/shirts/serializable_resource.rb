@@ -47,7 +47,9 @@ module Api
     attribute(:number_purchased) { @object.order_line_items.count }
 
     belongs_to :host, class: { Event: '::Api::EventSerializableResource',
-                               Organization: '::Api::OrganizationSerializableResource' }
+                               Organization: '::Api::OrganizationSerializableResource' } do
+                                 linkage always: true
+                               end
     has_many :order_line_items, class: '::Api::OrderLineItemSerializableResource'
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: restraints
@@ -49,8 +50,8 @@ describe Restraint do
                       host: event,
                       user: @registration.attendee)
 
-      add_to_order(@order, package)
-      add_to_order(@order, discount)
+      add_to_order!(@order, package)
+      add_to_order!(@order, discount)
 
       # verify
       actual = @order.total
@@ -66,7 +67,7 @@ describe Restraint do
                      host: event,
                      user: @registration.attendee)
 
-      add_to_order(order, wrong_package)
+      add_to_order!(order, wrong_package)
       oli = add_to_order(order, discount)
       expect(oli).to_not be_valid
       remove_invalid_items(order) # simulate not saving
@@ -86,7 +87,7 @@ describe Restraint do
                       host: event,
                       user: @registration.attendee)
 
-      add_to_order(@order, package)
+      add_to_order!(@order, package)
 
       actual = @order.total
       expected = package.current_price
@@ -101,13 +102,13 @@ describe Restraint do
                       host: event,
                       user: @registration.attendee)
 
-      add_to_order(@order, package)
+      add_to_order!(@order, package)
       # add other stuff
       competition = create(:competition, event: event, kind: Competition::SOLO_JAZZ)
       oli = add_to_order(@order, competition)
 
       # add discount to order
-      add_to_order(@order, discount, price: 0 - package.current_price)
+      add_to_order!(@order, discount, price: 0 - package.current_price)
 
       # verify
       actual = @order.total

@@ -5,7 +5,7 @@ module Api
     self.serializer = CompetitionSerializableResource
 
     def index
-      render json: model, include: 'order_line_items.order.registration'
+      render_jsonapi(options: { include: 'order_line_items.order.registration' })
     end
 
     private

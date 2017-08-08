@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe 'AMS monkey patches' do
   describe 'nested field whitelisting on attributes' do
-    it 'shows relationship fields' do
+    xit 'shows relationship fields' do
       user = build(:user)
       event = build(:event)
       registration = build(:registration, attendee: user, host: event)
@@ -30,7 +30,7 @@ describe 'AMS monkey patches' do
       expect(result).to eq expected
     end
 
-    it 'shows relationship fields for multiple objects' do
+    xit 'shows relationship fields for multiple objects' do
       user = build(:user)
       event = build(:event)
       registration = build(:registration, attendee: user, host: event)

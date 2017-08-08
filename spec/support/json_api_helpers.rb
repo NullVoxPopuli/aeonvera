@@ -32,7 +32,7 @@ def json_api_included
 end
 
 def json_api_create_with(klass, params)
-  params = CaseTransform.dash(params)
+  params = CaseTransform.underscore(params)
 
   expect do
     post :create, params
@@ -49,6 +49,8 @@ def json_api_create_with(klass, params)
   # auto compare attributes
   given_attributes = params[:data][:attributes]
   given_attributes.each do |key, value|
+    next if key == :id
+
     actual = attributes[key.to_s]
     # check if actual is a time
     if value.is_a?(Time)
@@ -76,7 +78,7 @@ def json_api_create_with(klass, params)
   end
 
   id = data['id']
-  id = attributes['-id'] if data['id'].include?('.')
+  # id = attributes['-id'] if data['id'].include?('.')
   created_object = klass.find(id)
   expect(created_object).to be_present
 
