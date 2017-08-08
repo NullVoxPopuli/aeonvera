@@ -36,7 +36,7 @@ describe Api::Users::DeviseOverrides::AccountRegistrationsController, type: :req
       it 'confirms that the confirmation email was sent' do
         post '/api/users', params
 
-        expect(json_response).to have_attribute('confirmation-sent-at')
+        expect(json_response).to have_attribute('confirmation_sent_at')
       end
 
       it 'creates an account' do

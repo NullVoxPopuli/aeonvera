@@ -50,12 +50,11 @@ describe Registration do
 
     describe 'order_line_items' do
       it 'has an order_line_item' do
-        registration = Registration.new
-        registration.save(validate: false)
-        order = Order.new(registration: registration)
-        order.save(validate: false)
-        order_line_item = OrderLineItem.new(order: order)
-        order_line_item.save(validate: false)
+        registration = create(:registration)
+        order = create(:order, registration: registration, host: registration.event)
+        order_line_item = create(:order_line_item,
+                                 order: order,
+                                 line_item: create(:line_item, host: registration.event))
 
         registration.reload
         expect(registration.order_line_items).to include(order_line_item)

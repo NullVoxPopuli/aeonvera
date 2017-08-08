@@ -62,8 +62,8 @@ describe Payable do
       discount = create(:discount, host: @event, value: 100, kind: Discount::PERCENT_OFF)
       order = create(:order, host: @event, registration: @registration)
 
-      add_to_order(order, package)
-      add_to_order(order, discount)
+      add_to_order!(order, package)
+      add_to_order!(order, discount)
 
       expect(order.sub_total).to eq 0
       expect(order.total).to eq 0
@@ -74,8 +74,8 @@ describe Payable do
       package = create(:package, event: @event, initial_price: 0, at_the_door_price: 0)
       friday_dance = create(:line_item, event: @event, price: 25)
       order = Order.new(host: @event, registration: @registration)
-      add_to_order(order, package)
-      add_to_order(order, friday_dance)
+      add_to_order!(order, package)
+      add_to_order!(order, friday_dance)
 
       expect(order.payment_method).to eq 'Cash'
       expect(order.sub_total).to eq 25
@@ -84,18 +84,18 @@ describe Payable do
     end
 
     it 'totals everything' do
-      add_to_order(@payment, order_line_item)
-      add_to_order(@payment, order_line_item, quantity: 2)
+      add_to_order!(@payment, order_line_item)
+      add_to_order!(@payment, order_line_item, quantity: 2)
 
       expect(@payment.total).to eq 15
     end
 
     it 'has a discount' do
-      add_to_order(@payment, order_line_item)
-      add_to_order(@payment, order_line_item, quantity: 2)
+      add_to_order!(@payment, order_line_item)
+      add_to_order!(@payment, order_line_item, quantity: 2)
 
       discount = create(:discount, host: @event, value: 10, kind: Discount::DOLLARS_OFF)
-      add_to_order(@payment, discount)
+      add_to_order!(@payment, discount)
 
       expect(@payment.total).to eq 5
     end
@@ -104,8 +104,8 @@ describe Payable do
       discount = Discount.new(host: @event, name: 'test', value: 10_000)
       discount.save
 
-      add_to_order(@payment, order_line_item)
-      add_to_order(@payment, discount)
+      add_to_order!(@payment, order_line_item)
+      add_to_order!(@payment, discount)
 
       expect(@payment.total).to eq 0
     end

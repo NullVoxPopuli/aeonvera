@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # this class overrides some things from devise in order to
 # make it JSON API compliant
 #
@@ -7,15 +8,15 @@ module Api
   module Users
     module DeviseOverrides
       class AccountRegistrationsController < Devise::RegistrationsController
+        include Controllers::ModelRendering
+
+        self.serializer = UserSerializableResource
         # skip_before_filter :authenticate_user!
+
         protected
 
         def respond_with(obj, *_args)
-          if obj.errors.present?
-            render json: obj, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
-          else
-            render jsonapi: obj, serializer: Api::UserSerializer
-          end
+          render_jsonapi(model: obj)
         end
 
         def account_update_params

@@ -19,8 +19,9 @@ module Api
       return all if params[:all]
 
       model = MemberOperations::ReadAll.new(current_user, params).run
+
       respond_to do |format|
-        format.json { render_models }
+        format.json { render_jsonapi(model: model) }
         format.csv do
           csv_data = CsvGeneration.model_to_csv(
             model, params[:fields],
@@ -34,7 +35,7 @@ module Api
 
     def all
       search = User.ransack(params[:q])
-      render json: search.result, each_serializer: MemberSerializer
+      render_jsonapi(model: search.result)
     end
 
     private
