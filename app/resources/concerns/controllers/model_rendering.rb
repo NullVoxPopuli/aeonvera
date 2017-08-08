@@ -75,10 +75,11 @@ module Controllers
     end
 
     def render_jsonapi_error(model)
-      model.errors.messages.map {|k, v| JSONAPI::Serializable::Error.new(detail: v, source: "data/attributes/#{k}")}
-      render json: error_renderer.render(model.errors.messages), status: 422
-      # ap model.errors.full_messages
-      # render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
+      errors = model.errors.messages.map { |k, v|
+        JSONAPI::Serializable::Error.create(detail: v.first, source: "data/attributes/#{k}")
+      }
+
+      render json: error_renderer.render(errors), status: 422
     end
 
     def serializer
