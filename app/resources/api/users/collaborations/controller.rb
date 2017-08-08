@@ -1,12 +1,15 @@
 # frozen_string_literal: true
+
 # This controller only responds to update
 module Api
   module Users
     class CollaborationsController < APIController
+      self.serializer = CollaborationSerializableResource
+
       before_filter :must_be_logged_in
 
       def update
-        render_model
+        render_jsonapi
       end
 
       # model will contain errors if something went wrong

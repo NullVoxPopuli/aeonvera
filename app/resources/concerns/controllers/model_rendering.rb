@@ -48,6 +48,10 @@ module Controllers
       @success_renderer ||= JSONAPI::Serializable::SuccessRenderer.new
     end
 
+    def error_renderer
+      @error_renderer ||= JSONAPI::Serializable::ErrorsRenderer.new
+    end
+
     def default_fields
       self.class.default_fields
     end
@@ -71,7 +75,10 @@ module Controllers
     end
 
     def render_jsonapi_error(model)
-      render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
+      model.errors.messages.map {|k, v| JSONAPI::Serializable::Error.new(detail: v, source: "data/attributes/#{k}")}
+      render json: error_renderer.render(model.errors.messages), status: 422
+      # ap model.errors.full_messages
+      # render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
     end
 
     def serializer
