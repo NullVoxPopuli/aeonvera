@@ -39,7 +39,7 @@ describe Order do
   describe 'associations' do
     context 'line_Items' do
       it 'has line items' do
-        discount = Discount.new
+        discount = build(:discount)
         discount.save(validate: false)
 
         order = Order.new
@@ -165,7 +165,7 @@ describe Order do
       event = create(:event)
       o = create(:order, host: event)
       package = create(:package, event: event)
-      add_to_order(o, package, quantity: 1)
+      add_to_order!(o, package, quantity: 1)
 
       expect(o.sub_total).to eq package.current_price
       expect(o.total).to eq package.current_price
@@ -201,7 +201,7 @@ describe Order do
 
   describe 'package + discount' do
     let(:event) { create(:event) }
-    let(:order) { Order.new(event: event) }
+    let(:order) { build(:order, event: event) }
     let(:discount) { create(:discount, host: event) }
     let(:package) { create(:package, event: event) }
 
@@ -210,8 +210,8 @@ describe Order do
       discount.amount = 10
       discount.save
 
-      add_to_order(order, package)
-      add_to_order(order, discount)
+      add_to_order!(order, package)
+      add_to_order!(order, discount)
 
       expected = package.current_price - discount.amount
       actual = order.total
@@ -237,6 +237,7 @@ describe Order do
 
       oli = add_to_order(order, wrong_package)
       expect(oli).to be_valid
+      oli.save
 
       oli = add_to_order(order, discount)
       expect(oli).to_not be_valid
@@ -268,7 +269,7 @@ describe Order do
         tier.allowed_packages << package
         expected = package.initial_price + tier.increase_by_dollars
 
-        oli = add_to_order(order, package)
+        oli = add_to_order!(order, package)
         expect(oli).to be_valid
         expect(order.total).to eq expected
       end
@@ -278,7 +279,7 @@ describe Order do
         tier.allowed_packages << different_package
         expected = package.initial_price
 
-        add_to_order(order, package)
+        add_to_order!(order, package)
         expect(order.total).to eq expected
         expect(order.total).to_not eq different_package.initial_price
       end
@@ -297,12 +298,12 @@ describe Order do
         discount.percent = 50
         discount.save
 
-        add_to_order(order, package)
-        add_to_order(order, discount)
+        add_to_order!(order, package)
+        add_to_order!(order, discount)
 
         price = package.current_price
 
-        expected = price - price * (discount.percent / 100.0)
+        expected = price - (price * (discount.percent / 100.0))
         expect(order.total).to eq expected
       end
 
