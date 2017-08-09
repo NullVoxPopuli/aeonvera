@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module AssertParameters
   def assert!(object, requires = '', message: nil)
     value = asserted_value(object, requires)

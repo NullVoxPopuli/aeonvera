@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # TODO: make the payment handlers polymorphic,
 # separate classes, but not models
 # TODO: service?

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module OrderOperations
     # This should only be used for organizations

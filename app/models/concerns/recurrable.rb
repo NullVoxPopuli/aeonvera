@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Recurrable
   extend ActiveSupport::Concern
 

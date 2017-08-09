@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class CollaboratorsMailer < ActionMailer::Base
   default from: APPLICATION_CONFIG['support_email']
 

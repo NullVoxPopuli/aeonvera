@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def jsonapi_params(type, id: nil, attributes: {}, relationships: {})
   attributes[:id] = id if id
 

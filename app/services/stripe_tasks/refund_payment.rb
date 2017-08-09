@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module StripeTasks
   module RefundPayment
     module_function

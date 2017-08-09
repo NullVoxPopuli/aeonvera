@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module CollaborationOperations
     # Below are all the available actions an Operation can have.

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module StripeTasks
   module ChargeCard
     module_function

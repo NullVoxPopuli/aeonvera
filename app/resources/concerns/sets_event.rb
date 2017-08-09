@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # TODO: remove
 module SetsEvent
   extend ActiveSupport::Concern

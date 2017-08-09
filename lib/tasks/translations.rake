@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # http://stackoverflow.com/questions/8829725/i18n-how-to-check-if-a-translation-key-value-pairs-is-missing
 task i18n: :environment do
   def collect_keys(scope, translations)

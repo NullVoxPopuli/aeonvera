@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module CollaborationOperations
     class Create < SkinnyControllers::Operation::Base

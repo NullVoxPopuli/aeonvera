@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 AeonVera::Application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'

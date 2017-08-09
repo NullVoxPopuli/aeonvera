@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-def page!
-end
+
+def page!; end
 
 def login(user = @user = create(:user))
   user.confirm!

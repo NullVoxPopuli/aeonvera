@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class OrderPolicy < SkinnyControllers::Policy::Base
     # A User should be able to:

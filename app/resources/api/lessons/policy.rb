@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class LessonPolicy < SkinnyControllers::Policy::Base
     # Below are all the available permissions. Each permission corresponds

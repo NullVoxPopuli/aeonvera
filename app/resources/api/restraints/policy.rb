@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class RestraintPolicy < SkinnyControllers::Policy::Base
     def update?

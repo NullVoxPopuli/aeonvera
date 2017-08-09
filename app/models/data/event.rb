@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: events
@@ -212,8 +213,7 @@ class Event < ApplicationRecord
     @pricing_tiers_in_order
   end
 
-  def allows_multiple_discounts?
-  end
+  def allows_multiple_discounts?; end
 
   def registration_json
     json = as_json(

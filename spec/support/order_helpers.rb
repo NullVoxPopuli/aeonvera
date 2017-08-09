@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def add_to_order(order, line_item, quantity: 1, price: 0)
   price = line_item.try(:current_price) ||
     line_item.try(:price) ||

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # config/initializers/sidekiq_scheduler.rb
 require 'sidekiq/scheduler'
 require 'sidekiq/web'

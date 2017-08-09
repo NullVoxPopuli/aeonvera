@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class HostResourceController < Api::ResourceController
     # Why is index allowed via no login?

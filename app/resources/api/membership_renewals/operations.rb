@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module MembershipRenewalOperations
     class ReadAll < SkinnyControllers::Operation::Base

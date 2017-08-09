@@ -6,7 +6,6 @@ module Api
 
     type 'levels'
 
-
     PUBLIC_ATTRIBUTES = [:id, :event_id,
                          :name, :description,
                          :requirement].freeze

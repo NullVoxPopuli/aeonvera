@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 unless Rails.env.production? || Rails.env.staging?
   require 'rspec/core/rake_task'
 

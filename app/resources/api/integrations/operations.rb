@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module IntegrationOperations
     # TODO: Refactor to handle multiple oauth providers

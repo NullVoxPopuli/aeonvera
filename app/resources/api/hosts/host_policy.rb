@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class HostPolicy < SkinnyControllers::Policy::Base
     def read?

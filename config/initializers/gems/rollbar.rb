@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 if defined? Rollbar
   Rollbar.configure do |config|
     # Without configuration, Rollbar is enabled in all environments.

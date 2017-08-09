@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module HelperOperations
   module Helpers
     def host_from_params(params)

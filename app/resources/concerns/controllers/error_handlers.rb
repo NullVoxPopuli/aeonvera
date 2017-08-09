@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Controllers
   module ErrorHandlers
     extend ActiveSupport::Concern

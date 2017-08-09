@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class SponsorshipsController < Api::ResourceController
     self.serializer = SponsorshipSerializableResource

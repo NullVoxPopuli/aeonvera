@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.configure do |config|
   config.include Devise::TestHelpers, type: :controller
   # https://github.com/plataformatec/devise/wiki/How-To:-Test-with-Capybara

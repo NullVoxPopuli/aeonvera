@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module OrderLineItemOperations
     class Update < SkinnyControllers::Operation::Base

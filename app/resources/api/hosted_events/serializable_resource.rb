@@ -7,7 +7,6 @@ module Api
 
     type 'hosted-events'
 
-
     attributes :name, :location,
                :registration_opens_at, :starts_at, :ends_at, :url
 

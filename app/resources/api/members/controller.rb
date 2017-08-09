@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   # Used for searching for members to add to an organization.
   # Searches through all registered users

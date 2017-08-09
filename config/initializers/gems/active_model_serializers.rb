@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'active_model_serializers'
 # ActiveModelSerializers.config.adapter = :json_api
 # ActiveModelSerializers.config.serializer_lookup_chain.unshift(

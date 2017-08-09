@@ -18,7 +18,7 @@ module Api
     PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
 
     attributes :name, :current_price, :price,
-# :number_purchased,
+               # :number_purchased,
                :starts_at, :ends_at, :schedule,
                :duration_amount, :duration_unit,
                :registration_opens_at, :registration_closes_at,

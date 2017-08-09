@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module UserOperations
   class Update < SkinnyControllers::Operation::Base
     def run

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class RaffleTicketsController < Api::ResourceController
     self.serializer = RaffleTicketSerializableResource
@@ -24,10 +25,8 @@ module Api
       params.require(:raffle_id)
     end
 
-    def update_params
-    end
+    def update_params; end
 
-    def create_params
-    end
+    def create_params; end
   end
 end

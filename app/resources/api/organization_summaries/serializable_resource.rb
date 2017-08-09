@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   # object is actually an OrganizationSummaryPresenter
   class OrganizationSummarySerializableResource < ApplicationResource
