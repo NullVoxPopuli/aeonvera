@@ -294,7 +294,7 @@ describe Order do
       end
 
       it 'reduces the amount by a %' do
-        discount.kind == Discount::PERCENT_OFF
+        discount.kind = Discount::PERCENT_OFF
         discount.percent = 50
         discount.save
 
@@ -308,7 +308,7 @@ describe Order do
       end
 
       it 'reduces to free' do
-        discount.kind == Discount::PERCENT_OFF
+        discount.kind = Discount::PERCENT_OFF
         discount.percent = 100
         discount.save
 

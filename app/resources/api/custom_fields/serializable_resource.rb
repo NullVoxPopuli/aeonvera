@@ -10,8 +10,12 @@ module Api
 
     attributes :label, :kind, :default_value, :editable
 
-    belongs_to :host, class: { Event: '::Api::EventSerializableResource',
-                               Organization: '::Api::OrganizationSerializableResource' }
+    belongs_to :host,
+               class: { Event: '::Api::EventSerializableResource',
+                        Organization: '::Api::OrganizationSerializableResource' } do
+      linkage always: true
+    end
+
     has_many :custom_field_responses, class: '::Api::CustomFieldResponseSerializableResource'
   end
 end

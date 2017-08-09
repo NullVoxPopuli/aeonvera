@@ -9,9 +9,10 @@ module Api
       # TODO: add a `self.parent = :method` to SkinnyControllers
       if params[:mine]
         organizations = current_user.owned_and_collaborated_organizations
-        render json: organizations, include: params[:include]
+
+        render_jsonapi(model: organizations)
       else
-        render json: model, include: params[:include]
+        render_jsonapi
       end
     end
 

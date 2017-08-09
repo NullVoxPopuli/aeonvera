@@ -55,7 +55,7 @@ describe LineItem::RaffleTicket do
         item = LineItem.new
         item.save(validate: false)
 
-        oli = OrderLineItem.new(line_item: item)
+        oli = OrderLineItem.new(line_item: item, order: build(:order))
         oli.save(validate: false)
 
         item.reload

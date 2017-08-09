@@ -12,9 +12,18 @@ module Api
                :preferred_gender_to_house_with,
                :housing_provision_id
 
-    belongs_to :host, class: { Event: '::Api::EventSerializableResource',
-                               Organization: '::Api::OrganizationSerializableResource' }
-    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource'
-    belongs_to :housing_provision, class: '::Api::HousingProvisionSerializableResource'
+    belongs_to :host,
+               class: { Event: '::Api::EventSerializableResource',
+                        Organization: '::Api::OrganizationSerializableResource' } do
+      linkage always: true
+    end
+
+    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource' do
+      linkage always: true
+    end
+
+    belongs_to :housing_provision, class: '::Api::HousingProvisionSerializableResource' do
+      linkage always: true
+    end
   end
 end

@@ -20,15 +20,18 @@ module Api
                :allowed_number_of_uses, :requires_student_id,
                :times_used
 
-
     attribute(:package_ids) { @object.allowed_package_ids }
 
     has_many :allowed_packages, class: '::Api::PackageSerializableResource'
     has_many :restraints, class: '::Api::RestraintSerializableResource' do
       linkage always: true
     end
+
     has_many :order_line_items, class: '::Api::OrderLineItemSerializableResource'
-    belongs_to :host, class: { Event: '::Api::EventSerializableResource',
-                               Organization: '::Api::OrganizationSerializableResource' }
+    belongs_to :host,
+               class: { Event: '::Api::EventSerializableResource',
+                        Organization: '::Api::OrganizationSerializableResource' } do
+      linkage always: true
+    end
   end
 end

@@ -76,7 +76,7 @@ describe Api::OrderOperations::Update do
         package = create(:package, event: event)
         integration = create_integration(owner: event)
         @order = create(:order, host: event, registration: registration)
-        add_to_order(@order, package)
+        add_to_order!(@order, package)
 
         @params = {
           id: @order.id,

@@ -205,7 +205,7 @@ describe Api::OrderLineItemsController, type: :request do
             end
 
             it 'sets the new package' do
-              expect(json_response).to have_relation_to(other_package, { relation: 'line-item' })
+              expect(json_response).to have_relation_to(other_package, { relation: 'line_item' })
             end
 
             it 'updates the price' do
@@ -342,6 +342,7 @@ describe Api::OrderLineItemsController, type: :request do
           expect(response.status).to eq 201
 
           order.reload
+
           expected_value = lesson.current_price -
             membership_discount.value +
             membership_option.current_price

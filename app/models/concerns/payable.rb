@@ -126,7 +126,7 @@ module Payable
 
   # In Dollars
   def sub_total
-    (sub_total_in_cents || ensure_sub_total_persisted) / 100
+    (sub_total_in_cents || ensure_sub_total_persisted) / 100.0
   end
 
   def ensure_sub_total_persisted
