@@ -77,10 +77,10 @@ describe Api::OrderLineItemsController, type: :request do
                 .to change(OrderLineItem, :count).by 1
 
               expect(json_response)
-                .to have_relation_to(shirt, { relation: 'line-item', type: 'shirts' })
+                .to have_relation_to(shirt, { relation: 'line_item', type: 'shirts' })
             end
 
-            it 'uses the price of the size, rather than the line-item' do
+            it 'uses the price of the size, rather than the line_item' do
               post '/api/order_line_items', params, @headers
 
               expect(json_response).to have_attribute('size', 'S')
@@ -263,7 +263,7 @@ describe Api::OrderLineItemsController, type: :request do
                     id: @existing.id,
                     attributes: { quantity: 5 },
                     relationships: {
-                      'line-item': { data: { type: 'shirts', id: shirt.id } },
+                      line_item: { data: { type: 'shirts', id: shirt.id } },
                       order: { data: { type: 'orders', id: order.id } }
                     }
                   }
@@ -337,7 +337,6 @@ describe Api::OrderLineItemsController, type: :request do
         it 'applies the auto-discount when a lesson is added to a membership' do
           add_to_order!(order, membership_option)
           expect(order.order_line_items.length).to eq 1
-
           post '/api/order_line_items', lesson_params, auth_header_for(user)
 
           expect(response.status).to eq 201

@@ -4,11 +4,9 @@ module Api
   module Users
     class RegistrationsController < APIController
       include SkinnyControllers::Diet
-
-      DEFAULT_INCLUDES = { orders: [:order_line_items] }.freeze
-
-      # TODO: compare with params[:fields]
-      ALLOWED_FIELDS = {
+      self.serializer = ::Api::Users::RegistrationSerializableResource
+      self.default_include = { orders: [:order_line_items] }.freeze
+      self.default_fields = {
         registration: Users::RegistrationSerializableResource::ATTRIBUTES,
         level: LevelFields::PUBLIC_ATTRIBUTES,
         order: OrderSerializableResource::BUYER_FIELDS,
@@ -20,15 +18,13 @@ module Api
 
       before_filter :must_be_logged_in
 
-      self.serializer = ::Api::Users::RegistrationSerializableResource
-
       def create
-        render_model('housing_request,housing_provision,custom_field_responses', jsonapi: true)
+        render_jsonapi(options: { include: 'housing_request,housing_provision,custom_field_responses' })
       end
 
       def update
         params[:fields] = { registration: {} }
-        render_model('housing_request,housing_provision,custom_field_responses', jsonapi: true)
+        render_jsonapi(options: { include: 'housing_request,housing_provision,custom_field_responses' })
       end
 
       def index
@@ -37,11 +33,7 @@ module Api
                 .ransack(params[:q])
                 .result
 
-        render json: success(model,
-                             # TODO: come up with a way to whitelist includes
-                             includes: params[:include] || DEFAULT_INCLUDES,
-                             fields: params[:fields] || ALLOWED_FIELDS,
-                             class: ::Api::Users::RegistrationSerializableResource)
+        render_jsonapi(model: model)
       end
 
       def show
@@ -50,10 +42,7 @@ module Api
                 .includes(orders: [:order_line_items])
                 .find(params[:id])
 
-        render json: success(model,
-                             include: params[:include] || DEFAULT_INCLUDES,
-                             fields: params[:fields] || ALLOWED_FIELDS,
-                             class: ::Api::Users::RegistrationSerializableResource)
+        render_jsonapi(model: model)
       end
 
       def destroy

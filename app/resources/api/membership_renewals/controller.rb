@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # this works with membership renewals, but at the organization level.
 # membership renewals are bound to a membership option, hence the includes in index
 module Api

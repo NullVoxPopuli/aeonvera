@@ -3,6 +3,7 @@
 require 'jsonapi/serializable'
 
 class APIController < ActionController::Base
+  # ? include SkinnyControllers::Diet
   include Controllers::CurrentUser
   include Controllers::JsonApiErrors
   include Controllers::ModelRendering
