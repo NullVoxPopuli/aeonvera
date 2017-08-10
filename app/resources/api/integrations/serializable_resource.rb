@@ -16,7 +16,11 @@ module Api
       @object.config.try(:[], 'stripe_publishable_key') if @object.kind == Integration::STRIPE
     end
 
-    belongs_to :owner, class: { Event: '::Api::EventSerializableResource',
-                                Organization: '::Api::OrganizationSerializableResource' }
+    belongs_to :owner, class: {
+      Event: '::Api::EventSerializableResource',
+      Organization: '::Api::OrganizationSerializableResource'
+    } do
+      linkage always: true
+    end
   end
 end

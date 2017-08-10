@@ -34,3 +34,9 @@ if ::Rails::VERSION::MAJOR >= 5
 else
   ::ActionDispatch::ParamsParser::DEFAULT_PARSERS[Mime[:jsonapi]] = PARSER
 end
+
+# TODO: be able to render with the jsonapi mimetype
+# ActionController::Renderers.add :jsonapi do |json, options|
+#   self.content_type ||= Mime[:jsonapi]
+#   self.response_body = json
+# end

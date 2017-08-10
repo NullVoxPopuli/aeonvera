@@ -45,11 +45,22 @@ module Api
       has_one :housing_provision, class: '::Api::HousingProvisionSerializableResource'
       has_many :custom_field_responses, class: '::Api::CustomFieldSerializableResource'
 
-      belongs_to :event, class: '::Api::EventSerializableResource'
+      belongs_to :event, class: '::Api::EventSerializableResource' do
+        linkage always: true
+      end
+
       belongs_to :level, class: '::Api::LevelSerializableResource'
 
       belongs_to :unpaid_order, class: '::Api::OrderSerializableResource'
       has_many :orders, class: '::Api::OrderSerializableResource'
+
+      # Legacy Naming
+      belongs_to :host, class: {
+        Event: '::Api::EventSerializableResource'
+      } do
+        data { @object.event }
+        linkage always: true
+      end
     end
   end
 end
