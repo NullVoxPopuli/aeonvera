@@ -22,7 +22,7 @@ module Api
     attribute(:accept_only_electronic_payments) { true }
 
     has_many :lessons, class: '::Api::LessonSerializableResource' do
-      @object.available_lessons
+      data { @object.available_lessons }
     end
 
     has_many :integrations, class: '::Api::IntegrationSerializableResource'

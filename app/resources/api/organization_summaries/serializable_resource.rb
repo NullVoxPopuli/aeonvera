@@ -11,6 +11,8 @@ module Api
                :revenue_past_month, :net_received_past_month,
                :unpaid_past_month, :new_memberships_past_month
 
-    has_many :orders, class: '::Api::OrderSerializableResource'
+    has_many :orders, class: '::Api::OrderSerializableResource' do
+      data { @object.orders.last(10) }
+    end
   end
 end

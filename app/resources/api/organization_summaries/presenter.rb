@@ -1,16 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class OrganizationSummaryPresenter
-    attr_reader :object
-
-    delegate :logo_url, :logo_url_thumb, :logo_url_medium,
-             :orders, :name, :domain, to: :object
-
-    def initialize(object)
-      @object = object
-    end
-
+  class OrganizationSummaryPresenter < ApplicationPresenter
     def revenue_past_month
       paid_orders_last_month.map(&:paid_amount).inject(:+)
     end

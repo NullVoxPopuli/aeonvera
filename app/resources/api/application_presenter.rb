@@ -5,9 +5,9 @@ module Api
     attr_reader :object
 
     def initialize(object)
-      @object = object
-
       super(object)
+
+      @object = object
     end
   end
 end

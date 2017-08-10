@@ -7,7 +7,9 @@ module Api
     include SetsOrganization
 
     def show
-      render_jsonapi(model: @organization)
+      model = OrganizationSummaryPresenter.new(@organization)
+
+      render_jsonapi(model: model)
     end
   end
 end
