@@ -5,7 +5,7 @@ module Api
     type 'membership-options'
 
     attributes :duration_in_words,
-               :name, :current_price, :price,
+               :name, :price,
                :starts_at, :ends_at, :schedule,
                :duration_amount, :duration_unit,
                :registration_opens_at, :registration_closes_at,
@@ -13,5 +13,6 @@ module Api
                :expires_at
 
     # attribute(:number_purchased) { @object.order_line_items.count }
+    attribute(:current_price) { @object.price }
   end
 end

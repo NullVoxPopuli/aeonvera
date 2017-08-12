@@ -3,6 +3,20 @@
 module Api
   class OrganizationsController < Api::ResourceController
     self.serializer = OrganizationSerializableResource
+    self.default_fields = {
+      organization: [
+        :name, :tagline,
+        :city, :state, :beta,
+        :domain,
+        :logo_file_name, :logo_content_type,
+        :logo_file_size, :logo_updated_at,
+        :make_attendees_pay_fees,
+        :notify_email,
+        :email_all_purchases,
+        :email_membership_purchases,
+        :contact_email
+      ]
+    }
 
     before_filter :must_be_logged_in, except: [:index, :show]
 
@@ -15,6 +29,12 @@ module Api
       else
         render_jsonapi
       end
+    end
+
+    def show
+      presented = OrganizationPresenter.new(model)
+
+      render_jsonapi(model: presented)
     end
 
     private

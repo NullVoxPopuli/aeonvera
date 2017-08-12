@@ -26,7 +26,7 @@ module Api
     BUYER_FIELDS = Array[*BUYER_ATTRIBUTES, *BUYER_RELATIONSHIPS]
 
     attributes :is_fee_absorbed,
-               :paid_amount, :net_amount_received, :total_fee_amount,
+               :net_amount_received, :total_fee_amount,
                :paid, :payment_method,
                :created_at, :user_name,
                :payment_received_at,
@@ -36,6 +36,8 @@ module Api
                :current_paid_amount,
                :current_total_fee_amount,
                :current_net_amount_received
+
+    attribute(:paid_amount) { @object.paid_amount.to_f }
 
     attribute(:stripe_refunds) do
       @object.stripe_refunds.map do |refund|

@@ -24,14 +24,9 @@ module Api
     end
 
     def index
-      if params[:id]
-        @model = OrderOperations::Read.new(current_user, params).run
+      model = OrderOperations::ReadAll.run(current_user, params)
 
-        render_jsonapi(model: @model)
-        return
-      end
-
-      super
+      render_jsonapi(model: model)
     end
 
     def show

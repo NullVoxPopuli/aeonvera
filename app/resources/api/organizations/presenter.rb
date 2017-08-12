@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Api
-  class OrganizationSummaryPresenter < ApplicationPresenter
+  class OrganizationPresenter < ApplicationPresenter
     def revenue_past_month
       paid_orders_last_month.map(&:paid_amount).inject(:+)
     end

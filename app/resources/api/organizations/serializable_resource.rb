@@ -17,6 +17,12 @@ module Api
                :email_membership_purchases,
                :contact_email
 
+    # Attributes that require a presenter
+    attribute(:revenue_past_month) { @object.try(:revenue_past_month) }
+    attribute(:net_received_past_month) { @object.try(:net_received_past_month) }
+    attribute(:unpaid_past_month) { @object.try(:unpaid_past_month) }
+    attribute(:new_memberships_past_month) { @object.try(:new_memberships_past_month) }
+
     attribute(:url) { @object.link }
     attribute(:has_stripe_integration) { @object.integrations[:stripe].present? }
     attribute(:accept_only_electronic_payments) { true }
@@ -28,5 +34,9 @@ module Api
     has_many :integrations, class: '::Api::IntegrationSerializableResource'
     has_many :membership_options, class: '::Api::MembershipOptionSerializableResource'
     has_many :membership_discounts, class: '::Api::MembershipDiscountSerializableResource'
+
+    has_many :recent_orders, class: '::Api::OrderSerializableResource' do
+      data { @object.orders.last(10) }
+    end
   end
 end
