@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::RafflesController, type: :controller do
@@ -9,13 +11,13 @@ RSpec.describe Api::RafflesController, type: :controller do
   context 'show' do
     it 'includes the purchasers' do
       raffle = create(:raffle, event: @event)
-      ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: {'number_of_tickets' => 1})
-      attendance = create(:attendance, event: @event)
-      order = create(:order, attendance: attendance, host: @event)
+      ticket_option = create(:raffle_ticket, host: @event, raffle: raffle, metadata: { 'number_of_tickets' => 1 })
+      registration = create(:registration, event: @event)
+      order = create(:order, registration: registration, host: @event)
       create(:order_line_item,
-        order: order,
-        line_item: ticket_option,
-        quantity: 1)
+             order: order,
+             line_item: ticket_option,
+             quantity: 1)
 
       get :show, id: raffle.id, include: 'ticket_purchasers'
 
@@ -25,9 +27,8 @@ RSpec.describe Api::RafflesController, type: :controller do
       expect(included.count).to be 1
       attributes = included.first['attributes']
 
-      expect(attributes['attendance-id']).to eq attendance.id
-      expect(attributes['number-of-tickets-purchased']).to eq 1
-      expect(attributes['name']).to eq attendance.attendee_name
+      expect(attributes['number_of_tickets_purchased']).to eq 1
+      expect(attributes['name']).to eq registration.attendee_name
     end
   end
 
@@ -40,17 +41,17 @@ RSpec.describe Api::RafflesController, type: :controller do
 
       it 'chooses a new winner' do
         # gotta create some ticket purchases
-        attendance = create(:attendance, event: @event)
-        order = create(:order, attendance: attendance, host: @event)
+        registration = create(:registration, event: @event)
+        order = create(:order, registration: registration, host: @event)
         create(:order_line_item,
-          order: order,
-          line_item: @ticket_option,
-          quantity: 1)
+               order: order,
+               line_item: @ticket_option,
+               quantity: 1)
         # sanity, to make sure the test data is correct
         # For whatever reason, when this is uncommented, it *sometimes* fails...
         # (this expectation, that is... not sure what's up with that).
         # maybe a caching issue.
-        # expect(@event.attendances.with_raffle_tickets(@raffle.id).first).to eq attendance
+        # expect(@event.registrations.with_raffle_tickets(@raffle.id).first).to eq registration
 
         # now the actual test
         json_api = {
@@ -66,8 +67,8 @@ RSpec.describe Api::RafflesController, type: :controller do
         patch :update, json_api
         data = json_api_data
         attributes = data['attributes']
-        expect(attributes['winner']).to eq attendance.attendee_name
-        expect(attributes['winner-has-been-chosen']).to eq true
+        expect(attributes['winner']).to eq registration.attendee_name
+        expect(attributes['winner_has_been_chosen']).to eq true
       end
 
       it 'does not choose a new winner when there are no tickets' do
@@ -85,7 +86,7 @@ RSpec.describe Api::RafflesController, type: :controller do
 
         data = json_api_data
         attributes = data['attributes']
-        expect(attributes['winner-has-been-chosen']).to eq false
+        expect(attributes['winner_has_been_chosen']).to eq false
       end
     end
   end

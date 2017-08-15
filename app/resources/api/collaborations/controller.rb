@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 # this is where collaborations are managed
 # collaborations are accepted at users/collaborations
 module Api
   class CollaborationsController < Api::ResourceController
+    self.serializer = CollaborationSerializableResource
     # include ::HelperOperations::Helpers
     # include ::SkinnyControllers::Diet
 
@@ -64,7 +67,7 @@ module Api
       end
     end
 
-    alias_method :update_collaboration_params, :update_params
-    alias_method :create_collaboration_params, :create_params
+    alias update_collaboration_params update_params
+    alias create_collaboration_params create_params
   end
 end

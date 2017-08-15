@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: orders
@@ -6,7 +8,7 @@
 #  payment_token               :string(255)
 #  payer_id                    :string(255)
 #  metadata                    :text
-#  attendance_id               :integer
+#  registration_id               :integer
 #  host_id                     :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
@@ -35,12 +37,10 @@
 require 'spec_helper'
 
 describe Order do
-
   describe 'associations' do
     context 'line_Items' do
-
       it 'has line items' do
-        discount = Discount.new
+        discount = build(:discount)
         discount.save(validate: false)
 
         order = Order.new
@@ -56,8 +56,7 @@ describe Order do
   end
 
   describe 'validations' do
-
-    describe 'attendance' do
+    describe 'registration' do
       it 'is required when there is a competition' do
         event = create(:event)
         competition = create(:competition, event: event)
@@ -86,8 +85,8 @@ describe Order do
         expect(o.errors.keys).to_not include(:buyer_email)
       end
 
-      it 'is on the attendance' do
-        o = create(:order, attendance: create(:attendance))
+      it 'is on the registration' do
+        o = create(:order, registration: create(:registration))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_email)
       end
@@ -107,7 +106,6 @@ describe Order do
         expect(o.errors.keys).to include(:buyer_name)
       end
 
-
       it 'is present in the metadata' do
         o = create(:order, host: create(:organization))
         o.buyer_name = 'test test'
@@ -115,8 +113,8 @@ describe Order do
         expect(o.errors.keys).to_not include(:buyer_name)
       end
 
-      it 'is on the attendance' do
-        o = create(:order, attendance: create(:attendance))
+      it 'is on the registration' do
+        o = create(:order, registration: create(:registration))
         expect(o).to be_valid
         expect(o.errors.keys).to_not include(:buyer_name)
       end
@@ -129,30 +127,28 @@ describe Order do
     end
   end
 
-  describe "#force_paid!" do
-    it "becomes paid" do
+  describe '#force_paid!' do
+    it 'becomes paid' do
       o = Order.new
       o.paid?.should == false
     end
   end
 
   describe '#owes' do
-
     it 'has not been paid' do
       o = Order.new
-      allow(o).to receive(:total){ 10 }
+      allow(o).to receive(:total) { 10 }
 
       expect(o.owes).to eq 10
     end
 
     it 'has been paid' do
       o = Order.new
-      allow(o).to receive(:total){ 10 }
-      allow(o).to receive(:paid?){ true }
+      allow(o).to receive(:total) { 10 }
+      allow(o).to receive(:paid?) { true }
 
       expect(o.owes).to eq 0
     end
-
   end
 
   describe 'sub_total' do
@@ -170,7 +166,7 @@ describe Order do
       event = create(:event)
       o = create(:order, host: event)
       package = create(:package, event: event)
-      add_to_order(o, package, quantity: 1)
+      add_to_order!(o, package, quantity: 1)
 
       expect(o.sub_total).to eq package.current_price
       expect(o.total).to eq package.current_price
@@ -205,18 +201,18 @@ describe Order do
   end
 
   describe 'package + discount' do
-    let(:event){ create(:event) }
-    let(:order){ Order.new(event: event) }
-    let(:discount){ create(:discount, host: event) }
-    let(:package){ create(:package, event: event) }
+    let(:event) { create(:event) }
+    let(:order) { build(:order, event: event) }
+    let(:discount) { create(:discount, host: event) }
+    let(:package) { create(:package, event: event) }
 
     it 'discounts a dollar amount' do
       discount.kind = Discount::DOLLARS_OFF
       discount.amount = 10
       discount.save
 
-      add_to_order(order, package)
-      add_to_order(order, discount)
+      add_to_order!(order, package)
+      add_to_order!(order, discount)
 
       expected = package.current_price - discount.amount
       actual = order.total
@@ -242,11 +238,11 @@ describe Order do
 
       oli = add_to_order(order, wrong_package)
       expect(oli).to be_valid
+      oli.save
 
       oli = add_to_order(order, discount)
       expect(oli).to_not be_valid
       remove_invalid_items(order) # instead of saving, remove invalid
-
 
       expected = package.current_price
       expect(order.total).to eq expected
@@ -264,17 +260,17 @@ describe Order do
     end
 
     context 'a tier is triggered, but is tied to a specific package' do
-      let(:tier){ create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
+      let(:tier) { create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
 
       before(:each) do
-        allow(event).to receive(:current_tier){tier}
+        allow(event).to receive(:current_tier) { tier }
       end
 
       it 'increases the price of a package' do
         tier.allowed_packages << package
         expected = package.initial_price + tier.increase_by_dollars
 
-        oli = add_to_order(order, package)
+        oli = add_to_order!(order, package)
         expect(oli).to be_valid
         expect(order.total).to eq expected
       end
@@ -284,37 +280,36 @@ describe Order do
         tier.allowed_packages << different_package
         expected = package.initial_price
 
-        add_to_order(order, package)
+        add_to_order!(order, package)
         expect(order.total).to eq expected
         expect(order.total).to_not eq different_package.initial_price
       end
-
     end
 
     context 'a tier has increased the price of a package' do
-      let(:tier){ create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
+      let(:tier) { create(:pricing_tier, event: event, date: 1.week.ago, increase_by_dollars: 11) }
 
       before(:each) do
-        allow(event).to receive(:current_tier){tier}
+        allow(event).to receive(:current_tier) { tier }
         expect(package.current_price).to eq package.initial_price + tier.increase_by_dollars
       end
 
       it 'reduces the amount by a %' do
-        discount.kind == Discount::PERCENT_OFF
+        discount.kind = Discount::PERCENT_OFF
         discount.percent = 50
         discount.save
 
-        add_to_order(order, package)
-        add_to_order(order, discount)
+        add_to_order!(order, package)
+        add_to_order!(order, discount)
 
         price = package.current_price
 
-        expected = price - price * (discount.percent / 100.0)
+        expected = price - (price * (discount.percent / 100.0))
         expect(order.total).to eq expected
       end
 
       it 'reduces to free' do
-        discount.kind == Discount::PERCENT_OFF
+        discount.kind = Discount::PERCENT_OFF
         discount.percent = 100
         discount.save
 
@@ -326,18 +321,12 @@ describe Order do
       end
 
       context 'other items are in the order' do
-
         it 'reduces the amount by a %' do
-
         end
 
         it 'reduces to free' do
-
         end
-
       end
-
     end
-
   end
 end

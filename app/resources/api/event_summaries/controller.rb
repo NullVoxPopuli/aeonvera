@@ -1,12 +1,17 @@
+# frozen_string_literal: true
+
 module Api
-    class EventSummariesController < APIController
-    include SetsEvent
+  class EventSummariesController < APIController
+    self.serializer = EventSummarySerializableResource
+    self.default_include = 'registrations'
 
     def show
-      render json: @event,
-        serializer: EventSummarySerializer,
-        root: :event_summaries,
-        include: params[:include]
+      model = EventSummaryOperations::Read
+              .run(current_user, { event_id: params[:id] })
+
+      render_jsonapi(model: model, options: {
+                       expose: { current_user: current_user }
+                     })
     end
   end
 end

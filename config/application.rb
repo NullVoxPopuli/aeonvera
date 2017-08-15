@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require File.expand_path('../boot', __FILE__)
 
 # require 'rails/all'
@@ -30,7 +31,6 @@ module AeonVera
     end
 
     config.active_job.queue_adapter = :sidekiq
-
 
     config.cache_store = :redis_store, ENV['REDIS_URL'] if ENV['REDIS_URL']
     # Upgrading from rails 4.1.x to 4.2.x
@@ -99,9 +99,9 @@ module AeonVera
       allow do
         origins '*'
         resource '*',
-          headers: :any,
-          methods: [:get, :post, :patch, :delete, :put, :options, :head],
-          credentials: true
+                 headers: :any,
+                 methods: [:get, :post, :patch, :delete, :put, :options, :head],
+                 credentials: false
       end
     end
   end

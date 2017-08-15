@@ -1,93 +1,97 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::Users::RegistrationsController, type: :request do
-  let(:user) { create(:user) }
+  base_path = '/api/users/registrations'
 
-  before(:each) do
-    @headers = {
-      'devise.mapping' => Devise.mappings[:api_user]
-    }
-
-    host! APPLICATION_CONFIG[:domain][Rails.env]
+  context 'not logged in' do
+    it_behaves_like(
+      'unauthorized',
+      factory: :registration,
+      base_path: base_path
+    )
   end
 
-  context 'create' do
-    context 'with a valid payload' do
-      let(:params) { {
-        data: {
+  context 'logged in' do
+    let(:event) { create(:event) }
+    let(:user) { create_confirmed_user }
+
+    context 'index' do
+      it 'has no registrations' do
+        get base_path, {}, auth_header_for(user)
+
+        expect(response.status).to eq 200
+        expect(json_api_data.length).to eq 0
+      end
+
+      context 'has registrations' do
+        before(:each) do
+          create(:registration, attendee: user, host: event)
+        end
+
+        it 'lists registrations' do
+          get base_path, {}, auth_header_for(user)
+
+          expect(json_api_data.length).to eq 1
+        end
+      end
+    end
+
+    context 'show' do
+      let(:registration) { create(:registration, attendee: user, host: event) }
+
+      it 'retrieves a registration' do
+        get "#{base_path}/#{registration.id}", {}, auth_header_for(user)
+
+        expect(response.status).to eq 200
+      end
+    end
+
+    context 'create' do
+      it 'creates a registration' do
+        params = jsonapi_params(
+          'registrations',
           attributes: {
-            first_name: 'First',
-            last_name: 'Last',
-            email: 'emailyMcEmailFace@email.email',
-            password: 'password',
-            password_confirmation: 'password'
-          }
-        }
-      } }
+            attendee_first_name: 'The',
+            attendee_last_name: 'Last',
+            city: 'Indianapolis',
+            state: 'IN',
+            dance_orientation: Registration::LEAD
+          },
+          relationships: { host: event }
+        )
 
-      it 'returns a valid jsonapi document' do
-        post '/api/users', params
+        post base_path, params, auth_header_for(user)
 
-        expect { JSONAPI.parse_response!(json_response) }
-          .to_not raise_error
-      end
-
-      it 'confirms that the confirmation email was sent' do
-        post '/api/users', params
-
-        expect(json_response).to have_attribute('confirmation-sent-at')
-      end
-
-      it 'creates an account' do
-        expect {
-          post '/api/users', params
-          expect(response.status).to eq 200
-        }.to change(User, :count).by 1
+        expect(response.status).to eq 200
       end
     end
 
-    it 'has case-insensitive email addresses' do
-      old_user = create(:user)
+    context 'update' do
+      let(:registration) { create(:registration, attendee_first_name: 'A', attendee: user, host: event) }
 
-      # ensure we are actually testing a different casing
-      expect(old_user.email.downcase).to eq old_user.email
+      it 'updates a registration' do
+        params = jsonapi_params(
+          'registrations',
+          id: registration.id,
+          attributes: { attendee_first_name: 'B' }
+        )
 
-      expect {
-        post '/api/users', {
-          data: {
-            attributes: {
-              first_name: 'First',
-              last_name: 'Last',
-              email: old_user.email.upcase,
-              password: 'password',
-              password_confirmation: 'password'
-            }
-          }
-        }
-        expect(response.status).to eq 422
-      }.to change(User, :count).by 0
+        put "#{base_path}/#{registration.id}", params, auth_header_for(user)
 
-      json = JSON.parse(response.body)
-      reason = json['errors'].first['detail']
-      expect(reason).to eq 'has already been taken'
-    end
-  end
-
-  context 'update' do
-    let(:user) { create(:user, confirmed_at: Time.now) }
-
-    before(:each) do
-      @headers.merge!('Authorization' => "Bearer #{user.authentication_token}")
+        expect(response.status).to eq 200
+        expect(json_api_data['attributes']['attendee_first_name']).to eq 'B'
+      end
     end
 
-    it 'updates the name' do
-      put '/api/users/registrations', { data: { attributes: {
-        first_name: user.name + 'updated',
-        current_password: user.password } } }, @headers
+    context 'destroy' do
+      let!(:registration) { create(:registration, attendee: user, host: event) }
 
-      expect(response.status).to eq 200
-
-      expect(User.find(user.id).first_name).to eq user.name + 'updated'
+      it 'deletes a registration' do
+        expect { delete "#{base_path}/#{registration.id}", {}, auth_header_for(user) }
+          .to change(Registration, :count).by(-1)
+      end
     end
   end
 end

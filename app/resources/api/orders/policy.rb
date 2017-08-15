@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class OrderPolicy < SkinnyControllers::Policy::Base
     # A User should be able to:
@@ -53,8 +54,8 @@ module Api
     end
 
     def owner?
-      (object.user_id != nil && object.user_id == user_id) ||
-        (object.payment_token != nil && object.payment_token == user_id)
+      (!object.user_id.nil? && object.user_id == user_id) ||
+        (!object.payment_token.nil? && object.payment_token == user_id)
     end
 
     # this covers both event and community

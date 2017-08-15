@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class HostPolicy < SkinnyControllers::Policy::Base
     def read?
@@ -18,6 +20,5 @@ module Api
     def has_ended?
       object.ends_at < Time.now
     end
-
   end
 end

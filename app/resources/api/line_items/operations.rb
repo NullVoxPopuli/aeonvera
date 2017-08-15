@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module LineItemOperations
   class ReadAll < SkinnyControllers::Operation::Base
     include HelperOperations::Helpers

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Api
   class LessonPolicy < SkinnyControllers::Policy::Base
-
     # Below are all the available permissions. Each permission corresponds
     # to an action in the controller.
     # Default functionality is to return true (allow) -- so the methods
@@ -47,6 +48,5 @@ module Api
       end
       result
     end
-
   end
 end

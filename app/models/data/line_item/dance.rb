@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: line_items
@@ -36,6 +38,6 @@
 #
 
 class LineItem::Dance < LineItem
-	include HasAddress
-	include Recurrable
+  include HasAddress
+  include Recurrable
 end

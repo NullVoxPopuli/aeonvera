@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class MembershipMailer < ApplicationMailer
   # only called from the membership_reminder_job,
   # so this should not be called with deliver later.

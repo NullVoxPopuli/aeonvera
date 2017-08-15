@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: housing_requests
@@ -13,8 +15,8 @@
 #  unwanted_roommates             :text
 #  preferred_gender_to_house_with :string(255)
 #  notes                          :text
-#  attendance_id                  :integer
-#  attendance_type                :string(255)
+#  registration_id                  :integer
+#  registration_type                :string(255)
 #  host_id                        :integer
 #  host_type                      :string(255)
 #  housing_provision_id           :integer
@@ -25,7 +27,7 @@
 #
 # Indexes
 #
-#  index_housing_requests_on_attendance_id_and_attendance_type  (attendance_id,attendance_type)
+#  index_housing_requests_on_registration_id_and_registration_type  (registration_id,registration_type)
 #  index_housing_requests_on_host_id_and_host_type              (host_id,host_type)
 #
 
@@ -39,10 +41,10 @@ class HousingRequest < ApplicationRecord
   serialize :unwanted_roommates, JSON
 
   belongs_to :host, polymorphic: true
-  belongs_to :attendance, -> { with_deleted }, polymorphic: true
+  belongs_to :registration, -> { with_deleted }
 
   belongs_to :event, class_name: Event.name,
-    foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
+                     foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
   # TODO: Implement #177
   belongs_to :housing_provision
@@ -57,21 +59,23 @@ class HousingRequest < ApplicationRecord
     :attendee_name,
     :attendee_email,
     :requested_roommate_name_list,
-    :unwanted_roommate_name_list] +
+    :unwanted_roommate_name_list
+  ] +
     column_names,
-    exclude: [
-      :updated_at, :created_at,
-      :attendance_id, :attendance_type,
-      :id,
-      :requested_roommates, :unwanted_roommates,
-      :host_id, :host_type]
+                   exclude: [
+                     :updated_at, :created_at,
+                     :registration_id, :registration_type,
+                     :id,
+                     :requested_roommates, :unwanted_roommates,
+                     :host_id, :host_type
+                   ]
 
   def attendee_name
-    attendance.try(:attendee_name) || "Attendee Not Found or Not Associated"
+    registration.try(:attendee_name) || 'Attendee Not Found or Not Associated'
   end
 
   def attendee_email
-    attendance.try(:attendee).try(:email) || ""
+    registration.try(:attendee).try(:email) || ''
   end
 
   def requested_roommate_names
@@ -83,12 +87,10 @@ class HousingRequest < ApplicationRecord
   end
 
   def requested_roommate_name_list
-    requested_roommate_names.keep_if{|n| n.present?}.join(", ")
+    requested_roommate_names.keep_if(&:present?).join(', ')
   end
 
   def unwanted_roommate_name_list
-    unwanted_roommate_names.keep_if{|n| n.present?}.join(", ")
+    unwanted_roommate_names.keep_if(&:present?).join(', ')
   end
-
-
 end

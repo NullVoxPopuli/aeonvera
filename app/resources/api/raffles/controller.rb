@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 module Api
   class RafflesController < Api::EventResourceController
+    self.serializer = RaffleSerializableResource
+
     def update
       if must_choose_new_winner?
         model.choose_winner!
@@ -7,7 +11,7 @@ module Api
         # I guess unless there are no tickets purchased...
         # but the UI should hide the button for choosing a winner
         # if no tickets have been purchased
-        render json: model
+        render_jsonapi
       else
         super
       end

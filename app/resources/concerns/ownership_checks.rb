@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OwnershipChecks
   extend ActiveSupport::Concern
 

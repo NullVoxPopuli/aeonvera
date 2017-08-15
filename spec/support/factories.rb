@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   sequence :email do |n|
     "email#{n}@factory.com"
@@ -14,7 +16,7 @@ FactoryGirl.define do
   end
 
   factory :user do
-    first_name "ÆONVERA"
+    first_name 'ÆONVERA'
     last_name 'User Test'
     email
     password '12345678'
@@ -212,11 +214,17 @@ FactoryGirl.define do
     order
   end
 
-  factory :attendance, class: EventAttendance do
+  factory :registration do
     host factory: :event
+    # event
     attendee
     pricing_tier
     package
+    attendee_first_name 'First'
+    attendee_last_name 'Last'
+    dance_orientation Registration::LEAD
+    city 'Indianapolis'
+    state 'IN'
     metadata do
       {
         'address' => {
@@ -228,13 +236,11 @@ FactoryGirl.define do
       }
     end
 
-    after(:build) do |attendance, _evaluator|
-      # attendance.host = create(:event, hosted_by: attendance.attendee) unless attendance.host.present?
-      attendance.dance_orientation = 0
+    after(:build) do |registration, _evaluator|
+      registration.event = registration.host
+      # registration.host = create(:event, hosted_by: registration.attendee) unless registration.host.present?
+      registration.dance_orientation = 0
     end
-  end
-
-  factory :organization_attendance, class: OrganizationAttendance do
   end
 
   factory :attendee, class: User do

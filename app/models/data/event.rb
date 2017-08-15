@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: events
@@ -60,29 +61,24 @@ class Event < ApplicationRecord
                                       source_type: Organization.name
 
   has_many :integrations,
-    dependent: :destroy,
-    extend: Extensions::Integrations,
-    as: :owner
+           dependent: :destroy,
+           extend: Extensions::Integrations,
+           as: :owner
 
   has_many :notes, as: :host
   has_many :custom_fields, as: :host
   has_many :orders, as: :host
   has_many :order_line_items, through: :orders, source: :order_line_items
 
-  has_many :attendances,
-    -> { where(attending: true).order('attendances.created_at DESC') },
-    as: :host, class_name: 'EventAttendance'
+  has_many :registrations,
+           -> { where(attending: true).order('registrations.created_at DESC') },
+           foreign_key: :host_id, class_name: 'Registration'
 
-  alias event_attendances attendances
+  has_many :cancelled_registrations,
+           -> { where(attending: false).order('registrations.created_at DESC') },
+           as: :host, class_name: 'Registration'
 
-  has_many :cancelled_attendances,
-    -> { where(attending: false).order('attendances.created_at DESC') },
-    as: :host, class_name: 'EventAttendance'
-
-  has_many :all_attendances,
-    -> { order('attendances.created_at DESC') },
-    as: :host, class_name: 'Attendance'
-  has_many :attendees, through: :attendances
+  has_many :attendees, through: :registrations
   has_many :collaborations, as: :collaborated
   has_many :collaborators, through: :collaborations, source: :user
 
@@ -95,12 +91,12 @@ class Event < ApplicationRecord
   has_many :levels
   has_many :raffles
   has_many :line_items,
-    -> { where("item_type = '' OR item_type IS NULL") },
-    as: :host
+           -> { where("item_type = '' OR item_type IS NULL") },
+           as: :host
   has_many :shirts,
-    -> { where(item_type: 'LineItem::Shirt') },
-    class_name: 'LineItem',
-    as: :host
+           -> { where(item_type: 'LineItem::Shirt') },
+           class_name: 'LineItem',
+           as: :host
 
   # this way of sorting pricing ties does not put the opening tier in
   # the correct spot. That is fixed with a method
@@ -153,7 +149,7 @@ class Event < ApplicationRecord
   end
 
   def recent_registrations
-    attendances.limit(5).order('created_at DESC')
+    registrations.limit(5).order('created_at DESC')
   end
 
   def registration_opens_at
@@ -217,8 +213,7 @@ class Event < ApplicationRecord
     @pricing_tiers_in_order
   end
 
-  def allows_multiple_discounts?
-  end
+  def allows_multiple_discounts?; end
 
   def registration_json
     json = as_json(
@@ -232,7 +227,7 @@ class Event < ApplicationRecord
   end
 
   def unpaid_total
-    attendances.map(&:amount_owed).inject(:+)
+    registrations.map(&:amount_owed).inject(:+)
   end
 
   def revenue
@@ -250,12 +245,12 @@ class Event < ApplicationRecord
   end
 
   def shirts_sold
-    orders
-      .paid
-      .joins(:order_line_items)
-      .where(order_line_items: { line_item_type: LineItem::Shirt.name })
-      .map(&:order_line_items).flatten
-      .inject(0) { |total, oli| total + oli.quantity }
+    order_ids = orders.paid.pluck(:id)
+
+    OrderLineItem
+      .where(line_item_type: LineItem::Shirt.name, order_id: order_ids)
+      .pluck(:quantity)
+      .sum
   end
 
   def shirts_available?

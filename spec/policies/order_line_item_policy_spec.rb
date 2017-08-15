@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::OrderLineItemPolicy do
-  let(:by_owner){
-    ->(method, paid = false){
+  let(:by_owner) {
+    ->(method, paid = false) {
       event = create(:event)
-      order = create(:order, host: event, attendance: create(:attendance))
+      order = create(:order, host: event, registration: create(:registration))
       order.paid = paid
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       policy = Api::OrderLineItemPolicy.new(order_item.order.user, order_item)
@@ -12,10 +14,10 @@ describe Api::OrderLineItemPolicy do
     }
   }
 
-  let(:by_event_owner){
-    ->(method, paid = false){
+  let(:by_event_owner) {
+    ->(method, paid = false) {
       event = create(:event)
-      order = create(:order, host: event, attendance: create(:attendance))
+      order = create(:order, host: event, registration: create(:registration))
       order.paid = paid
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       policy = Api::OrderLineItemPolicy.new(event.hosted_by, order_item)
@@ -24,9 +26,9 @@ describe Api::OrderLineItemPolicy do
   }
 
   let(:by_a_collaborator) {
-    -> (method, paid = false) {
+    ->(method, paid = false) {
       event = create(:event)
-      order = create(:order, host: event, attendance: create(:attendance))
+      order = create(:order, host: event, registration: create(:registration))
       order.paid = paid
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       collaborator = create(:user)
@@ -37,10 +39,10 @@ describe Api::OrderLineItemPolicy do
     }
   }
 
-  let(:by_a_stranger){
-    ->(method){
+  let(:by_a_stranger) {
+    ->(method) {
       event = create(:event)
-      order = create(:order, host: event, attendance: create(:attendance))
+      order = create(:order, host: event, registration: create(:registration))
       order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
       policy = Api::OrderLineItemPolicy.new(create(:user), order_item)
       policy.send(method)
@@ -48,7 +50,6 @@ describe Api::OrderLineItemPolicy do
   }
 
   context 'can be read?' do
-
     it 'by the event owner' do
       result = by_event_owner.call(:read?)
       expect(result).to eq true
@@ -162,5 +163,4 @@ describe Api::OrderLineItemPolicy do
       expect(result).to eq false
     end
   end
-
 end

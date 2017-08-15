@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 def create_confirmed_user(user = @user)
   user ||= create(:user)
   user.confirmed_at = 2.days.ago

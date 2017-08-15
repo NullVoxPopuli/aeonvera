@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::CompetitionsController, type: :controller do
-
   context 'not logged in' do
     context 'index' do
       it 'renders - nothing private about the competition list' do
-        get :index
+        event = create(:event)
+        get :index, event_id: event.id
         expect(response.status).to eq 200
       end
     end

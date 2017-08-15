@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::HousingProvisionsController, type: :controller do
   let(:event) { create(:event) }
   before(:each) do
     login_through_api
-    @attendance = create(:attendance, host: event, attendee: @user)
+    @registration = create(:registration, host: event, attendee: @user)
   end
 
   context 'create' do
@@ -23,10 +25,10 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
             notes: 'Lots of couches'
           },
           relationships: {
-            attendance: {
+            registration: {
               data: {
-                id: @attendance.id,
-                type: 'event-attendances'
+                id: @registration.id,
+                type: 'users/registrations'
               }
             },
             host: {
@@ -48,8 +50,9 @@ RSpec.describe Api::HousingProvisionsController, type: :controller do
       @housing_provision = create(
         :housing_provision,
         host: event,
-        attendance: @attendance,
-        preferred_gender_to_host: 'Robots')
+        registration: @registration,
+        preferred_gender_to_host: 'Robots'
+      )
     end
 
     it 'updates a housing request' do

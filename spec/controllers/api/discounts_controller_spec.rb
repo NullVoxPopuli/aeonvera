@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::DiscountsController, type: :controller do
@@ -55,5 +57,4 @@ RSpec.describe Api::DiscountsController, type: :controller do
       json_api_update_with(@discount, json_api)
     end
   end
-
 end

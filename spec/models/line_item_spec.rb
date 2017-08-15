@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: line_items
@@ -38,7 +40,6 @@
 require 'rails_helper'
 
 describe LineItem::RaffleTicket do
-
   describe 'associations' do
     # when relationships get complicated... we unit test them.
     # that's how it works in real life, right?
@@ -55,7 +56,7 @@ describe LineItem::RaffleTicket do
         item = LineItem.new
         item.save(validate: false)
 
-        oli = OrderLineItem.new(line_item: item)
+        oli = OrderLineItem.new(line_item: item, order: build(:order))
         oli.save(validate: false)
 
         item.reload
@@ -63,7 +64,6 @@ describe LineItem::RaffleTicket do
         expect(items.first).to eq oli
       end
     end
-
 
     context 'orders' do
       it 'has orders' do
@@ -93,26 +93,29 @@ describe LineItem::RaffleTicket do
     end
 
     context 'purchasers' do
-
       it 'has purchasers' do
         skip('is there a way to make this work?')
         item = LineItem.new
-        attendance = EventAttendance.new
-        order = Order.new(attendance: attendance)
+        registration = Registration.new
+        order = Order.new(registration: registration)
         oli = OrderLineItem.new(order: order, line_item: item)
 
+        order.order_line_items = [oli]
+        item.orders = [order]
+        item.order_line_items = [oli]
+
         purchaser = item.purchasers.first
-        expect(purchaser).to eq attendance
+        expect(purchaser).to eq registration
       end
 
       it 'relates when persisted' do
         item = LineItem.new
         item.save(validate: false)
 
-        attendance = EventAttendance.new
-        attendance.save(validate: false)
+        registration = Registration.new
+        registration.save(validate: false)
 
-        order = Order.new(attendance: attendance)
+        order = Order.new(registration: registration)
         order.save(validate: false)
 
         oli = OrderLineItem.new(order: order, line_item: item)
@@ -120,11 +123,8 @@ describe LineItem::RaffleTicket do
 
         item.reload
         purchaser = item.purchasers.first
-        expect(purchaser).to eq attendance
+        expect(purchaser).to eq registration
       end
-
     end
-
   end
-
 end

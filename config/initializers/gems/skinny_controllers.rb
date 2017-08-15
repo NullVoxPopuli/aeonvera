@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 SkinnyControllers.search_proc = lambda do |relation|
   relation
     .ransack(params[:q])
     .result
-    # .paginate(per_page: params[:per_page] || 50, page: params[:page])
+  # .paginate(per_page: params[:per_page] || 50, page: params[:page])
 end
 
 module SkinnyControllers
@@ -24,8 +25,8 @@ module SkinnyControllers
       def find_model
         if use_parent?
           return parent_resource
-            .send(association_name_for_parent_resource)
-            .find(id_from_params)
+                 .send(association_name_for_parent_resource)
+                 .find(id_from_params)
         end
 
         if params[:scope]
@@ -45,7 +46,6 @@ module SkinnyControllers
         else
           model_from_params
         end
-
       end
     end
   end

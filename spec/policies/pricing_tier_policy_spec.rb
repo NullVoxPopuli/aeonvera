@@ -1,27 +1,28 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::PricingTierPolicy do
-  let(:by_owner){
-    ->(method){
+  let(:by_owner) {
+    ->(method) {
       tier = create(:pricing_tier)
       policy = Api::PricingTierPolicy.new(tier.event.hosted_by, tier)
       policy.send(method)
     }
   }
 
-  let(:by_registrant){
-    ->(method){
+  let(:by_registrant) {
+    ->(method) {
       event = create(:event)
       tier = create(:pricing_tier, event: event)
-      attendance = create(:attendance, host: event, pricing_tier: tier)
+      registration = create(:registration, host: event, pricing_tier: tier)
 
-      policy = Api::PricingTierPolicy.new(attendance.attendee, tier)
+      policy = Api::PricingTierPolicy.new(registration.attendee, tier)
       policy.send(method)
     }
   }
 
   context 'can be read?' do
-
     it 'by the event owner' do
       result = by_owner.call(:read?)
       expect(result).to eq true
@@ -68,5 +69,4 @@ describe Api::PricingTierPolicy do
       expect(result).to eq false
     end
   end
-
 end

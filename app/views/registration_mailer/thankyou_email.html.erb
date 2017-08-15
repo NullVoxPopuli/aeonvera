@@ -1,0 +1,30 @@
+<%= content_for :header do %>
+	<%= @event.name %>
+<% end %>
+
+<%= @registration.attendee_name %>, <br>
+Thank you for registering <%= @preposition %> <%= @event.name %>! <br>
+<br>
+The organizers are aware of your registration, and should be happy to see you at their event.
+<br>
+<br>
+<h3>
+  Order Summary
+</h3>
+<%= render partial: "/orders/summary", locals: { order: @order, registration: @registration, buttons: false } %>
+<br>
+<br>
+If you have any questions about <%= @event.name %>,
+feel free to email
+<% if @event.contact_email.present? %>
+  <a href='mailto:<%= @event.contact_email %>'>the event organizers.</a>
+<% else %>
+  the event organizers.
+<% end %>
+<br>
+<br>
+<% if @event.try(:registration_email_disclaimer).present? %>
+  <small>
+    <%= @event.registration_email_disclaimer.html_safe %>
+  </small>
+<% end %>

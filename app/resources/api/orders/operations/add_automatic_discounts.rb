@@ -10,7 +10,7 @@ module Api
       include ::AssertParameters
 
       # rtype([{ user: User, host: [Event, Organization] }, {}] => Any)
-      rtype([Order] => Any)
+      # rtype([Order] => Any)
       def initialize(order)
         @order = order
 
@@ -77,12 +77,16 @@ module Api
             end
 
             # create
-            @order.order_line_items.create(
+            oli = @order.order_line_items.new(
               line_item: discount,
               line_item_type: discount.class.name,
               price: 0 - discount.value,
               quantity: quantity
             )
+
+            oli.save
+
+            oli
           end
         end
       end

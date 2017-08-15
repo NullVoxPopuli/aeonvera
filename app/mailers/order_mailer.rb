@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class OrderMailer < ApplicationMailer
   def receipt(for_order: nil)
     @order = for_order

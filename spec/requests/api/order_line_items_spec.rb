@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::OrderLineItemsController, type: :request do
@@ -6,7 +7,7 @@ describe Api::OrderLineItemsController, type: :request do
 
   context 'Event: is logged in' do
     let(:order) {
-      create(:order, host: event, attendance: create(:attendance, host: event), user: stray_user)
+      create(:order, host: event, registration: create(:registration, host: event), user: stray_user)
     }
 
     context 'user owns the event' do
@@ -46,13 +47,13 @@ describe Api::OrderLineItemsController, type: :request do
       context 'when creating an order line item' do
         context 'of type: Shirt' do
           let(:shirt) { create(:shirt,
-            host: event,
-            price: 15,
-            metadata: {
-              sizes: ['S', 'M', 'L'],
-              prices: { 'S': '10', 'M': '12' },
-              inventory: { 'S': '0', 'M': '0', 'L': '0' }
-          } ) }
+                               host: event,
+                               price: 15,
+                               metadata: {
+                                 sizes: %w(S M L),
+                                 prices: { 'S': '10', 'M': '12' },
+                                 inventory: { 'S': '0', 'M': '0', 'L': '0' }
+                               }) }
           let(:params) { {
             data: {
               type: 'order-line-items',
@@ -77,10 +78,10 @@ describe Api::OrderLineItemsController, type: :request do
                 .to change(OrderLineItem, :count).by 1
 
               expect(json_response)
-                .to have_relation_to(shirt, { relation: 'line-item', type: 'shirts' })
+                .to have_relation_to(shirt, { relation: 'line_item', type: 'shirts' })
             end
 
-            it 'uses the price of the size, rather than the line-item' do
+            it 'uses the price of the size, rather than the line_item' do
               post '/api/order_line_items', params, @headers
 
               expect(json_response).to have_attribute('size', 'S')
@@ -182,15 +183,15 @@ describe Api::OrderLineItemsController, type: :request do
           let(:other_package) { create(:package, event: event, initial_price: 40) }
           let!(:order_line_item) {
             create(:order_line_item,
-              line_item: package,
-              order: order,
-              quantity: 1,
-              price: package.current_price)
+                   line_item: package,
+                   order: order,
+                   quantity: 1,
+                   price: package.current_price)
           }
           let(:params) { {
             data: {
               type: 'order-line-items',
-              attributes: { },
+              attributes: {},
               relationships: {
                 'line-item': { data: { type: 'packages', id: other_package.id } },
                 order: { data: { type: 'orders', id: order.id } }
@@ -205,7 +206,7 @@ describe Api::OrderLineItemsController, type: :request do
             end
 
             it 'sets the new package' do
-              expect(json_response).to have_relation_to(other_package, { relation: 'line-item' })
+              expect(json_response).to have_relation_to(other_package, { relation: 'line_item' })
             end
 
             it 'updates the price' do
@@ -221,13 +222,13 @@ describe Api::OrderLineItemsController, type: :request do
       context 'and the order is paid for' do
         context 'of type: Shirt' do
           let(:shirt) { create(:shirt,
-            host: event,
-            price: 15,
-            metadata: {
-              sizes: ['S', 'M', 'L'],
-              prices: { 'S': '10', 'M': '12' },
-              inventory: { 'S': '0', 'M': '0', 'L': '0' }
-          } ) }
+                               host: event,
+                               price: 15,
+                               metadata: {
+                                 sizes: %w(S M L),
+                                 prices: { 'S': '10', 'M': '12' },
+                                 inventory: { 'S': '0', 'M': '0', 'L': '0' }
+                               }) }
 
           before(:each) do
             @existing = add_to_order!(order, create(:shirt, host: event))
@@ -263,7 +264,7 @@ describe Api::OrderLineItemsController, type: :request do
                     id: @existing.id,
                     attributes: { quantity: 5 },
                     relationships: {
-                      'line-item': { data: { type: 'shirts', id: shirt.id } },
+                      line_item: { data: { type: 'shirts', id: shirt.id } },
                       order: { data: { type: 'orders', id: order.id } }
                     }
                   }
@@ -288,10 +289,10 @@ describe Api::OrderLineItemsController, type: :request do
         let!(:membership_option) { create(:membership_option, host: organization, price: 25) }
         let!(:membership_discount) {
           create(:membership_discount,
-            host: organization,
-            value: 7,
-            affects: LineItem::Lesson.name,
-            kind: Discount::DOLLARS_OFF)
+                 host: organization,
+                 value: 7,
+                 affects: LineItem::Lesson.name,
+                 kind: Discount::DOLLARS_OFF)
         }
 
         let!(:lesson_params) { {
@@ -337,12 +338,12 @@ describe Api::OrderLineItemsController, type: :request do
         it 'applies the auto-discount when a lesson is added to a membership' do
           add_to_order!(order, membership_option)
           expect(order.order_line_items.length).to eq 1
-
           post '/api/order_line_items', lesson_params, auth_header_for(user)
 
           expect(response.status).to eq 201
 
           order.reload
+
           expected_value = lesson.current_price -
             membership_discount.value +
             membership_option.current_price
@@ -476,10 +477,8 @@ describe Api::OrderLineItemsController, type: :request do
           # If a discount were received, this would be 2
           expect { post '/api/order_line_items', params }
             .to change(OrderLineItem, :count).by(1)
-
         end
       end
     end
   end
-
 end

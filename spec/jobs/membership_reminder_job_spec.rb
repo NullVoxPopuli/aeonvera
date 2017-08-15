@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe MembershipReminderJob do
@@ -6,7 +8,7 @@ describe MembershipReminderJob do
   let(:user) { create_confirmed_user }
   let(:membership_option) {
     create(:membership_option,
-      organization: org, duration_unit: 3, duration_amount: 1)
+           organization: org, duration_unit: 3, duration_amount: 1)
   }
 
   before(:each) do
@@ -15,9 +17,9 @@ describe MembershipReminderJob do
 
   it 'does not send before a week' do
     create(:membership_renewal,
-      membership_option: membership_option,
-      user: user,
-      start_date: 1.year.ago + 9.days)
+           membership_option: membership_option,
+           user: user,
+           start_date: 1.year.ago + 9.days)
 
     ActionMailer::Base.deliveries.clear
     MembershipReminderJob.perform_now
@@ -26,9 +28,9 @@ describe MembershipReminderJob do
 
   it 'sends when there is one week before expiration' do
     create(:membership_renewal,
-      membership_option: membership_option,
-      user: user,
-      start_date: 1.year.ago + 6.days)
+           membership_option: membership_option,
+           user: user,
+           start_date: 1.year.ago + 6.days)
 
     ActionMailer::Base.deliveries.clear
     MembershipReminderJob.perform_now
@@ -37,9 +39,9 @@ describe MembershipReminderJob do
 
   it 'does not spend if the expiration has hit' do
     create(:membership_renewal,
-      membership_option: membership_option,
-      user: user,
-      start_date: 1.year.ago - 1.day)
+           membership_option: membership_option,
+           user: user,
+           start_date: 1.year.ago - 1.day)
 
     ActionMailer::Base.deliveries.clear
     MembershipReminderJob.perform_now

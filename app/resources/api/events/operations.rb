@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module EventOperations
     class Read < SkinnyControllers::Operation::Base
@@ -12,7 +14,7 @@ module Api
         # when wouldn't create an event be allowed?
         # return unless allowed?
         @model.hosted_by = current_user
-        @model.opening_tier.event = @model if @model.opening_tier
+        @model.opening_tier&.event = @model
         @model.save
         @model
       end

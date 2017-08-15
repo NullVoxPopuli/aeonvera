@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::HostedEventsController, type: :controller do
-
   context 'index' do
     it 'shows a users hosted events' do
       event = create_event

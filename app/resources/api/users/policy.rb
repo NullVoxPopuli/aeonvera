@@ -1,9 +1,21 @@
-class UserPolicy < SkinnyControllers::Policy::Base
+# frozen_string_literal: true
 
-  def read?; is_current_user?; end
-  def update?; is_current_user?; end
-  def delete?; is_current_user?; end
-  def create?; true; end
+class UserPolicy < SkinnyControllers::Policy::Base
+  def read?
+    is_current_user?
+  end
+
+  def update?
+    is_current_user?
+  end
+
+  def delete?
+    is_current_user?
+  end
+
+  def create?
+    true
+  end
 
   private
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::SponsorshipsController, type: :request do
@@ -91,7 +93,7 @@ describe Api::SponsorshipsController, type: :request do
             }
           }
 
-          put path_with.(sponsorship.id), params, @headers
+          put path_with.call(sponsorship.id), params, @headers
           expect(response.status).to eq 200
 
           s = Sponsorship.find(sponsorship.id)
@@ -103,7 +105,7 @@ describe Api::SponsorshipsController, type: :request do
       context 'destroy' do
         it 'destroys' do
           expect {
-            delete path_with.(sponsorship.id), {}, @headers
+            delete path_with.call(sponsorship.id), {}, @headers
             expect(response.status).to eq 200
           }.to change(Sponsorship, :count).by(-1)
         end

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 module Api
   # Note that unless authenticated, all requests
   # to this controller must include a
   # payment_token param
   class OrderLineItemsController < Api::ResourceController
+    self.serializer = OrderLineItemSerializableResource
 
     def index
       render_models(params[:include])
@@ -26,19 +28,22 @@ module Api
       #     :current_net_amount_received,
       #     :registration
       #   ] }
-      render_model('order.order_line_items.line_item,line_item.restraints,order.registration', success_status: 201)
+      render_jsonapi(options: {
+                       include: 'order.order_line_items.line_item,line_item.restraints,order.registration',
+                       status: 201
+                     })
     end
 
     def update
-      render_model('line_item,order.order_line_items')
+      render_jsonapi(options: { include: 'line_item,order.order_line_items' })
     end
 
     def destroy
-      render_model('order.order_line_items')
+      render_jsonapi(options: { include: 'order.order_line_items' })
     end
 
     def mark_as_picked_up
-      render_model
+      render_jsonapi
     end
 
     private
@@ -63,6 +68,5 @@ module Api
         )
       end
     end
-
   end
 end

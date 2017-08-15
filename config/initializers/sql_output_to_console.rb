@@ -1,4 +1,6 @@
-if !Rails.env.production?
+# frozen_string_literal: true
+
+unless Rails.env.production?
   # quick helper method for showing SQL statements when
   # debugging through binding.pry
   def show_sql

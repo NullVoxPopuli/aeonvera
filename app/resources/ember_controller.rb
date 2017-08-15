@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Main entry point to the app / ember
 class EmberController < ActionController::Base
   def index

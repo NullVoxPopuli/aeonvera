@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -43,25 +44,25 @@ class User < ApplicationRecord
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-    :recoverable, :rememberable, :trackable, :validatable,
-    :confirmable, :lockable # , :omniauthable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :confirmable, :lockable # , :omniauthable
 
   has_many :integrations,
-    dependent: :destroy,
-    extend: Extensions::Integrations,
-    as: :owner
+           dependent: :destroy,
+           extend: Extensions::Integrations,
+           as: :owner
 
   has_many :organizations, foreign_key: 'owner_id'
   has_many :hosted_events, class_name: 'Event', foreign_key: 'hosted_by_id'
-  has_many :event_attendances,
-    -> { where("attendance_type = '#{EventAttendance.name}'") },
-    foreign_key: 'attendee_id',
-    class_name: EventAttendance.name
 
-  has_many :attended_events, through: :event_attendances, source: :host, source_type: Event.name
-  has_many :attendances, foreign_key: 'attendee_id'
+  has_many :registrations, foreign_key: 'attendee_id'
+  has_many :attended_events, through: :registrations, source: :host
+
   has_many :collaborated_events, through: :collaborations, source: :collaborated, source_type: Event.name
-  has_many :collaborated_organizations, through: :collaborations, source: :collaborated, source_type: Organization.name
+  has_many :collaborated_organizations,
+           through: :collaborations,
+           source: :collaborated,
+           source_type: Organization.name
   has_many :collaborations
 
   has_many :membership_renewals
@@ -90,58 +91,10 @@ class User < ApplicationRecord
     )
   end
 
-  # @return [Attendance] the attendance record for this user for the specified event
-  def attendance_for_event(event)
-    attendances.where(host: event).first
+  # @return [Registration] the registration record for this user for the specified event
+  def registration_for_event(event)
+    registrations.where(host: event).first
   end
-
-  alias attendance_for_host attendance_for_event
-  alias attendance_for_organization attendance_for_event
-
-  # https://github.com/plataformatec/devise/wiki/How-To:-Allow-users-to-sign-in-using-their-username-or-email-address
-  # Overriding the find_for_database_authentication method allows you to edit database authentication ;
-  # overriding find_for_authentication allows you to redefine authentication at a specific point (such as token,
-  # LDAP or database). Finally, if you override the find_first_by_auth_conditions method, you can customize
-  # finder methods (such as authentication, account unlocking or password recovery).
-  # def self.find_first_by_auth_conditions(warden_conditions)
-  #   # host = warden_conditions[:host]
-  #   login = warden_conditions[:login]
-
-  #   if login
-  #     User.where(
-  #       ["lower(username) = :value OR lower(email) = :value", {
-  #          value: login.downcase
-  #     }]).first
-  #   elsif confirmation_token = warden_conditions[:confirmation_token]
-  #     u = User.where(
-  #       ["confirmation_token = :token", {
-  #          token: confirmation_token
-  #     }]).first
-  #     ap warden_conditions
-  #     ap u
-  #     u
-  #   elsif reset_token = warden_conditions[:reset_password_token]
-  #     User.where(
-  #       ["reset_password_token = :token", {
-  #          token: reset_token
-  #     }]).first
-  #   elsif unlock_token = warden_conditions[:unlock_token]
-  #     User.where(
-  #       ["unlock_token = :token", {
-  #          token: unlock_token
-  #     }]).first
-  #   elsif api_token = (warden_conditions[:api_key] or warden_conditions[:authentication_token])
-  #     User.where(
-  #       ["authentication_token = :token", {
-  #          token: api_token
-  #     }]).first
-  #   elsif email = warden_conditions[:email]
-  #     User.where(
-  #       ["lower(email) = :email", {
-  #          email: email.downcase
-  #     }]).first
-  #   end
-  # end
 
   # There is something wrong with Devise as of Jan 5, 2014.
   # Confirmable is generating a new confirmation token, and using that
@@ -235,20 +188,20 @@ class User < ApplicationRecord
   end
 
   def ensure_authentication_token
-    if authentication_token.blank?
-      self.authentication_token = generate_authentication_token
-    end
+    return unless authentication_token.blank?
+
+    self.authentication_token = generate_authentication_token
   end
 
   protected
 
   # ensure that the user is not signed up for an upcoming event
   def not_attending_event?
-    if attending_upcoming_events?
-      event_names = upcoming_events.map(&:name).join(', ')
-      errors[:base] << "You may not delete your account when you are attending an upcoming event. (#{event_names})"
-      false
-    end
+    return unless attending_upcoming_events?
+
+    names = upcoming_events.map(&:name).join(', ')
+    errors[:base] << "You may not delete your account when you are attending an upcoming event. (#{names})"
+    false
   end
 
   def generate_authentication_token

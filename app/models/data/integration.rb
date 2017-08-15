@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: integrations
@@ -24,7 +25,10 @@ class Integration < ApplicationRecord
 
   ENCRYPTION_KEY = 'aeonvera_integrations'
 
-  attr_encrypted :config, key: ENCRYPTION_KEY, marshal: true
+  # TODO: fix/upgrade need iv column :-\
+  attr_encrypted :config, key: ENCRYPTION_KEY,
+                          marshal: true,
+                          insecure_mode: true
 
   STRIPE = 'stripe'
   PAYPAL = 'paypal'

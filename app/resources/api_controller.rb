@@ -1,5 +1,9 @@
 # frozen_string_literal: true
+
+require 'jsonapi/serializable'
+
 class APIController < ActionController::Base
+  # ? include SkinnyControllers::Diet
   include Controllers::CurrentUser
   include Controllers::JsonApiErrors
   include Controllers::ModelRendering
@@ -27,21 +31,17 @@ class APIController < ActionController::Base
     request.format = :json unless params[:format]
   end
 
-  def sync_form_and_model(form, model)
-    form.sync
-
-    form_errors = form.errors.messages
-    return if form_errors.blank?
-
-    form_errors.each do |field, errors|
-      Array[*errors].each do |error|
-        model.errors.add(field, error)
-      end
-    end
-  end
-
   def set_time_zone
     return unless current_user && current_user.time_zone.present?
     Time.zone = current_user.time_zone
+  end
+
+  def self.merged_fieldset(source, hash)
+    keys = hash.keys
+    fields = source.dup
+    fields.delete_if { |k, _v| keys.include?(k) }
+
+    fields.push(hash)
+    fields
   end
 end

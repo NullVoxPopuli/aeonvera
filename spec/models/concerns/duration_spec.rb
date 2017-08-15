@@ -1,8 +1,8 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Duration do
-
-
   context '#duration' do
     before(:each) do
       @membership_option = build(:membership_option)
@@ -30,5 +30,4 @@ describe Duration do
       expect(@durationable.duration).to eq 1.year
     end
   end
-
 end

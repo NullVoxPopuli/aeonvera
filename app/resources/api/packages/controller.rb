@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 module Api
   class PackagesController < Api::EventResourceController
+    self.serializer = PackageSerializableResource
+
     private
 
     def update_package_params

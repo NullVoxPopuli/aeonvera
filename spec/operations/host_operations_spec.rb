@@ -1,13 +1,12 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-
 describe Api::HostOperations do
-
   describe Api::HostOperations::Read do
-
     context 'model_from_params' do
-      let(:subdomain){ 'subdomain' }
-      let(:operation){ Api::HostOperations::Read.new(nil, { subdomain: subdomain }) }
+      let(:subdomain) { 'subdomain' }
+      let(:operation) { Api::HostOperations::Read.new(nil, { subdomain: subdomain }) }
 
       it 'finds an event' do
         event = create(:event, domain: subdomain)
@@ -26,7 +25,5 @@ describe Api::HostOperations do
         expect(model).to be_nil
       end
     end
-
   end
-
 end

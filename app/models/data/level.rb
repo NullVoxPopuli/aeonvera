@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: levels
@@ -21,39 +23,28 @@ class Level < ApplicationRecord
 
   belongs_to :user
   belongs_to :event
-  has_many :attendances, -> { where(attending: true).order("attendances.created_at DESC") }
-  has_many :event_attendances, -> { where(attending: true).order("attendances.created_at DESC") }
   belongs_to :package
+  has_many :registrations, -> { where(attending: true).order('registrations.created_at DESC') }
 
   validates :name, presence: true
-
-  #before_destroy { |level|
-  #  result = level.attendances.size == 0
-  #  if result
-  #    level.errors.add(:base, "There are attendees with this level.")
-  #    return false
-  #  end
-  #}
-
 
   NOTHING = 0
   AUDITION = 1
   INVITATION = 2
 
   REQUIREMENT_NAMES = {
-    NOTHING => "",
-    AUDITION => "Audition",
-    INVITATION => "Invitation"
-  }
-
+    NOTHING => '',
+    AUDITION => 'Audition',
+    INVITATION => 'Invitation'
+  }.freeze
 
   def requirement_name
     REQUIREMENT_NAMES[requirement]
   end
 
   def is_accessible_to?(user)
-    return true if self.event.hosted_by == user
-    return true if user.collaborated_event_ids.include?(self.event_id)
+    return true if event.hosted_by == user
+    return true if user.collaborated_event_ids.include?(event_id)
 
     false
   end

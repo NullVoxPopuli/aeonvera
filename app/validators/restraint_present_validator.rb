@@ -1,6 +1,7 @@
-class RestraintPresentValidator < ActiveModel::EachValidator
+# frozen_string_literal: true
 
-  def validate_each(record, attribute, value)
+class RestraintPresentValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, _value)
     order = record.order
     line_item = record.line_item
 
@@ -23,5 +24,4 @@ class RestraintPresentValidator < ActiveModel::EachValidator
       end
     end
   end
-
 end

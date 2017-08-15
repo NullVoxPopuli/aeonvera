@@ -5,16 +5,16 @@ module Api
   #
   # module Api
   #   class RegistrationsController < UserResourceController
-  #     self.resource_class = Attendance
+  #     self.resource_class = Registration
   #     self.serializer_class = RegistrationSummarySerializer
   #     self.parent_resource_method = :current_user
-  #     self.association_name_for_parent_resource = :attendances
+  #     self.association_name_for_parent_resource = :registrations
   #
   #     def index
-  #       search = current_user.attendances.ransack(params[:q])
-  #       @attendances = search.result
+  #       search = current_user.registrations.ransack(params[:q])
+  #       @registrations = search.result
   #
-  #       render json: @attendances,
+  #       render json: @registrations,
   #              include: params[:include],
   #              each_serializer: RegistrationSummarySerializer
   #     end
@@ -22,8 +22,8 @@ module Api
   #     # create, new, update, delete, and show are inherited
   #
   #     def show
-  #       @attendance = current_user.attendances.find(params[:id])
-  #       render json: @attendance
+  #       @registration = current_user.registrations.find(params[:id])
+  #       render json: @registration
   #     end
   #
   #     def resource_params; end
