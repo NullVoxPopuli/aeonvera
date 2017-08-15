@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module OrderOperations
     #
@@ -9,7 +11,7 @@ module Api
 
       DEFAULTS = {
         payment_method: Payable::Methods::STRIPE
-      }
+      }.freeze
 
       def run
         build_order
@@ -31,9 +33,9 @@ module Api
         @model = Order.new(order_params)
 
         # a user is alwoys going to be the person paying.
-        # if an attendance is passed, use the user from
-        # that attendance.
-        @model.user = attendance.try(:attendee)
+        # if an registration is passed, use the user from
+        # that registration.
+        @model.user = registration.try(:attendee)
         # TODO: allow this to be set manually
         @model.user = current_user if @model.host.is_a?(Organization)
 
@@ -57,7 +59,7 @@ module Api
           created_by: current_user,
 
           # nil or will be set
-          attendance: attendance # .becomes(Attendance)
+          registration: registration # .becomes(Registration)
         )
       end
 
@@ -65,9 +67,13 @@ module Api
         params_for_action[:payment_method] || DEFAULTS[:payment_method]
       end
 
-      def attendance
+      def registration
         # use find_by_id to not raise exception, and return nil if not found
-        @attendance ||= host.attendances.find_by_id(params_for_action[:attendance_id])
+        @registration ||= begin
+          if host.respond_to?(:registrations)
+            host.registrations.find_by_id(params_for_action[:registration_id])
+          end
+        end
       end
 
       def host

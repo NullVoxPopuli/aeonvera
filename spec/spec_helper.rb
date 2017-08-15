@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
 
@@ -11,6 +12,7 @@ SimpleCov.start do
   add_group 'Policies', '.*polic.*'
   add_group 'Mailers', 'app/mailers'
   add_group 'Serializers', '.*serializer.*'
+  add_group 'SerializableResources', '.*serializable_resource.*'
   add_group 'Services', 'app/services'
 
   # filters.clear
@@ -31,6 +33,7 @@ require 'rspec/rails'
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/requests/shared_examples/**/*.rb')].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -56,6 +59,15 @@ RSpec.configure do |config|
     end
   end
 
+  config.after(:each, type: :controller) do |example|
+    if example.exception
+      begin
+        ap JSON.parse(response.body)
+      rescue => e
+        # probably not j son
+      end
+    end
+  end
 
   # Automatically Adding Metadata RSpec versions before 3.0.0 automatically added
   # metadata to specs based on their location on the filesystem. This was both

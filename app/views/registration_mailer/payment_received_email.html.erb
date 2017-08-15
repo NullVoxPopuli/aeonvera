@@ -1,0 +1,23 @@
+<%= content_for :header do %>
+  <%= @event.name %>
+<% end %>
+
+
+<%= @registration.attendee_name %>, <br>
+Your payment <%= @preposition %> <%= @event.name %> has been received. <br>
+<br>
+<h3>
+  Order Summary
+</h3>
+<%= render partial: "/orders/summary", locals: { order: @order, registration: @registration, buttons: false } %>
+<br>
+<br>
+If you have any questions about <%= @event.name %>,
+feel free to email
+<% if @event.contact_email.present? %>
+  <a href='mailto:<%= @event.contact_email %>'>the event organizers.</a>
+<% else %>
+  the event organizers.
+<% end %>
+<br>
+<br>

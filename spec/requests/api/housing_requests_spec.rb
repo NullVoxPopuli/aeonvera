@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::HousingRequestsController, type: :request do
@@ -10,7 +11,7 @@ describe Api::HousingRequestsController, type: :request do
     context 'and is registering' do
       let!(:user) { create_confirmed_user }
       let!(:event) { create(:event) }
-      let!(:attendance) { create(:attendance, host: event, attendee: user) }
+      let!(:registration) { create(:registration, host: event, attendee: user) }
       let(:payload) {
         {
           'data' => {
@@ -23,7 +24,7 @@ describe Api::HousingRequestsController, type: :request do
             },
             'relationships' => {
               'host' => { 'data' => { 'type' => 'events', 'id' => event.id } },
-              'attendance' => { 'data' => { 'type' => 'registrations', 'id' => attendance.id } },
+              'registration' => { 'data' => { 'type' => 'registrations', 'id' => registration.id } },
               'housing-provision' => { 'data' => nil }
             },
             'type' => 'housing-requests'
@@ -46,7 +47,7 @@ describe Api::HousingRequestsController, type: :request do
       end
 
       context 'show' do
-        let!(:housing_request) { create(:housing_request, attendance: attendance) }
+        let!(:housing_request) { create(:housing_request, registration: registration) }
 
         subject { get "/api/housing_requests/#{housing_request.id}", payload, @headers }
 
@@ -54,7 +55,7 @@ describe Api::HousingRequestsController, type: :request do
       end
 
       context 'update' do
-        let!(:housing_request) { create(:housing_request, attendance: attendance) }
+        let!(:housing_request) { create(:housing_request, registration: registration) }
         let(:update_params) {
           {
             data: {
@@ -71,7 +72,7 @@ describe Api::HousingRequestsController, type: :request do
       end
 
       context 'delete' do
-        let!(:housing_request) { create(:housing_request, attendance: attendance) }
+        let!(:housing_request) { create(:housing_request, registration: registration) }
 
         subject { delete "/api/housing_requests/#{housing_request.id}", {}, @headers }
 
@@ -84,7 +85,7 @@ describe Api::HousingRequestsController, type: :request do
         user = create_confirmed_user
         auth_header_for(user)
         @event = create(:event, hosted_by: user)
-        @attendance = create(:attendance, host: @event)
+        @registration = create(:registration, host: @event)
         @housing_request = create(:housing_request, host: @event)
         create(:housing_request, host: @event)
       end
@@ -106,7 +107,7 @@ describe Api::HousingRequestsController, type: :request do
           {
             'data' => {
               'attributes' => {},
-              'relationships' => { 'host' => { 'data' => { 'type' => 'events', 'id' => @event.id } }, 'attendance' => { 'data' => { 'type' => 'event-attendances', 'id' => @attendance.id } } },
+              'relationships' => { 'host' => { 'data' => { 'type' => 'events', 'id' => @event.id } }, 'registration' => { 'data' => { 'type' => 'registrations', 'id' => @registration.id } } },
               'type' => 'housing-requests'
             }
           }
@@ -119,10 +120,10 @@ describe Api::HousingRequestsController, type: :request do
           }.to change(HousingRequest, :count).by 1
         end
 
-        it 'is tied to the attendance' do
+        it 'is tied to the registration' do
           post '/api/housing_requests', payload, @headers
           id = json_api_data['id']
-          expect(HousingRequest.find(id).attendance).to eq @attendance
+          expect(HousingRequest.find(id).registration).to eq @registration
         end
       end
     end

@@ -1,9 +1,24 @@
 # frozen_string_literal: true
+
 module Api
   module OrderOperations
     class ReadAll < SkinnyControllers::Operation::Base
+      include HelperOperations::Helpers
+
       def run
-        search = orders
+        return find_one if params[:id]
+
+        find_many
+      end
+
+      private
+
+      def find_one
+        OrderOperations::Read.run(current_user, params)
+      end
+
+      def find_many
+        search = model
         return search if search.empty?
 
         # for the sake of speed, and the garbage collector,
@@ -21,15 +36,33 @@ module Api
         end
       end
 
-      def orders
-        return model if model.is_a?(Array)
-        return [model] if model.is_a?(Order)
-        model.ransack(params[:q]).result(distinct: true)
+      def model
+        return scope if scope.is_a?(Array)
+
+        scope.ransack(params[:q]).result(distinct: true)
              .includes(
                :user,
                :host,
-               attendance: [:attendee], order_line_items: [:line_item]
+               registration: [:attendee], order_line_items: [:line_item]
              )
+      end
+
+      def scope
+        return host_scope if requesting_from_host?
+
+        current_user.orders
+      end
+
+      def requesting_from_host?
+        params[:host_id] && params[:host_type]
+      end
+
+      def host_scope
+        host.orders
+      end
+
+      def host
+        host_from_params(params)
       end
     end
   end

@@ -1,4 +1,6 @@
-require "spec_helper"
+# frozen_string_literal: true
+
+require 'spec_helper'
 
 RSpec.describe OrderMailer, type: :mailer do
   before(:each) do
@@ -6,43 +8,43 @@ RSpec.describe OrderMailer, type: :mailer do
   end
 
   it 'sends a receipt' do
-    o = create(:order, user: @user, attendance: create(:attendance))
+    o = create(:order, user: @user, registration: create(:registration))
     ActionMailer::Base.deliveries.clear
 
-    expect{
+    expect {
       OrderMailer.receipt(for_order: o).deliver_now
     }.to change(ActionMailer::Base.deliveries, :count).by 1
   end
 
   it 'does not include the processing fee' do
     e = create(:event, make_attendees_pay_fees: false)
-    o = create(:order, host: e, user: @user, attendance: create(:attendance))
-    allow(o).to receive(:total_fee_amount){ 5 }
+    o = create(:order, host: e, user: @user, registration: create(:registration))
+    allow(o).to receive(:total_fee_amount) { 5 }
 
     ActionMailer::Base.deliveries.clear
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
     body = email.body.raw_source
 
-    expect(body).to_not include("Processing Fee")
+    expect(body).to_not include('Processing Fee')
   end
 
   it 'does include the processing fee' do
     e = create(:event, make_attendees_pay_fees: true)
-    o = create(:order, host: e, user: @user, attendance: create(:attendance))
-    allow(o).to receive(:total_fee_amount){ 5 }
+    o = create(:order, host: e, user: @user, registration: create(:registration))
+    allow(o).to receive(:total_fee_amount) { 5 }
 
     ActionMailer::Base.deliveries.clear
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
     body = email.body.raw_source
 
-    expect(body).to include("Processing Fee")
+    expect(body).to include('Processing Fee')
   end
 
   it 'shows the payment token when present' do
     token = 'abctoken'
-    o = create(:order, user: @user, payment_token: token, attendance: create(:attendance))
+    o = create(:order, user: @user, payment_token: token, registration: create(:registration))
     ActionMailer::Base.deliveries.clear
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
@@ -53,7 +55,7 @@ RSpec.describe OrderMailer, type: :mailer do
 
   it 'shows the contact email when present' do
     host = create(:event, contact_email: 'test@test.abc')
-    o = create(:order, user: @user, attendance: create(:attendance), host: host)
+    o = create(:order, user: @user, registration: create(:registration), host: host)
     ActionMailer::Base.deliveries.clear
 
     OrderMailer.receipt(for_order: o).deliver_now
@@ -65,13 +67,13 @@ RSpec.describe OrderMailer, type: :mailer do
 
   it 'does not show a contact email when there is not one present' do
     host = create(:event)
-    o = create(:order, user: @user, attendance: create(:attendance), host: host)
+    o = create(:order, user: @user, registration: create(:registration), host: host)
     ActionMailer::Base.deliveries.clear
 
     OrderMailer.receipt(for_order: o).deliver_now
     email = ActionMailer::Base.deliveries.first
     body = email.body.raw_source
-    expect(body.gsub("\n", '')).to include('email  the organizers.')
+    expect(body.delete("\n")).to include('email  the organizers.')
   end
 
   describe 'organization email notifications' do
@@ -160,5 +162,4 @@ RSpec.describe OrderMailer, type: :mailer do
       expect(email.bcc).to be_nil
     end
   end
-
 end

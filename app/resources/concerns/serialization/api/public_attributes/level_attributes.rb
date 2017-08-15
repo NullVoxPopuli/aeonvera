@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   module PublicAttributes
     module LevelAttributes
@@ -6,8 +7,8 @@ module Api
 
       included do
         attributes :id, :event_id,
-          :name, :description,
-          :requirement, :deleted_at
+                   :name, :description,
+                   :requirement, :deleted_at
       end
     end
   end

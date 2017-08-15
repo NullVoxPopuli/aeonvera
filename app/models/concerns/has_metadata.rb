@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HasMetadata
   extend ActiveSupport::Concern
 
@@ -8,7 +10,7 @@ module HasMetadata
   end
 
   def metadata_safe
-    self.metadata || {}
+    metadata || {}
   end
 
   private
@@ -16,5 +18,4 @@ module HasMetadata
   def prepare_metadata
     self.metadata ||= {}
   end
-
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '2.4.1'
@@ -11,9 +12,9 @@ gem 'rails', '~> 4.2'
 gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
-gem 'attr_encrypted' # column encryption
+gem 'attr_encrypted', '~> 1.3.0' # column encryption
 
- # type checking
+# type checking
 gem 'rtype'
 gem 'rtype-native'
 
@@ -23,7 +24,7 @@ gem 'skinny_controllers' # , path: '../skinny_controllers' # controllers, chill 
 gem 'drawers' # , path: '../rails_module_unification'
 gem 'devise' # User Authentication and management
 
-gem "dry-validation"
+gem 'dry-validation'
 gem 'reform' # Non-Model Validation
 
 gem 'paranoia', '~> 2.0' # soft deletion
@@ -48,6 +49,10 @@ gem 'api_cache', github: 'NullVoxPopuli/api_cache'
 # gem 'active_model_serializers', path: '../active_model_serializers'
 # gem 'active_model_serializers', github: 'bf4/active_model_serializers', branch: 'smarter_association_id_lookup'
 gem 'active_model_serializers', '0.10.5'
+# held back due to JSONAPI document validations - Not every endpoint is JSONAPI
+# gem 'jsonapi-renderer', '0.1.2'
+gem 'jsonapi-rb'
+
 gem 'oj'
 gem 'oj_mimic_json'
 
@@ -67,10 +72,8 @@ gem 'scout_apm'
 # Auto-scaling Tuning
 # gem 'rails_autoscale_agent'
 
-
 # fast web server
 gem 'puma'
-
 
 ############
 # JS, CSS and Icons (For Emails)
@@ -118,9 +121,6 @@ group :test do
   # managing and traversing time in specs
   gem 'delorean'
 
-  # Mimicking objects
-  gem 'metahash-rb', require: 'metahash'
-
   # The test runner
   gem 'rspec'
   gem 'rspec-rails'
@@ -139,7 +139,6 @@ group :test do
   gem 'simplecov', require: false
   # Coverage Reporting
   gem 'codeclimate-test-reporter'
-
 
   # JSONAPI Validation
   gem 'jsonapi-parser', require: 'jsonapi/parser'

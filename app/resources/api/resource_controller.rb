@@ -8,7 +8,7 @@ module Api
 
     def index
       respond_to do |format|
-        format.json { render_models(params[:include]) }
+        format.json { render_jsonapi }
         format.csv do
           csv_data = CsvGeneration.model_to_csv(model, params[:fields])
           send_data(csv_data)
@@ -17,19 +17,19 @@ module Api
     end
 
     def show
-      render_model(params[:include])
+      render_jsonapi
     end
 
     def create
-      render_model(params[:include], success_status: 201)
+      render_jsonapi(options: { status: 201 })
     end
 
     def update
-      render_model
+      render_jsonapi
     end
 
     def destroy
-      render_model
+      render_jsonapi
     end
   end
 end

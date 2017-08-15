@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   class HousingRequestPolicy < SkinnyControllers::Policy::Base
     # Below are all the available permissions. Each permission corresponds
@@ -45,7 +46,7 @@ module Api
     end
 
     def is_the_attendee?
-      object.attendance.attendee_id == user.id
+      object.registration.attendee_id == user.id
     end
   end
 end

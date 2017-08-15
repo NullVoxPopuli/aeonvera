@@ -1,19 +1,14 @@
-def page!
-  save_and_open_page
-end
-
-def login(user = @user = create(:user))
-  user.confirm!
-  sign_in user
-end
+# frozen_string_literal: true
 
 # TODO: remove
 def auth_header_for(user = @user = create(:user))
-  @headers = { 'Authorization' => 'Bearer ' + user.authentication_token }
+  @headers = {
+    'Authorization' => 'Bearer ' + user.authentication_token
+  }
 end
 
 def force_login(user)
-  allow(controller).to receive(:current_user){ user }
+  allow(controller).to receive(:current_user) { user }
 end
 
 def confirmed_user(user = @user = create(:user))
@@ -58,18 +53,4 @@ def create_integration(params)
   i = Integration.new(attributes)
   i.save
   i
-end
-
-
-def event_path(path, params = {})
-  ["hosted_events/#{path}", { hosted_event_id: @event.id.to_s }.merge(params)]
-end
-
-# this should be defined in the hosts file
-def test_event_domain
-  "//testevent.#{root_test_domain}"
-end
-
-def root_test_domain
-  APPLICATION_CONFIG[:domain][Rails.env]
 end

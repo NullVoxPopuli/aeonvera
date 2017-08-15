@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::HostsController, type: :controller do
-
   context 'index' do
     it 'wraps the host in a collection' do
       event = create_event

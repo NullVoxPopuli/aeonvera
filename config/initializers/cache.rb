@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Globally set up redis
 redis = nil
 if ENV['REDIS_URL'].present?

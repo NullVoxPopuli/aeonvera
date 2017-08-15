@@ -1,8 +1,11 @@
 # frozen_string_literal: true
+
 module Api
   class CompetitionsController < Api::EventResourceController
+    self.serializer = CompetitionSerializableResource
+
     def index
-      render json: model, include: 'order_line_items.order.attendance'
+      render_jsonapi(options: { include: 'order_line_items.order.registration' })
     end
 
     private

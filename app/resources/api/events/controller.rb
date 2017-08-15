@@ -1,18 +1,31 @@
+# frozen_string_literal: true
+
 module Api
-  class EventsController < Api::ResourceController
-    def index; show; end
+  class EventsController < ResourceController
+    self.serializer = EventSerializableResource
+    self.default_fields = {
+      # events: [:opening_tier, :current_tier, :integrations, :sponsorships],
+      levels: [:id, :name, :requirement, :description],
+      'opening-tiers': [:date, :registrants, :increase_by_dollars, :is_opening_tier],
+      'pricing-tiers': [:date, :registrants, :increase_by_dollars, :is_opening_tier]
+
+    }
+
+    def index
+      show
+    end
 
     def show
-      params[:fields] = { levels: [:id, :name, :requirement, :description] }
-      super
+      model = EventOperations::Read.new(current_user, params).run
+      render_jsonapi(model: model)
     end
 
     private
 
     def update_event_params
       whitelistable_params(embedded: [
-          :opening_tier, :sponsorship
-        ]) do |whitelister|
+                             :opening_tier, :sponsorship
+                           ]) do |whitelister|
         whitelister.permit(
           :name, :short_description, :domain,
           :starts_at, :ends_at,
@@ -45,6 +58,5 @@ module Api
     def create_event_params
       update_event_params
     end
-
   end
 end

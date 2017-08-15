@@ -1,19 +1,20 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe Api::MembershipRenewalOperations do
-  let(:klass){ Api::MembershipRenewalOperations }
+  let(:klass) { Api::MembershipRenewalOperations }
 
   context 'ReadAll' do
     context 'organization' do
       it 'returns the organization' do
         organization = create(:organization)
-        op = klass::ReadAll.new(organization.owner, {organization_id: organization.id}, {})
+        op = klass::ReadAll.new(organization.owner, { organization_id: organization.id }, {})
 
         expect(op.send(:organization)).to eq organization
       end
 
       it 'errors if a non-team-member accesses' do
-
       end
     end
 
@@ -25,7 +26,7 @@ describe Api::MembershipRenewalOperations do
         create(:membership_renewal, membership_option: option)
         create(:membership_renewal, membership_option: option2)
 
-        op = klass::ReadAll.new(organization.owner, {organization_id: organization.id}, {})
+        op = klass::ReadAll.new(organization.owner, { organization_id: organization.id }, {})
         result = op.send(:renewals)
 
         result.each do |renewal|
@@ -44,7 +45,7 @@ describe Api::MembershipRenewalOperations do
         recent = create(:membership_renewal, membership_option: option, user: user, updated_at: 2.months.ago)
         create(:membership_renewal, membership_option: option, user: user, updated_at: 4.months.ago)
 
-        op = klass::ReadAll.new(organization.owner, {organization_id: organization.id}, {})
+        op = klass::ReadAll.new(organization.owner, { organization_id: organization.id }, {})
         result = op.send(:latest_renewals)
 
         expect(result.count).to eq 1
@@ -52,5 +53,4 @@ describe Api::MembershipRenewalOperations do
       end
     end
   end
-
 end

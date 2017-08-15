@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #
 # Some orders are created without any order line items.
 # (thanks frontend)

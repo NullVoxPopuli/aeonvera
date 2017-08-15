@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: discounted_items
@@ -8,6 +10,6 @@
 #
 
 class DiscountedItem < ApplicationRecord
-	belongs_to :discount
-	belongs_to :attendee
+  belongs_to :discount
+  belongs_to :attendee
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::Users::CollaborationsController, type: :request do
@@ -112,6 +114,5 @@ describe Api::Users::CollaborationsController, type: :request do
 
       expect(Organization.find(organization.id).collaborator_ids).to include(user.id)
     end
-
   end
 end

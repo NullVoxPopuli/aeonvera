@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: line_items
@@ -53,18 +54,18 @@ class LineItem < ApplicationRecord
   belongs_to :event, class_name: Event.name,
                      foreign_key: 'host_id', foreign_type: 'host_type', polymorphic: true
 
-  alias attendances purchasers
+  alias registrations purchasers
 
   alias_attribute :current_price, :price
 
   has_attached_file :picture,
-    preserve_files: true,
-    keep_old_files: true,
-    path: '/assets/:class/:id/picture_:style.:extension',
-    styles: {
-      thumb: '128x128>',
-      medium: '300x300>'
-    }
+                    preserve_files: true,
+                    keep_old_files: true,
+                    path: '/assets/:class/:id/picture_:style.:extension',
+                    styles: {
+                      thumb: '128x128>',
+                      medium: '300x300>'
+                    }
 
   validates_attachment_content_type :picture, content_type: /\Aimage\/.*\Z/
 

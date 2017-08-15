@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::OrganizationsController do
-
   context 'index' do
     it 'returns all of the organizations' do
       create(:organization)

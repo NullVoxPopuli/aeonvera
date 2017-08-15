@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::CollaborationsController, type: :request do
@@ -71,7 +73,8 @@ describe Api::CollaborationsController, type: :request do
 
           it 'can create' do
             create_params = params.call(
-              email: collaborator.email, host_type: Event.name, host_id: event.id)
+              email: collaborator.email, host_type: Event.name, host_id: event.id
+            )
 
             post '/api/collaborations', create_params, @headers
             expect(response.status).to eq 201
@@ -79,7 +82,8 @@ describe Api::CollaborationsController, type: :request do
 
           it 'does not create a collaboration' do
             create_params = params.call(
-              email: collaborator.email, host_type: Event.name, host_id: event.id)
+              email: collaborator.email, host_type: Event.name, host_id: event.id
+            )
 
             expect do
               post '/api/collaborations', create_params, @headers
@@ -88,7 +92,8 @@ describe Api::CollaborationsController, type: :request do
 
           it 'sends an email invitation' do
             create_params = params.call(
-              email: collaborator.email, host_type: Event.name, host_id: event.id)
+              email: collaborator.email, host_type: Event.name, host_id: event.id
+            )
 
             expect do
               post '/api/collaborations', create_params, @headers
@@ -137,7 +142,8 @@ describe Api::CollaborationsController, type: :request do
               create_list(
                 :collaboration, 5,
                 collaborated: create(:event),
-                user: create(:user))
+                user: create(:user)
+              )
             end
 
             it 'is scoped to the event' do
@@ -204,14 +210,12 @@ describe Api::CollaborationsController, type: :request do
             expect(response.status).to eq 200
           end
         end
-
       end
 
       context 'is non collaborator' do
         before(:each) do
           set_login_header_as.call(create_confirmed_user)
         end
-
 
         it 'cannot create' do
           create_params = {
@@ -257,7 +261,6 @@ describe Api::CollaborationsController, type: :request do
             expect(response.status).to eq 403
           end
         end
-
       end
     end
   end

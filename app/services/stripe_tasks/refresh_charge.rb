@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # example charge, and then refund
 # initial charge: 105 <- also net received
 # added fees:     4.29

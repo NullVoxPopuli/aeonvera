@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::LessonsController, type: :request do
@@ -48,8 +49,8 @@ describe Api::LessonsController, type: :request do
         context 'creating' do
           it 'can create' do
             create_params = jsonapi_params('lessons',
-              attributes: { name: 'hi', price: '2' },
-              relationships: { host: organization})
+                                           attributes: { name: 'hi', price: '2' },
+                                           relationships: { host: organization })
 
             post '/api/lessons', create_params, @headers
             expect(response.status).to eq 201
@@ -57,8 +58,8 @@ describe Api::LessonsController, type: :request do
 
           it 'creates a lesson' do
             create_params = jsonapi_params('lessons',
-              attributes: { name: 'hi', price: '2' },
-              relationships: { host: organization })
+                                           attributes: { name: 'hi', price: '2' },
+                                           relationships: { host: organization })
 
             expect do
               post '/api/lessons', create_params, @headers
@@ -71,8 +72,8 @@ describe Api::LessonsController, type: :request do
 
           it 'can update' do
             put "/api/lessons/#{lesson.id}",
-              jsonapi_params('lessons', id: lesson.id, attributes: { name: 'hi' }),
-              @headers
+                jsonapi_params('lessons', id: lesson.id, attributes: { name: 'hi' }),
+                @headers
 
             expect(response.status).to eq 200
           end

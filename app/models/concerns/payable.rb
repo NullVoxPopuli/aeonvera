@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Payable
   module Methods
     PAYPAL = 'PayPal'
@@ -124,7 +125,18 @@ module Payable
     checks.first.try(:[], 'number')
   end
 
+  # In Dollars
   def sub_total
+    (sub_total_in_cents || ensure_sub_total_persisted) / 100.0
+  end
+
+  def ensure_sub_total_persisted
+    self.sub_total_in_cents = _calculate_sub_total * 100
+    save
+    sub_total_in_cents
+  end
+
+  def _calculate_sub_total
     return legacy_total if is_legacy?
     amount = 0
     remaining_discounts = []
@@ -132,17 +144,18 @@ module Payable
       remaining_discounts << discount
     end
 
-    valid_order_line_items = order_line_items.select(&:valid?)
-    valid_order_line_items.each do |line_item|
-      if (object = line_item.line_item).is_a?(Discount)
+    valid_order_line_items = order_line_items
+    valid_order_line_items.each do |order_line_item|
+      if order_line_item.line_item_type.include?('Discount')
+        object = order_line_item.line_item
         amount = amount_after_discount(
           amount,
           object,
-          order_line_item: line_item,
+          order_line_item: order_line_item,
           discounts_to_apply_at_end: discounts_to_apply_at_end
         )
       else
-        amount += (line_item.price * line_item.quantity)
+        amount += (order_line_item.price * order_line_item.quantity)
       end
     end
 

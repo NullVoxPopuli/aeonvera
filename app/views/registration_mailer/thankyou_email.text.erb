@@ -1,0 +1,24 @@
+<%= content_for :header do %>
+	<%= @event.name %>
+<% end %>
+
+<%= @registration.attendee_name %>,
+Thank you for registering <%= @preposition %> <%= @event.name %>!
+
+The organizers are aware of your registration, and should be happy to see you at their event.
+
+
+Order Summary
+<%= render partial: "/orders/summary", locals: { order: @order, registration: @registration, buttons: false } %>
+
+If you have any questions about <%= @event.name %>,
+feel free to email the event organizers.
+
+
+<% if @event.try(:registration_email_disclaimer).present? %>
+  <%= @event.registration_email_disclaimer.html_safe %>
+<% end %>
+
+
+
+* Note, this is a text version of the email, and may not be as well-formatted as the accompanied html version.

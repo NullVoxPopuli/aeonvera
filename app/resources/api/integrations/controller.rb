@@ -1,6 +1,11 @@
+# frozen_string_literal: true
+
 module Api
   class IntegrationsController < Api::ResourceController
+    self.serializer = IntegrationSerializableResource
+
     before_action :must_be_logged_in
+
     private
 
     def create_integration_params

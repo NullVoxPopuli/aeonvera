@@ -1,9 +1,21 @@
+# frozen_string_literal: true
+
 module Api
   class HousingProvisionsController < Api::EventResourceController
+    self.serializer = HousingProvisionSerializableResource
+    self.default_fields = {
+      housing_provisions: [
+        :name, :housing_capacity, :number_of_showers,
+        :can_provide_transportation, :transportation_capacity,
+        :preferred_gender_to_host, :has_pets,
+        :smokes, :notes, :host, :registration
+      ]
+    }
+
     private
 
     def update_housing_provision_params
-      whitelistable_params(polymorphic: [:attendance, :registration, :host]) do |whitelister|
+      whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :housing_capacity, :number_of_showers, :can_provide_transportation,
           :transportation_capacity, :preferred_gender_to_host,
@@ -13,18 +25,15 @@ module Api
     end
 
     def create_housing_provision_params
-      whitelisted = whitelistable_params(polymorphic: [:attendance, :registration, :host]) do |whitelister|
+      whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
           :housing_capacity, :number_of_showers, :can_provide_transportation,
           :transportation_capacity, :preferred_gender_to_host,
           :has_pets, :smokes, :notes,
-          :attendance_id, :attendance_type,
+          :registration_id, :registration_type,
           :host_id, :host_type, :name
         )
       end
-
-      whitelisted[:attendance_type] = 'Attendance'
-      whitelisted
     end
   end
 end

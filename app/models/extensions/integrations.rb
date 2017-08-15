@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # extends the integrations association for {Account}s and {User}s
 #   such that integrations becames a psuedo object
 module Extensions

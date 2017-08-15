@@ -1,41 +1,52 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe APIController do
-  let(:controller){ APIController.new }
-  let(:params){
-    {"data"=>{
-      "attributes"=>{
-        "host-name"=>nil, "host-url"=>nil, "created-at"=>nil, "payment-received-at"=>nil,
-        "paid-amount"=>nil, "net-amount-received"=>nil, "total-fee-amount"=>nil,
-        "payment-method"=>nil,
-        "payment-token"=>'123',
-        "check-number"=>nil, "paid"=>false, "total-in-cents"=>nil,
-        "user-email"=>"oeu", "user-name"=>"aoeu oaeu", "checkout-token"=>nil,
-        "checkout-email"=>nil},
-      "relationships"=>{
-        "host"=>{"data"=>{'type' => 'organizations', 'id' => 1}},
-        "order-line-items"=>{"data"=>[{
-          "attributes"=>{
-            "quantity"=>1, "price"=>45, "partner-name"=>nil, "dance-orientation"=>nil,
-            "size"=>nil, "payment-token"=>nil},
-          "relationships"=>{
-            "line-item"=>{"data"=>{"type"=>"lessons", "id"=>2}},
-            "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
-          "type"=>"order-line-items"},  {
-          "attributes"=>{
-            "quantity"=>1, "price"=>45, "partner-name"=>nil, "dance-orientation"=>nil,
-            "size"=>nil, "payment-token"=>nil},
-          "relationships"=>{
-            "line-item"=>{"data"=>{"type"=>"lessons", "id"=>3}},
-            "order"=>{"data"=>{"type"=>"orders", "id"=>nil}}},
-          "type"=>"order-line-items"}]},
-        "attendance"=>{"data"=>nil},
-        "user"=>{"data"=>nil}},
-      "type"=>"orders"}, "order"=>{}}
+  let(:controller) { APIController.new }
+  let(:params) {
+    { 'data' => {
+      'attributes' => {
+        'host-name' => nil, 'host-url' => nil, 'created-at' => nil, 'payment-received-at' => nil,
+        'paid-amount' => nil, 'net-amount-received' => nil, 'total-fee-amount' => nil,
+        'payment-method' => nil,
+        'payment-token' => '123',
+        'check-number' => nil, 'paid' => false, 'total-in-cents' => nil,
+        'user-email' => 'oeu', 'user-name' => 'aoeu oaeu', 'checkout-token' => nil,
+        'checkout-email' => nil
+      },
+      'relationships' => {
+        'host' => { 'data' => { 'type' => 'organizations', 'id' => 1 } },
+        'order-line-items' => { 'data' => [{
+          'attributes' => {
+            'quantity' => 1, 'price' => 45, 'partner-name' => nil, 'dance-orientation' => nil,
+            'size' => nil, 'payment-token' => nil
+          },
+          'relationships' => {
+            'line-item' => { 'data' => { 'type' => 'lessons', 'id' => 2 } },
+            'order' => { 'data' => { 'type' => 'orders', 'id' => nil } }
+          },
+          'type' => 'order-line-items'
+        }, {
+          'attributes' => {
+            'quantity' => 1, 'price' => 45, 'partner-name' => nil, 'dance-orientation' => nil,
+            'size' => nil, 'payment-token' => nil
+          },
+          'relationships' => {
+            'line-item' => { 'data' => { 'type' => 'lessons', 'id' => 3 } },
+            'order' => { 'data' => { 'type' => 'orders', 'id' => nil } }
+          },
+          'type' => 'order-line-items'
+        }] },
+        'registration' => { 'data' => nil },
+        'user' => { 'data' => nil }
+      },
+      'type' => 'orders'
+    }, 'order' => {} }
   }
 
   before(:each) do
-    allow(controller).to receive(:params){ params }
+    allow(controller).to receive(:params) { params }
   end
 
   describe '#whitelistable_params' do

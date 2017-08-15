@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::LevelsController, type: :controller do
   context 'index' do
-
     it 'gets all levels' do
       force_login(user = create(:user))
       event = create(:event, user: user)
@@ -31,7 +32,6 @@ describe Api::LevelsController, type: :controller do
       data = json['data']
 
       expect(data.count).to eq 2
-
     end
 
     it 'requires the event id to be specified' do
@@ -57,7 +57,6 @@ describe Api::LevelsController, type: :controller do
       data = json['data']
 
       expect(data['attributes']['name']).to eq level.name
-
     end
   end
 
@@ -68,7 +67,7 @@ describe Api::LevelsController, type: :controller do
       level = create(:level, event: event)
 
       new_name = level.name + ' updated'
-      json_api = {id: level.id, "data":{"id":"#{level.id}","attributes":{"number_of_leads":28,"number_of_follows":26,"name": new_name,"requirement":1},"type":"levels"}}
+      json_api = { id: level.id, "data": { "id": level.id.to_s, "attributes": { "number_of_leads": 28, "number_of_follows": 26, "name": new_name, "requirement": 1 }, "type": 'levels' } }
 
       patch :update, json_api
 
@@ -81,7 +80,7 @@ describe Api::LevelsController, type: :controller do
       level = create(:level, event: event)
 
       new_name = level.name + ' updated'
-      json_api = {id: level.id, "data":{"id":"#{level.id}","attributes":{"number_of_leads":28,"number_of_follows":26,"name": new_name,"requirement":1},"type":"levels"}}
+      json_api = { id: level.id, "data": { "id": level.id.to_s, "attributes": { "number_of_leads": 28, "number_of_follows": 26, "name": new_name, "requirement": 1 }, "type": 'levels' } }
 
       patch :update, json_api
 
@@ -99,10 +98,10 @@ describe Api::LevelsController, type: :controller do
       force_login(event.hosted_by)
       level = build(:level, event: event)
 
-      json_api = {"data":{"attributes": level.attributes ,"type":"levels",
-        "relationships": {"event":{"data": {"id": level.event_id}}}}}
+      json_api = { "data": { "attributes": level.attributes, "type": 'levels',
+                             "relationships": { "event": { "data": { "id": level.event_id } } } } }
 
-      expect{
+      expect {
         post :create, json_api
       }.to change(Level, :count).by(1)
     end
@@ -112,10 +111,10 @@ describe Api::LevelsController, type: :controller do
       event = create(:event, user: create(:user))
       level = build(:level, event: event)
 
-      json_api = {"data":{"attributes": level.attributes ,"type":"levels",
-        "relationships": {"event":{"data": {"id": level.event_id}}}}}
+      json_api = { "data": { "attributes": level.attributes, "type": 'levels',
+                             "relationships": { "event": { "data": { "id": level.event_id } } } } }
 
-      expect{
+      expect {
         post :create, json_api
       }.to change(Level, :count).by(0)
     end

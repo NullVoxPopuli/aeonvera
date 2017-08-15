@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Api
   # Used for searching for members to add to an organization.
   # Searches through all registered users
@@ -10,7 +11,7 @@ module Api
                               model_params_key: 'member',
                               association_name: 'members'
 
-    self.serializer = MemberSerializer
+    self.serializer = MemberSerializableResource
 
     before_action :must_be_logged_in
     before_action :enforce_search_parameters, only: [:index]
@@ -19,8 +20,9 @@ module Api
       return all if params[:all]
 
       model = MemberOperations::ReadAll.new(current_user, params).run
+
       respond_to do |format|
-        format.json { render_models }
+        format.json { render_jsonapi(model: model) }
         format.csv do
           csv_data = CsvGeneration.model_to_csv(
             model, params[:fields],
@@ -34,7 +36,7 @@ module Api
 
     def all
       search = User.ransack(params[:q])
-      render json: search.result, each_serializer: MemberSerializer
+      render_jsonapi(model: search.result)
     end
 
     private

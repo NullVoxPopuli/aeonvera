@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'render_anywhere'
 class ApplicationMailer < ActionMailer::Base
   default from: APPLICATION_CONFIG['support_email']

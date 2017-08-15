@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::HousingProvisionsController, type: :request do
@@ -9,14 +11,14 @@ describe Api::HousingProvisionsController, type: :request do
     context 'and is registering' do
       let!(:user) { create_confirmed_user }
       let!(:event) { create(:event) }
-      let!(:attendance) { create(:attendance, host: event, attendee: user) }
+      let!(:registration) { create(:registration, host: event, attendee: user) }
       let(:payload) {
         {
           'data' => {
             'attributes' => {},
             'relationships' => {
               'host' => { 'data' => { 'type' => 'events', 'id' => event.id } },
-              'attendance' => { 'data' => { 'type' => 'registrations', 'id' => attendance.id } },
+              'registration' => { 'data' => { 'type' => 'registrations', 'id' => registration.id } },
               'housing-provision' => { 'data' => nil }
             },
             'type' => 'housing-provisions'
@@ -39,7 +41,7 @@ describe Api::HousingProvisionsController, type: :request do
       end
 
       context 'show' do
-        let!(:housing_provision) { create(:housing_provision, attendance: attendance) }
+        let!(:housing_provision) { create(:housing_provision, registration: registration) }
 
         subject { get "/api/housing_provisions/#{housing_provision.id}", payload, @headers }
 
@@ -47,7 +49,7 @@ describe Api::HousingProvisionsController, type: :request do
       end
 
       context 'update' do
-        let!(:housing_provision) { create(:housing_provision, attendance: attendance) }
+        let!(:housing_provision) { create(:housing_provision, registration: registration) }
         let(:update_params) {
           {
             data: {
@@ -64,7 +66,7 @@ describe Api::HousingProvisionsController, type: :request do
       end
 
       context 'delete' do
-        let!(:housing_provision) { create(:housing_provision, attendance: attendance) }
+        let!(:housing_provision) { create(:housing_provision, registration: registration) }
 
         subject { delete "/api/housing_provisions/#{housing_provision.id}", {}, @headers }
 
@@ -72,15 +74,14 @@ describe Api::HousingProvisionsController, type: :request do
       end
     end
 
-
     context 'owns the event' do
       before(:each) do
         user = create_confirmed_user
         auth_header_for(user)
         @event = create(:event, hosted_by: user)
-        @attendance = create(:attendance, host: @event)
-        @housing_provision = create(:housing_provision, host: @event, attendance: @attendance)
-        create(:housing_provision, host: @event, attendance: @attendance)
+        @registration = create(:registration, host: @event)
+        @housing_provision = create(:housing_provision, host: @event, registration: @registration)
+        create(:housing_provision, host: @event, registration: @registration)
       end
 
       it 'can read all' do
@@ -89,7 +90,7 @@ describe Api::HousingProvisionsController, type: :request do
       end
 
       it 'selects attributes' do
-        get "/api/housing_provisions.csv?event_id=#{@event.id}&fields=housingCapacity,numberOfShowers,attendance.attendeeName", {}, @headers
+        get "/api/housing_provisions.csv?event_id=#{@event.id}&fields=housingCapacity,numberOfShowers,registration.attendeeName", {}, @headers
         expect(response.status).to eq 200
       end
 
@@ -103,10 +104,10 @@ describe Api::HousingProvisionsController, type: :request do
       context 'creating' do
         let(:payload) do
           {
-            "data"=>{
-              "attributes"=>{"housing-capacity"=>0, "number-of-showers"=>0, "can-provide-transportation"=>false, "transportation-capacity"=>0, "preferred-gender-to-host"=>"No Preference", "has-pets"=>false, "smokes"=>false, "notes"=>nil, "name"=>nil},
-              "relationships"=>{"host"=>{"data"=>{"type"=>"events", "id"=> @event.id}}, "attendance"=>{"data"=>{"type"=>"event-attendances", "id"=>@attendance.id}}},
-              "type"=>"housing-provisions"
+            'data' => {
+              'attributes' => { 'housing-capacity' => 0, 'number-of-showers' => 0, 'can-provide-transportation' => false, 'transportation-capacity' => 0, 'preferred-gender-to-host' => 'No Preference', 'has-pets' => false, 'smokes' => false, 'notes' => nil, 'name' => nil },
+              'relationships' => { 'host' => { 'data' => { 'type' => 'events', 'id' => @event.id } }, 'registration' => { 'data' => { 'type' => 'registrations', 'id' => @registration.id } } },
+              'type' => 'housing-provisions'
             }
           }
         end
@@ -118,10 +119,10 @@ describe Api::HousingProvisionsController, type: :request do
           }.to change(HousingProvision, :count).by 1
         end
 
-        it 'is tied to the attendance' do
+        it 'is tied to the registration' do
           post '/api/housing_provisions', payload, @headers
           id = json_api_data['id']
-          expect(HousingProvision.find(id).attendance).to eq @attendance
+          expect(HousingProvision.find(id).registration).to eq @registration
         end
       end
     end

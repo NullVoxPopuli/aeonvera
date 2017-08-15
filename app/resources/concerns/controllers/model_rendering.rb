@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Controllers
   module ModelRendering
     extend ActiveSupport::Concern
@@ -9,75 +10,80 @@ module Controllers
     included do
       class << self
         attr_accessor :serializer
+        attr_accessor :default_fields
+        attr_accessor :default_include
       end
     end
 
     protected
 
-    def render_jsonapi_model(model, options: {}, succeeded: nil)
-      succeeded ||= model.respond_to?(:errors) ? model.errors.blank? : succeeded
+    def render_jsonapi(options: {}, model: nil)
+      model ||= self.model
 
-      if succeeded
-        render_jsonapi(
-          model,
-          DEFAULT_OK_OPTIONS.merge(options)
-        )
-      else
-        render(
-          DEFAULT_ERROR_OPTIONS
-            .merge(options)
-            .merge(jsonapi: model.errors)
-        )
-      end
-    end
-
-    def render_model(include_param = nil, success_status: 200)
-      render_json_response(
-        include_param,
-        success_status,
-        ->(model) { model.errors.present? }
-      )
-    end
-
-    def render_models(include_param = nil, success_status: 200)
-      render_json_response(
-        include_param,
-        success_status,
-        ->(model) { model.respond_to?(:errors) && model.errors.present? }
-      )
-    end
-
-    def render_json_response(include_param, success_status = 200, error_condition = nil)
       raise ActiveRecord::RecordNotFound if model.nil?
+      return render_jsonapi_error(model) if errors_present?(model)
 
-      return render_jsonapi_error(model) if error_present?(error_condition, model)
+      default_exposed = { current_user: current_user }
+      exposed = default_exposed.merge(options.delete(:expose) || {})
 
-      options = {
-        json: model,
-        include: include_param,
-        fields: params[:fields] || {},
-        status: success_status
+      jsonapi_options = {
+        expose: exposed,
+        fields: options.delete(:fields) || allowed_fields,
+        include: options.delete(:include) || allowed_include,
+        class: options.delete(:class) || serializer
       }
 
-      if self.class.serializer
-        if model.respond_to?(:each)
-          options[:each_serializer] = self.class.serializer
-        else
-          options[:serializer] = self.class.serializer
-        end
-      end
+      render_options = DEFAULT_OK_OPTIONS
+                       .merge(options)
+                       .merge(json: success(model, jsonapi_options))
 
-      render options
+      render(render_options)
+    end
+
+    def success(resource, options = {})
+      success_renderer.render(resource, options)
+    end
+
+    def success_renderer
+      @success_renderer ||= JSONAPI::Serializable::SuccessRenderer.new
+    end
+
+    def error_renderer
+      @error_renderer ||= JSONAPI::Serializable::ErrorsRenderer.new
+    end
+
+    def default_fields
+      self.class.default_fields
+    end
+
+    def default_include
+      self.class.default_include
+    end
+
+    def allowed_include
+      params[:include] || default_include || {}
+    end
+
+    def allowed_fields
+      params[:fields] || default_fields || {}
     end
 
     private
 
-    def error_present?(condition, model)
-      condition && condition.call(model)
+    def errors_present?(model)
+      model.respond_to?(:errors) && model.errors.present?
     end
 
     def render_jsonapi_error(model)
-      render json: model, status: 422, serializer: ActiveModel::Serializer::ErrorSerializer
+      errors = model.errors.messages.map { |k, v|
+        JSONAPI::Serializable::Error.create(detail: v.first, source: "data/attributes/#{k}")
+      }
+
+      render json: error_renderer.render(errors), status: 422
+    end
+
+    def serializer
+      self.class.serializer
     end
   end
 end

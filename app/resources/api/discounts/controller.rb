@@ -1,9 +1,17 @@
+# frozen_string_literal: true
+
 module Api
   class DiscountsController < Api::EventResourceController
+    self.serializer = DiscountSerializableResource
+
     def index
       return super unless params[:q]
+
+      params[:fields] = {
+        discount: DiscountSerializableResource::PUBLIC_FIELDS
+      }
       search = Event.find(event_id).discounts.ransack(params[:q])
-      render json: search.result, each_serializer: RegistrationDiscountSerializer
+      render_jsonapi(model: search.result)
     end
 
     def event_id
@@ -17,7 +25,8 @@ module Api
         whitelister.permit(
           :code, :amount, :kind,
           :requires_student_id,
-          :allowed_number_of_uses)
+          :allowed_number_of_uses
+        )
       end
     end
 
@@ -27,7 +36,8 @@ module Api
           :code, :amount, :kind,
           :requires_student_id,
           :allowed_number_of_uses,
-          :host_id, :host_type)
+          :host_id, :host_type
+        )
       end
     end
   end

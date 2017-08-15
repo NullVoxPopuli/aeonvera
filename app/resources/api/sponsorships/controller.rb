@@ -1,13 +1,17 @@
+# frozen_string_literal: true
+
 module Api
   class SponsorshipsController < Api::ResourceController
+    self.serializer = SponsorshipSerializableResource
+
     before_filter :must_be_logged_in, except: [:index]
 
     private
 
     def update_sponsorship_params
       whitelistable_params(polymorphic: [
-        :sponsor, :sponsored, :discount
-        ]) do |whitelister|
+                             :sponsor, :sponsored, :discount
+                           ]) do |whitelister|
         whitelister.permit(
           :sponsor_id, :sponsor_type,
           :sponsored_id, :sponsored_type,

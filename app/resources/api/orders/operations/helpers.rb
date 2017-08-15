@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Api
   module OrderOperations
     module Helpers
-
       def save_order
         ActiveRecord::Base.transaction do
           @model.save

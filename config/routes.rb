@@ -1,13 +1,12 @@
 # frozen_string_literal: true
+
 AeonVera::Application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
 
   mount Sidekiq::Web => '/sidekiq'
 
-  if Rails.env.development?
-    mount LetterOpenerWeb::Engine, at: '/letter_opener'
-  end
+  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
   # for our frontend ui.
   # this should also enable the creation of
@@ -19,7 +18,6 @@ AeonVera::Application.routes.draw do
     # Various Event information / summaries
     resources :upcoming_events # public calendar
     resources :hosted_events # TODO: Is this used?
-    resources :registerable_events # TODO: is this used?
     resources :event_summaries, only: [:show] # overview
 
     resources :notes
@@ -56,11 +54,11 @@ AeonVera::Application.routes.draw do
     resources :housing_provisions
     resources :volunteers
     resources :housing_stats
-    resources :event_attendances do
-      member do
-        put :checkin
-      end
-    end
+    # resources :event_attendances do
+    #   member do
+    #     put :checkin
+    #   end
+    # end
     resources :competitions
     resources :competition_responses
     resources :line_items
@@ -98,24 +96,22 @@ AeonVera::Application.routes.draw do
     get '/charts/:id', to: 'chart_data#show'
 
     devise_scope :api_user do
-      get '/confirmation', to: 'users/confirmations#show'
-      post '/confirmation', to: 'users/confirmations#create'
+      get '/confirmation', to: 'users/devise_overrides/confirmations#show'
+      post '/confirmation', to: 'users/devise_overrides/confirmations#create'
     end
-
-    resources :registrations
 
     get '/users/current-user', to: 'users#show'
     devise_for :users, # skip: :sessions,
-      controllers: {
-        # password resets
-        passwords: 'api/users/passwords',
-        # email confirmations
-        confirmations: 'api/users/confirmations',
-        # creating new account
-        registrations: 'api/users/registrations',
-        # logging in
-        sessions: 'api/users/sessions'
-      }
+               controllers: {
+                 # password resets
+                 passwords: 'api/users/devise_overrides/passwords',
+                 # email confirmations
+                 confirmations: 'api/users/devise_overrides/confirmations',
+                 # creating new account
+                 registrations: 'api/users/devise_overrides/account_registrations',
+                 # logging in
+                 sessions: 'api/users/devise_overrides/sessions'
+               }
 
     # accepting invitations to work on an event / org
     put '/users/collaborations', to: 'users/collaborations#update'
@@ -127,6 +123,7 @@ AeonVera::Application.routes.draw do
       collection do
         # personally registured events for current user
         resources :registered_events, controller: 'users/registered_events'
+        resources :registrations, controller: 'users/registrations'
       end
     end
 

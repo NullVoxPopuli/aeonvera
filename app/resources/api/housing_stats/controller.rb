@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 module Api
   class HousingStatsController < APIController
+    self.serializer = HousingStatsSerializableResource
     include SetsEvent
 
     def show
-      render json: @event, serializer: HousingStatsSerializer
+      presenter = HousingStatsPresenter.new(@event)
+      render_jsonapi(model: presenter)
     end
   end
 end

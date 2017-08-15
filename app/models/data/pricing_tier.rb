@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: pricing_tiers
@@ -20,12 +21,12 @@ class PricingTier < ApplicationRecord
 
   has_many :packages
   belongs_to :event
-  has_many :attendances, -> { where(attending: true).order('attendances.created_at DESC') }
+  has_many :registrations, -> { where(attending: true).order('registrations.created_at DESC') }
   has_many :orders
 
   has_and_belongs_to_many :packages,
-    join_table: 'packages_pricing_tiers',
-    association_foreign_key: 'pricing_tier_id', foreign_key: 'package_id'
+                          join_table: 'packages_pricing_tiers',
+                          association_foreign_key: 'pricing_tier_id', foreign_key: 'package_id'
 
   has_many :restraints, as: :dependable
   has_many :allowed_packages, through: :restraints,
@@ -33,17 +34,16 @@ class PricingTier < ApplicationRecord
 
   validates :event, presence: true
   validates :date,
-    allow_blank: true,
-    date: {
-      # after: Proc.new{ |o| o.event.registration_opens_at - 1.day },
-      before: proc { |o| o.event ? o.event.ends_at : Date.today + 1000.years },
-      message: :invalid_date
-    }
+            allow_blank: true,
+            date: {
+              # after: Proc.new{ |o| o.event.registration_opens_at - 1.day },
+              before: proc { |o| o.event ? o.event.ends_at : Date.today + 1000.years },
+              message: :invalid_date
+            }
 
   scope :before, ->(object) {
     if object.is_a?(PricingTier)
       table = object.class.arel_table
-      attendance_table = Attendance.arel_table
 
       where(
 
@@ -96,7 +96,7 @@ class PricingTier < ApplicationRecord
     # account for race condition where Date.today doesn't eval to the same date
     result = true if date && date <= Date.today + 1.minute
 
-    result = true if registrants && registrants <= event.attendances.count
+    result = true if registrants && registrants <= event.registrations.count
 
     result
   end

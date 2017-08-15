@@ -1,20 +1,39 @@
+# frozen_string_literal: true
+
 module Api
   class HostsController < APIController
-    SHARED_RELATIONSHIPS       = 'integrations,'.freeze
-    EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount,sponsorships.sponsor'.freeze
-    ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'.freeze
+    SHARED_RELATIONSHIPS       = 'integrations,'
+    EVENT_RELATIONSHIPS        = 'opening_tier,current_tier,custom_fields,line_items,shirts,packages,levels,competitions,sponsorships,sponsorships.discount,sponsorships.sponsor'
+    ORGANIZATION_RELATIONSHIPS = 'lessons,membership_options,membership_discounts'
+    PUBLIC_EVENT_FIELDS = {
+      event: EventFields::PUBLIC_FIELDS,
+      integrations: IntegrationSerializableResource::PUBLIC_FIELDS,
+      opening_tier: PricingTierSerializableResource::PUBLIC_FIELDS,
+      current_tier: PricingTierSerializableResource::PUBLIC_FIELDS,
+      custom_fields: CustomFieldSerializableResource::PUBLIC_FIELDS,
+      line_items: LineItemSerializableResource::PUBLIC_FIELDS,
+      shirts: ShirtSerializableResource::PUBLIC_FIELDS,
+      packages: PackageSerializableResource::PUBLIC_FIELDS,
+      levels: LevelFields::PUBLIC_FIELDS,
+      competitions: CompetitionSerializableResource::PUBLIC_FIELDS
+      # sponsorships: merged_fieldset(SponsorshipSerializer::PUBLIC_FIELDS, {
+      #                                 discount: DiscountSerializer::PUBLIC_FIELDS,
+      #                                 sponsor: [:id, :name]
+      #                               })
+    }.freeze
 
     before_action :ensure_host
 
     # TODO: is this ever used?
     def index
-      render json: [host_from_subdomain], each_serializer: each_serializer
+      render json: success([host_from_subdomain], class: each_serializer)
     end
 
     def show
-      render json: host_from_subdomain,
-             include: include_string,
-             serializer: each_serializer
+      render json: success(host_from_subdomain,
+                           include: include_string,
+                           fields: fields,
+                           class: each_serializer)
     end
 
     private
@@ -35,9 +54,9 @@ module Api
       klass = host_from_subdomain.class
 
       if klass == Event
-        RegisterEventSerializer
+        EventSerializableResource
       else
-        OrganizationSerializer
+        OrganizationSerializableResource
       end
     end
 
@@ -59,6 +78,15 @@ module Api
           EVENT_RELATIONSHIPS
         end
       )
+    end
+
+    def fields
+      klass = host_from_subdomain.class
+      if klass == Organization
+        {}
+      else
+        PUBLIC_EVENT_FIELDS
+      end
     end
   end
 end

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+
 module Api
   class NotesController < Api::ResourceController
+    self.serializer = NoteSerializableResource
+
     before_action :must_be_logged_in
 
     private

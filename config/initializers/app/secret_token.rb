@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Be sure to restart your server when you modify this file.
 
 # Your secret key is used for verifying the integrity of signed cookies.
@@ -13,6 +15,6 @@
 # The default key is just a keyboard button mash.
 # Not to be used in production.
 AeonVera::Application.config.secret_key_base = (
-  ENV["COOKIE_SECRET_KEY"] ||
+  ENV['COOKIE_SECRET_KEY'] ||
   'xr7k6c869xykpj.f65e374ukpxuehyf.gu,e5463u74pkeutfgpi.u'
 )

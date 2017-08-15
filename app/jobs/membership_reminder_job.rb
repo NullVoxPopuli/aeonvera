@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 #
 # run through all memberships, and see if they
 # have a week before their membership ends.

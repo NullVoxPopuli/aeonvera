@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   class EventPolicy < SkinnyControllers::Policy::Base
     include ::OwnershipChecks
@@ -11,7 +13,6 @@ module Api
         is_at_least_a_collaborator?(object)
       end
     end
-
 
     class SubConfiguration < SkinnyControllers::Policy::Base
       include ::OwnershipChecks

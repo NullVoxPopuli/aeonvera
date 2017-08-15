@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Api
   module OrderOperations
     class Update < SkinnyControllers::Operation::Base
@@ -42,7 +44,6 @@ module Api
         !is_paying?
       end
 
-
       def pay
         original_paid_status = model.paid?
 
@@ -58,7 +59,6 @@ module Api
       def modify
         model.save
       end
-
 
       def update
         payment_method = params_for_action[:payment_method]

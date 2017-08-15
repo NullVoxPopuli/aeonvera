@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: order_line_items
@@ -28,9 +29,9 @@ class OrderLineItem < ApplicationRecord
   # { with_deleted }
   # TODO BUG: https://github.com/rails/rails/pull/16531
   belongs_to :line_item, -> { unscope(where: :deleted_at) },
-    polymorphic: true, inverse_of: :order_line_items
+             polymorphic: true, inverse_of: :order_line_items
 
-  # delegate :attendance, to: :order, allow_nil: true
+  # delegate :registration, to: :order, allow_nil: true
 
   validates :line_item, presence: true
   validates :line_item, host_matches: { with_host: 'order.host' }
@@ -45,6 +46,8 @@ class OrderLineItem < ApplicationRecord
 
   delegate :name, to: :line_item
 
+  after_save :update_order_sub_total
+
   def total
     price * quantity
   end
@@ -55,5 +58,9 @@ class OrderLineItem < ApplicationRecord
 
   def is_competition_requiring_orientation?
     line_item.is_a?(Competition) && line_item.requires_orientation?
+  end
+
+  def update_order_sub_total
+    order.ensure_sub_total_persisted
   end
 end

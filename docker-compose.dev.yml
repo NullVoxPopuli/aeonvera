@@ -45,6 +45,8 @@ services:
 
       - SIDEKIQ_USERNAME=devuser
       - SIDEKIQ_PASSWORD=1234
+      - SQREEN_LOG_LEVEL=DEBUG
+      - SQREEN_LOG_LOCATION=/dev/stderr
 
   web:
     <<: *rails
@@ -52,6 +54,8 @@ services:
     # command: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:4301
     ports:
       - "4301:4301"
+    env_file:
+      - .env
     links:
       - db
       # - worker
