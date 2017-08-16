@@ -13,6 +13,7 @@ module Controllers
       rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
       rescue_from AeonVera::Errors::BeforeHookFailed, with: :client_error
+      rescue_from AeonVera::Errors::DiscountNotFound, with: :not_found
 
       rescue_from SkinnyControllers::DeniedByPolicy, with: :denied_by_policy_error
     end

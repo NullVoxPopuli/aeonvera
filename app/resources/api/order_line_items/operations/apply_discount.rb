@@ -26,7 +26,7 @@ module Api
 
       def discount
         discount = Discount.find_by_code(discount_code)
-        raise 'Discount not found' unless discount
+        raise AeonVera::Errors::DiscountNotFound, 'Discount not found' unless discount
 
         discount
       end
