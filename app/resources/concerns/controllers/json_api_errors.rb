@@ -82,6 +82,8 @@ module Controllers
     def jsonapi_error(status, errors)
       errors = errors.is_a?(Hash) ? [errors] : errors
 
+      ap errors if Rails.env.development?
+
       render json: {
         jsonapi: { version: '1.0' },
         errors: errors

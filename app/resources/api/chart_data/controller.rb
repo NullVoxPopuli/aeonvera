@@ -5,12 +5,23 @@ module Api
     include SetsEvent
 
     def show
-      render json: @event, serializer: chart_serializer
+      render_jsonapi(model: presented)
     end
 
     private
 
-    def chart_serializer
+    def presented
+      chart_type = params[:chart_type]
+
+      case chart_type
+      when 'line-income-and-registrations'
+        return ChartDataPresenters::IncomeAndRegistrationsPresenter.new(@event)
+      when 'sunburt-registration-breakdown'
+        return ChartDataPresenters::RegistrationBreakdownPresenter.new(@event)
+      end
+    end
+
+    def serializer
       chart_type = params[:chart_type]
 
       case chart_type

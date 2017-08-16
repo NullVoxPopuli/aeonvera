@@ -32,8 +32,8 @@ module Api
         count = 0
         money = 0
 
-        registrations = object.registrations.reorder('created_at ASC')
-        registrations.each do |registration|
+        ordered_registrations = object.registrations.reorder('created_at ASC')
+        ordered_registrations.each do |registration|
           time = registration.created_at.to_i
           registration_times << time.to_s
           registrations << (count += 1).to_s
