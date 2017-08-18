@@ -2,6 +2,8 @@
 
 module Api
   class SponsorshipSerializableResource < ApplicationResource
+    type 'sponsorships'
+
     PUBLIC_ATTRIBUTES = [:id].freeze
     PUBLIC_RELATIONSHIPS = [:sponsor, :sponsored, :discount].freeze
     PUBLIC_FIELDS = Array[*PUBLIC_ATTRIBUTES, *PUBLIC_RELATIONSHIPS]
