@@ -2,10 +2,12 @@
 
 module Api
   class VolunteersController < APIController
+    self.serializer = VolunteerSerializableResource
+
     include SetsEvent
 
     def index
-      render json: @event.registrations.volunteering, each_serializer: VolunteerSerializer
+      render_jsonapi(model: @event.registrations.volunteering)
     end
   end
 end
