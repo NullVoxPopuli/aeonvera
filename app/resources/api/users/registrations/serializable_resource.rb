@@ -43,7 +43,7 @@ module Api
 
       has_one :housing_request, class: '::Api::HousingRequestSerializableResource'
       has_one :housing_provision, class: '::Api::HousingProvisionSerializableResource'
-      has_many :custom_field_responses, class: '::Api::CustomFieldSerializableResource'
+      has_many :custom_field_responses, class: '::Api::CustomFieldResponseSerializableResource'
 
       belongs_to :event, class: '::Api::EventSerializableResource' do
         linkage always: true
