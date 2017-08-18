@@ -6,7 +6,7 @@ module Api
 
     attributes :first_name, :last_name, :email
 
-    has_many :membership_renewals
-    has_many :memberships
+    has_many :membership_renewals, class: '::Api::MembershipRenewalSerializableResource'
+    has_many :memberships, class: '::Api::MembershipOptionSerializableResource'
   end
 end
