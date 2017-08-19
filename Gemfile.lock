@@ -156,9 +156,9 @@ GEM
     font-awesome-rails (4.3.0.0)
       railties (>= 3.2, < 5.0)
     formatted_rails_logger (0.1.0)
-    foundation-rails (5.5.1.2)
+    foundation-rails (5.0.3.1)
       railties (>= 3.1.0)
-      sass (>= 3.3.0, < 3.5)
+      sass (>= 3.2.0)
     fuubar (2.2.0)
       rspec-core (~> 3.0)
       ruby-progressbar (~> 1.4)
@@ -437,7 +437,7 @@ DEPENDENCIES
   factory_girl_rails
   font-awesome-rails
   formatted_rails_logger
-  foundation-rails
+  foundation-rails (= 5.0.3.1)
   fuubar
   goldiloader
   i18n
