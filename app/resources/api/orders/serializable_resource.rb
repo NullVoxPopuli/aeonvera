@@ -57,7 +57,10 @@ module Api
 
     has_many :order_line_items, class: '::Api::OrderLineItemSerializableResource'
     belongs_to :pricing_tier, class: '::Api::PricingTierSerializableResource'
-    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource'
+    belongs_to :registration, class: '::Api::Users::RegistrationSerializableResource' do
+      linkage always: true
+    end
+
     belongs_to :host, class: {
       Event: '::Api::EventSerializableResource',
       Organization: '::Api::OrganizationSerializableResource'
