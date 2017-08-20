@@ -351,7 +351,7 @@ GEM
     ruby-progressbar (1.8.1)
     rufus-scheduler (3.4.2)
       et-orbi (~> 1.0)
-    sass (3.3.14)
+    sass (3.4.25)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
       sass (~> 3.1)
@@ -467,7 +467,7 @@ DEPENDENCIES
   rtype
   rtype-native
   rubocop
-  sass (~> 3.3.14)
+  sass (~> 3.4.25)
   sass-rails
   scout_apm
   sidekiq
