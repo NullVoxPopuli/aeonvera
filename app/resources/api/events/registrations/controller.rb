@@ -23,10 +23,18 @@ module Api
       end
 
       def checkin
-        render_model
+        model = RegistrationOperations::Checkin
+                .run(current_user, params, checkin_params)
+
+        render_jsonapi(model: model)
       end
 
       private
+
+      def checkin_params
+        params.require(:checked_in_at)
+        params
+      end
 
       def resource_params
         whitelistable_params(polymorphic: [:host]) do |w|

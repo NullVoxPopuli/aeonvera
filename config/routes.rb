@@ -43,7 +43,11 @@ AeonVera::Application.routes.draw do
     get 'hosts/:subdomain', to: 'hosts#show'
     resources :hosts
     namespace :events do
-      resources :registrations
+      resources :registrations do
+        member do
+          put :checkin
+        end
+      end
     end
 
     resources :events

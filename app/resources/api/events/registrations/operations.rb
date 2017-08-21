@@ -3,9 +3,7 @@
 module Api
   module Events
     module RegistrationOperations
-      class Checkin < Update
-        # TODO: only event collaborators can check someone in
-      end
+      # one-off, smaller ops go here
     end
   end
 end
