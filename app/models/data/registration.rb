@@ -134,6 +134,7 @@ class Registration < ApplicationRecord
   scope :leads, -> { where(dance_orientation: LEAD) }
   scope :follows, -> { where(dance_orientation: FOLLOW) }
   scope :volunteering, -> { where(interested_in_volunteering: true) }
+  scope :checkedin, -> { where(arel_table[:checked_in_at].not_eq(nil)) }
 
   accepts_nested_attributes_for :custom_field_responses
   accepts_nested_attributes_for :housing_request

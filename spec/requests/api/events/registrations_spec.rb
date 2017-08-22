@@ -44,5 +44,22 @@ describe Api::Events::RegistrationsController, type: :request do
         event_relationship_name: :host
       }
     )
+
+    context 'PUT /:id/checkin' do
+      let(:user) { create_confirmed_user }
+      let(:event) { create(:event) }
+      let!(:collaboration) { create(:collaboration, user: user, collaborated: event) }
+      let!(:registration) { create(:registration, host: event) }
+
+      it 'is allowed' do
+        put(
+          "/api/events/registrations/#{registration.id}/checkin",
+          { checked_in_at: Time.now, event_id: event.id },
+          auth_header_for(user)
+        )
+
+        expect(response.status).to eq 200
+      end
+    end
   end
 end
