@@ -16,6 +16,6 @@ module Api
     attributes :name, :description, :requirement, :deleted_at
 
     belongs_to :event, class: '::Api::EventSerializableResource'
-    has_many :registrations, class: '::Api::Users::RegistrationSerializer'
+    has_many :registrations, class: '::Api::Users::RegistrationSerializableResource'
   end
 end
