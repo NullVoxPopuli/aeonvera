@@ -27,6 +27,7 @@ module Api
                :preferred_gender_to_host,
                :has_pets,
                :smokes,
+               :name,
                :notes)
 
     belongs_to :host, class: { Event: '::Api::EventSerializableResource',
