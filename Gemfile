@@ -82,7 +82,7 @@ gem 'sass', '~> 3.3.14'
 gem 'sass-rails'
 gem 'foundation-rails', '5.0.3.1'
 gem 'font-awesome-rails'
-gem 'sprockets-rails', '2.3.3'
+gem 'sprockets-rails', '3.2.0'
 gem 'uglifier' # for heroku asset precompilation. :-(
 
 #########
