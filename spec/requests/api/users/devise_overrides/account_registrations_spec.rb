@@ -34,7 +34,8 @@ describe Api::Users::DeviseOverrides::AccountRegistrationsController, type: :req
           .to_not raise_error
       end
 
-      it 'confirms that the confirmation email was sent' do
+      xit 'confirms that the confirmation email was sent' do
+        pending('send welcome email. Confirmations disabled')
         post '/api/users', params
 
         expect(json_response).to have_attribute('confirmation_sent_at')

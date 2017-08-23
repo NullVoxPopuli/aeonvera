@@ -121,12 +121,15 @@ module Api
         params_for_action.fetch(:line_item_type)
       end
 
+      def payment_token
+        @payment_token ||= params[:payment_token] || params.dig(:data, :attributes, :payment_token)
+      end
+
       def order
         @order ||= begin
           id = params_for_action[:order_id]
-          token = params[:payment_token]
 
-          raise 'Must provide order_id or token' unless id || token
+          raise 'Must provide order_id or token' unless id || payment_token
 
           if current_user
             o = ::Api::OrderOperations::Read.new(
@@ -135,9 +138,9 @@ module Api
             ).run
           end
 
-          o ||= Order.find_by_payment_token(token) if token
+          o ||= Order.find_by_payment_token(payment_token) if payment_token
 
-          raise "Order not found for id #{id} nor token #{token}, or you do not have permission to access it" unless o
+          raise "Order not found for id #{id} nor token #{payment_token}, or you do not have permission to access it" unless o
 
           o
         end
@@ -153,14 +156,14 @@ module Api
 
         # If we have a token (no logged in user), we need to create
         # a fake user to use with the policy
-        temp_user = OpenStruct.new(id: params[:payment_token])
+        temp_user = OpenStruct.new(id: payment_token)
         policy_class
           .new(temp_user, model)
           .create?
       end
 
       def authorized_via_token?
-        order.payment_token == params[:payment_token]
+        order.payment_token == payment_token
       end
     end
   end

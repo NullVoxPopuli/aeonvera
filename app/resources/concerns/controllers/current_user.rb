@@ -21,13 +21,7 @@ module Controllers
 
       user = User.find_by_authentication_token(token)
 
-      if user
-        if !user.confirmed?
-          user.errors.add(:base, I18n.t('devise.failure.unconfirmed'))
-        else
-          sign_in user, store: false
-        end
-      end
+      sign_in(user, store: false) if user
 
       user
     end

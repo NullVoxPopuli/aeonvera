@@ -29,7 +29,8 @@ describe Api::Users::DeviseOverrides::AccountRegistrationsController, type: :con
       expect(response.body).to_not be_nil
     end
 
-    it 'sends an email for confirmation' do
+    xit 'sends an email for confirmation' do
+      pending('confirmation removed, send welcome email instead')
       user = build(:user, {
                      first_name: 'first',
                      last_name: 'last',

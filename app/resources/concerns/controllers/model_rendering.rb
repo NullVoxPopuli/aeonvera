@@ -76,7 +76,7 @@ module Controllers
 
     def render_jsonapi_error(model)
       errors = model.errors.messages.map { |k, v|
-        JSONAPI::Serializable::Error.create(detail: v.first, source: "data/attributes/#{k}")
+        JSONAPI::Serializable::Error.create(detail: v.first, source: { pointer: "data/attributes/#{k}" })
       }
 
       render json: error_renderer.render(errors), status: 422

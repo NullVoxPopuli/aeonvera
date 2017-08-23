@@ -109,8 +109,6 @@ AeonVera::Application.routes.draw do
                controllers: {
                  # password resets
                  passwords: 'api/users/devise_overrides/passwords',
-                 # email confirmations
-                 confirmations: 'api/users/devise_overrides/confirmations',
                  # creating new account
                  registrations: 'api/users/devise_overrides/account_registrations',
                  # logging in
