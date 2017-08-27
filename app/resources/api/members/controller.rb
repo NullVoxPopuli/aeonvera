@@ -23,14 +23,7 @@ module Api
 
       respond_to do |format|
         format.json { render_jsonapi(model: model) }
-        format.csv do
-          csv_data = CsvGeneration.model_to_csv(
-            model, params[:fields],
-            skip_serialization: true
-          )
-
-          send_data(csv_data)
-        end
+        format.csv { send_csv(model, serialize: false) }
       end
     end
 

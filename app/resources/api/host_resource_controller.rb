@@ -10,7 +10,7 @@ module Api
 
       respond_to do |format|
         format.json { render_jsonapi(model: model) }
-        format.csv { send_data CsvGeneration.model_to_csv(model, params[:fields]) }
+        format.csv { send_csv(model) }
       end
     end
 
