@@ -65,7 +65,7 @@ module Api
           model = current_user.registrations.find(params[:id])
 
           paids = model.orders.map(&:paid)
-          allowed_to_destroy = paids.empty? || paids.all?
+          allowed_to_destroy = paids.empty? || !paids.any?
 
           raise AeonVera::Errors::BeforeHookFailed unless allowed_to_destroy
 
