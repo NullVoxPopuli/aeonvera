@@ -8,6 +8,7 @@ module Api
 
         def run
           model = event.registrations
+                       .with_deleted
                        .includes(
                          :custom_field_responses,
                          :housing_request, :housing_provision,

@@ -19,7 +19,8 @@ describe Api::Events::RegistrationsController, type: :request do
         type: 'registrations',
         factory: :registration,
         base_path: base_path,
-        event_relationship_name: :host
+        event_relationship_name: :host,
+        undestroy: true
       }
     )
 

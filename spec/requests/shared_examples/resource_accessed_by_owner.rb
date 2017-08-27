@@ -7,6 +7,7 @@ shared_examples 'resource_accessed_by_event_owner' do |options = {}|
   base_path = options[:base_path]
   relationship_name = options[:event_relationship_name]
   type = options[:type]
+  undestroy = options[:undestroy]
 
   let(:owner) { create_confirmed_user }
   let(:event) { create(:event, hosted_by: owner) }
@@ -64,6 +65,17 @@ shared_examples 'resource_accessed_by_event_owner' do |options = {}|
       delete "#{base_path}/#{object.id}", { event_id: event.id }, auth_header_for(owner)
 
       expect(response.status).to eq 200
+    end
+  end
+
+  if undestroy
+    context 'undestroy' do
+      it 'succeeds' do
+        object = create(factory_name, event: event, deleted_at: Time.now)
+        put "#{base_path}/#{object.id}/undestroy", { event_id: event.id }, auth_header_for(owner)
+
+        expect(response.status).to eq 200
+      end
     end
   end
 end

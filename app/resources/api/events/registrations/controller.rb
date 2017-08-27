@@ -42,6 +42,14 @@ module Api
         render_jsonapi(model: model)
       end
 
+
+      def undestroy
+        model = RegistrationOperations::Undestroy
+                  .run(current_user, params)
+
+        render_jsonapi(model: model)
+      end
+
       private
 
       def checkin_params
