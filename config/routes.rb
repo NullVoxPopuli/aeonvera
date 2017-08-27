@@ -47,6 +47,9 @@ AeonVera::Application.routes.draw do
         member do
           put :checkin
         end
+        collection do
+          get :deleted
+        end
       end
     end
 

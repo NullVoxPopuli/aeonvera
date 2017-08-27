@@ -9,6 +9,7 @@ class APIController < ActionController::Base
   include Controllers::ModelRendering
   include Controllers::StrongParameters
   include Controllers::ErrorHandlers
+  include Controllers::SendCsv
 
   respond_to :json
   protect_from_forgery with: :null_session

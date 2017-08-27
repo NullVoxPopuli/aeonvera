@@ -13,6 +13,19 @@ module Api
                 .ransack(params[:q])
                 .result
 
+        respond_to do |format|
+          format.json { render_jsonapi(model: model) }
+          format.csv { send_csv(model) }
+        end
+      end
+
+      def deleted
+        model = RegistrationOperations::ReadAll
+                .run(current_user, params)
+                .only_deleted
+                .ransack(params[:q])
+                .result
+
         render_jsonapi(model: model)
       end
 

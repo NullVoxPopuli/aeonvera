@@ -22,6 +22,16 @@ describe Api::Events::RegistrationsController, type: :request do
         event_relationship_name: :host
       }
     )
+
+    it_behaves_like(
+      'resource_has_csv_rendering', {
+        type: 'registrations',
+        factory: :registration,
+        base_path: base_path,
+        parent_relationship_name: :host,
+        actions: [:index]
+      }
+    )
   end
 
   context 'is logged in but does not own the event' do
