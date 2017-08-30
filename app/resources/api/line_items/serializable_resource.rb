@@ -6,6 +6,8 @@ module Api
     include SharedAttributes::Stock
     include SharedAttributes::HasPicture
 
+    type 'line-items'
+
     PUBLIC_ATTRIBUTES = [:id, :name, :current_price, :price,
                          :starts_at, :ends_at,
                          :registration_opens_at, :registration_closes_at,
