@@ -178,26 +178,49 @@ describe Api::OrdersController, type: :request do
     end
 
     context 'can create an order' do
-      let(:organization) { create(:organization) }
-      let(:params) { {
-        data: {
-          type: 'order',
-          attributes: {},
-          relationships: {
-            host: { data: { type: 'Organization', id: organization.id } }
+      context 'for an organization' do
+        let(:organization) { create(:organization) }
+        let(:params) { {
+          data: {
+            type: 'order',
+            attributes: {},
+            relationships: {
+              host: { data: { type: 'Organization', id: organization.id } }
+            }
           }
-        }
-      } }
+        } }
 
-      it 'can create an order' do
-        expect { post '/api/orders', params, auth_header_for(user) }
-          .to change(Order, :count).by 1
-        expect(response.status).to eq 200
+        it 'can create an order' do
+          expect { post '/api/orders', params, auth_header_for(user) }
+            .to change(Order, :count).by 1
+          expect(response.status).to eq 200
+        end
+
+        it 'can create an order - blank payment_token is ignored' do
+          post '/api/orders', params, auth_header_for(user)
+          expect(response.status).to eq 200
+        end
       end
 
-      it 'can create an order - blank payment_token is ignored' do
-        post '/api/orders', params, auth_header_for(user)
-        expect(response.status).to eq 200
+      context 'for an event' do
+        let(:event) { create(:event) }
+        let(:params) { {
+          data: {
+            type: 'order',
+            attributes: {},
+            relationships: {
+              host: { data: { type: 'Event', id: event.id } }
+            }
+          }
+        } }
+
+        it 'is assigned the current pricing tier' do
+          post '/api/orders?include=pricing_tier', params, auth_header_for(user)
+          id = json_api_data['id']
+          actual = Order.find(id).pricing_tier
+
+          expect(actual).to eq event.current_tier
+        end
       end
     end
 

@@ -25,5 +25,6 @@ module Api
 
     belongs_to :event, class: '::Api::EventSerializableResource'
     has_many :registrations, class: '::Api::Users::RegistrationSerializableResource'
+    has_many :order_line_items, class: '::Api::OrderLineItemSerializableResource'
   end
 end

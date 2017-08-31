@@ -99,6 +99,8 @@ class Order < ApplicationRecord
   validates :host, presence: true
   validate :require_registration_if_has_competitions
 
+  before_create :set_pricing_tier
+
   before_create do |instance|
     # Set is_fee_absorbed to whatever the event is set to.
     # This will require an update to to make the order different
@@ -300,5 +302,15 @@ class Order < ApplicationRecord
         csv << row
       end
     end
+  end
+
+  private
+
+  def set_pricing_tier
+    return unless host.is_a?(Event)
+    # TODO: maybe disable this, cause a tier is always required?
+    return unless host.current_tier
+
+    self.pricing_tier = host.current_tier
   end
 end
