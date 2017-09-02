@@ -8,7 +8,7 @@ class OrderMailer < ApplicationMailer
 
     domain = APPLICATION_CONFIG['domain'][Rails.env]
     path = @order.host.subdomain
-    @order_url = "//#{domain}/#{path}/#{@host.id}/#{@order.id}"
+    @order_url = "//#{domain}/#{path}/register/#{@host.id}/#{@order.id}"
 
     @order_url += "?token=#{@order.payment_token}" if @order.payment_token
 
