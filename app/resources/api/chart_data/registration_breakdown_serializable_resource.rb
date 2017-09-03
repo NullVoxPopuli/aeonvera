@@ -7,7 +7,7 @@ module Api
 
       attributes :root_node
 
-      id { "#{object.id}-registration-breakdown" }
+      id { "#{@object.id}-registration-breakdown" }
     end
   end
 end
