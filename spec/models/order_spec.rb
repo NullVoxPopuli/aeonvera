@@ -79,7 +79,7 @@ describe Order do
 
           it 'can be deleted' do
             expect { order.destroy }
-              .to change(Order, :count).by -1
+              .to change(Order, :count).by(-1)
           end
         end
       end

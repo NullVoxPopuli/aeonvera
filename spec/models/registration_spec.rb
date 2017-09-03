@@ -79,6 +79,39 @@ describe Registration do
     end
   end
 
+  context 'lifecycle' do
+    let(:registration) { create(:registration) }
+
+    describe 'before_destroy' do
+      describe '#ensure_unpaid' do
+        context 'order is paid' do
+          let!(:order) { create(:order, paid: true, registration: registration) }
+
+          it 'cannot be deleted' do
+            expect { registration.destroy }
+              .to change(registration.errors, :count).by 1
+          end
+
+          it 'adds a message to the errors' do
+            registration.destroy
+
+            error = registration.errors.full_messages.first
+            expect(error).to match(/cannot delete/)
+          end
+        end
+
+        context 'order is upnaid' do
+          let!(:order) { create(:order, paid: false,  registration: registration) }
+
+          it 'can be deleted' do
+            expect { registration.destroy }
+              .to change(Registration, :count).by(-1)
+          end
+        end
+      end
+    end
+  end
+
   describe '#attendee_name' do
     let(:event) { create(:event) }
 

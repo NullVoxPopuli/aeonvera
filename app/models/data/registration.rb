@@ -146,6 +146,8 @@ class Registration < ApplicationRecord
   # validates :dance_orientation, presence: true, if: ->(a) { a.event.ask_if_leading_or_following? }
   # validates :level, presence: true, if: proc { |a| (p = a.package) && p.requires_track? }
 
+  before_destroy :ensure_unpaid
+
   # for CSV output
   csv_with_columns [
     :attendee_name,
@@ -291,6 +293,13 @@ class Registration < ApplicationRecord
   end
 
   private
+
+  def ensure_unpaid
+    return unless has_paid_orders?
+
+    errors[:base] << 'cannot delete a registration that has paid'
+    false
+  end
 
   def purchasable_items
     result = []
