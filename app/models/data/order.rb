@@ -99,6 +99,7 @@ class Order < ApplicationRecord
   validates :host, presence: true
   validate :require_registration_if_has_competitions
 
+  before_destroy :ensure_unpaid
   before_create :set_pricing_tier
 
   before_create do |instance|
@@ -305,6 +306,13 @@ class Order < ApplicationRecord
   end
 
   private
+
+  def ensure_unpaid
+    return unless paid?
+
+    errors[:base] << 'cannot delete an order that has been paid for'
+    false
+  end
 
   def set_pricing_tier
     return unless host.is_a?(Event)

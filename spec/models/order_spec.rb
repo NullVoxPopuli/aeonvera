@@ -55,6 +55,37 @@ describe Order do
     end
   end
 
+  context 'lifecycle' do
+    describe 'before_destroy' do
+      describe '#ensure_unpaid' do
+        context 'order is paid' do
+          let!(:order) { create(:order, paid: true) }
+
+          it 'cannot be deleted' do
+            expect { order.destroy }
+              .to change(order.errors, :count).by 1
+          end
+
+          it 'adds a message to the errors' do
+            order.destroy
+
+            error = order.errors.full_messages.first
+            expect(error).to match(/cannot delete/)
+          end
+        end
+
+        context 'order is upnaid' do
+          let!(:order) { create(:order, paid: false) }
+
+          it 'can be deleted' do
+            expect { order.destroy }
+              .to change(Order, :count).by -1
+          end
+        end
+      end
+    end
+  end
+
   describe 'validations' do
     describe 'registration' do
       it 'is required when there is a competition' do
