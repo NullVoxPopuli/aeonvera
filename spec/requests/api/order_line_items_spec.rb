@@ -5,6 +5,18 @@ require 'rails_helper'
 describe Api::OrderLineItemsController, type: :request do
   include RequestSpecUserSetup
 
+  base_path = '/api/order_line_items'
+
+  # context 'is logged in and owns the event' do
+  #   it_behaves_like(
+  #     'resource_accessed_by_event_owner', {
+  #       type: 'order-line-items',
+  #       factory: :order_line_item,
+  #       base_path: base_path
+  #     }
+  #   )
+  # end
+
   context 'Event: is logged in' do
     let(:order) {
       create(:order, host: event, registration: create(:registration, host: event), user: stray_user)

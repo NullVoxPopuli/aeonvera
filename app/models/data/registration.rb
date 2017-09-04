@@ -214,20 +214,17 @@ class Registration < ApplicationRecord
   end
 
   def attendee_name
-    # for transfers
-    return transferred_to_name if transferred_to_name.present?
-
-    if attendee
+    if (first = attendee_first_name.presence) &&
+        # User-less registration or
+        # registering for someone else
+        (last = attendee_last_name.presence)
+      "#{first} #{last}"
+    elsif attendee
       # normal
 
       # have to titleize, cause some people aren't OCD enough
       # to type their name with proper capitalization....
       attendee.name.titleize
-    elsif (first = metadata['first_name']) &&
-        # User-less Registration
-
-        (last = metadata['last_name'])
-      "#{first} #{last}"
     else
       'Name not given'
     end

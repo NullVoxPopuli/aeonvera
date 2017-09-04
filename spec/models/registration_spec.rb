@@ -101,7 +101,7 @@ describe Registration do
         end
 
         context 'order is upnaid' do
-          let!(:order) { create(:order, paid: false,  registration: registration) }
+          let!(:order) { create(:order, paid: false, registration: registration) }
 
           it 'can be deleted' do
             expect { registration.destroy }
@@ -115,15 +115,21 @@ describe Registration do
   describe '#attendee_name' do
     let(:event) { create(:event) }
 
-    it 'returns the transfer name if set' do
-      registration = create(:registration, event: event, transferred_to_name: 'Luke')
+    it 'returns the individual names if set' do
+      registration = create(:registration,
+                            event: event,
+                            attendee_first_name: 'Luke',
+                            attendee_last_name: 'Skywalker')
 
-      expect(registration.attendee_name).to eq 'Luke'
+      expect(registration.attendee_name).to eq 'Luke Skywalker'
     end
 
     it 'returns the name of the user' do
       user = create(:user)
-      registration = create(:registration, event: event, attendee: user)
+      registration = create(:registration,
+                            event: event, attendee: user,
+                            attendee_first_name: '',
+                            attendee_last_name: '')
 
       expect(registration.attendee_name).to eq user.name.titleize
     end

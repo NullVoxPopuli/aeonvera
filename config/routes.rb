@@ -47,6 +47,7 @@ AeonVera::Application.routes.draw do
         member do
           put :checkin
           put :undestroy
+          put :transfer
         end
         collection do
           get :deleted
@@ -62,11 +63,6 @@ AeonVera::Application.routes.draw do
     resources :housing_provisions
     resources :volunteers
     resources :housing_stats
-    # resources :event_attendances do
-    #   member do
-    #     put :checkin
-    #   end
-    # end
     resources :competitions
     resources :competition_responses
     resources :line_items

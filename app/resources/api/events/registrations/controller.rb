@@ -29,6 +29,13 @@ module Api
         render_jsonapi(model: model)
       end
 
+      def transfer
+        model = RegistrationOperations::Transfer
+                .run(current_user, params, transfer_params)
+
+        render_jsonapi(model: model)
+      end
+
       def show
         model = RegistrationOperations::Read.run(current_user, params)
 
@@ -42,15 +49,26 @@ module Api
         render_jsonapi(model: model)
       end
 
-
       def undestroy
         model = RegistrationOperations::Undestroy
-                  .run(current_user, params)
+                .run(current_user, params)
 
         render_jsonapi(model: model)
       end
 
       private
+
+      def transfer_params
+        whitelistable_params do |w|
+          w.permit(
+            :transferred_to_email,
+            :transferred_to_first_name,
+            :transferred_to_last_name,
+            :transferred_to_year,
+            :transfer_reason
+          )
+        end
+      end
 
       def checkin_params
         params.require(:checked_in_at)

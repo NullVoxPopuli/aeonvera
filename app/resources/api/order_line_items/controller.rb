@@ -8,7 +8,9 @@ module Api
     self.serializer = OrderLineItemSerializableResource
 
     def index
-      render_models(params[:include])
+      render_jsonapi(options: {
+                       include: params[:include]
+                     })
     end
 
     def create
