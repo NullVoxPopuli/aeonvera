@@ -7,24 +7,26 @@ shared_examples 'resource_accessed_by_random_user' do |options = {}|
   base_path = options[:base_path]
   relationship_name = options[:event_relationship_name]
   type = options[:type]
+  show_status = options[:show] || 403
+  index_status = options[:index] || 403
 
   let(:user) { create_confirmed_user }
   let(:event) { create(:event) }
 
   context 'index' do
-    it 'is denied access' do
+    it "returns a #{show_status}" do
       get base_path, { event_id: event.id }, auth_header_for(user)
 
-      expect(response.status).to eq 403
+      expect(response.status).to eq index_status
     end
   end
 
   context 'show' do
-    it 'is denied access' do
+    it "returns a #{show_status}" do
       object = create(factory_name, event: event)
       get "#{base_path}/#{object.id}", { event_id: event.id }, auth_header_for(user)
 
-      expect(response.status).to eq 403
+      expect(response.status).to eq show_status
     end
   end
 

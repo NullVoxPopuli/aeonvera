@@ -7,6 +7,7 @@ shared_examples 'resource_accessed_by_collaborator_with_full_access' do |options
   base_path = options[:base_path]
   relationship_name = options[:event_relationship_name]
   type = options[:type]
+  destroy_status = options[:destroy] || 200
 
   let(:user) { create_confirmed_user }
   let(:event) { create(:event) }
@@ -60,11 +61,11 @@ shared_examples 'resource_accessed_by_collaborator_with_full_access' do |options
   end
 
   context 'destroy' do
-    it 'succeeds' do
+    it "returns a #{destroy_status}" do
       object = create(factory_name, event: event)
       delete "#{base_path}/#{object.id}", { event_id: event.id }, auth_header_for(user)
 
-      expect(response.status).to eq 200
+      expect(response.status).to eq destroy_status
     end
   end
 end
