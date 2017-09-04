@@ -337,4 +337,57 @@ describe Api::OrdersController, type: :request do
       end
     end
   end
+
+  context 'pos / at the door' do
+    let(:owner) { create_confirmed_user }
+    let(:random_user) { create_confirmed_user }
+    let(:event) { create(:event, hosted_by: owner) }
+
+    context 'order has no registration' do
+      let(:registration) { create(:registration, host: event)}
+      let(:order) { create(:order, host: event) }
+
+      before { StripeMock.start }
+      after { StripeMock.stop }
+
+      it 'can be updated by the owner' do
+        put(
+          "/api/orders/#{order.id}", {
+            data: {
+              relationships: {
+                registration: {
+                  data: {
+                    id: registration.id,
+                    type: 'registrations'
+                  }
+                }
+              }
+            }
+          }, auth_header_for(owner)
+        )
+
+        expect(response.status).to eq 200
+        expect(order.reload.registration).to eq registration
+      end
+
+      it 'cannot be updated by just anyone' do
+        put(
+          "/api/orders/#{order.id}", {
+            data: {
+              relationships: {
+                registration: {
+                  data: {
+                    id: registration.id,
+                    type: 'registrations'
+                  }
+                }
+              }
+            }
+          }, auth_header_for(random_user)
+        )
+
+        expect(response.status).to eq 403
+      end
+    end
+  end
 end

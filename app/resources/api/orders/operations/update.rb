@@ -51,13 +51,25 @@ module Api
 
         paid_changed = original_paid_status != model.paid?
 
-        if model.errors.blank? && paid_changed && model.paid?
-          OrderMailer.receipt(for_order: model).deliver_now
-        end
+        payment_succeeded = model.errors.blank? && paid_changed && model.paid?
+        return unless payment_succeeded
+
+        OrderMailer.receipt(for_order: model).deliver_now
       end
 
       def modify
+        set_registration if params_for_action[:registration_id]
         model.save
+      end
+
+      # only the event owner / collaborators can update this
+      def set_registration
+        return unless current_user
+        return unless policy_class
+                      .new(current_user, model)
+                      .is_collaborator?
+
+        model.registration_id = params_for_action[:registration_id]
       end
 
       def update
