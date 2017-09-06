@@ -4,7 +4,8 @@ module Api
   module Users
     module DeviseOverrides
       class PasswordsController < Devise::PasswordsController
-        include Controllers::DeviseOverrides
+        include Controllers::ModelRendering
+
         respond_to :html, :json
 
         # prepend_before_filter :logout, only: :edit
@@ -25,6 +26,14 @@ module Api
         end
 
         private
+
+        def respond_with(obj, *_args)
+          render_jsonapi(model: obj)
+        end
+
+        def respond_with_navigational(*args)
+          respond_with(*args)
+        end
 
         def resource_name
           :user

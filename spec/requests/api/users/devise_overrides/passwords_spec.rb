@@ -27,6 +27,29 @@ describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
       user.save
     end
 
+    it 'returns an error when the passwords do not match' do
+      put '/api/users/password', user: {
+        password: '1234',
+        password_confirmation: '12345678',
+        reset_password_token: '123'
+      }
+
+      actual = json_response['errors'].map { |e| e['detail'] }.join
+      expect(actual).to match(/match Password/)
+      expect(actual).to match(/too short/)
+    end
+
+    it 'returns an error when the token does not match' do
+      put '/api/users/password', user: {
+        password: '12345678',
+        password_confirmation: '12345678',
+        reset_password_token: '123453'
+      }
+
+      actual = json_response['errors'].map { |e| e['detail'] }.join
+      expect(actual).to match(/is invalid/)
+    end
+
     it 'changes the password' do
       old_password = user.encrypted_password
       put '/api/users/password', user: {
