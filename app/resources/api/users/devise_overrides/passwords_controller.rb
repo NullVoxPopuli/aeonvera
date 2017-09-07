@@ -28,7 +28,11 @@ module Api
         private
 
         def respond_with(obj, *_args)
-          render_jsonapi(model: obj)
+          render_jsonapi(
+            model: obj,
+            options: {
+              class: '::Api::UserSerializableResource'
+            })
         end
 
         def respond_with_navigational(*args)

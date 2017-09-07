@@ -27,6 +27,15 @@ describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
       user.save
     end
 
+    it 'returns an error when no data is submitted' do
+      put '/api/users/password', user: {}
+
+      expect(response.status).to eq 422
+
+      actual = json_response['errors'].map { |e| e['detail'] }.join
+      expect(actual).to match(/can't be blank/)
+    end
+
     it 'returns an error when the passwords do not match' do
       put '/api/users/password', user: {
         password: '1234',
@@ -46,6 +55,23 @@ describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
         reset_password_token: '123453'
       }
 
+      actual = json_response['errors'].map { |e| e['detail'] }.join
+      expect(actual).to match(/is invalid/)
+    end
+
+    it 'returns an error when the token has already been used' do
+      set_password = -> {
+        put '/api/users/password', user: {
+          password: '12345678',
+          password_confirmation: '12345678',
+          reset_password_token: '123'
+        }
+      }
+
+      set_password.call
+      set_password.call
+
+      expect(response.status).to eq 422
       actual = json_response['errors'].map { |e| e['detail'] }.join
       expect(actual).to match(/is invalid/)
     end
