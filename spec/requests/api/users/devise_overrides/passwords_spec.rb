@@ -18,6 +18,21 @@ describe Api::Users::DeviseOverrides::PasswordsController, type: :request do
       user.reload
       expect(user.reset_password_token).to_not be_nil
     end
+
+    it 'trys an email that is not found' do
+      post '/api/users/password', user: { email: "#{user.email}---#{user.email}" }
+
+      expect(response.status).to eq 422
+      actual = json_response['errors'].map { |e| e['detail'] }.join
+      expect(actual).to match(/not found/)
+    end
+
+    it 'asks for a password reset token twice.' do
+      post '/api/users/password', user: { email: user.email }
+      post '/api/users/password', user: { email: user.email }
+
+      expect(response.status).to eq 200
+    end
   end
 
   context 'resets the password' do

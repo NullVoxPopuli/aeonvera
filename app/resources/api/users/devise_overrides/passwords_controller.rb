@@ -28,11 +28,18 @@ module Api
         private
 
         def respond_with(obj, *_args)
-          render_jsonapi(
-            model: obj,
-            options: {
-              class: '::Api::UserSerializableResource'
-            })
+          return render json: obj if obj.is_a?(Hash)
+
+          if obj.is_a?(User)
+            return render_jsonapi(
+              model: obj,
+              options: {
+                class: '::Api::UserSerializableResource'
+              }
+            )
+          end
+
+          raise "Unknown password-reset render #{obj.class.name}"
         end
 
         def respond_with_navigational(*args)
