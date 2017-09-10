@@ -6,6 +6,7 @@ module Api
 
     attributes(:name,
                :short_description, :location,
+               :website,
                :domain,
                :starts_at, :ends_at,
                :mail_payments_end_at,

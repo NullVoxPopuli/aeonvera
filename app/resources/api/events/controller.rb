@@ -37,6 +37,7 @@ module Api
           :allow_discounts, :shirt_sales_end_at,
           :show_at_the_door_prices_at, :allow_combined_discounts,
           :location, :show_on_public_calendar,
+          :website,
           :make_attendees_pay_fees, :accept_only_electronic_payments,
           :logo,
           :logo_file_name, :logo_file_size,

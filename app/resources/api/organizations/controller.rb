@@ -48,6 +48,7 @@ module Api
         whitelister.permit(
           :name, :tagline,
           :city, :state, :domain, :make_attendees_pay_fees,
+          :website,
           :logo,
           :logo_file_name, :logo_file_size,
           :logo_updated_at, :logo_content_type,

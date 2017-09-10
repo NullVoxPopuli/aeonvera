@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170904172114) do
+ActiveRecord::Schema.define(version: 20170910210553) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -197,6 +197,7 @@ ActiveRecord::Schema.define(version: 20170904172114) do
     t.boolean  "ask_if_leading_or_following",                 default: true,  null: false
     t.string   "contact_email"
     t.datetime "online_competition_sales_end_at"
+    t.string   "website"
   end
 
   add_index "events", ["domain"], name: "index_events_on_domain", using: :btree
@@ -403,6 +404,7 @@ ActiveRecord::Schema.define(version: 20170904172114) do
     t.boolean  "email_all_purchases",                    default: false, null: false
     t.boolean  "email_membership_purchases",             default: false, null: false
     t.string   "contact_email"
+    t.string   "website"
   end
 
   add_index "organizations", ["domain"], name: "index_organizations_on_domain", using: :btree

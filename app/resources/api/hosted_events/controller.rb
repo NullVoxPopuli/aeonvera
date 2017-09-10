@@ -7,10 +7,12 @@ module Api
     before_filter :must_be_logged_in
 
     def index
-      @events = current_user.hosted_and_collaborated_events.includes(
+      search = current_user.hosted_and_collaborated_events.includes(
         :registrations,
         :pricing_tiers, orders: [:order_line_items]
-      )
+      ).ransack(params[:q])
+
+      @events = search.result
 
       render_jsonapi(model: @events, options: {
                        expose: { current_user: current_user }

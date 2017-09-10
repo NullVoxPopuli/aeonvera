@@ -6,20 +6,58 @@ module CsvGeneration
   def model_to_csv(model, fields_from_params = nil, skip_serialization: false, serializer:)
     options = { class: serializer }
 
-    if fields_from_params
-      fields = JSONAPI::IncludeDirective.new(fields_from_params).to_hash
-      options[:fields] = CaseTransform.underscore(fields)
+    options.merge(options_from_fields(fields_from_params))
+
+    hash = skip_serialization ? model : serialize_data(options, model)
+
+    collection_to_csv(hash)
+  end
+
+  def serialize_data(options, model)
+    jsonapi = renderer.render(model, options)
+
+    included = {}
+    jsonapi[:included].each do |i|
+     included[i[:type]] ||= {}
+     included[i[:id]] = i[:attributes]
+    end if jsonapi[:included]
+
+    hash = jsonapi[:data].map do |d|
+     r = d[:attributes]
+     d[:relationships].each do |k, v|
+       id = v.dig(:data, :id)
+       next unless id
+       relations = included.dig(k, id)
+       next unless relations
+       relations.each do |j, x|
+         r[j] = x
+       end
+     end
     end
 
-    hash = if skip_serialization
-                model
-              else
-                jsonapi = renderer.render(model, options)
-                jsonapi[:data].map { |d| d[:attributes] }
-              end
+    flat_hash(hash)
+  end
 
-    hash = flat_hash(hash)
-    collection_to_csv(hash)
+  def options_from_fields(fields_from_params)
+    return {} unless fields_from_params
+
+    fields = JSONAPI::IncludeDirective.new(fields_from_params).to_hash
+    f = {}
+    i = []
+    fields.each do |k, v|
+      if !v.values.empty?
+        key = k.to_s.pluralize.underscore.to_sym
+        f[k.to_s.pluralize.to_sym] = v.keys.map(&:to_s).map(&:underscore)
+        i << key
+      else
+        f[k] = v
+      end
+    end
+
+    {
+      fields: CaseTransform.underscore(f),
+      include: i.join(',')
+    }
   end
 
   def renderer

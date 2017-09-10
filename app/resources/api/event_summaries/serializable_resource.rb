@@ -6,7 +6,7 @@ module Api
 
     type 'event-summaries'
 
-    attributes :name, :location,
+    attributes :name, :location, :website, :short_description,
                :registration_opens_at, :starts_at, :ends_at, :url,
                :revenue, :unpaid
 
