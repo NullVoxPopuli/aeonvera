@@ -182,7 +182,7 @@ GEM
     json (2.1.0)
     jsonapi-deserializable (0.2.0)
     jsonapi-parser (0.1.1)
-    jsonapi-rb (0.3.0)
+    jsonapi-rb (0.4.0)
       jsonapi-deserializable (~> 0.2.0)
       jsonapi-serializable (~> 0.2.1)
     jsonapi-renderer (0.1.3)
