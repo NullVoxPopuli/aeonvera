@@ -8,6 +8,7 @@ module Api
       attributes :deleted_at,
                  :transferred_to_email,
                  :transferred_from_first_name, :transferred_from_last_name,
+                 :transferred_at,
                  :transferred_to_year
     end
   end
