@@ -42,7 +42,7 @@ module Api
         end
 
         def transfer_to_year?
-          params_for_action[:transferred_to_year]
+          params_for_action[:transferred_to_year].present?
         end
 
         def to_year
