@@ -67,6 +67,7 @@ AeonVera::Application.routes.draw do
     resources :competition_responses
     resources :line_items
 
+    resources :unpaid_orders, controller: :orders
     resources :orders do
       resources :order_line_items
       member do
