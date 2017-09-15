@@ -23,6 +23,8 @@ rspec:
     DATABASE_PASSWORD: postgres
 
     REDIS_URL: redis://redis:6379
+
+    COVERAGE: true
   before_script:
     - |
       time (
