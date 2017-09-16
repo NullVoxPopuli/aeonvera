@@ -144,9 +144,8 @@ class Order < ApplicationRecord
   def require_registration_if_has_competitions
     return true unless has_competition?
 
-    unless (name_from_metadata || registration.try(:attendee_name)) &&
-        (email_from_metadata || registration.try(:attendee_email))
-      errors.add(:base, 'Registrant registration or buyer name and email are required when purchasing a competition.')
+    unless (name_from_metadata || registration.try(:attendee_name))
+      errors.add(:base, 'Registration or buyer name are required when purchasing a competition.')
     end
   end
 

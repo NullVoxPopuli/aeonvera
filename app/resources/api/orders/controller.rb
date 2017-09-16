@@ -104,7 +104,7 @@ module Api
     def update_order_params
       whitelistable_params(polymorphic: [:host]) do |whitelister|
         whitelister.permit(
-          :registration_id, :host_id, :host_type, :payment_method,
+          :registration_id, :host_id, :host_type,
           :user_email, :user_name,
 
           # specifically for payment

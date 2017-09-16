@@ -305,7 +305,7 @@ describe Api::OrdersController, type: :request do
         before(:each) do
           # 'disable' the stripe stuff -- not tested here
           allow_any_instance_of(Order).to receive(:sync_current_payment_aggregations)
-          allow_any_instance_of(Api::OrderOperations::Update).to receive(:update_stripe) {
+          allow_any_instance_of(Api::OrderOperations::Pay).to receive(:update_stripe) {
             order.update(
               paid: true,
               net_amount_received: -1,
