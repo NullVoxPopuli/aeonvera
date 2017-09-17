@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: levels
@@ -12,6 +11,7 @@
 #  created_at  :datetime
 #  updated_at  :datetime
 #  deleted_at  :datetime
+#  description :text
 #
 # Indexes
 #

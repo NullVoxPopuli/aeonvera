@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: packages
@@ -16,6 +15,7 @@
 #  updated_at           :datetime
 #  deleted_at           :datetime
 #  ignore_pricing_tiers :boolean          default(FALSE), not null
+#  description          :text
 #
 # Indexes
 #

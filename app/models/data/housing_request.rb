@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: housing_requests
@@ -15,8 +14,7 @@
 #  unwanted_roommates             :text
 #  preferred_gender_to_house_with :string(255)
 #  notes                          :text
-#  registration_id                  :integer
-#  registration_type                :string(255)
+#  registration_id                :integer
 #  host_id                        :integer
 #  host_type                      :string(255)
 #  housing_provision_id           :integer
@@ -27,8 +25,7 @@
 #
 # Indexes
 #
-#  index_housing_requests_on_registration_id_and_registration_type  (registration_id,registration_type)
-#  index_housing_requests_on_host_id_and_host_type              (host_id,host_type)
+#  index_housing_requests_on_host_id_and_host_type  (host_id,host_type)
 #
 
 class HousingRequest < ApplicationRecord

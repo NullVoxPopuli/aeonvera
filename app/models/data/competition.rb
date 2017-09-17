@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: competitions
@@ -14,6 +13,8 @@
 #  created_at        :datetime
 #  updated_at        :datetime
 #  deleted_at        :datetime
+#  description       :text
+#  nonregisterable   :boolean          default(FALSE), not null
 #
 # Indexes
 #

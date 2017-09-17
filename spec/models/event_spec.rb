@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: events
@@ -40,6 +39,7 @@
 #  ask_if_leading_or_following     :boolean          default(TRUE), not null
 #  contact_email                   :string
 #  online_competition_sales_end_at :datetime
+#  website                         :string
 #
 # Indexes
 #

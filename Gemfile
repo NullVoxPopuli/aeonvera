@@ -15,8 +15,8 @@ gem 'pg' # database
 gem 'attr_encrypted', '~> 1.3.0' # column encryption
 
 # type checking
-gem 'rtype'
-gem 'rtype-native'
+# gem 'rtype'
+# gem 'rtype-native'
 
 gem 'goldiloader' # automatic includes on everything (AR)
 gem 'skinny_controllers' # , path: '../skinny_controllers' # controllers, chill out!

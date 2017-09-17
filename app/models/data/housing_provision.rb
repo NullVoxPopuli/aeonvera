@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: housing_provisions
@@ -13,8 +12,7 @@
 #  has_pets                   :boolean          default(FALSE), not null
 #  smokes                     :boolean          default(FALSE), not null
 #  notes                      :text
-#  registration_id              :integer
-#  registration_type            :string(255)
+#  registration_id            :integer
 #  host_id                    :integer
 #  host_type                  :string(255)
 #  created_at                 :datetime
@@ -24,8 +22,7 @@
 #
 # Indexes
 #
-#  index_housing_provisions_on_registration_id_and_registration_type  (registration_id,registration_type)
-#  index_housing_provisions_on_host_id_and_host_type              (host_id,host_type)
+#  index_housing_provisions_on_host_id_and_host_type  (host_id,host_type)
 #
 
 class HousingProvision < ApplicationRecord

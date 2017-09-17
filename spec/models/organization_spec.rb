@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: organizations
@@ -24,6 +23,7 @@
 #  email_all_purchases        :boolean          default(FALSE), not null
 #  email_membership_purchases :boolean          default(FALSE), not null
 #  contact_email              :string
+#  website                    :string
 #
 # Indexes
 #

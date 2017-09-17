@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: passes
@@ -10,7 +9,7 @@
 #  percent_off       :integer
 #  discountable_id   :integer
 #  discountable_type :string(255)
-#  attendance_id     :integer
+#  registration_id   :integer
 #  event_id          :integer
 #  user_id           :integer
 #  created_at        :datetime
