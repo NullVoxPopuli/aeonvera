@@ -46,9 +46,11 @@ AeonVera::Application.routes.draw do
       resources :registrations do
         member do
           put :checkin
+          put :uncheckin
           put :undestroy
           put :transfer
         end
+
         collection do
           get :deleted
         end

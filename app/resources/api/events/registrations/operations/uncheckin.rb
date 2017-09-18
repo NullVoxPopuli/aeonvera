@@ -3,14 +3,15 @@
 module Api
   module Events
     module RegistrationOperations
-      class Update < SkinnyControllers::Operation::Default
+      class Uncheckin < SkinnyControllers::Operation::Base
         include ::HelperOperations::EventManagementPermissionChecks
 
         def run
           check_allowed!
 
           registration = Read.run(current_user, params)
-          registration.update(params_for_action)
+          registration.update(checked_in_at: nil)
+
           registration
         end
       end

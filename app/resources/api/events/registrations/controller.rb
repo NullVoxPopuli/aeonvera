@@ -19,6 +19,13 @@ module Api
         end
       end
 
+      def update
+        model = RegistrationOperations::Update
+                .run(current_user, params, resource_params)
+
+        render_jsonapi(model: model)
+      end
+
       def deleted
         model = RegistrationOperations::ReadAll
                 .run(current_user, params)
@@ -45,6 +52,13 @@ module Api
       def checkin
         model = RegistrationOperations::Checkin
                 .run(current_user, params, checkin_params)
+
+        render_jsonapi(model: model)
+      end
+
+      def uncheckin
+        model = RegistrationOperations::Uncheckin
+                .run(current_user, params)
 
         render_jsonapi(model: model)
       end
@@ -81,6 +95,7 @@ module Api
             :attendee_first_name, :attendee_last_name,
             :city, :state, :phone_number,
             :interested_in_volunteering,
+            :is_attending,
             :dance_orientation,
             :host_id, :host_type,
             :level_id

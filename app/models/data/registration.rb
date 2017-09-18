@@ -279,6 +279,10 @@ class Registration < ApplicationRecord
     orders.where(paid: true).count > 0
   end
 
+  def is_attending=(value)
+    self.attending = value
+  end
+
   def checkin!
     self.checked_in_at = Time.now
   end

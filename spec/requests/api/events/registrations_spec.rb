@@ -44,6 +44,39 @@ describe Api::Events::RegistrationsController, type: :request do
         event_relationship_name: :host
       }
     )
+
+    context 'PUT /:id/checkin' do
+      let(:user) { create_confirmed_user }
+      let(:event) { create(:event) }
+      let!(:registration) { create(:registration, host: event) }
+
+      it 'is not allowed' do
+        put(
+          "/api/events/registrations/#{registration.id}/checkin",
+          { checked_in_at: Time.now, event_id: event.id },
+          auth_header_for(user)
+        )
+
+        expect(response.status).to eq 403
+      end
+    end
+
+    context 'PUT /:id/uncheckin' do
+      let(:user) { create_confirmed_user }
+      let(:event) { create(:event) }
+      let!(:registration) { create(:registration, host: event, attending: true) }
+
+      it 'is not allowed' do
+        put(
+          "/api/events/registrations/#{registration.id}/uncheckin",
+          { event_id: event.id },
+          auth_header_for(user)
+        )
+
+
+        expect(response.status).to eq 403
+      end
+    end
   end
 
   context 'is logged in and the user is a collaborator' do
@@ -66,6 +99,23 @@ describe Api::Events::RegistrationsController, type: :request do
         put(
           "/api/events/registrations/#{registration.id}/checkin",
           { checked_in_at: Time.now, event_id: event.id },
+          auth_header_for(user)
+        )
+
+        expect(response.status).to eq 200
+      end
+    end
+
+    context 'PUT /:id/uncheckin' do
+      let(:user) { create_confirmed_user }
+      let(:event) { create(:event) }
+      let!(:collaboration) { create(:collaboration, user: user, collaborated: event) }
+      let!(:registration) { create(:registration, host: event, attending: true) }
+
+      it 'is allowed' do
+        put(
+          "/api/events/registrations/#{registration.id}/uncheckin",
+          { event_id: event.id },
           auth_header_for(user)
         )
 
