@@ -55,7 +55,7 @@ module Api
         whitelister.permit(
           :line_item_id, :line_item_type, :order_id,
           :price, :quantity,
-          :partner_name, :dance_orientation, :size,
+          :partner_name, :dance_orientation, :size, :picked_up_at,
           :discount_code
         )
       end

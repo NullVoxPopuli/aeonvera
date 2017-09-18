@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def add_to_order(order, line_item, quantity: 1, price: 0)
+def add_to_order(order, line_item, quantity: 1, price: 0, size: nil)
   price = line_item.try(:current_price) ||
     line_item.try(:price) ||
     line_item.try(:value) || price
@@ -9,15 +9,16 @@ def add_to_order(order, line_item, quantity: 1, price: 0)
     line_item_type: line_item.class.name,
     order: order,
     price: price,
-    quantity: quantity
+    quantity: quantity,
+    size: size
   )
 
   order.order_line_items << oli
   oli
 end
 
-def add_to_order!(order, line_item, quantity: 1, price: 0)
-  oli = add_to_order(order, line_item, quantity: quantity, price: price)
+def add_to_order!(order, line_item, quantity: 1, price: 0, size: nil)
+  oli = add_to_order(order, line_item, quantity: quantity, price: price, size: size)
   oli.save
   order.save!
 

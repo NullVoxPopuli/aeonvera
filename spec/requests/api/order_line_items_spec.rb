@@ -243,7 +243,7 @@ describe Api::OrderLineItemsController, type: :request do
                                }) }
 
           before(:each) do
-            @existing = add_to_order!(order, create(:shirt, host: event))
+            @existing = add_to_order!(order, create(:shirt, host: event), size: 'S')
             order.paid = true
             order.save
           end

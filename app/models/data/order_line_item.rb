@@ -43,6 +43,7 @@ class OrderLineItem < ApplicationRecord
   validates :quantity, presence: true
   validates :partner_name, presence: true, if: :is_competition_requiring_partner?
   validates :dance_orientation, presence: true, if: :is_competition_requiring_orientation?
+  validates :size, presence: true, if: :is_shirt?
 
   delegate :name, to: :line_item
 
@@ -58,6 +59,10 @@ class OrderLineItem < ApplicationRecord
 
   def is_competition_requiring_orientation?
     line_item.is_a?(Competition) && line_item.requires_orientation?
+  end
+
+  def is_shirt?
+    line_item.is_a?(LineItem::Shirt) || line_item.is_a?(Shirt)
   end
 
   def update_order_sub_total

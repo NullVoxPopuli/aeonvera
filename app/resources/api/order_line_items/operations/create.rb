@@ -3,6 +3,9 @@
 module Api
   module OrderLineItemOperations
     class Create < SkinnyControllers::Operation::Base
+      FIELDS_REQUIRING_HIGHER_PERMISSIONS = ['picked_up_at'].freeze
+      EPHEMERAL_FIELDS = ['discount_code'].freeze
+
       def run
         @model = discount_code? ? add_discount! : create_line_item!
 
@@ -56,7 +59,13 @@ module Api
           return item
         end
 
-        order.order_line_items.build(order_line_item_params)
+        oli = order.order_line_items.build(order_line_item_params)
+
+        if params_for_action[:picked_up_at] && allowed_to_mark_picked_up?(oli)
+          oli.picked_up_at = Time.now
+        end
+
+        oli
       end
 
       def existing_order_line_item
@@ -75,8 +84,11 @@ module Api
 
       def order_line_item_params
         @order_line_item_params ||= begin
-          attributes = OrderLineItem.column_names
-          oli_params = params_for_action.select { |c| attributes.include?(c) }
+          oli_params = params_for_action.reject do |k, _v|
+            FIELDS_REQUIRING_HIGHER_PERMISSIONS.include?(k) ||
+              EPHEMERAL_FIELDS.include?(k)
+          end
+
           given_quantity = oli_params[:quantity]
           quantity = given_quantity.to_i > 0 ? given_quantity : 1
 
@@ -98,6 +110,7 @@ module Api
 
       def shirt_price
         size = params_for_action[:size]
+        return unless size
 
         line_item.price_for_size(size) || line_item.price
       end
@@ -160,6 +173,12 @@ module Api
         policy_class
           .new(temp_user, model)
           .create?
+      end
+
+      def allowed_to_mark_picked_up?(order_line_item)
+        return false unless current_user
+
+        policy_for(order_line_item).mark_as_picked_up?
       end
 
       def authorized_via_token?

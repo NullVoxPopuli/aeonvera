@@ -8,7 +8,7 @@ describe Api::OrderLineItemPolicy do
       event = create(:event)
       order = create(:order, host: event, registration: create(:registration))
       order.paid = paid
-      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
+      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event), size: 'S')
       policy = Api::OrderLineItemPolicy.new(order_item.order.user, order_item)
       policy.send(method)
     }
@@ -19,7 +19,7 @@ describe Api::OrderLineItemPolicy do
       event = create(:event)
       order = create(:order, host: event, registration: create(:registration))
       order.paid = paid
-      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
+      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event), size: 'S')
       policy = Api::OrderLineItemPolicy.new(event.hosted_by, order_item)
       policy.send(method)
     }
@@ -30,7 +30,7 @@ describe Api::OrderLineItemPolicy do
       event = create(:event)
       order = create(:order, host: event, registration: create(:registration))
       order.paid = paid
-      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
+      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event), size: 'S')
       collaborator = create(:user)
       event.collaborators << collaborator
       event.save
@@ -43,7 +43,7 @@ describe Api::OrderLineItemPolicy do
     ->(method) {
       event = create(:event)
       order = create(:order, host: event, registration: create(:registration))
-      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event))
+      order_item = create(:order_line_item, order: order, line_item: create(:shirt, host: event), size: 'S')
       policy = Api::OrderLineItemPolicy.new(create(:user), order_item)
       policy.send(method)
     }
