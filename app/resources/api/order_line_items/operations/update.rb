@@ -3,6 +3,11 @@
 module Api
   module OrderLineItemOperations
     class Update < SkinnyControllers::Operation::Base
+      UPDATEABLE_FIELDS_AFTER_PURCHASE = [
+        :dance_orientation, :partner_name,
+        :scratch
+      ]
+
       def run
         check_allowed!
 

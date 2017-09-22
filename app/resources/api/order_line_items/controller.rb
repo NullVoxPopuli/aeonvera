@@ -48,6 +48,10 @@ module Api
       render_jsonapi
     end
 
+    def update_non_payment
+      render_jsonapi(options: { include: 'line_item,order.order_line_items' })
+    end
+
     private
 
     def create_order_line_item_params
@@ -57,6 +61,14 @@ module Api
           :price, :quantity,
           :partner_name, :dance_orientation, :size, :picked_up_at,
           :discount_code
+        )
+      end
+    end
+
+    def update_non_payment_order_line_item_params
+      whitelistable_params(polymorphic: [:line_item]) do |whitelister|
+        whitelister.permit(
+          :scratch, :partner_name, :dance_orientation
         )
       end
     end

@@ -85,6 +85,7 @@ AeonVera::Application.routes.draw do
     resources :order_line_items do
       member do
         put :mark_as_picked_up
+        put :update_non_payment
       end
     end
     resources :shirts

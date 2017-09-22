@@ -30,6 +30,10 @@ module Api
       read?
     end
 
+    def update_non_payment?
+      read?
+    end
+
     # Only owners and collaborators can set this
     def mark_as_picked_up?
       order.host.is_accessible_as_collaborator?(user)

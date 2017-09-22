@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170917150710) do
+ActiveRecord::Schema.define(version: 20170922194347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,38 +23,6 @@ ActiveRecord::Schema.define(version: 20170917150710) do
     t.string   "uid",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "attendances", force: :cascade do |t|
-    t.integer  "attendee_id"
-    t.integer  "host_id"
-    t.integer  "level_id"
-    t.integer  "package_id"
-    t.integer  "pricing_tier_id"
-    t.boolean  "interested_in_volunteering"
-    t.boolean  "needs_housing"
-    t.boolean  "providing_housing"
-    t.text     "metadata"
-    t.datetime "checked_in_at"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "attending",                              default: true, null: false
-    t.string   "dance_orientation",          limit: 255
-    t.string   "host_type",                  limit: 255
-    t.string   "attendance_type",            limit: 255
-    t.string   "transferred_to_name"
-    t.integer  "transferred_to_user_id"
-    t.datetime "transferred_at"
-    t.string   "transfer_reason"
-  end
-
-  add_index "attendances", ["host_id", "host_type", "attendance_type"], name: "index_attendances_on_host_id_and_host_type_and_attendance_type", using: :btree
-  add_index "attendances", ["host_id", "host_type"], name: "index_attendances_on_host_id_and_host_type", using: :btree
-
-  create_table "attendances_discounts", force: :cascade do |t|
-    t.integer "attendance_id"
-    t.integer "discount_id"
   end
 
   create_table "attendees", force: :cascade do |t|
@@ -83,17 +51,6 @@ ActiveRecord::Schema.define(version: 20170917150710) do
 
   add_index "collaborations", ["collaborated_id", "collaborated_type"], name: "index_collaborations_on_collaborated_id_and_collaborated_type", using: :btree
   add_index "collaborations", ["user_id"], name: "index_collaborations_on_user_id", using: :btree
-
-  create_table "competition_responses", force: :cascade do |t|
-    t.integer  "attendance_id"
-    t.integer  "competition_id"
-    t.string   "dance_orientation", limit: 255
-    t.string   "partner_name",      limit: 255
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "attendance_type",   limit: 255, default: "EventAttendance"
-  end
 
   create_table "competitions", force: :cascade do |t|
     t.string   "name",              limit: 255
@@ -340,8 +297,8 @@ ActiveRecord::Schema.define(version: 20170917150710) do
     t.integer  "order_id"
     t.integer  "line_item_id"
     t.string   "line_item_type",    limit: 255
-    t.decimal  "price",                         default: 0.0, null: false
-    t.integer  "quantity",                      default: 1,   null: false
+    t.decimal  "price",                         default: 0.0,   null: false
+    t.integer  "quantity",                      default: 1,     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "size"
@@ -349,6 +306,7 @@ ActiveRecord::Schema.define(version: 20170917150710) do
     t.string   "dance_orientation"
     t.string   "partner_name"
     t.datetime "picked_up_at"
+    t.boolean  "scratch",                       default: false, null: false
   end
 
   add_index "order_line_items", ["line_item_id", "line_item_type"], name: "index_order_line_items_on_line_item_id_and_line_item_type", using: :btree
@@ -480,7 +438,6 @@ ActiveRecord::Schema.define(version: 20170917150710) do
     t.boolean  "attending",                               default: true, null: false
     t.string   "dance_orientation",           limit: 255
     t.string   "host_type",                   limit: 255
-    t.string   "registration_type",           limit: 255
     t.datetime "transferred_at"
     t.string   "transfer_reason"
     t.string   "attendee_first_name"

@@ -7,7 +7,8 @@ module Api
     attributes :price, :quantity,
                :order_id, :dance_orientation, :partner_name,
                :size, :color,
-               :picked_up_at
+               :picked_up_at,
+               :scratch
 
     belongs_to :order, class: '::Api::OrderSerializableResource' do
       linkage always: true

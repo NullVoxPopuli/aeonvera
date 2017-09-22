@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: order_line_items
@@ -17,6 +16,7 @@
 #  dance_orientation :string
 #  partner_name      :string
 #  picked_up_at      :datetime
+#  scratch           :boolean          default(FALSE), not null
 #
 # Indexes
 #
