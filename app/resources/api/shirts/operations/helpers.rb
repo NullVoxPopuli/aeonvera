@@ -27,7 +27,7 @@ module Api
       # prices can only contain what is being sold.
       # This also makes the sizes array useless. But we'll keep it for now,
       # to be compatible with legacy data.
-      def params_with_proper_sizing_metadata(whitelisted = model_params)
+      def params_with_proper_sizing_metadata(whitelisted = params_for_action)
         # have to delete, because sizes isn't an attribute on Shirt
         sizes = whitelisted.delete(:sizes)
         return unless sizes

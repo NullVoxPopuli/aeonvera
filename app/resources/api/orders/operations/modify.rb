@@ -16,6 +16,7 @@ module Api
 
       def run
         modify
+        model.ensure_sub_total_persisted
 
         model
       end
