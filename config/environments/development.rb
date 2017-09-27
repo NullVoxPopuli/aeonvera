@@ -9,7 +9,7 @@ AeonVera::Application.configure do
   config.cache_classes = false
 
   # Do not eager load code on boot.
-  config.eager_load = true
+  config.eager_load = false
 
   # Prevent cilcular dependency issue when autoloading changed classes
   config.allow_concurrency = false

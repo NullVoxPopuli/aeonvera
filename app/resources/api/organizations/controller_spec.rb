@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Api::OrganizationsController do
+describe Api::OrganizationsController, type: :controller do
   context 'index' do
     it 'returns all of the organizations' do
       create(:organization)
