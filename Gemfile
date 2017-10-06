@@ -66,7 +66,7 @@ gem 'aws-sdk' # Upload Storage on S3
 gem 'date_validator'
 
 # app performance monitoring
-gem 'scout_apm'
+gem 'scout_apm', '>= 2.3.0.pre2', '< 3.0.pre'
 # GC Tuning
 # gem 'tunemygc'
 # Auto-scaling Tuning
