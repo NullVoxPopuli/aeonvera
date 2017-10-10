@@ -156,7 +156,10 @@ describe Api::OrdersController, type: :request do
 
     it 'can download a csv' do
       get '/api/orders.csv',
-          { event_id: event.id, fields: 'notes,createdAt,paymentReceivedAt,paidAmount' },
+          {
+            event_id: event.id,
+            fields: { order: 'notes,createdAt,paymentReceivedAt,paidAmount' }
+          },
           auth_header_for(owner)
 
       expect(response.status).to eq 200
