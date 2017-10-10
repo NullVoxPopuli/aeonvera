@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+# TODO: why is this the only test that requires requiring like this?
+require Rails.root + 'spec/rails_helper'
+require_relative 'controller'
 
 RSpec.describe Api::CustomFieldsController, type: :controller do
   before(:each) do

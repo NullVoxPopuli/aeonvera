@@ -40,7 +40,7 @@ rspec:
     - apt-get install -y nodejs
     - bundle install
     - bundle exec rake parallel:setup
-    - COVERAGE=true bundle exec rake parallel:spec
+    - COVERAGE=true bundle exec parallel_rspec app/ spec/
 
   after_script:
     - time ./cc-test-reporter after-build
