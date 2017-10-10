@@ -153,6 +153,12 @@ describe Api::OrdersController, type: :request do
       delete "/api/orders/#{order.id}", {}, auth_header_for(owner)
       expect(response.status).to eq 404
     end
+
+    it 'can download a csv' do
+      get "/api/orders.csv", {}, auth_header_for(owner)
+
+      expect(response.status).to eq 200
+    end
   end
 
   context 'is logged in' do
