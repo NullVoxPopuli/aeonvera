@@ -14,23 +14,3 @@ module Rails
     end
   end
 end
-#
-# module ActiveSupport #:nodoc:
-#   module Dependencies #:nodoc:
-#  module ModuleConstMissing
-#
-#       def load_dependency(file)
-#         ap file
-#         if Dependencies.load? && Dependencies.constant_watch_stack.watching?
-#           Dependencies.new_constants_in(Object) { yield }
-#         else
-#           yield
-#         end
-#       rescue Exception => exception  # errors from loading file
-#         exception.blame_file! file if exception.respond_to? :blame_file!
-#         raise
-#       end
-#
-#  end
-#  end
-#  end
