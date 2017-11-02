@@ -19,10 +19,6 @@ spec:
         configMap:
           name: gitlab-runner
 
-      - name: cacerts
-        hostPath:
-          path: /usr/share/ca-certificates/mozilla
-
       - name: var-run-docker-sock
         hostPath:
           path: /var/run/docker.sock
@@ -38,21 +34,20 @@ spec:
         imagePullPolicy: Always
         env:
         - name: GITLAB_URL
-          value: {{ default "" .Values.gitlabUrl | quote }}
+          value: https://gitlab.com/ci/
         - name: CI_SERVER_URL
-          value: {{ default "" .Values.gitlabUrl | quote }}
+          value: https://gitlab.com/ci/
+        - name: GITLAB_CI_URL
+          value: https://gitlab.com/ci/
         - name: REGISTRATION_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: gitlab-secrets
               key: runner-registration-token
         volumeMounts:
         - name: var-run-docker-sock
-          mountPath: /var/run/docker.sokc
+          mountPath: /var/run/docker.sock
         - name: working-directory
           mountPath: /home/gitlab-runner
         - name: config
           mountPath: /etc/gitlab-runner
-        - name: cacerts
-          mountPath: /etc/ssl/certs
-          readOnly: true
