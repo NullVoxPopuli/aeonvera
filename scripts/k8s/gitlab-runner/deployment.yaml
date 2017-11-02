@@ -1,0 +1,58 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gitlab-runner
+  namespace: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: gitlab-runner
+  template:
+    metadata:
+      labels:
+        name: gitlab-runner
+    spec:
+      restartPolicy: Always
+      volumes:
+      - name: config
+        configMap:
+          name: gitlab-runner
+
+      - name: cacerts
+        hostPath:
+          path: /usr/share/ca-certificates/mozilla
+
+      - name: var-run-docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+
+      - name: working-directory
+        hostPath:
+          path: /home/gitlab-runner
+
+      containers:
+      - name: gitlab-runner
+        args: ["run"]
+        image: gitlab/gitlab-runner:latest
+        imagePullPolicy: Always
+        env:
+        - name: GITLAB_URL
+          value: {{ default "" .Values.gitlabUrl | quote }}
+        - name: CI_SERVER_URL
+          value: {{ default "" .Values.gitlabUrl | quote }}
+        - name: REGISTRATION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}
+              key: runner-registration-token
+        volumeMounts:
+        - name: var-run-docker-sock
+          mountPath: /var/run/docker.sokc
+        - name: working-directory
+          mountPath: /home/gitlab-runner
+        - name: config
+          mountPath: /etc/gitlab-runner
+        - name: cacerts
+          mountPath: /etc/ssl/certs
+          readOnly: true
