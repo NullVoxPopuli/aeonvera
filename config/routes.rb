@@ -146,6 +146,8 @@ AeonVera::Application.routes.draw do
     get 'paypal/callback', to: 'paypal#callback'
   end
 
+  get '/_health', to: 'health_check#k8s'
+
   # redirect everything to ember
   #
   # But only if it doesn't start with /api/
