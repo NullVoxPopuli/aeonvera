@@ -6,44 +6,47 @@ rspec:
   stage: ci
   image: ruby:2.4.1
 
-  tags:
-    - docker
+  # tags:
+  #   - docker
 
   services:
     - postgres
     - redis
-  variables:
-    POSTGRES_DB: aeonvera_test
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
+  # variables:
+  #   POSTGRES_DB: aeonvera_test
+  #   POSTGRES_USER: postgres
+  #   POSTGRES_PASSWORD: postgres
+  #
+  #   DATABASE_HOST: postgres
+  #   DATABASE_NAME: aeonvera_test
+  #   DATABASE_USERNAME: postgres
+  #   DATABASE_PASSWORD: postgres
+  #
+  #   REDIS_URL: redis://redis:6379
 
-    DATABASE_HOST: postgres
-    DATABASE_NAME: aeonvera_test
-    DATABASE_USERNAME: postgres
-    DATABASE_PASSWORD: postgres
-
-    REDIS_URL: redis://redis:6379
-
-  before_script:
-    - |
-      time (
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
-        ./cc-test-reporter before-build
-      )
+  # before_script:
+  #   - |
+  #     time (
+  #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  #       chmod +x ./cc-test-reporter
+  #       ./cc-test-reporter before-build
+  #     )
 
   script:
-    - gem install bundler
-    - gem install therubyracer
-    - gem install execjs
-    - apt-get update
-    - apt-get install -y nodejs
-    - bundle install
-    - bundle exec rake parallel:setup
-    - COVERAGE=true bundle exec parallel_rspec app/ spec/
+    - ./script/ci/test.sh
 
-  after_script:
-    - time ./cc-test-reporter after-build
+  # script:
+  #   - gem install bundler
+  #   - gem install therubyracer
+  #   - gem install execjs
+  #   - apt-get update
+  #   - apt-get install -y nodejs
+  #   - bundle install
+  #   - bundle exec rake parallel:setup
+  #   - COVERAGE=true bundle exec parallel_rspec app/ spec/
+
+  # after_script:
+  #   - time ./cc-test-reporter after-build
   artifacts:
     paths:
       - coverage/
@@ -62,40 +65,40 @@ rspec:
 #    paths:
 #      - coverage/
 
-production:
-  stage: deploy
-  image: ruby:2.4.1
-
-  tags:
-    - docker
-
-  variables:
-    HEROKU_API_KEY: $HEROKU_PRODUCTION_API_KEY
-    HEROKU_APP_NAME: $HEROKU_PRODUCTION_APP_NAME
-  dependencies:
-    - rspec
-  script:
-    - >
-      if [ -n "$HEROKU_APP_NAME" ]; then echo 'HEROKU_APP_NAME present'; fi;
-      if [ -n "$HEROKU_API_KEY" ]; then echo 'HEROKU_API_KEY present'; fi;
-      ./scripts/ci/deploy.sh
-
-  environment:
-    name: production
-    url: https://aeonvera.com
-  only:
-    - master
-
-# https://about.gitlab.com/2016/11/03/publish-code-coverage-report-with-gitlab-pages/
-pages:
-  stage: deploy
-  dependencies:
-    - rspec
-  script:
-    - mv coverage/ public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
-  only:
-    - develop
+# production:
+#   stage: deploy
+#   image: ruby:2.4.1
+#
+#   tags:
+#     - docker
+#
+#   variables:
+#     HEROKU_API_KEY: $HEROKU_PRODUCTION_API_KEY
+#     HEROKU_APP_NAME: $HEROKU_PRODUCTION_APP_NAME
+#   dependencies:
+#     - rspec
+#   script:
+#     - >
+#       if [ -n "$HEROKU_APP_NAME" ]; then echo 'HEROKU_APP_NAME present'; fi;
+#       if [ -n "$HEROKU_API_KEY" ]; then echo 'HEROKU_API_KEY present'; fi;
+#       ./scripts/ci/deploy.sh
+#
+#   environment:
+#     name: production
+#     url: https://aeonvera.com
+#   only:
+#     - master
+#
+# # https://about.gitlab.com/2016/11/03/publish-code-coverage-report-with-gitlab-pages/
+# pages:
+#   stage: deploy
+#   dependencies:
+#     - rspec
+#   script:
+#     - mv coverage/ public/
+#   artifacts:
+#     paths:
+#       - public
+#     expire_in: 30 days
+#   only:
+#     - develop
