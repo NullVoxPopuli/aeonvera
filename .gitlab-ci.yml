@@ -9,6 +9,7 @@ rspec:
   services:
     - postgres
     - redis
+
   variables:
     KUBERNETES_NAMESPACE_OVERWRITE: ci-${CI_COMMIT_REF_NAME}
 
@@ -32,8 +33,7 @@ rspec:
   #     )
 
   script:
-    - pwd
-    - ./script/ci/test.sh
+    - ./scripts/ci/test.sh
 
   # script:
   #   - gem install bundler
