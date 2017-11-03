@@ -24,7 +24,13 @@ rspec:
 
     REDIS_URL: redis://redis:6379
 
-  # before_script:
+  before_script:
+    - |
+      time (
+        sudo curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+      )
   #   - |
   #     time (
   #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
