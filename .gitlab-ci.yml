@@ -4,33 +4,33 @@ stages:
 
 rspec:
   stage: ci
-  image: ruby:2.4.1
+  image: tmaier/docker-compose:latest
 
   services:
-    - postgres
-    - redis
+    - docker:dind
 
   variables:
     KUBERNETES_NAMESPACE_OVERWRITE: ci-${CI_COMMIT_REF_NAME}
-
-    POSTGRES_DB: aeonvera_test
-    POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: postgres
-
-    DATABASE_HOST: postgres
-    DATABASE_NAME: aeonvera_test
-    DATABASE_USERNAME: postgres
-    DATABASE_PASSWORD: postgres
-
-    REDIS_URL: redis://redis:6379
+    #
+    # POSTGRES_DB: aeonvera_test
+    # POSTGRES_USER: postgres
+    # POSTGRES_PASSWORD: postgres
+    #
+    # DATABASE_HOST: postgres
+    # DATABASE_NAME: aeonvera_test
+    # DATABASE_USERNAME: postgres
+    # DATABASE_PASSWORD: postgres
+    #
+    # REDIS_URL: redis://redis:6379
 
   before_script:
-    - |
-      time (
-        curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
-        docker-compose --version
-      )
+    - docker-compose --version
+  # - |
+  #   time (
+  #     curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+  #     chmod +x /usr/local/bin/docker-compose
+  #     docker-compose --version
+  #   )
   #   - |
   #     time (
   #       curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
