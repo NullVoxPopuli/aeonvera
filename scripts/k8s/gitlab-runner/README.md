@@ -1,1 +1,1 @@
-be sure to login to the cluster, and on the gitlab-runner pod, run `gitlab-runner register`
+helm install --namespace gitlab--name gitlab-runner -f values.yaml gitlab/gitlab-runner

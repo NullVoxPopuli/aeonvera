@@ -6,23 +6,22 @@ rspec:
   stage: ci
   image: ruby:2.4.1
 
-  # tags:
-  #   - docker
-
   services:
     - postgres
     - redis
-  # variables:
-  #   POSTGRES_DB: aeonvera_test
-  #   POSTGRES_USER: postgres
-  #   POSTGRES_PASSWORD: postgres
-  #
-  #   DATABASE_HOST: postgres
-  #   DATABASE_NAME: aeonvera_test
-  #   DATABASE_USERNAME: postgres
-  #   DATABASE_PASSWORD: postgres
-  #
-  #   REDIS_URL: redis://redis:6379
+  variables:
+    KUBERNETES_NAMESPACE_OVERWRITE: ci-${CI_COMMIT_REF_NAME}
+
+    POSTGRES_DB: aeonvera_test
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+
+    DATABASE_HOST: postgres
+    DATABASE_NAME: aeonvera_test
+    DATABASE_USERNAME: postgres
+    DATABASE_PASSWORD: postgres
+
+    REDIS_URL: redis://redis:6379
 
   # before_script:
   #   - |
@@ -33,6 +32,7 @@ rspec:
   #     )
 
   script:
+    - pwd
     - ./script/ci/test.sh
 
   # script:
