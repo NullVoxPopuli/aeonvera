@@ -330,7 +330,7 @@ production:
   }
 
   function ensure_namespace() {
-    kubectl describe namespace "$KUBE_NAMESPACE" --insecure-skip-tls-verify=true || kubectl create namespace "$KUBE_NAMESPACE" --insecure-skip-tls-verify=true
+    kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
   }
 
   function check_kube_domain() {
