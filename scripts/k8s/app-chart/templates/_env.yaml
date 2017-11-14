@@ -1,0 +1,51 @@
+{{- define "RUBY_ENV" }}
+- name: RAILS_ENV
+  value: {{ .Values.env.RAILS_ENV }}
+
+- name: REDIS_URL
+  value: redis://{{ .Release.Name }}-redis-service:6379
+- name: SIDEKIQ_REDIS_URL
+  value: {{ .Values.redis.SIDEKIQ }}
+- name: REDIS_PROVIDER
+  value: redis://{{ .Release.Name }}-redis-service:6379
+
+- name: ROLLBAR_CLIENT_TOKEN
+  value: {{ .Values.env.rollbar.ROLLBAR_CLIENT_TOKEN | quote }}
+- name: ROLLBAR_SERVER_TOKEN
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "secrets.name" . }}
+      key: rollbar-server-token
+
+- name: S3_BUCKET
+  value: {{ .Values.env.aws.S3_BUCKET }}
+- name: AWS_ACCESS_KEY_ID
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "secrets.name" . }}
+      key: aws-access-key-id
+- name: AWS_SECRET_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "secrets.name" . }}
+      key: aws-secret-access-key
+
+- name: DATABASE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "secrets.name" . }}
+      key: db-password
+
+- name: SECRET_KEY_BASE
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "secrets.name" . }}
+      key: rails-secret-key-base
+
+- name: DEVISE_SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "secrets.name" . }}
+      key: devise-secret-key
+
+{{- end }}
