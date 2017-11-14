@@ -11,3 +11,42 @@ helm upgrade gitlab-runner \
 
 
 helm delete gitlab-runner
+
+## Creating a new environment within the cluster
+
+#### nginx ingress controller
+```bash
+helm install stable/nginx-ingress --namespace default
+```
+
+#### The App
+```bash
+helm install ./app-chart --values ci-values.yaml
+```
+
+#### For Cluster Auto-Scaling,
+https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#which-version-on-cluster-autoscaler-should-i-use-in-my-cluster
+
+Also: https://github.com/kubernetes/autoscaler
+
+#### SSL via Let's Encrypt
+```bash
+helm install stable/kube-lego
+```
+
+see https://github.com/kubernetes/charts/tree/master/stable/kube-lego for config details
+
+
+## Updating
+
+### Helm overall
+
+List Releases:
+```bash
+helm list
+```
+
+Update:
+```bash
+helm upgrade "release-name" ./app-chart/  --values ci-values.yaml
+```

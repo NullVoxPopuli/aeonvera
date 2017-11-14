@@ -5,7 +5,7 @@
 - name: REDIS_URL
   value: redis://{{ .Release.Name }}-redis-service:6379
 - name: SIDEKIQ_REDIS_URL
-  value: {{ .Values.redis.SIDEKIQ }}
+  value: redis://{{ .Release.Name }}-redis-service:6379
 - name: REDIS_PROVIDER
   value: redis://{{ .Release.Name }}-redis-service:6379
 
@@ -14,7 +14,7 @@
 - name: ROLLBAR_SERVER_TOKEN
   valueFrom:
     secretKeyRef:
-      name: {{ template "secrets.name" . }}
+      name: {{ .Values.secrets-name }}
       key: rollbar-server-token
 
 - name: S3_BUCKET
@@ -22,30 +22,53 @@
 - name: AWS_ACCESS_KEY_ID
   valueFrom:
     secretKeyRef:
-      name: {{ template "secrets.name" . }}
+      name: {{ .Values.secrets-name }}
       key: aws-access-key-id
 - name: AWS_SECRET_ACCESS_KEY
   valueFrom:
     secretKeyRef:
-      name: {{ template "secrets.name" . }}
+      name: {{ .Values.secrets-name }}
       key: aws-secret-access-key
 
 - name: DATABASE_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ template "secrets.name" . }}
+      name: {{ .Values.secrets-name }}
       key: db-password
 
 - name: SECRET_KEY_BASE
   valueFrom:
     secretKeyRef:
-      name: {{ template "secrets.name" . }}
+      name: {{ .Values.secrets-name }}
       key: rails-secret-key-base
 
 - name: DEVISE_SECRET_KEY
   valueFrom:
     secretKeyRef:
-      name: {{ template "secrets.name" . }}
+      name: {{ .Values.secrets-name }}
       key: devise-secret-key
 
+- name: SCOUT_API_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets-name }}
+      value: scout-api-key
+
+- name: SIDEKIQ_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets-name }}
+      value: sidekiq-password
+
+- name: SIDEKIQ_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets-name }}
+      value: sidekiq-username
+
+- name: STRIPE_SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets-name }}
+      value: stripe-secret-key
 {{- end }}

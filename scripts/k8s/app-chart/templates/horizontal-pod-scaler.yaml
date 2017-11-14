@@ -10,4 +10,4 @@ spec:
     apiVersion: extensions/v1beta1
     kind: Deployment
     name: {{ template "web.name" }}
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 70

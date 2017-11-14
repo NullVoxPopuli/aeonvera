@@ -7,7 +7,7 @@ gitlabURL: http://gitlab.com/ci/
 ## be retreived from your GitLab Instance.
 ## ref: https://docs.gitlab.com/ce/ci/runners/README.html#creating-and-registering-a-runner
 ##
-runnerRegistrationToken: ""
+# runnerRegistrationToken: ""
 
 ## Set the certsSecretName in order to pass custom certficates for GitLab Runner to use
 ## Provide resource name for a Kubernetes Secret Object in the same namespace,

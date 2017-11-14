@@ -12,6 +12,7 @@ domain: 'ci.aeonvera.com'
 registry: ""
 tag: develop
 
+secrets-name: 'ci-secrets'
 
 env:
   RAILS_ENV: development
