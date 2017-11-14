@@ -24,7 +24,7 @@ env:
     # DEVISE_SECRET_KEY should be set in the secret from the k8s dashboard
 
   aws:
-    S3_BUCKET: ''
+    S3_BUCKET: 'aeonvera-development'
     # AWS_ACCESS_KEY_ID should be set in the secret from the k8s dashboard
     # AWS_SECRET_ACCESS_KEY should be set in the secret from the k8s dashboard
 
