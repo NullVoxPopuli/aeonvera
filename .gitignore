@@ -6,6 +6,10 @@
 .env
 backups/*
 
+vendor/bundle/ruby/2.4.0/bundler/gems/api_cache*
+vendor/bundle/ruby/2.4.0/bundler/gems/factory_girl*
+vendor/bundle/ruby-2.4.0/cache/git
+
 # Ignore UI test files in the public dir
 /public/dist/assets/test*
 
