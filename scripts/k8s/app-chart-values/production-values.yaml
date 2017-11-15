@@ -1,6 +1,6 @@
 namespace: production
 domain: 'aeonvera.com'
-registry: ""
+registry: "us.gcr.io/precognition-168700/aeonvera-api"
 tag: master
 
 secrets-name: 'production-secrets'

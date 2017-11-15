@@ -9,7 +9,7 @@
 appname: aeonvera
 namespace: ci
 domain: 'ci.aeonvera.com'
-registry: ""
+registry: "us.gcr.io/precognition-168700/aeonvera-api"
 tag: develop
 
 secrets-name: 'ci-secrets'

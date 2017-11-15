@@ -1,0 +1,24 @@
+#!/bin/bash
+
+export CHART_NAME='app-chart'
+
+function deploy {
+  targetEnvironment=$1
+  arguments=${@:2}
+
+  # Try to see if this has already been deployed
+  releaseResult=$(helm list | grep $CHART_NAME | grep $targetEnvironment)
+
+  ######################
+  # Install or Upgrade?
+  upstall='upgrade'
+
+  # No release with the chart name found
+  if [ -z "$releaseResult"]; then
+    upstall='install'
+  fi
+
+  ############
+  # Deploy!!!
+  helm $upstall -f "$targetEnvironment-values.yaml" $arguments
+}

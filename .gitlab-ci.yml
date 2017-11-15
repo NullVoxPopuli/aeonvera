@@ -185,12 +185,13 @@ production:
   script:
     - check_kube_domain
     - install_dependencies
-    - download_chart
+    # - download_chart
     - ensure_namespace
-    - install_tiller
-    - create_secret
-    - deploy
-    - delete canary
+    # - install_tiller
+    # - create_secret
+    # - deploy
+    # - delete canary
+    - scripts/k8s/deploy production
   environment:
     name: production
     url: http://$CI_PROJECT_PATH_SLUG.$AUTO_DEVOPS_DOMAIN
@@ -251,26 +252,32 @@ production:
       replicas="$new_replicas"
     fi
 
-    helm upgrade --install \
+    script/k8s/deploy $KUBE_NAMESPACE \
       --wait \
-      --set service.enabled="$service_enabled" \
-      --set releaseOverride="$CI_ENVIRONMENT_SLUG" \
-      --set image.repository="$CI_APPLICATION_REPOSITORY" \
-      --set image.tag="$CI_APPLICATION_TAG" \
-      --set image.pullPolicy=IfNotPresent \
-      --set application.track="$track" \
-      --set application.database_url="$DATABASE_URL" \
-      --set service.url="$CI_ENVIRONMENT_URL" \
-      --set replicaCount="$replicas" \
-      --set postgresql.enabled="$postgres_enabled" \
-      --set postgresql.nameOverride="postgres" \
-      --set postgresql.postgresUser="$POSTGRES_USER" \
-      --set postgresql.postgresPassword="$POSTGRES_PASSWORD" \
-      --set postgresql.postgresDatabase="$POSTGRES_DB" \
       --namespace="$KUBE_NAMESPACE" \
       --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
-      "$name" \
-      chart/
+      --name "$name"
+
+    # helm upgrade --install \ci-values
+    #   --wait \
+    #   --set service.enabled="$service_enabled" \
+    #   --set releaseOverride="$CI_ENVIRONMENT_SLUG" \
+    #   --set image.repository="$CI_APPLICATION_REPOSITORY" \
+    #   --set image.tag="$CI_APPLICATION_TAG" \
+    #   --set image.pullPolicy=IfNotPresent \
+    #   --set application.track="$track" \
+    #   --set application.database_url="$DATABASE_URL" \
+    #   --set service.url="$CI_ENVIRONMENT_URL" \
+    #   --set replicaCount="$replicas" \
+    #   --set postgresql.enabled="$postgres_enabled" \
+    #   --set postgresql.nameOverride="postgres" \
+    #   --set postgresql.postgresUser="$POSTGRES_USER" \
+    #   --set postgresql.postgresPassword="$POSTGRES_PASSWORD" \
+    #   --set postgresql.postgresDatabase="$POSTGRES_DB" \
+    #   --namespace="$KUBE_NAMESPACE" \
+    #   --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
+    #   "$name" \
+    #   chart/
   }
 
   function install_dependencies() {

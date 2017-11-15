@@ -1,0 +1,56 @@
+{{ if eq .Values.namespace 'production' }}
+  # Don't use a docker image for the db if in the prod namespace
+{{ else }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    app: {{ .Values.appname }}
+    component: db
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+  selector:
+    app: {{ .Values.appname }}
+    component: db
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.appname }}
+  name: db
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: db
+    spec:
+      containers:
+      - image: postgres:9.6
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          tcpSocket:
+            port: db
+          timeoutSeconds: 1
+        name: db
+        ports:
+        - containerPort: 5432
+          name: db
+          protocol: TCP
+{{ end }}
