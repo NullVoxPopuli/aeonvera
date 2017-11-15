@@ -252,7 +252,7 @@ production:
       replicas="$new_replicas"
     fi
 
-    script/k8s/deploy $KUBE_NAMESPACE \
+    scripts/k8s/deploy $KUBE_NAMESPACE \
       --wait \
       --namespace="$KUBE_NAMESPACE" \
       --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
