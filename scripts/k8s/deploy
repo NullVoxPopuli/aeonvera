@@ -22,3 +22,7 @@ function deploy {
   # Deploy!!!
   helm $upstall -f "$targetEnvironment-values.yaml" $arguments
 }
+
+if [ $1 ]; then
+  deploy $*
+fi

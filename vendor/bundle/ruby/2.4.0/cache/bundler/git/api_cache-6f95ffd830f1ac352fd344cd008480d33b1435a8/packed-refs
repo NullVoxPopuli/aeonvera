@@ -1,0 +1,15 @@
+# pack-refs with: peeled fully-peeled 
+ebb4a8b3214e31761401ebb890e19400a9ca8360 refs/heads/gh-pages
+4a26abe74da2e77d41d02b8d031ed1e8c260dc16 refs/heads/master
+ebe8b1e71a3cd55f80665eb17456e82fced5f37e refs/heads/memory-store-get
+4eea61b8e488926847c3b2b883639e1cf4490b6a refs/heads/new-moneta-api
+6b1e3c2c7330443526f0711e18c762238c8e24a2 refs/tags/v0.1.0
+fe36206b84b9c3a7d2515954d0362bc0e47c077d refs/tags/v0.1.1
+8071d786f8ca0765256a2952c6b853183be58926 refs/tags/v0.1.2
+fd0c61c9901fafa7145fa3972bf714e428809d34 refs/tags/v0.2.0
+2050b89fbf4e77d8b4798d3faedd60e326783abe refs/tags/v0.2.1
+^bcc515ea40c0c078bdbb20c49eb5819f21543e42
+ea8cfde1c302c34b21ad5d04f8838718499c04bf refs/tags/v0.2.2
+^e5db27beefe2b8f6b55305b4daf7f150a2b149db
+84cb849889d8362f7a947f80e98605128fd6162f refs/tags/v0.2.3
+^b47cb78e83ee42fdc33245d6ce59766853faf6d9
