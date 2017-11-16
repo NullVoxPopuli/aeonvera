@@ -25,8 +25,6 @@ spec:
           hostPort: 2375
         command: ["/bin/bash", "/scripts/entrypoint"]
         env:
-        - name: DOCKER_HOST
-          value: "/var/run/docker.sock"
         - name: GITLAB_URL
           value: {{ template "gitlabUrl" . }}
         - name: REGISTRATION_TOKEN
@@ -85,8 +83,6 @@ spec:
         volumeMounts:
         - name: docker-graph-storage
           mountPath: /var/lib/docker
-        - name: var-run-docker-sock
-          mountPath: /var/run/docker.sock
         - name: scripts
           mountPath: /scripts
         {{- if .Values.certsSecretName }}
@@ -100,9 +96,6 @@ spec:
       - name: docker-graph-storage
         hostPath:
           path: /var/lib/docker
-      - name: var-run-docker-sock
-        hostPath:
-          path: /var/run/docker.sock
       {{- if .Values.certsSecretName }}
       - name: custom-certs
         secret:
