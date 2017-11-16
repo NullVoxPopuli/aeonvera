@@ -83,6 +83,8 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         volumeMounts:
+        - name: docker-graph-storage
+          mountPath: /var/lib/docke
         - name: var-run-docker-sock
           mountPath: /var/run/docker.sock
         - name: scripts
@@ -95,6 +97,9 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
+      - name: docker-graph-storage
+        hostPath:
+          path: /var/lib/docker
       - name: var-run-docker-sock
         hostPath:
           path: /var/run/docker.sock
