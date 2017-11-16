@@ -46,10 +46,8 @@ stages:
 build:
   stage: build
   image: docker:git
-  # services:
-  # - docker:dind
-  variables:
-    DOCKER_HOST: /var/lib/docker.sock
+  services:
+  - docker:dind
   script:
     - setup_docker
     - build
