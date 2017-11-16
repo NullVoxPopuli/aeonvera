@@ -62,11 +62,15 @@ test:
   variables:
     POSTGRES_DB: test
   stage: test
-  image: gliderlabs/herokuish:latest
+  image: tmaier/docker-compose
   script:
-    - setup_test_db
-    - cp -R . /tmp/app
-    - /bin/herokuish buildpack test
+    - scripts/ci/test.sh
+    - docker-compose -f docker-compose.ci.yml down --remove-orphans
+  # image: gliderlabs/herokuish:latest
+  # script:
+  #   - setup_test_db
+  #   - cp -R . /tmp/app
+  #   - /bin/herokuish buildpack test
   only:
     - branches
 

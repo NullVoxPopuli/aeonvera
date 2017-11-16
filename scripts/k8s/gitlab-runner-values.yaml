@@ -1,13 +1,13 @@
 ## The GitLab Server URL (with protocol) that want to register the runner against
 ## ref: https://docs.gitlab.com/runner/commands/README.html#gitlab-runner-register
 ##
-gitlabURL: http://gitlab.com/ci/
+gitlabUrl: https://gitlab.com/ci/
 
 ## The Registration Token for adding new Runners to the GitLab Server. This must
 ## be retreived from your GitLab Instance.
 ## ref: https://docs.gitlab.com/ce/ci/runners/README.html#creating-and-registering-a-runner
 ##
-# runnerRegistrationToken: ""
+runnerRegistrationToken: ""
 
 ## Set the certsSecretName in order to pass custom certficates for GitLab Runner to use
 ## Provide resource name for a Kubernetes Secret Object in the same namespace,
@@ -19,7 +19,7 @@ gitlabURL: http://gitlab.com/ci/
 ## Configure the maximum number of concurrent jobs
 ## ref: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section
 ##
-concurrent: 5
+concurrent: 1
 
 ## Defines in seconds how often to check GitLab for a new builds
 ## ref: https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-global-section

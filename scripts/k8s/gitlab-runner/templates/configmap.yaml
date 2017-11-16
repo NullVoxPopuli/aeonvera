@@ -27,3 +27,14 @@ data:
     concurrent = {{ .Values.concurrent }}
     check_interval = {{ .Values.checkInterval }}
     privileged = true
+
+    [runners.kubernetes]
+      [[runners.kubernetes.volumes.host_path]]
+        name = "docker-socket"
+        mount_path = "/var/run/docker.sock"
+        host_path = "/var/run/docker.sock"
+
+      # [[runners.kubernetes.volumes.host_path]]
+      #   name = "docker-volume-cache"
+      #   mount_path = "/var/lib/docker"
+      #   host_path = "/var/lib/docker
