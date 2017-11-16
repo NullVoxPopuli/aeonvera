@@ -292,8 +292,8 @@ production:
   }
 
   function setup_docker() {
-    export DOCKER_DRIVER=overlay2
-    export DOCKER_HOST=/var/run/docker.sock
+    export DOCKER_DRIVER=overlay
+    export DOCKER_HOST=tcp://localhost:2375
     docker info
     if ! docker info &>/dev/null; then
       if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
