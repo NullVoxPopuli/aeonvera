@@ -17,9 +17,13 @@ data:
     cp /scripts/config.toml /etc/gitlab-runner/
 
     # Register the runner
+    # --executor kubernetes
     /entrypoint register --non-interactive \
       --url $GITLAB_URL \
-      --executor kubernetes
+      --executor docker \
+      --docker-image "docker:latest" \
+      --docker-volumes /var/run/docker.sock:/var/run/docker.sock
+
 
     # Start the runner
     /entrypoint run --user=gitlab-runner \

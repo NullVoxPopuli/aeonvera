@@ -57,20 +57,11 @@ build:
     - branches
 
 test:
-  services:
-    - postgres:latest
-  variables:
-    POSTGRES_DB: test
   stage: test
   image: tmaier/docker-compose
   script:
     - scripts/ci/test.sh
     - docker-compose -f docker-compose.ci.yml down --remove-orphans
-  # image: gliderlabs/herokuish:latest
-  # script:
-  #   - setup_test_db
-  #   - cp -R . /tmp/app
-  #   - /bin/herokuish buildpack test
   only:
     - branches
 
@@ -301,8 +292,8 @@ production:
   function setup_docker() {
     if ! docker info &>/dev/null; then
       if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
-        # export DOCKER_HOST='tcp://localhost:2375'
-        export DOCKER_HOST='/var/run/docker.sock'
+        export DOCKER_HOST='tcp://localhost:2375'
+        # export DOCKER_HOST='/var/run/docker.sock'
       fi
     fi
   }
