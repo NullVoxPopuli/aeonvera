@@ -11,11 +11,11 @@ function deploy {
 
   ######################
   # Install or Upgrade?
-  upstall='upgrade'
+  upstall="upgrade $CHART_NAME"
 
   # No release with the chart name found
   if [ -z "$releaseResult"]; then
-    upstall='install'
+    upstall="install --name $CHART_NAME"
   fi
 
   ############
