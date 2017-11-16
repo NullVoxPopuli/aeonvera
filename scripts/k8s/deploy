@@ -2,6 +2,10 @@
 
 export CHART_NAME='app-chart'
 
+
+# The directory of the folder this script resides in
+fullPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 function deploy {
   targetEnvironment=$1
   releaseName=$2
@@ -25,7 +29,7 @@ function deploy {
 
   ############
   # Deploy!!!
-  cmd="helm $upstall -f \"$targetEnvironment-values.yaml\" $arguments"
+  cmd="helm $upstall $arguments -f \"$targetEnvironment-values.yaml\" $fullPath/app-chart"
   echo "Running: $cmd"
   eval $cmd
 }
