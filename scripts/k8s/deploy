@@ -20,7 +20,9 @@ function deploy {
 
   ############
   # Deploy!!!
-  helm $upstall -f "$targetEnvironment-values.yaml" $arguments
+  cmd="helm $upstall -f \"$targetEnvironment-values.yaml\" $arguments"
+  echo "Running: $cmd"
+  eval $cmd
 }
 
 if [ $1 ]; then
