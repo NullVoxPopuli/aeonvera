@@ -1,8 +1,9 @@
-{{- if and (include "gitlabUrl" .) (default "" .Values.runnerRegistrationToken) }}
+{{- if (include "gitlabUrl" .) }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}
+  namespace: gitlab
   labels:
     app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -28,7 +29,7 @@ spec:
         - name: REGISTRATION_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ template "fullname" . }}
+              name: {{ .Values.secretName }}
               key: runner-registration-token
         - name: KUBERNETES_IMAGE
           value: {{ .Values.runners.image | quote }}
