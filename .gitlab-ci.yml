@@ -252,11 +252,9 @@ production:
       replicas="$new_replicas"
     fi
 
-    scripts/k8s/deploy $KUBE_NAMESPACE \
+    scripts/k8s/deploy $KUBE_NAMESPACE $name \
       --wait \
-      --namespace="$KUBE_NAMESPACE" \
-      --version="$CI_PIPELINE_ID-$CI_JOB_ID" \
-      --name "$name"
+      --version="$CI_PIPELINE_ID-$CI_JOB_ID"
 
     # helm upgrade --install \ci-values
     #   --wait \

@@ -4,18 +4,23 @@ export CHART_NAME='app-chart'
 
 function deploy {
   targetEnvironment=$1
-  arguments=${@:2}
+  releaseName=$2
+  arguments=${@:3}
+
+  if [ "$targetEnvironment" == "production" ]; then
+    releaseName=$CHART_NAME
+  fi
 
   # Try to see if this has already been deployed
   releaseResult=$(helm list | grep $CHART_NAME | grep $targetEnvironment)
 
   ######################
   # Install or Upgrade?
-  upstall="upgrade $CHART_NAME"
+  upstall="upgrade $releaseName"
 
   # No release with the chart name found
   if [ -z "$releaseResult"]; then
-    upstall="install --name $CHART_NAME"
+    upstall="install --name $releaseName"
   fi
 
   ############
