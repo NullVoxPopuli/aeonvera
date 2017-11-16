@@ -20,6 +20,9 @@ spec:
       - name: {{ template "fullname" . }}
         image: {{ .Values.image }}
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+        ports:
+        - containerPort: 2375
+          hostPort: 2375
         command: ["/bin/bash", "/scripts/entrypoint"]
         env:
         - name: DOCKER_HOST

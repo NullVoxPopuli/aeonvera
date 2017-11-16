@@ -45,9 +45,9 @@ stages:
 
 build:
   stage: build
-  image: docker:git
-  services:
-  - docker:dind
+  # image: docker:git
+  # services:
+  # - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
   script:

@@ -30,6 +30,7 @@ data:
     check_interval = {{ .Values.checkInterval }}
     privileged = true
     [[runners]]
+      name = 'Kubernetes GitLab Runner'
       [runners.kubernetes]
         privileged = true
         [[runners.kubernetes.volumes.host_path]]
