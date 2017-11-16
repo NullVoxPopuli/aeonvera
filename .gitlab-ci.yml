@@ -51,7 +51,7 @@ build:
   variables:
     DOCKER_DRIVER: overlay2
   script:
-    - setup_docker
+    # - setup_docker
     - build
   only:
     - branches
@@ -294,7 +294,7 @@ production:
   function setup_docker() {
     if ! docker info &>/dev/null; then
       if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
-        export DOCKER_HOST='tcp://localhost:2375'
+        export DOCKER_HOST=tcp://localhost:2375
         # export DOCKER_HOST='/var/run/docker.sock'
       fi
     fi
