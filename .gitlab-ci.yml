@@ -48,8 +48,8 @@ build:
   image: docker:git
   # services:
   # - docker:dind
-  # variables:
-  #   DOCKER_DRIVER: overlay2
+  variables:
+    DOCKER_HOST: /var/lib/docker.sock
   script:
     - setup_docker
     - build
@@ -292,11 +292,12 @@ production:
   }
 
   function setup_docker() {
+    export DOCKER_DRIVER=overlay2
+    export DOCKER_HOST=/var/run/docker.sock
+    docker info
     if ! docker info &>/dev/null; then
       if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
         export DOCKER_HOST=tcp://localhost:2375
-        export DOCKER_DRIVER=overlay2
-        # export DOCKER_HOST=/var/run/docker.sock
         docker info
       fi
     fi
