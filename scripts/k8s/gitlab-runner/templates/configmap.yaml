@@ -17,12 +17,9 @@ data:
     cp /scripts/config.toml /etc/gitlab-runner/
 
     # Register the runner
-    # --executor kubernetes
     /entrypoint register --non-interactive \
       --url $GITLAB_URL \
-      --executor docker \
-      --docker-image "docker:latest" \
-      --docker-volumes /var/run/docker.sock:/var/run/docker.sock
+      --executor kubernetes
 
 
     # Start the runner
@@ -32,14 +29,14 @@ data:
     concurrent = {{ .Values.concurrent }}
     check_interval = {{ .Values.checkInterval }}
     privileged = true
-
-# [runners.kubernetes]
-#   [[runners.kubernetes.volumes.host_path]]
-#     name = "docker-socket"
-#     mount_path = "/var/run/docker.sock"
-#     host_path = "/var/run/docker.sock"
-
-# [[runners.kubernetes.volumes.host_path]]
-#   name = "docker-volume-cache"
-#   mount_path = "/var/lib/docker"
-#   host_path = "/var/lib/docker
+    [[runners]]
+      [runners.kubernetes]
+        privileged = true
+        [[runners.kubernetes.volumes.host_path]]
+          name = "docker-socket"
+          mount_path = "/var/run/docker.sock"
+          host_path = "/var/run/docker.sock"
+        [[runners.kubernetes.volumes.host_path]]
+          name = "docker-volume-cache"
+          mount_path = "/var/lib/docker"
+          host_path = "/var/lib/docker"

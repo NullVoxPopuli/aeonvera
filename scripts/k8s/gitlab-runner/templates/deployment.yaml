@@ -80,6 +80,8 @@ spec:
           successThreshold: 1
           failureThreshold: 3
         volumeMounts:
+        - name: var-run-docker-sock
+          mountPath: /var/run/docker.sock
         - name: scripts
           mountPath: /scripts
         {{- if .Values.certsSecretName }}
@@ -90,11 +92,9 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
-      {{ if .Values.runners.privileged }}
       - name: var-run-docker-sock
         hostPath:
           path: /var/run/docker.sock
-      {{ end }}
       {{- if .Values.certsSecretName }}
       - name: custom-certs
         secret:
