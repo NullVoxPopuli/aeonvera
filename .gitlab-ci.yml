@@ -46,8 +46,8 @@ stages:
 build:
   stage: build
   image: docker:git
-  services:
-  - docker:dind
+  # services:
+  # - docker:dind
   script:
     - setup_docker
     - build
@@ -57,8 +57,8 @@ build:
 test:
   stage: test
   image: tmaier/docker-compose
-  services:
-    - docker:dind
+  # services:
+  #   - docker:dind
   script:
     - scripts/ci/test.sh
     - docker-compose -f docker-compose.ci.yml down --remove-orphans
@@ -70,8 +70,8 @@ codequality:
   variables:
     DOCKER_DRIVER: overlay2
   allow_failure: true
-  services:
-    - docker:dind
+  # services:
+  #   - docker:dind
   script:
     - setup_docker
     - codeclimate
