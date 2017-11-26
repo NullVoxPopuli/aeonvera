@@ -33,6 +33,7 @@ variables:
   POSTGRES_PASSWORD: testing-password
   POSTGRES_ENABLED: "true"
   POSTGRES_DB: $CI_ENVIRONMENT_SLUG
+  DOCKER_HOST: /var/run/docker.sock
 
 stages:
   - build
@@ -291,11 +292,11 @@ production:
 
   function setup_docker() {
     export DOCKER_DRIVER=overlay
-    export DOCKER_HOST=tcp://localhost:2375
+    export DOCKER_HOST=/var/run/docker.sock
     docker info
     if ! docker info &>/dev/null; then
       if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
-        export DOCKER_HOST=tcp://localhost:2375
+        # export DOCKER_HOST=tcp://localhost:2375
         docker info
       fi
     fi
