@@ -34,6 +34,5 @@ data:
       [runners.kubernetes]
         privileged = true
         [[runners.kubernetes.volumes.host_path]]
-          name = "docker-volume-cache"
-          mount_path = "/var/lib/docker"
-          host_path = "/var/lib/docker"
+          name = "docker-socket"
+          mount_path = "/var/run/docker.sock"

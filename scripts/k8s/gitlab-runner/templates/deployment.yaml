@@ -16,6 +16,19 @@ spec:
       labels:
         app: {{ template "fullname" . }}
     spec:
+      volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+      {{- if .Values.certsSecretName }}
+      - name: custom-certs
+        secret:
+          secretName: {{ .Values.certsSecretName }}
+      {{- end }}
+      - name: scripts
+        configMap:
+          name: {{ template "fullname" . }}
+
       containers:
       - name: {{ template "fullname" . }}
         image: {{ .Values.image }}
@@ -24,6 +37,17 @@ spec:
         - containerPort: 2375
           hostPort: 2375
         command: ["/bin/bash", "/scripts/entrypoint"]
+        volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+        - name: scripts
+          mountPath: /scripts
+        {{- if .Values.certsSecretName }}
+        - name: custom-certs
+          readOnly: true
+          mountPath: /etc/gitlab-runner/certs/
+        {{- end }}
+
         env:
         - name: GITLAB_URL
           value: {{ template "gitlabUrl" . }}
@@ -80,29 +104,8 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           failureThreshold: 3
-        volumeMounts:
-        - name: docker-graph-storage
-          mountPath: /var/lib/docker
-        - name: scripts
-          mountPath: /scripts
-        {{- if .Values.certsSecretName }}
-        - name: custom-certs
-          readOnly: true
-          mountPath: /etc/gitlab-runner/certs/
-        {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-      volumes:
-      - name: docker-graph-storage
-        hostPath:
-          path: /var/lib/docker
-      {{- if .Values.certsSecretName }}
-      - name: custom-certs
-        secret:
-          secretName: {{ .Values.certsSecretName }}
-      {{- end }}
-      - name: scripts
-        configMap:
-          name: {{ template "fullname" . }}
+
 {{ else }}
 {{ end }}
