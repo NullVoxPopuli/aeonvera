@@ -1,0 +1,45 @@
+run.config:
+  engine: ruby
+  engine.config:
+    runtime: ruby-2.4
+
+  # add extra packages
+  extra_packages:
+    - nodejs
+    - nginx
+
+  build_triggers:
+    - Gemfile
+    - Gemfile.lock
+
+#
+deploy.config:
+  extra_steps:
+    - rake assets:precompile
+
+  before_live:
+    web.main:
+      - rake db:setup_or_migrate
+
+# add a database
+data.db:
+  image: nanobox/postgresql
+
+# add a web component and give it a "start" command
+web.main:
+  start:
+    nginx: nginx -c /app/config/nginx.conf
+    puma: bundle exec rails s -b 0.0.0.0 -p 8080
+
+  # add writable dirs to the web component
+  writable_dirs:
+    - tmp
+    - log
+
+  # the path to a logfile you want streamed to the nanobox dashboard
+  log_watch:
+    rails: 'log/production.log'
+
+# add a worker component and give it a "start" command
+# worker.main:
+#   start: sidekiq
