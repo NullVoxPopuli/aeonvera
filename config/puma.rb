@@ -1,5 +1,13 @@
 # frozen_string_literal: true
 
+# Adapting for NanoBox
+if ENV['DATA_DB_USER']
+  ENV['DATABASE_HOST'] = ENV['DATA_DB_HOST']
+  ENV['DATABASE_USERNAME'] = ENV['DATA_DB_USER']
+  ENV['DATABASE_PASSWORD'] = ENV['DATA_DB_PASS']
+  ENV['REDIS_URL'] = "redis://#{ENV['DATA_REDIS_HOST']}"
+end
+
 workers Integer(ENV['WEB_CONCURRENCY'] || 1)
 threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count

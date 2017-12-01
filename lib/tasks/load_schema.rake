@@ -3,6 +3,23 @@
 # http://stackoverflow.com/questions/8829725/i18n-how-to-check-if-a-translation-key-value-pairs-is-missing
 namespace :db do
   namespace :schema do
+    def database_exists?
+      ActiveRecord::Base.connection
+    rescue ActiveRecord::NoDatabaseError
+      false
+    else
+      true
+    end
+
+    task setup_or_migrate: :environment do
+      begin
+        load "#{Rails.root}/db/schema.rb"
+      rescue
+        Rake::Task['db:create'].execute
+        load "#{Rails.root}/db/schema.rb"
+      end
+    end
+
     task load: :environment do
       return if Rails.env.production?
 
@@ -10,7 +27,7 @@ namespace :db do
         # ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
         load "#{Rails.root}/db/schema.rb" # use db agnostic schema by default
         # ActiveRecord::Migrator.up('db/migrate') # use migrations
-        ap 'Database loaded'
+        puts 'Database loaded'
       end
 
       silence_stream(STDOUT, &load_schema)

@@ -5,7 +5,7 @@ run.config:
 
   # add extra packages
   extra_packages:
-    - nginx
+    # - nginx
     - nodejs
 
   build_triggers:
@@ -13,23 +13,35 @@ run.config:
     - Gemfile.lock
 
 #
-deploy.config: {}
+deploy.config:
   # extra_steps:
   #   - rake assets:precompile
 
-  # before_live:
-  #   web.main:
-  #     - rake db:setup_or_migrate
+  before_live:
+    web.main:
+      - rake db:schema:setup_or_migrate
 
-# add a database
 data.db:
   image: nanobox/postgresql
 
-# add a web component and give it a "start" command
+data.redis:
+  image: nanobox/redis:3.0
+
+worker.jobs:
+  start: bundle exec sidekiq
+
+  # add writable dirs to the web component
+  writable_dirs:
+    - tmp
+    - log
+
+  log_watch:
+    sideki: 'log/sidekiq.log'
+
 web.main:
   start:
-    nginx: nginx -c /app/config/nginx.conf
-    puma: bundle exec rails s -b 0.0.0.0 -p 8080
+    puma: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:8080
+    # nginx: nginx -c /app/config/nginx.conf
 
   # add writable dirs to the web component
   writable_dirs:
