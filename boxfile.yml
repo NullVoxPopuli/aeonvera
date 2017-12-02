@@ -5,28 +5,44 @@ run.config:
 
   # add extra packages
   extra_packages:
-    # - nginx
+    - nginx
     - nodejs
 
   build_triggers:
     - Gemfile
     - Gemfile.lock
 
-#
 deploy.config:
-  # extra_steps:
-  #   - rake assets:precompile
-
   before_live:
     web.main:
       - rake db:schema:setup_or_migrate
 
+# LOCAL DB
 data.db:
   image: nanobox/postgresql
+  local_only: true
 
+# CACHE
 data.redis:
   image: nanobox/redis:3.0
 
+# API
+web.main:
+  start:
+    puma: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:8080
+    nginx: nginx -c /app/config/nginx.conf
+
+  writable_dirs:
+    - tmp
+    - log
+
+  # the path to a logfile you want streamed to the nanobox dashboard
+  log_watch:
+    rails: 'log/production.log'
+    nginx: 'log/nginx.access.log'
+    nginx_error: 'log/nginx.error.log'
+
+# SIDEKIQ
 worker.jobs:
   start: bundle exec sidekiq
 
@@ -36,22 +52,4 @@ worker.jobs:
     - log
 
   log_watch:
-    sideki: 'log/sidekiq.log'
-
-web.main:
-  start:
-    puma: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:8080
-    # nginx: nginx -c /app/config/nginx.conf
-
-  # add writable dirs to the web component
-  writable_dirs:
-    - tmp
-    - log
-
-  # the path to a logfile you want streamed to the nanobox dashboard
-  log_watch:
-    rails: 'log/production.log'
-
-# add a worker component and give it a "start" command
-# worker.main:
-#   start: sidekiq
+    sidekiq: 'log/sidekiq.log'

@@ -1,20 +1,8 @@
-# SQLite version 3.x
-#   gem install sqlite3
-#
-#   Ensure the SQLite 3 gem is defined in your Gemfile
-#   gem 'sqlite3'
-local: &local
-  database: aeonvera_development
-  username: lprestonsegoiii
-  password: 1234
-  port: 5432
-  host: localhost
-
 env: &env
-  database: <%= ENV['DATABASE_NAME'] %>
-  host: <%= ENV['DATABASE_HOST'] %>
-  username: <%= ENV['DATABASE_USERNAME'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
+  database: <%= ENV['DATABASE_NAME'] || 'gonano' %>
+  host: <%= ENV['DATABASE_HOST'] || ENV['DATA_DB_HOST'] %>
+  username: <%= ENV['DATABASE_USERNAME'] || ENV['DATA_DB_USER'] %>
+  password: <%= ENV['DATABASE_PASSWORD'] || ENV['DATA_DB_PASS'] %>
   port: <%= ENV['DATABASE_PORT'] %>
 
 development: &development
@@ -36,7 +24,4 @@ production: &production
   database: aeonvera_production
 
 staging: &staging
-  <<: *production
-
-development_production:
   <<: *production
