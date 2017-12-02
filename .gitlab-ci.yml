@@ -109,7 +109,6 @@ codequality:
   services:
     - docker:dind
   script:
-    - setup_docker
     - codeclimate
   artifacts:
     paths: [codeclimate.json]
