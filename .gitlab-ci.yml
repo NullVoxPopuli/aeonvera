@@ -100,18 +100,17 @@ rspec:
 #   only:
 #     - branches
 
-codequality:
-  image: docker:latest
-  variables:
-    DOCKER_DRIVER: overlay2
-    # DOCKER_HOST: /var/run/docker.sock
-  allow_failure: true
-  services:
-    - docker:dind
-  script:
-    - codeclimate
-  artifacts:
-    paths: [codeclimate.json]
+# codequality:
+#   image: docker:latest
+#   variables:
+#     DOCKER_DRIVER: overlay2
+#   allow_failure: true
+#   services:
+#     - docker:dind
+#   script:
+#     - codeclimate
+#   artifacts:
+#     paths: [codeclimate.json]
 
 # This job continuously deploys to production on every push to `master`.
 # To make this a manual process, either because you're enabling `staging`
