@@ -6,6 +6,9 @@
 .env
 backups/*
 
+# generated file
+/config/nginx.conf
+
 vendor/bundle/ruby/2.4.0/bundler/gems/api_cache*
 vendor/bundle/ruby/2.4.0/bundler/gems/factory_girl*
 vendor/bundle/ruby/2.4.0/cache/bundler/git/*

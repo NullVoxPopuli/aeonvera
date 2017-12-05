@@ -1,2 +1,7 @@
 .git/
 .gitignore
+logs/
+tmp/
+coverage/
+backups/
+spec/

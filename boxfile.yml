@@ -7,6 +7,7 @@ run.config:
   extra_packages:
     - nginx
     - nodejs
+    - gettext-tools
 
   build_triggers:
     - Gemfile
@@ -16,6 +17,9 @@ deploy.config:
   before_live:
     web.main:
       - rake db:schema:setup_or_migrate
+  transform:
+    - chown -R gonano:gonano /app/tmp
+    - envsubst '$S3_BUCKET:$NGINX_PORT' < /app/config/nginx.template.conf > /app/config/nginx.conf
 
 # LOCAL DB
 data.db:
@@ -29,7 +33,7 @@ data.redis:
 # API
 web.main:
   start:
-    puma: bundle exec puma -C ./config/puma.rb -b tcp://0.0.0.0:8080
+    puma: bundle exec puma -C ./config/puma.rb -b unix:///app/puma.sock
     nginx: nginx -c /app/config/nginx.conf
 
   writable_dirs:
