@@ -148,11 +148,22 @@ production:
     docker run ${cc_opts} codeclimate/codeclimate analyze -f json > codeclimate.json
   }
 
+  # NANABOX_APP_NAME
+  # NANOBOX_USERNAME
+  # NANOBOX_PASSWORD
   function install_nanobox() {
-    # NANOBOX_USERNAME
-    # NANOBOX_PASSWORD
-    wget -qO- https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh | sh
+    wget \
+      -O /usr/local/bin/nanobox \
+      https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
+
+    chmod +x /usr/local/bin/nanobox
+
+    nanobox config set ci-mode true
+    nanobox config set provider native
+
     nanobox remote add $NANOBOX_APP_NAME
+
+    echo "Nanobox is ready to go!"
   }
 
 before_script:
