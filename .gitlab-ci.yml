@@ -151,7 +151,7 @@ production:
   function install_nanobox() {
     # NANOBOX_USERNAME
     # NANOBOX_PASSWORD
-    wget -qO- https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh | bash -s
+    wget -qO- https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh | sh
     nanobox remote add $NANOBOX_APP_NAME
   }
 
