@@ -129,6 +129,7 @@ production:
       wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
       echo $(ls)
       chmod +x ./nanobox
+      cat ./nanobox
 
       ./nanobox config set ci-mode true
       ./nanobox config set provider native
