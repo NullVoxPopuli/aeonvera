@@ -5,3 +5,4 @@ tmp/
 coverage/
 backups/
 spec/
+config/nginx.conf

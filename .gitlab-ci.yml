@@ -125,10 +125,10 @@ production:
   environment:
     name: production
     url: https://aeonvera.com
+  # only:
+  #   refs:
+  #     - master
 #  when: manual
-  only:
-    refs:
-      - master
 
 # ---------------------------------------------------------------------------
 
@@ -152,7 +152,7 @@ production:
     # NANOBOX_USERNAME
     # NANOBOX_PASSWORD
     bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
-    nanobox remote add aeonvera
+    nanobox remote add $NANOBOX_APP_NAME
   }
 
 before_script:

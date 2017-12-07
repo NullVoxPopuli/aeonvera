@@ -16,11 +16,6 @@ run.config:
 deploy.config:
   before_live:
     web.main:
-      - export REDIS_URL="redis://$DATA_REDIS_HOST"
-      - export REDIS_HOST=$DATA_REDIS_HOST
-      - export REDIS_PROVIDER=$REDIS_HOST
-
-      # - mkdir -p /app/sockets
       - rake db:schema:setup_or_migrate
   transform:
     - chown -R gonano:gonano /app/tmp
@@ -29,7 +24,7 @@ deploy.config:
 # LOCAL DB
 data.db:
   image: nanobox/postgresql
-  local_only: true
+  # local_only: true
 
 # CACHE
 data.redis:
@@ -39,7 +34,7 @@ data.redis:
 web.main:
   start:
     puma: bundle exec puma -C ./config/puma.rb -b unix:///app/sockets/puma.sock
-    nginx: nginx -c /app/config/nginx.conf
+    nginx: /app/scripts/start-nginx
 
   writable_dirs:
     - tmp
