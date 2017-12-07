@@ -16,6 +16,11 @@ run.config:
 deploy.config:
   before_live:
     web.main:
+      - export REDIS_URL="redis://$DATA_REDIS_HOST"
+      - export REDIS_HOST=$DATA_REDIS_HOST
+      - export REDIS_PROVIDER=$REDIS_HOST
+
+      # - mkdir -p /app/sockets
       - rake db:schema:setup_or_migrate
   transform:
     - chown -R gonano:gonano /app/tmp
@@ -33,12 +38,13 @@ data.redis:
 # API
 web.main:
   start:
-    puma: bundle exec puma -C ./config/puma.rb -b unix:///app/puma.sock
+    puma: bundle exec puma -C ./config/puma.rb -b unix:///app/sockets/puma.sock
     nginx: nginx -c /app/config/nginx.conf
 
   writable_dirs:
     - tmp
     - log
+    - sockets
 
   # the path to a logfile you want streamed to the nanobox dashboard
   log_watch:
