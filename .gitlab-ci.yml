@@ -120,7 +120,6 @@ stages:
 production:
   stage: production
   script:
-    - ./nanobox deploy
     - |
       # Requires:
       # NANABOX_APP_NAME
