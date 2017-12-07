@@ -40,7 +40,7 @@ stages:
   - test
   - production
 
-rspec:
+.rspec:
   stage: test
   image: ruby:2.4.1
 
@@ -153,10 +153,10 @@ production:
   # NANOBOX_PASSWORD
   function install_nanobox() {
     wget \
-      -O /usr/local/bin/nanobox \
+      -O /bin/nanobox \
       https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
 
-    chmod +x /usr/local/bin/nanobox
+    chmod +x /bin/nanobox
 
     nanobox config set ci-mode true
     nanobox config set provider native
