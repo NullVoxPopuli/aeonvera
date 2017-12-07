@@ -152,9 +152,10 @@ production:
   # NANOBOX_USERNAME
   # NANOBOX_PASSWORD
   function install_nanobox() {
-    nanofile=/bin/nanobox
+    nanofile=/usr/local/bin/nanobox
     echo $(pwd)
     echo $PATH
+
     wget \
       -O $nanofile \
       https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
