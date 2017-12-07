@@ -126,10 +126,8 @@ production:
       # NANOBOX_USERNAME
       # NANOBOX_PASSWORD
 
-      wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
-      echo $(ls)
+      wget -O - https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
       chmod +x ./nanobox
-      cat ./nanobox
 
       ./nanobox config set ci-mode true
       ./nanobox config set provider native
