@@ -152,11 +152,15 @@ production:
   # NANOBOX_USERNAME
   # NANOBOX_PASSWORD
   function install_nanobox() {
+    nanofile=/bin/nanobox
+    echo $(pwd)
+    echo $PATH
     wget \
-      -O /bin/nanobox \
+      -O $nanofile \
       https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
 
-    chmod +x /bin/nanobox
+
+    chmod +x $nanofile
 
     nanobox config set ci-mode true
     nanobox config set provider native
