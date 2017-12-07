@@ -126,6 +126,7 @@ production:
       # NANOBOX_USERNAME
       # NANOBOX_PASSWORD
 
+      set -e
       wget -q https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
       chmod +x ./nanobox
       ls -la
