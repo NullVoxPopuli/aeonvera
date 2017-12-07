@@ -156,10 +156,11 @@ production:
     echo $PATH
 
     wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
-    mv nanobox /usr/local/bin/
-    chmod +x /usr/local/bin/nanobox
+    mv nanobox /bin/
+    echo $(ls /bin/)
 
-    echo $(ls /usr/local/bin/)
+    chmod +x /bin/nanobox
+    echo $(which nanobox)
 
     nanobox config set ci-mode true
     nanobox config set provider native
