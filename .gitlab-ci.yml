@@ -121,7 +121,7 @@ production:
   stage: production
   script:
     - install_nanobox
-    - nanobox deploy
+    - /bin/nanobox deploy
   environment:
     name: production
     url: https://aeonvera.com
@@ -152,20 +152,15 @@ production:
   # NANOBOX_USERNAME
   # NANOBOX_PASSWORD
   function install_nanobox() {
-    echo $(pwd)
-    echo $PATH
-
     wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
     mv nanobox /bin/
-    echo $(ls /bin/)
 
     chmod +x /bin/nanobox
-    echo $(which nanobox)
 
-    nanobox config set ci-mode true
-    nanobox config set provider native
+    /bin/nanobox config set ci-mode true
+    /bin/nanobox config set provider native
 
-    nanobox remote add $NANOBOX_APP_NAME
+    /bin/nanobox remote add $NANOBOX_APP_NAME
 
     echo "Nanobox is ready to go!"
   }
