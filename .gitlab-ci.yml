@@ -133,11 +133,11 @@ production:
       set -x
       echo $(realpath nanobox)
       echo $(realpath $nanopath)
-      sh -c "$nanopath config set ci-mode true"
-      sh -c "$nanopath config set provider native"
+      sh -c "'$nanopath config set ci-mode true'"
+      sh -c "'$nanopath config set provider native'"
 
-      sh -c "$nanopath remote add $NANOBOX_APP_NAME"
-      sh -c "$nanopath deploy"
+      sh -c "'$nanopath remote add $NANOBOX_APP_NAME'"
+      sh -c "'$nanopath deploy'"
 
   environment:
     name: production
