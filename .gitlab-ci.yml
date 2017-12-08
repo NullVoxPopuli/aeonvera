@@ -130,7 +130,7 @@ production:
       wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
       chmod 777 nanobox
       ls -la
-      mv nanobox /usr/bin/
+      ln -s nanobox /usr/bin/
       ls -la /usr/bin
       chmod 777 /usr/bin/nanobox
 
