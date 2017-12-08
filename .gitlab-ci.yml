@@ -132,7 +132,6 @@ production:
 
       echo $(realpath nanobox)
       echo $(realpath $nanopath)
-      sh -c "ls -la $PWD"
       sh -c "$nanopath config set ci-mode true"
       sh -c "$nanopath config set provider native"
 
