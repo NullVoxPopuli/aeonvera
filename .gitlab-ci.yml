@@ -129,7 +129,7 @@ production:
       set -e
       wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
       chmod 777 nanobox
-      # nanopath=$PWD/nanobox
+      nanopath=$PWD/nanobox
       # ls -la
       # ln -s $PWD/nanobox /usr/bin/
       # ls -la /usr/bin
