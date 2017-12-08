@@ -130,7 +130,7 @@ production:
       chmod 777 nanobox
       nanopath=$PWD/nanobox
 
-      set -o
+      set -x
       echo $(realpath nanobox)
       echo $(realpath $nanopath)
       sh -c "$nanopath config set ci-mode true"
