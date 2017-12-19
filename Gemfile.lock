@@ -357,7 +357,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    scout_apm (2.3.0.pre2)
+    scout_apm (3.0.0.pre14)
     sidekiq (5.0.4)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -466,7 +466,7 @@ DEPENDENCIES
   rubocop
   sass (~> 3.3.14)
   sass-rails
-  scout_apm (>= 2.3.0.pre2, < 3.0.pre)
+  scout_apm (>= 2.3.0.pre2, < 4.0)
   sidekiq
   sidekiq-scheduler
   simplecov
