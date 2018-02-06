@@ -162,6 +162,9 @@ production:
         export DOCKER_HOST='tcp://localhost:2375'
       fi
     fi
+
+
+    docker info
   }
 
   # NANABOX_APP_NAME
