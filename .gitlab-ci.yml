@@ -127,7 +127,6 @@ production:
   script:
     - setup_docker
     - install_nanobox
-    - cat ~/.nanobox/nanobox.log
     - deploy
 
 
@@ -184,7 +183,7 @@ production:
   }
 
   function deploy() {
-    ./nanobox deploy
+    ./nanobox deploy --verbose
   }
 
 before_script:
