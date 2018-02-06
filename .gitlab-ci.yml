@@ -177,7 +177,6 @@ production:
 
     echo "nanobox is located at $(which nanobox)"
 
-
     nanobox config set ci-mode true
     nanobox config set provider native
 
@@ -189,7 +188,7 @@ production:
   function deploy() {
     set -x
     set -e
-    ./nanobox deploy  --debug --trace --verbose || true
+    nanobox deploy  --debug --trace --verbose || true
     cat ~/.nanobox/nanobox.log
     exit 1
   }
