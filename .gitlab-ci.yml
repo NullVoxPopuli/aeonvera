@@ -122,8 +122,9 @@ production:
   services:
     - docker:dind
   script:
-    - apk add --update bash py-pip
-    - pip install docker-compose
+    # - apk add --update bash py-pip
+    # - pip install docker-compose
+    - echo $(whoami)
     - sudo useradd deploy
     - su deploy -c "./deployment/to-nanobox"
   environment:
