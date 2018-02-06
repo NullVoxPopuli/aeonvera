@@ -125,6 +125,7 @@ production:
   variables:
     DOCKER_DRIVER: overlay2
   script:
+    - print_system_info
     - setup_docker
     - install_nanobox
     - deploy
@@ -154,6 +155,14 @@ production:
 
     docker run ${cc_opts} codeclimate/codeclimate init
     docker run ${cc_opts} codeclimate/codeclimate analyze -f json > codeclimate.json
+  }
+
+  function print_system_info() {
+    set -x
+    set -e
+
+    uname -a
+    lsb_release -a
   }
 
    function setup_docker() {
