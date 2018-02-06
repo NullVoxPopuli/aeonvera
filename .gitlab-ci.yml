@@ -128,15 +128,15 @@ production:
 
       set -x
       wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
-      chmod 777 nanobox
-      nanopath=$PWD/nanobox
+      chmod +x nanobox
 
       echo $(realpath nanobox)
-      sh -c "$nanopath config set ci-mode true"
-      sh -c "$nanopath config set provider native"
+      echo $(ls -la)
+      ./nanobox config set ci-mode true"
+      ./nanobox config set provider native"
 
-      sh -c "$nanopath remote add $NANOBOX_APP_NAME"
-      sh -c "$nanopath deploy"
+      ./nanobox remote add $NANOBOX_APP_NAME"
+      ./nanobox deploy"
 
   environment:
     name: production
