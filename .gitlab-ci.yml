@@ -119,10 +119,10 @@ stages:
 
 production:
   stage: production
-  # services:
-  #   - docker:dind
+  services:
+    - docker:dind
   script:
-    - ./deployment/to-nanobox.sh
+    - ./deployment/to-nanobox
   environment:
     name: production
     url: https://aeonvera.com
