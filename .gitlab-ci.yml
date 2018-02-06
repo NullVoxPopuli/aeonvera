@@ -121,6 +121,8 @@ production:
   stage: production
   tags:
     - docker
+  services:
+    - docker:dind
   script:
     - |
       # Requires:
@@ -132,8 +134,7 @@ production:
       wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
       chmod +x nanobox
 
-      echo $(realpath nanobox)
-      echo $(ls -la)
+      echo "DOCKER: $(which docker)"
       ./nanobox config set ci-mode true"
       ./nanobox config set provider native"
 
