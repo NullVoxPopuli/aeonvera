@@ -1,16 +1,3 @@
-GIT
-  remote: git://github.com/NullVoxPopuli/api_cache.git
-  revision: 4a26abe74da2e77d41d02b8d031ed1e8c260dc16
-  specs:
-    api_cache (0.3.0)
-
-GIT
-  remote: git://github.com/thoughtbot/factory_girl.git
-  revision: 8a1df75fa16abcda8a31c118281e90db043afe64
-  specs:
-    factory_girl (4.8.0)
-      activesupport (>= 3.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -88,6 +75,7 @@ GEM
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
+    crass (1.0.3)
     css_parser (1.3.7)
       addressable
     dante (0.2.0)
@@ -152,8 +140,10 @@ GEM
     et-orbi (1.0.5)
       tzinfo
     execjs (2.7.0)
-    factory_girl_rails (4.8.0)
-      factory_girl (~> 4.8.0)
+    factory_girl (4.9.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.9.0)
+      factory_girl (~> 4.9.0)
       railties (>= 3.0.0)
     font-awesome-rails (4.7.0.2)
       railties (>= 3.2, < 5.2)
@@ -171,7 +161,8 @@ GEM
       activesupport (>= 4.2, < 5.2)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.8.6)
+    i18n (0.9.3)
+      concurrent-ruby (~> 1.0)
     inflecto (0.0.2)
     jimson-temp (0.9.5)
       blankslate (>= 3.1.2)
@@ -196,19 +187,20 @@ GEM
       actionmailer (>= 3.2)
       letter_opener (~> 1.0)
       railties (>= 3.2)
-    loofah (2.0.3)
+    loofah (2.1.1)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.6)
       mime-types (>= 1.16, < 4)
     method_source (0.8.2)
     mime-types (2.99.3)
     mimemagic (0.3.2)
-    mini_portile2 (2.2.0)
-    minitest (5.10.3)
+    mini_portile2 (2.3.0)
+    minitest (5.11.3)
     multi_json (1.12.2)
     netrc (0.11.0)
-    nokogiri (1.8.0)
-      mini_portile2 (~> 2.2.0)
+    nokogiri (1.8.2)
+      mini_portile2 (~> 2.3.0)
     oj (3.3.5)
     oj_mimic_json (1.0.1)
     orm_adapter (0.5.0)
@@ -257,8 +249,8 @@ GEM
       sprockets-rails
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.8)
-      activesupport (>= 4.2.0.beta, < 5.0)
+    rails-dom-testing (1.0.9)
+      activesupport (>= 4.2.0, < 5.0)
       nokogiri (~> 1.6)
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.3)
@@ -270,7 +262,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.2.2)
       rake
-    rake (12.1.0)
+    rake (12.3.0)
     ransack (1.8.3)
       actionpack (>= 3.0)
       activerecord (>= 3.0)
@@ -357,7 +349,6 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    scout_apm (2.3.0.pre2)
     sidekiq (5.0.4)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
@@ -400,7 +391,7 @@ GEM
     thor (0.20.0)
     thread_safe (0.3.6)
     tilt (2.0.8)
-    tzinfo (1.2.3)
+    tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uber (0.1.0)
     uglifier (3.2.0)
@@ -419,7 +410,6 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (= 0.10.5)
   annotate
-  api_cache!
   arbre
   attr_encrypted (~> 1.3.0)
   awesome_print
@@ -432,7 +422,7 @@ DEPENDENCIES
   devise
   drawers
   dry-validation
-  factory_girl!
+  factory_girl
   factory_girl_rails
   font-awesome-rails
   formatted_rails_logger
@@ -466,7 +456,6 @@ DEPENDENCIES
   rubocop
   sass (~> 3.3.14)
   sass-rails
-  scout_apm (>= 2.3.0.pre2, < 3.0.pre)
   sidekiq
   sidekiq-scheduler
   simplecov

@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
   s.files = ["bin/ruby-parse".freeze, "bin/ruby-rewrite".freeze]
   s.homepage = "https://github.com/whitequark/parser".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "A Ruby parser written in pure Ruby.".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

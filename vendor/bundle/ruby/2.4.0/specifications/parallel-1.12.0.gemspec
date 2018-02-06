@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/grosser/parallel".freeze
   s.licenses = ["MIT".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.3".freeze)
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Run any kind of code in parallel processes".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 end

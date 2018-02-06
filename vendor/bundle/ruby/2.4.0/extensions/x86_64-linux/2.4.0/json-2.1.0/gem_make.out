@@ -1,13 +1,13 @@
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
-/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/bin/ruby -r ./siteconf20171115-27980-pn4z2u.rb extconf.rb
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
+/usr/local/bin/ruby -r ./siteconf20180206-9-95wn3w.rb extconf.rb
 creating Makefile
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
 make "DESTDIR=" clean
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
 make "DESTDIR="
 make: Nothing to be done for 'all'.
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/json-2.1.0/ext/json
 make "DESTDIR=" install

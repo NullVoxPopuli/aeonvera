@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/dry-rb/dry-core".freeze
   s.licenses = ["MIT".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 2.1.0".freeze)
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "A toolset of small support modules used throughout the dry-rb ecosystem.".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

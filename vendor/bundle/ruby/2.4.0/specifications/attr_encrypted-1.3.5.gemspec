@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.email = ["shuber@huberry.com".freeze, "sbfaulkner@gmail.com".freeze, "billy.monk@gmail.com".freeze, "saghaulor@gmail.com".freeze]
   s.homepage = "http://github.com/attr-encrypted/attr_encrypted".freeze
   s.rdoc_options = ["--line-numbers".freeze, "--inline-source".freeze, "--main".freeze, "README.rdoc".freeze]
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Encrypt and decrypt attributes".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

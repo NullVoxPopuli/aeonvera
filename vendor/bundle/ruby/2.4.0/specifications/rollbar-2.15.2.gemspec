@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
   s.files = ["bin/rollbar-rails-runner".freeze]
   s.homepage = "https://rollbar.com".freeze
   s.licenses = ["MIT".freeze]
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Reports exceptions to Rollbar".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

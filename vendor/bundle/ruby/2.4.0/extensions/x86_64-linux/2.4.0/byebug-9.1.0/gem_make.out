@@ -1,11 +1,11 @@
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
-/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/bin/ruby -r ./siteconf20171115-27980-15fg5by.rb extconf.rb
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
+/usr/local/bin/ruby -r ./siteconf20180206-9-n8vk26.rb extconf.rb
 creating Makefile
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
 make "DESTDIR=" clean
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
 make "DESTDIR="
 compiling breakpoint.c
 compiling byebug.c
@@ -14,6 +14,6 @@ compiling locker.c
 compiling threads.c
 linking shared-object byebug/byebug.so
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/byebug-9.1.0/ext/byebug
 make "DESTDIR=" install
-/usr/bin/install -m 0755 byebug.so ./.gem.20171115-27980-8jj3pm/byebug
+/usr/bin/install -c -m 0755 byebug.so ./.gem.20180206-9-8bm9er/byebug

@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
   s.files = ["bin/aws.rb".freeze]
   s.homepage = "http://github.com/aws/aws-sdk-ruby".freeze
   s.licenses = ["Apache 2.0".freeze]
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "AWS SDK for Ruby - Core".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

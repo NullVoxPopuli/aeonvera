@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.description = "retrieve the sourcecode for a method".freeze
   s.email = "jrmair@gmail.com".freeze
   s.homepage = "http://banisterfiend.wordpress.com".freeze
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "retrieve the sourcecode for a method".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

@@ -41,7 +41,6 @@ gem 'sidekiq-scheduler'
 # Cache
 # gem 'redis'
 gem 'redis-rails', '5.0.2'
-gem 'api_cache', github: 'NullVoxPopuli/api_cache'
 
 # JSON serialization
 # gem 'active_model_serializers', git: 'https://github.com/NullVoxPopuli/active_model_serializers.git', branch: 'fields-also-whitelists-relationships'
@@ -66,7 +65,7 @@ gem 'aws-sdk' # Upload Storage on S3
 gem 'date_validator'
 
 # app performance monitoring
-gem 'scout_apm', '>= 2.3.0.pre2', '< 3.0.pre'
+# gem 'scout_apm', '>= 2.3.0.pre2', '< 3.0.pre'
 # GC Tuning
 # gem 'tunemygc'
 # Auto-scaling Tuning
@@ -128,7 +127,7 @@ group :test do
   gem 'rspec-sidekiq'
 
   gem 'factory_girl_rails'
-  gem 'factory_girl', github: 'thoughtbot/factory_girl'
+  gem 'factory_girl'
 
   # Mock Stripe objects
   gem 'stripe-ruby-mock', '~> 2.2.1', require: 'stripe_mock'

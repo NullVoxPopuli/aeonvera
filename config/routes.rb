@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "#{Rails.root}/app/resources/api/custom_fields/controller"
+
 AeonVera::Application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'

@@ -1,12 +1,12 @@
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
-/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/bin/ruby -r ./siteconf20171115-27980-28dz7b.rb extconf.rb
->>>>> Creating Makefile for ruby version 2.4.0 on x86_64-linux <<<<<
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
+/usr/local/bin/ruby -r ./siteconf20180206-9-4hlroc.rb extconf.rb
+>>>>> Creating Makefile for ruby version 2.4.3 on x86_64-linux <<<<<
 creating Makefile
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
 make "DESTDIR=" clean
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
 make "DESTDIR="
 compiling cache8.c
 compiling circarray.c
@@ -41,6 +41,6 @@ compiling val_stack.c
 compiling wab.c
 linking shared-object oj/oj.so
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/oj-3.3.5/ext/oj
 make "DESTDIR=" install
-/usr/bin/install -m 0755 oj.so ./.gem.20171115-27980-ghpknk/oj
+/usr/bin/install -c -m 0755 oj.so ./.gem.20180206-9-16j2jor/oj

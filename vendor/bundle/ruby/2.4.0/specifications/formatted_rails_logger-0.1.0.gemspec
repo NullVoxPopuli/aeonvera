@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.email = ["jonathan@dnil.net".freeze]
   s.homepage = "https://github.com/jrochkind/formatted_rails_logger".freeze
   s.rubyforge_project = "formatted_rails_logger".freeze
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Formatting capabilities for Rails BufferedLogger".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 end

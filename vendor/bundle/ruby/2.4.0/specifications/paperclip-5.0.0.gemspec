@@ -16,10 +16,10 @@ Gem::Specification.new do |s|
   s.post_install_message = "##################################################\n#  NOTE FOR UPGRADING FROM 4.3.0 OR EARLIER       #\n##################################################\n\nPaperclip is now compatible with aws-sdk >= 2.0.0.\n\nIf you are using S3 storage, aws-sdk >= 2.0.0 requires you to make a few small\nchanges:\n\n* You must set the `s3_region`\n* If you are explicitly setting permissions anywhere, such as in an initializer,\n  note that the format of the permissions changed from using an underscore to\n  using a hyphen. For example, `:public_read` needs to be changed to\n  `public-read`.\n\nFor a walkthrough of upgrading from 4 to 5 and aws-sdk >= 2.0 you can watch\nhttp://rubythursday.com/episodes/ruby-snack-27-upgrade-paperclip-and-aws-sdk-in-prep-for-rails-5\n".freeze
   s.required_ruby_version = Gem::Requirement.new(">= 2.1.0".freeze)
   s.requirements = ["ImageMagick".freeze]
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "File attachments as attributes for ActiveRecord".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

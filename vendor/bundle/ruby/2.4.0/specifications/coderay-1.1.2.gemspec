@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["-SNw2".freeze, "-mREADME_INDEX.rdoc".freeze, "-t CodeRay Documentation".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 1.8.6".freeze)
   s.rubyforge_project = "coderay".freeze
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Fast syntax highlighting for selected languages.".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 end

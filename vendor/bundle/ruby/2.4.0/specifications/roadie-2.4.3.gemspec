@@ -14,10 +14,10 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md".freeze, "Changelog.md".freeze]
   s.files = ["Changelog.md".freeze, "README.md".freeze]
   s.homepage = "http://github.com/Mange/roadie".freeze
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Making HTML emails comfortable for the Rails rockstars".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

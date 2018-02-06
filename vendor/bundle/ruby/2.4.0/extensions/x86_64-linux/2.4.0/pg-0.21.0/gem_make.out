@@ -1,5 +1,5 @@
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
-/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/bin/ruby -r ./siteconf20171115-27980-1th4934.rb extconf.rb
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
+/usr/local/bin/ruby -r ./siteconf20180206-9-1xc72qk.rb extconf.rb
 checking for pg_config... yes
 Using config values from /usr/bin/pg_config
 checking for libpq-fe.h... yes
@@ -43,10 +43,10 @@ checking for C99 variable length arrays... yes
 creating extconf.h
 creating Makefile
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
 make "DESTDIR=" clean
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
 make "DESTDIR="
 compiling gvl_wrappers.c
 compiling pg.c
@@ -69,6 +69,6 @@ compiling pg_type_map_in_ruby.c
 compiling util.c
 linking shared-object pg_ext.so
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext
 make "DESTDIR=" install
-/usr/bin/install -m 0755 pg_ext.so ./.gem.20171115-27980-1qf74fn
+/usr/bin/install -c -m 0755 pg_ext.so ./.gem.20180206-9-1azioox

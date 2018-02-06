@@ -12,12 +12,12 @@ NULLCMD = :
 #### Start of system configuration section. ####
 
 srcdir = .
-topdir = /home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0
+topdir = /usr/local/include/ruby-2.4.0
 hdrdir = $(topdir)
-arch_hdrdir = /home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux
+arch_hdrdir = /usr/local/include/ruby-2.4.0/x86_64-linux
 PATH_SEPARATOR = :
 VPATH = $(srcdir):$(arch_hdrdir)/ruby:$(hdrdir)/ruby
-prefix = $(DESTDIR)/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0
+prefix = $(DESTDIR)/usr/local
 rubysitearchprefix = $(rubylibprefix)/$(sitearch)
 rubyarchprefix = $(rubylibprefix)/$(arch)
 rubylibprefix = $(libdir)/$(RUBY_BASE_NAME)
@@ -31,8 +31,8 @@ rubyhdrdir = $(includedir)/$(RUBY_VERSION_NAME)
 vendorarchdir = $(vendorlibdir)/$(sitearch)
 vendorlibdir = $(vendordir)/$(ruby_version)
 vendordir = $(rubylibprefix)/vendor_ruby
-sitearchdir = $(DESTDIR)./.gem.20171115-27980-ghpknk
-sitelibdir = $(DESTDIR)./.gem.20171115-27980-ghpknk
+sitearchdir = $(DESTDIR)./.gem.20180206-9-16j2jor
+sitelibdir = $(DESTDIR)./.gem.20180206-9-16j2jor
 sitedir = $(rubylibprefix)/site_ruby
 rubyarchdir = $(rubylibdir)/$(arch)
 rubylibdir = $(rubylibprefix)/$(ruby_version)
@@ -54,7 +54,7 @@ oldincludedir = $(DESTDIR)/usr/include
 includedir = $(prefix)/include
 localstatedir = $(prefix)/var
 sharedstatedir = $(prefix)/com
-sysconfdir = $(DESTDIR)/etc
+sysconfdir = $(prefix)/etc
 datadir = $(datarootdir)
 datarootdir = $(prefix)/share
 libexecdir = $(exec_prefix)/libexec
@@ -67,8 +67,8 @@ CC = gcc
 CXX = g++
 LIBRUBY = $(LIBRUBY_SO)
 LIBRUBY_A = lib$(RUBY_SO_NAME)-static.a
-LIBRUBYARG_SHARED = -Wl,-rpath,'$${ORIGIN}/../lib' -Wl,-R'$${ORIGIN}/../lib' -l$(RUBY_SO_NAME)
-LIBRUBYARG_STATIC = -Wl,-rpath,'$${ORIGIN}/../lib' -Wl,-R'$${ORIGIN}/../lib' -l$(RUBY_SO_NAME)-static
+LIBRUBYARG_SHARED = -Wl,-rpath,$(libdir) -L$(libdir) -l$(RUBY_SO_NAME)
+LIBRUBYARG_STATIC = -Wl,-rpath,$(libdir) -L$(libdir) -l$(RUBY_SO_NAME)-static
 empty =
 OUTFLAG = -o $(empty)
 COUTFLAG = -o $(empty)
@@ -79,15 +79,15 @@ cflags   = $(optflags) $(debugflags) $(warnflags)
 cxxflags = $(optflags) $(debugflags) $(warnflags)
 optflags = -O3 -fno-fast-math
 debugflags = -ggdb3
-warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized
+warnflags = -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format
 CCDLFLAGS = -fPIC
 CFLAGS   = $(CCDLFLAGS) $(cflags)  -fPIC $(ARCH_FLAG)
 INCFLAGS = -I. -I$(arch_hdrdir) -I$(hdrdir)/ruby/backward -I$(hdrdir) -I$(srcdir)
 DEFS     = 
-CPPFLAGS =   $(DEFS) $(cppflags) -DRUBY_TYPE=ruby -DRUBY_RUBY -DRUBY_VERSION=2.4.0 -DRUBY_VERSION_MAJOR=2 -DRUBY_VERSION_MINOR=4 -DRUBY_VERSION_MICRO=0 -DHAS_RB_TIME_TIMESPEC=1 -DHAS_ENCODING_SUPPORT=1 -DHAS_NANO_TIME=1 -DHAS_IVAR_HELPERS=1 -DHAS_EXCEPTION_MAGIC=1 -DHAS_PROC_WITH_BLOCK=1 -DHAS_TOP_LEVEL_ST_H=0 -DNEEDS_RATIONAL=0 -DIS_WINDOWS=0 -DUSE_PTHREAD_MUTEX=1 -DUSE_RB_MUTEX=0 -DDATETIME_1_8=0 -DNO_TIME_ROUND_PAD=0 -DHAS_DATA_OBJECT_WRAP=1 -DHAS_METHOD_ARITY=1 -DHAS_STRUCT_MEMBERS=1 -DUNIFY_FIXNUM_AND_BIGNUM=1 -Wall
+CPPFLAGS =   $(DEFS) $(cppflags) -DRUBY_TYPE=ruby -DRUBY_RUBY -DRUBY_VERSION=2.4.3 -DRUBY_VERSION_MAJOR=2 -DRUBY_VERSION_MINOR=4 -DRUBY_VERSION_MICRO=3 -DHAS_RB_TIME_TIMESPEC=1 -DHAS_ENCODING_SUPPORT=1 -DHAS_NANO_TIME=1 -DHAS_IVAR_HELPERS=1 -DHAS_EXCEPTION_MAGIC=1 -DHAS_PROC_WITH_BLOCK=1 -DHAS_TOP_LEVEL_ST_H=0 -DNEEDS_RATIONAL=0 -DIS_WINDOWS=0 -DUSE_PTHREAD_MUTEX=1 -DUSE_RB_MUTEX=0 -DDATETIME_1_8=0 -DNO_TIME_ROUND_PAD=0 -DHAS_DATA_OBJECT_WRAP=1 -DHAS_METHOD_ARITY=1 -DHAS_STRUCT_MEMBERS=1 -DUNIFY_FIXNUM_AND_BIGNUM=1 -Wall
 CXXFLAGS = $(CCDLFLAGS) $(cxxflags) $(ARCH_FLAG)
 ldflags  = -L. -fstack-protector -rdynamic -Wl,-export-dynamic
-dldflags = -Wl,--compress-debug-sections=zlib 
+dldflags =  
 ARCH_FLAG = 
 DLDFLAGS = $(ldflags) $(dldflags) $(ARCH_FLAG)
 LDSHARED = $(CC) -shared
@@ -113,7 +113,7 @@ RM = rm -f
 RM_RF = $(RUBY) -run -e rm -- -rf
 RMDIRS = rmdir --ignore-fail-on-non-empty -p
 MAKEDIRS = /bin/mkdir -p
-INSTALL = /usr/bin/install
+INSTALL = /usr/bin/install -c
 INSTALL_PROG = $(INSTALL) -m 0755
 INSTALL_DATA = $(INSTALL) -m 644
 COPY = cp
@@ -123,7 +123,7 @@ TOUCH = exit >
 
 preload = 
 libpath = . $(libdir)
-LIBPATH =  -L. -L$(libdir) -Wl,-R$(libdir)
+LIBPATH =  -L. -L$(libdir) -Wl,-rpath,$(libdir)
 DEFFILE = 
 
 CLEANFILES = mkmf.log
@@ -134,11 +134,11 @@ extout =
 extout_prefix = 
 target_prefix = /oj
 LOCAL_LIBS = 
-LIBS = $(LIBRUBYARG_SHARED)  -lpthread -lgmp -ldl -lcrypt -lm   -lc
+LIBS = $(LIBRUBYARG_SHARED)  -lpthread -ldl -lcrypt -lm   -lc
 ORIG_SRCS = cache8.c circarray.c code.c compat.c custom.c dump.c dump_compat.c dump_leaf.c dump_object.c dump_strict.c err.c fast.c hash.c hash_test.c mimic_json.c object.c odd.c oj.c parse.c rails.c reader.c resolve.c rxclass.c saj.c scp.c sparse.c stream_writer.c strict.c string_writer.c val_stack.c wab.c
 SRCS = $(ORIG_SRCS) 
 OBJS = cache8.o circarray.o code.o compat.o custom.o dump.o dump_compat.o dump_leaf.o dump_object.o dump_strict.o err.o fast.o hash.o hash_test.o mimic_json.o object.o odd.o oj.o parse.o rails.o reader.o resolve.o rxclass.o saj.o scp.o sparse.o stream_writer.o strict.o string_writer.o val_stack.o wab.o
-HDRS = $(srcdir)/oj.h $(srcdir)/dump.h $(srcdir)/reader.h $(srcdir)/parse.h $(srcdir)/buf.h $(srcdir)/code.h $(srcdir)/hash.h $(srcdir)/rxclass.h $(srcdir)/val_stack.h $(srcdir)/resolve.h $(srcdir)/rails.h $(srcdir)/err.h $(srcdir)/cache8.h $(srcdir)/encode.h $(srcdir)/odd.h $(srcdir)/circarray.h
+HDRS = $(srcdir)/oj.h $(srcdir)/code.h $(srcdir)/err.h $(srcdir)/dump.h $(srcdir)/resolve.h $(srcdir)/reader.h $(srcdir)/val_stack.h $(srcdir)/encode.h $(srcdir)/odd.h $(srcdir)/buf.h $(srcdir)/hash.h $(srcdir)/parse.h $(srcdir)/cache8.h $(srcdir)/rxclass.h $(srcdir)/rails.h $(srcdir)/circarray.h
 LOCAL_HDRS = 
 TARGET = oj
 TARGET_NAME = oj
@@ -160,7 +160,7 @@ CLEANLIBS     = $(TARGET_SO)
 CLEANOBJS     = *.o  *.bak
 
 all:    $(DLLIB)
-static: $(STATIC_LIB) install-rb
+static: $(STATIC_LIB)
 .PHONY: all install static install-so install-rb
 .PHONY: clean clean-so clean-static clean-rb
 

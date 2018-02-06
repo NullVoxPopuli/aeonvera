@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.email = "ryan@railscasts.com".freeze
   s.homepage = "http://github.com/ryanb/letter_opener".freeze
   s.rubyforge_project = "letter_opener".freeze
-  s.rubygems_version = "2.7.2".freeze
+  s.rubygems_version = "2.7.4".freeze
   s.summary = "Preview mail in browser instead of sending.".freeze
 
-  s.installed_by_version = "2.7.2" if s.respond_to? :installed_by_version
+  s.installed_by_version = "2.7.4" if s.respond_to? :installed_by_version
 
   if s.respond_to? :specification_version then
     s.specification_version = 4

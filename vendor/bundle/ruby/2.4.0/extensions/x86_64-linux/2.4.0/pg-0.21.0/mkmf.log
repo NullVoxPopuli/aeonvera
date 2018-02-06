@@ -4,7 +4,7 @@ find_executable: checking for pg_config... -------------------- yes
 
 find_header: checking for libpq-fe.h... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -15,7 +15,7 @@ checked program was:
 6: }
 /* end */
 
-"gcc -E -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC  conftest.c -o conftest.i"
+"gcc -E -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC  conftest.c -o conftest.i"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -27,7 +27,7 @@ checked program was:
 
 find_header: checking for libpq/libpq-fs.h... -------------------- yes
 
-"gcc -E -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC  conftest.c -o conftest.i"
+"gcc -E -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC  conftest.c -o conftest.i"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -39,7 +39,7 @@ checked program was:
 
 find_header: checking for pg_config_manual.h... -------------------- yes
 
-"gcc -E -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC  conftest.c -o conftest.i"
+"gcc -E -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC  conftest.c -o conftest.i"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -51,7 +51,7 @@ checked program was:
 
 have_library: checking for PQconnectdb() in -lpq... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic     -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -75,17 +75,17 @@ checked program was:
 
 have_func: checking for PQconnectionUsedPassword()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQconnectionUsedPassword’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQconnectionUsedPassword' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQconnectionUsedPassword; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -103,7 +103,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQconnectionUsedPassword; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -126,17 +126,17 @@ checked program was:
 
 have_func: checking for PQisthreadsafe()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQisthreadsafe’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQisthreadsafe' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQisthreadsafe; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -154,7 +154,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQisthreadsafe; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -177,17 +177,17 @@ checked program was:
 
 have_func: checking for PQprepare()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQprepare’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQprepare' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQprepare; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -205,7 +205,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQprepare; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -228,17 +228,17 @@ checked program was:
 
 have_func: checking for PQexecParams()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQexecParams’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQexecParams' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQexecParams; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -256,7 +256,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQexecParams; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -279,17 +279,17 @@ checked program was:
 
 have_func: checking for PQescapeString()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQescapeString’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQescapeString' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeString; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -307,7 +307,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeString; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -330,17 +330,17 @@ checked program was:
 
 have_func: checking for PQescapeStringConn()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQescapeStringConn’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQescapeStringConn' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeStringConn; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -358,7 +358,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeStringConn; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -381,17 +381,17 @@ checked program was:
 
 have_func: checking for PQescapeLiteral()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQescapeLiteral’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQescapeLiteral' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeLiteral; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -409,7 +409,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeLiteral; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -432,17 +432,17 @@ checked program was:
 
 have_func: checking for PQescapeIdentifier()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQescapeIdentifier’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQescapeIdentifier' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeIdentifier; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -460,7 +460,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQescapeIdentifier; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -483,17 +483,17 @@ checked program was:
 
 have_func: checking for PQgetCancel()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQgetCancel’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQgetCancel' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQgetCancel; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -511,7 +511,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQgetCancel; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -534,17 +534,17 @@ checked program was:
 
 have_func: checking for lo_create()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘lo_create’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'lo_create' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))lo_create; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -562,7 +562,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))lo_create; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -585,17 +585,17 @@ checked program was:
 
 have_func: checking for pg_encoding_to_char()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘pg_encoding_to_char’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'pg_encoding_to_char' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))pg_encoding_to_char; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -613,7 +613,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))pg_encoding_to_char; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -636,17 +636,17 @@ checked program was:
 
 have_func: checking for pg_char_to_encoding()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘pg_char_to_encoding’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'pg_char_to_encoding' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))pg_char_to_encoding; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -664,7 +664,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))pg_char_to_encoding; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -687,17 +687,17 @@ checked program was:
 
 have_func: checking for PQsetClientEncoding()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQsetClientEncoding’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQsetClientEncoding' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQsetClientEncoding; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -715,7 +715,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQsetClientEncoding; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -738,17 +738,17 @@ checked program was:
 
 have_func: checking for PQlibVersion()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQlibVersion’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQlibVersion' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQlibVersion; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -766,7 +766,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQlibVersion; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -789,17 +789,17 @@ checked program was:
 
 have_func: checking for PQping()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQping’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQping' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQping; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -817,7 +817,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQping; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -840,17 +840,17 @@ checked program was:
 
 have_func: checking for PQsetSingleRowMode()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQsetSingleRowMode’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQsetSingleRowMode' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQsetSingleRowMode; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -868,7 +868,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQsetSingleRowMode; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -891,17 +891,17 @@ checked program was:
 
 have_func: checking for PQconninfo()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQconninfo’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQconninfo' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQconninfo; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -919,7 +919,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQconninfo; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -942,17 +942,17 @@ checked program was:
 
 have_func: checking for PQsslAttribute()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘PQsslAttribute’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'PQsslAttribute' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))PQsslAttribute; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -970,7 +970,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))PQsslAttribute; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -993,17 +993,17 @@ checked program was:
 
 have_func: checking for rb_encdb_alias()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘rb_encdb_alias’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'rb_encdb_alias' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_encdb_alias; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1021,7 +1021,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_encdb_alias; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1044,17 +1044,17 @@ checked program was:
 
 have_func: checking for rb_enc_alias()... -------------------- no
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘rb_enc_alias’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'rb_enc_alias' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_enc_alias; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1072,9 +1072,9 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_enc_alias; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-/tmp/ccGUz6Qo.o: In function `t':
-/home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext/conftest.c:14: undefined reference to `rb_enc_alias'
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+/tmp/ccCLQ0Bo.o: In function `t':
+/web/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext/conftest.c:14: undefined reference to `rb_enc_alias'
 collect2: error: ld returned 1 exit status
 checked program was:
 /* begin */
@@ -1098,17 +1098,17 @@ checked program was:
 
 have_func: checking for rb_thread_call_without_gvl()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘rb_thread_call_without_gvl’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'rb_thread_call_without_gvl' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_thread_call_without_gvl; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1126,7 +1126,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_thread_call_without_gvl; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1149,17 +1149,17 @@ checked program was:
 
 have_func: checking for rb_thread_call_with_gvl()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘rb_thread_call_with_gvl’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'rb_thread_call_with_gvl' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_thread_call_with_gvl; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1177,7 +1177,7 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_thread_call_with_gvl; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1200,7 +1200,7 @@ checked program was:
 
 have_func: checking for rb_thread_fd_select()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1222,17 +1222,17 @@ checked program was:
 
 have_func: checking for rb_w32_wrap_io_handle()... -------------------- no
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-conftest.c: In function ‘t’:
-conftest.c:13:57: error: ‘rb_w32_wrap_io_handle’ undeclared (first use in this function)
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:13:57: error: 'rb_w32_wrap_io_handle' undeclared (first use in this function)
  int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_w32_wrap_io_handle; return !p; }
                                                          ^
 conftest.c:13:57: note: each undeclared identifier is reported only once for each function it appears in
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1250,9 +1250,9 @@ checked program was:
 13: int t(void) { void ((*volatile p)()); p = (void ((*)()))rb_w32_wrap_io_handle; return !p; }
 /* end */
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
-/tmp/cc9RA0IY.o: In function `t':
-/home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext/conftest.c:14: undefined reference to `rb_w32_wrap_io_handle'
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
+/tmp/cchZddIc.o: In function `t':
+/web/vendor/bundle/ruby/2.4.0/gems/pg-0.21.0/ext/conftest.c:14: undefined reference to `rb_w32_wrap_io_handle'
 collect2: error: ld returned 1 exit status
 checked program was:
 /* begin */
@@ -1276,7 +1276,7 @@ checked program was:
 
 have_func: checking for rb_str_modify_expand()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1298,7 +1298,7 @@ checked program was:
 
 have_func: checking for rb_hash_dup()... -------------------- yes
 
-"gcc -o conftest -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC conftest.c  -L. -L/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -Wl,-R/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/lib -L/usr/lib/x86_64-linux-gnu -Wl,-R/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,'/../lib' -Wl,-R'/../lib' -lruby -lpq  -lpthread -lgmp -ldl -lcrypt -lm   -lc"
+"gcc -o conftest -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC conftest.c  -L. -L/usr/local/lib -Wl,-rpath,/usr/local/lib -L/usr/lib/x86_64-linux-gnu -Wl,-rpath,/usr/lib/x86_64-linux-gnu -L. -fstack-protector -rdynamic -Wl,-export-dynamic    -lpq  -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lruby -lpq  -lpthread -ldl -lcrypt -lm   -lc"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1320,7 +1320,7 @@ checked program was:
 
 have_const: checking for PGRES_COPY_BOTH in libpq-fe.h... -------------------- yes
 
-"gcc -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC   -c conftest.c"
+"gcc -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC   -c conftest.c"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -1336,7 +1336,7 @@ checked program was:
 
 have_const: checking for PGRES_SINGLE_TUPLE in libpq-fe.h... -------------------- yes
 
-"gcc -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC   -c conftest.c"
+"gcc -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC   -c conftest.c"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -1352,7 +1352,7 @@ checked program was:
 
 have_const: checking for PG_DIAG_TABLE_NAME in libpq-fe.h... -------------------- yes
 
-"gcc -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC   -c conftest.c"
+"gcc -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC   -c conftest.c"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -1368,7 +1368,7 @@ checked program was:
 
 have_struct_member: checking for struct pgNotify.extra in libpq-fe.h... -------------------- yes
 
-"gcc -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC   -c conftest.c"
+"gcc -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC   -c conftest.c"
 checked program was:
 /* begin */
  1: #include "ruby.h"
@@ -1387,7 +1387,7 @@ checked program was:
 
 have_header: checking for unistd.h... -------------------- yes
 
-"gcc -E -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC  conftest.c -o conftest.i"
+"gcc -E -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC  conftest.c -o conftest.i"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -1399,7 +1399,7 @@ checked program was:
 
 have_header: checking for inttypes.h... -------------------- yes
 
-"gcc -E -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC  conftest.c -o conftest.i"
+"gcc -E -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC  conftest.c -o conftest.i"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -1411,7 +1411,7 @@ checked program was:
 
 have_header: checking for ruby/st.h... -------------------- yes
 
-"gcc -E -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC  conftest.c -o conftest.i"
+"gcc -E -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC  conftest.c -o conftest.i"
 checked program was:
 /* begin */
 1: #include "ruby.h"
@@ -1423,16 +1423,16 @@ checked program was:
 
 checking for C99 variable length arrays... -------------------- yes
 
-"gcc -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/x86_64-linux -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0/ruby/backward -I/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format -Wno-maybe-uninitialized  -fPIC   -c conftest.c"
-conftest.c: In function ‘test_vla’:
-conftest.c:3:27: warning: unused variable ‘vla’ [-Wunused-variable]
+"gcc -I/usr/local/include/ruby-2.4.0/x86_64-linux -I/usr/local/include/ruby-2.4.0/ruby/backward -I/usr/local/include/ruby-2.4.0 -I. -I/usr/include/postgresql    -O3 -fno-fast-math -ggdb3 -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wno-tautological-compare -Wno-parentheses-equality -Wno-constant-logical-operand -Wno-self-assign -Wunused-variable -Wimplicit-int -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration -Wdeprecated-declarations -Wno-packed-bitfield-compat -Wsuggest-attribute=noreturn -Wsuggest-attribute=format  -fPIC   -c conftest.c"
+conftest.c: In function 'test_vla':
+conftest.c:3:27: warning: unused variable 'vla' [-Wunused-variable]
  void test_vla(int l){ int vla[l]; }
                            ^
 conftest.c: At top level:
-cc1: warning: unrecognized command line option ‘-Wno-self-assign’
-cc1: warning: unrecognized command line option ‘-Wno-constant-logical-operand’
-cc1: warning: unrecognized command line option ‘-Wno-parentheses-equality’
-cc1: warning: unrecognized command line option ‘-Wno-tautological-compare’
+cc1: warning: unrecognized command line option "-Wno-self-assign"
+cc1: warning: unrecognized command line option "-Wno-constant-logical-operand"
+cc1: warning: unrecognized command line option "-Wno-parentheses-equality"
+cc1: warning: unrecognized command line option "-Wno-tautological-compare"
 checked program was:
 /* begin */
 1: #include "ruby.h"

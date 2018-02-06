@@ -1,11 +1,11 @@
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
-/home/lprestonsegoiii/.rvm/rubies/ruby-2.4.0/bin/ruby -r ./siteconf20171115-27980-1tqy2hj.rb extconf.rb
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
+/usr/local/bin/ruby -r ./siteconf20180206-9-c7ekq0.rb extconf.rb
 creating Makefile
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
 make "DESTDIR=" clean
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
 make "DESTDIR="
 compiling bcrypt_ext.c
 compiling crypt.c
@@ -14,6 +14,6 @@ compiling crypt_gensalt.c
 compiling wrapper.c
 linking shared-object bcrypt_ext.so
 
-current directory: /home/lprestonsegoiii/Development/NullVoxPopuli/aeonvera/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
+current directory: /web/vendor/bundle/ruby/2.4.0/gems/bcrypt-3.1.10/ext/mri
 make "DESTDIR=" install
-/usr/bin/install -m 0755 bcrypt_ext.so ./.gem.20171115-27980-1sthk1c
+/usr/bin/install -c -m 0755 bcrypt_ext.so ./.gem.20180206-9-17msivd
