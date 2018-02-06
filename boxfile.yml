@@ -16,15 +16,18 @@ run.config:
 deploy.config:
   before_live:
     web.main:
-      - rake db:schema:setup_or_migrate
+      - rake db:migrate
   transform:
     - chown -R gonano:gonano /app/tmp
-    - envsubst '$S3_BUCKET:$NGINX_PORT' < /app/config/nginx.template.conf > /app/config/nginx.conf
+    - envsubst '$S3_BUCKET:$NGINX_PORT' < /app/deployment/nginx.template.conf > /app/deployment/nginx.conf
 
 # LOCAL DB
 data.db:
   image: nanobox/postgresql
-  # local_only: true
+  cron:
+    - id: backup
+      schedule: '0 3 * * *'
+      command: 'bash /app/deployment/production/backup-db'
 
 # CACHE
 data.redis:
@@ -34,7 +37,7 @@ data.redis:
 web.main:
   start:
     puma: bundle exec puma -C ./config/puma.rb -b unix:///app/sockets/puma.sock
-    nginx: /app/scripts/start-nginx
+    nginx: /app/deployment/start-nginx
 
   writable_dirs:
     - tmp

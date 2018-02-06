@@ -50,7 +50,7 @@ function rundocko {
     # Local Database Management
     db-setup)  docko-dev run --rm web rake db:create db:schema:load;;
     db-reset)  docko-dev run --rm web rake db:drop db:create db:schema:load;;
-    db-import) ./scripts/import-db-backup.sh;;
+    db-import) ./scripts/deployment/local-dev/import-db-backup.sh;;
 
     # Testing
     test)         docko-test-run $arguments;;
