@@ -124,8 +124,8 @@ production:
   script:
     # - apk add --update bash py-pip
     # - pip install docker-compose
-    - echo $(whoami)
-    - sudo useradd deploy
+    - echo $( cat /etc/passwd)
+    - useradd deploy
     - su deploy -c "./deployment/to-nanobox"
   environment:
     name: production
