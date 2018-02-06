@@ -125,7 +125,7 @@ production:
     # - apk add --update bash py-pip
     # - pip install docker-compose
     - echo $( cat /etc/passwd)
-    - su -s /bin/bash -c "./deployment/to-nanobox" guest
+    - su -s /bin/sh -c "./deployment/to-nanobox" guest
     # - ./deployment/to-nanobox
   environment:
     name: production
