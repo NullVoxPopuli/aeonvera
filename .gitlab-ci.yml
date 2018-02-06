@@ -163,7 +163,7 @@ production:
       fi
     fi
 
-    echo "Docker is located at -- $(which docker)"
+    echo "docker is located at $(which docker)"
   }
 
   # NANABOX_APP_NAME
@@ -173,8 +173,10 @@ production:
     wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
 
     chmod +x ./nanobox
+    cp ./nanobox /usr/local/bin/
 
-    cp ./nanobox /usr/bin/
+    echo "nanobox is located at $(which nanobox)"
+
 
     nanobox config set ci-mode true
     nanobox config set provider native
