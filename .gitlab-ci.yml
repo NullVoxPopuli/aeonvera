@@ -122,7 +122,7 @@ production:
   services:
     - docker:dind
   script:
-    - su - root -s /bin/sh -c "$PWD/deployment/to-nanobox"
+    - ./deployment/to-nanobox
   environment:
     name: production
     url: https://aeonvera.com
