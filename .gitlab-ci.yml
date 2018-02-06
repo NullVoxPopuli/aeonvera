@@ -122,10 +122,7 @@ production:
   services:
     - docker:dind
   script:
-    # - apk add --update bash py-pip
-    # - pip install docker-compose
-    - su -s /bin/sh -c "echo $(ls) && ./deployment/to-nanobox" guest
-    # - ./deployment/to-nanobox
+    - su -s /bin/sh -c "deployment/to-nanobox" guest
   environment:
     name: production
     url: https://aeonvera.com
