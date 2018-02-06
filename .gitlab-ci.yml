@@ -123,7 +123,21 @@ production:
     - docker:dind
   script:
     - ls ./deployment
-    - ./deployment/to-nanobox
+    - |
+      wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
+      chmod +x nanobox
+
+      echo "DOCKER: $(which docker)"
+
+      ./nanobox config set ci-mode true
+      ./nanobox config set provider native
+
+      ./nanobox remote add $NANOBOX_APP_NAME
+
+      ./nanobox config show
+
+      ./nanobox deploy
+
   environment:
     name: production
     url: https://aeonvera.com
