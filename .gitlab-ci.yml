@@ -127,7 +127,7 @@ production:
     - echo $( cat /etc/passwd)
     - chsh -s /bin/bash guest
     # - su guest -c "./deployment/to-nanobox"
-    ./deployment/to-nanobox
+    - ./deployment/to-nanobox
   environment:
     name: production
     url: https://aeonvera.com
