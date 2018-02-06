@@ -12,8 +12,6 @@ namespace :db do
     end
 
     task setup_or_migrate: :environment do
-      Rake.application.remove_task('db:schema:dump')
-
       begin
         ActiveRecord::Base.connection
       rescue ActiveRecord::NoDatabaseError
