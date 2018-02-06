@@ -181,7 +181,7 @@ production:
   }
 
   function deploy() {
-    ./nanobox deploy  --debug
+    ./nanobox deploy  --debug --trace --verbose
   }
 
 before_script:
