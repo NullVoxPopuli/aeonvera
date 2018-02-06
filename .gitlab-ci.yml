@@ -125,7 +125,7 @@ production:
     - apk add --update bash py-pip
     - pip install docker-compose
     - bash
-    - su gitlab-runner -c "./deployment/to-nanobox"
+    - su gitlab-runner -c "./deployment/production/to-nanobox"
   environment:
     name: production
     url: https://aeonvera.com
