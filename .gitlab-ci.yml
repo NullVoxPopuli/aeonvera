@@ -181,6 +181,7 @@ production:
   }
 
   function deploy() {
+    set -x
     ./nanobox deploy  --debug --trace --verbose
   }
 
