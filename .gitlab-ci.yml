@@ -119,10 +119,12 @@ stages:
 
 production:
   stage: production
-  tags:
-    - docker
-  services:
-    - docker:dind
+  image: docker:latest
+  #
+  # tags:
+  #   - docker
+  # services:
+  #   - docker:dind
   script:
     - |
       # Requires:
