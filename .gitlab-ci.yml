@@ -170,6 +170,7 @@ production:
     fi
 
     echo "docker is located at $(which docker)"
+    docker info
   }
 
   # NANABOX_APP_NAME
