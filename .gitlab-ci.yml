@@ -127,7 +127,9 @@ production:
   script:
     - setup_docker
     - install_nanobox
+    - cat ~/.nanobox/nanobox.log
     - deploy
+
 
   environment:
     name: production
@@ -183,8 +185,6 @@ production:
 
   function deploy() {
     ./nanobox deploy
-
-    tail ~/.nanobox/nanobox.log
   }
 
 before_script:
