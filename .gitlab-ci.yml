@@ -182,7 +182,11 @@ production:
 
   function deploy() {
     set -x
+     set -o
     ./nanobox deploy  --debug --trace --verbose
+    cat ~/.nanobox/nanobox.log
+    set +o
+    exit 1
   }
 
 before_script:
