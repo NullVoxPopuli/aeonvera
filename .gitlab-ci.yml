@@ -126,8 +126,8 @@ production:
     # - pip install docker-compose
     - echo $( cat /etc/passwd)
     - chsh -s /bin/bash guest
-    # - su guest -c "./deployment/to-nanobox"
-    - ./deployment/to-nanobox
+    - su -s /bin/bash -c "./deployment/to-nanobox" guest
+    # - ./deployment/to-nanobox
   environment:
     name: production
     url: https://aeonvera.com
