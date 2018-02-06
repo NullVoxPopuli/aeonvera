@@ -164,7 +164,8 @@ production:
     fi
 
 
-    docker info
+    echo $(docker info)
+    echo $(which docker)
   }
 
   # NANABOX_APP_NAME
