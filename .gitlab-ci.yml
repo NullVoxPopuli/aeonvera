@@ -119,8 +119,8 @@ stages:
 
 production:
   stage: production
-  services:
-    - docker:dind
+  # services:
+  #   - docker:dind
   script:
     - ./deployment/to-nanobox.sh
   environment:
