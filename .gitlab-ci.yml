@@ -125,7 +125,7 @@ production:
     - echo $(ls)
     - echo $(ls deployment)
     - echo $(ls $PWD/deployment)
-    - su -s /bin/sh -c "$PWD/deployment/to-nanobox" guest
+    - su - guist -s /bin/sh -c "$PWD/deployment/to-nanobox"
   environment:
     name: production
     url: https://aeonvera.com
