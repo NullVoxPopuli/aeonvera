@@ -159,10 +159,7 @@ production:
 
   function print_system_info() {
     set -x
-    set -e
-
     uname -a
-    lsb_release -a
   }
 
    function setup_docker() {
