@@ -13,10 +13,12 @@ namespace :db do
 
     task setup_or_migrate: :environment do
       begin
-        load "#{Rails.root}/db/schema.rb"
-      rescue
+        ActiveRecord::Base.connection
+      rescue ActiveRecord::NoDatabaseError
         Rake::Task['db:create'].execute
         load "#{Rails.root}/db/schema.rb"
+      else
+        Rake::Task['db:migrate'].execute
       end
     end
 
