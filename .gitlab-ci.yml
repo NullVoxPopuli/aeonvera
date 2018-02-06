@@ -122,6 +122,7 @@ production:
   services:
     - docker:dind
   script:
+    - ls ./deployment
     - ./deployment/to-nanobox
   environment:
     name: production
