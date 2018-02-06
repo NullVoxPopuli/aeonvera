@@ -188,6 +188,7 @@ production:
     ./nanobox config set ci-mode true
     ./nanobox config set provider native
     ./nanobox config show
+    echo $NANOBOX_USERNAME
 
     ./nanobox remote add $NANOBOX_APP_NAME
 
