@@ -16,7 +16,7 @@ run.config:
 deploy.config:
   before_live:
     web.main:
-      - rake db:migrate
+      - rake db:schema:setup_or_migrate
   transform:
     - chown -R gonano:gonano /app/tmp
     - envsubst '$S3_BUCKET:$NGINX_PORT' < /app/deployment/nginx.template.conf > /app/deployment/nginx.conf
