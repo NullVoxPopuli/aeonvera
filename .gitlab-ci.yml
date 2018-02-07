@@ -124,7 +124,7 @@ production:
   # however, this is alpine based.
   # which currently isn't supported by nanobox:
   # https://github.com/nanobox-io/nanobox/issues/645
-  image: billyteves/ubuntu-dind:latest
+  image: billyteves/ubuntu-dind
   # services:
   #   - docker:dind
   variables:
