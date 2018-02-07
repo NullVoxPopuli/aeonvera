@@ -191,10 +191,12 @@ production:
   # NANOBOX_USERNAME
   # NANOBOX_PASSWORD
   function install_nanobox() {
-    wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
-
-    chmod +x ./nanobox
-    cp ./nanobox /usr/local/bin/
+    # wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
+    wget https://d1ormdui8qdvue.cloudfront.net/installers/v2/linux/nanobox-2.tar.gz
+    mkdir -p nanobox-archive
+    tar -xf nanobox-2.tar.gz -C ./nanobox-archive
+    cp ./nanobox-archive/usr/local/bin/* /usr/local/bin/
+    rm ./nanobox-archive
 
     echo "nanobox is located at $(which nanobox)"
 
