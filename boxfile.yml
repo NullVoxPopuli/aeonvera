@@ -21,7 +21,7 @@ deploy.config:
     - chown -R gonano:gonano /app/tmp
     - envsubst '$S3_BUCKET:$NGINX_PORT' < /app/deployment/nginx.template.conf > /app/deployment/nginx.conf
 
-# LOCAL DB
+# PG DB
 data.db:
   image: nanobox/postgresql
   cron:

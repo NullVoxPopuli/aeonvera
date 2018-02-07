@@ -124,12 +124,13 @@ production:
   # however, this is alpine based.
   # which currently isn't supported by nanobox:
   # https://github.com/nanobox-io/nanobox/issues/645
-  image: leevh/dind-ubuntu
-  # services:
-  #   - docker:dind
+  image: docker:git
+  services:
+    - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
   script:
+    - ensure_system_dependencies_are_installed
     - print_system_info
     - setup_docker
     - install_nanobox
@@ -162,6 +163,10 @@ production:
     docker run ${cc_opts} codeclimate/codeclimate analyze -f json > codeclimate.json
   }
 
+  function ensure_system_dependencies_are_installed() {
+    apk add --no-cache bash curl
+  }
+
   function print_system_info() {
     uname -a
     echo "systemd $(which systemd)"
@@ -186,6 +191,8 @@ production:
   # NANOBOX_USERNAME
   # NANOBOX_PASSWORD
   function install_nanobox() {
+    bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
+
     wget https://s3.amazonaws.com/tools.nanobox.io/nanobox/v2/linux/amd64/nanobox
 
     chmod +x ./nanobox
