@@ -30,10 +30,6 @@ module AeonVera
       Kernel.const_set(config_name.to_s, config)
     end
 
-    if Rails.env.production?
-      config.active_record.dump_schema_after_migration = false
-    end
-
     config.active_job.queue_adapter = :sidekiq
 
     config.cache_store = :redis_store, ENV['REDIS_URL'] if ENV['REDIS_URL']

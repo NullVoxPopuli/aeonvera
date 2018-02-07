@@ -38,6 +38,7 @@ function rundocko {
     ps)    docko-dev ps;;
     stop)  docko-dev stop $arguments;;
     up)    docko-dev up;;
+    up:build) docko-dev up --build;;
 
     # Running the App / Consoles
     run)    docko-dev run --rm web $arguments;;

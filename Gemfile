@@ -8,7 +8,7 @@ ruby '~> 2.4.0'
 # Core
 ##########
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 4.2.0'
 gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
