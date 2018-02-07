@@ -55,7 +55,18 @@ function rundocko {
     # Testing
     test)         docko-test-run $arguments;;
     test-prepare) docko-test-run rake db:schema:load;;
-    rspec)        docko-test-run bundle exec rspec $arguments ;;
+    rspec)
+      rspec_params=$arguments
+
+      if [[ -z "$rspec_params" ]]; then
+        # because specs are co-located, we need to tell rpsec
+        # where to look
+        rspec_params="spec/ app/"
+      fi
+
+      echo "running: rspec $rspec_params"
+      docko-test-run bundle exec rspec $rspec_params
+    ;;
 
     *) echo 'command not recognized';;
   esac

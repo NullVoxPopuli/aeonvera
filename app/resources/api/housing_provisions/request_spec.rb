@@ -92,7 +92,7 @@ describe Api::HousingProvisionsController, type: :request do
       xit 'selects attributes' do
         pending('rendering relationship data in csvs is broken right now...')
         get(
-          "/api/housing_provisions.csv?event_id=#{@event.id}&fields=housingCapacity,numberOfShowers,registration.attendeeName",
+          "/api/housing_provisions.csv?event_id=#{@event.id}&fields[housingProvision]=housingCapacity,numberOfShowers,registration.attendeeName",
           {},
           @headers
         )
