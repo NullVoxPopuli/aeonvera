@@ -160,6 +160,11 @@ production:
   function print_system_info() {
     set -x
     uname -a
+    echo "systemd $(which systemd)"
+    echo "upstart $(which upstart)"
+    echo "systemctl $(which systemctl)"
+    echo "initctl $(which initctl)"
+
   }
 
    function setup_docker() {
