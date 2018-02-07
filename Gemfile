@@ -8,7 +8,7 @@ ruby '~> 2.4.0'
 # Core
 ##########
 
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 5.1.4'
 gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
@@ -29,7 +29,7 @@ gem 'reform' # Non-Model Validation
 
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
-gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
+gem 'roadie', '~> 3.2.2' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
 gem 'will_paginate', '~> 3.1.0' # pagination
@@ -77,11 +77,11 @@ gem 'puma'
 ############
 # JS, CSS and Icons (For Emails)
 ############
-gem 'sass', '~> 3.3.14'
+gem 'sass', '~> 3.5.5'
 gem 'sass-rails'
 gem 'foundation-rails', '5.0.3.1'
 gem 'font-awesome-rails'
-gem 'sprockets-rails', '2.3.3'
+gem 'sprockets-rails', '3.2.1'
 gem 'uglifier' # for heroku asset precompilation. :-(
 
 #########
@@ -130,7 +130,7 @@ group :test do
   gem 'factory_girl'
 
   # Mock Stripe objects
-  gem 'stripe-ruby-mock', '~> 2.2.1', require: 'stripe_mock'
+  gem 'stripe-ruby-mock', '~> 2.5.1', require: 'stripe_mock'
 
   gem 'database_cleaner'
 
