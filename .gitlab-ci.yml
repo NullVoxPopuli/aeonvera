@@ -119,9 +119,9 @@ stages:
 
 production:
   stage: production
-  image: docker:git
+  image: gitlab/dind
   services:
-    - docker:dind
+    - docker:dind:latest
   variables:
     DOCKER_DRIVER: overlay2
   script:
