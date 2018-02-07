@@ -153,6 +153,17 @@ describe Api::OrdersController, type: :request do
       delete "/api/orders/#{order.id}", {}, auth_header_for(owner)
       expect(response.status).to eq 404
     end
+
+    it 'can download a csv' do
+      get '/api/orders.csv',
+          {
+            event_id: event.id,
+            fields: { order: 'notes,createdAt,paymentReceivedAt,paidAmount' }
+          },
+          auth_header_for(owner)
+
+      expect(response.status).to eq 200
+    end
   end
 
   context 'is logged in' do
@@ -180,15 +191,17 @@ describe Api::OrdersController, type: :request do
     context 'can create an order' do
       context 'for an organization' do
         let(:organization) { create(:organization) }
-        let(:params) { {
-          data: {
-            type: 'order',
-            attributes: {},
-            relationships: {
-              host: { data: { type: 'Organization', id: organization.id } }
+        let(:params) do
+          {
+            data: {
+              type: 'order',
+              attributes: {},
+              relationships: {
+                host: { data: { type: 'Organization', id: organization.id } }
+              }
             }
           }
-        } }
+        end
 
         it 'can create an order' do
           expect { post '/api/orders', params, auth_header_for(user) }
@@ -204,15 +217,17 @@ describe Api::OrdersController, type: :request do
 
       context 'for an event' do
         let(:event) { create(:event) }
-        let(:params) { {
-          data: {
-            type: 'order',
-            attributes: {},
-            relationships: {
-              host: { data: { type: 'Event', id: event.id } }
+        let(:params) do
+          {
+            data: {
+              type: 'order',
+              attributes: {},
+              relationships: {
+                host: { data: { type: 'Event', id: event.id } }
+              }
             }
           }
-        } }
+        end
 
         it 'is assigned the current pricing tier' do
           post '/api/orders?include=pricing_tier', params, auth_header_for(user)
@@ -257,13 +272,13 @@ describe Api::OrdersController, type: :request do
 
       context 'when buying a membership option' do
         let!(:membership_option) { create(:membership_option, host: organization, price: 25) }
-        let!(:membership_discount) {
+        let!(:membership_discount) do
           create(:membership_discount,
                  host: organization,
                  value: 7,
                  affects: LineItem::Lesson.name,
                  kind: Discount::DOLLARS_OFF)
-        }
+        end
 
         before(:each) do
           add_to_order!(order, lesson)
@@ -316,15 +331,15 @@ describe Api::OrdersController, type: :request do
         end
 
         it 'makes sure that the param input is valid for paying for an order' do
-          expect {
+          expect do
             patch "/api/orders/#{order.id}", stripe_successful_payment_params, auth_header_for(user)
-          }.to change(order, :paid)
+          end.to change(order, :paid)
         end
 
         it 'creates a membership renewal' do
-          expect {
+          expect do
             patch "/api/orders/#{order.id}", stripe_successful_payment_params, auth_header_for(user)
-          }.to change(MembershipRenewal, :count).by(1)
+          end.to change(MembershipRenewal, :count).by(1)
         end
 
         it 'makes the user a member of the organization' do
@@ -344,7 +359,7 @@ describe Api::OrdersController, type: :request do
     let(:event) { create(:event, hosted_by: owner) }
 
     context 'order has no registration' do
-      let(:registration) { create(:registration, host: event)}
+      let(:registration) { create(:registration, host: event) }
       let(:order) { create(:order, host: event) }
 
       before { StripeMock.start }
