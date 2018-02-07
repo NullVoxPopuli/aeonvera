@@ -12,7 +12,7 @@ gem 'rails', '~> 4.2.0'
 gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
 gem 'pg' # database
-gem 'attr_encrypted', '~> 1.3.0' # column encryption
+gem 'attr_encrypted', '~> 3.0.3' # column encryption
 
 # type checking
 # gem 'rtype'
