@@ -29,7 +29,7 @@ gem 'reform' # Non-Model Validation
 
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
-gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
+gem 'roadie', '~> 3.2.2' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
 gem 'will_paginate', '~> 3.1.0' # pagination
