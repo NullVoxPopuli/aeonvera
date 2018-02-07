@@ -169,6 +169,7 @@ production:
 
   function print_system_info() {
     uname -a
+    cat /etc/*-release
     echo "systemd $(which systemd)"
     echo "upstart $(which upstart)"
     echo "systemctl $(which systemctl)"
