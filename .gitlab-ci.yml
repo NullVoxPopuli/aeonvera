@@ -196,7 +196,7 @@ production:
     mkdir -p nanobox-archive
     tar -xf nanobox-2.tar.gz -C ./nanobox-archive
     cp ./nanobox-archive/usr/local/bin/* /usr/local/bin/
-    rm ./nanobox-archive
+    rm -rf ./nanobox-archive
 
     echo "nanobox is located at $(which nanobox)"
 
