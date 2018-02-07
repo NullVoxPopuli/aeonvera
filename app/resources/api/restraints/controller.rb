@@ -5,7 +5,7 @@ module Api
     self.serializer = RestraintSerializableResource
     include SkinnyControllers::Diet
 
-    before_filter :must_be_logged_in
+    before_action :must_be_logged_in
 
     def index
       render_jsonapi

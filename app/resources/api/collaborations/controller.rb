@@ -13,7 +13,7 @@ module Api
     # self.parent_resource_method = :host
     # self.association_name_for_parent_resource = :collaborations
     #
-    before_filter :must_be_logged_in
+    before_action :must_be_logged_in
     #
     #
     # def accept_invitation

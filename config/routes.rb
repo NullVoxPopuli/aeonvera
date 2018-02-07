@@ -2,13 +2,11 @@
 
 require "#{Rails.root}/app/resources/api/custom_fields/controller"
 
-AeonVera::Application.routes.draw do
+Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
 
   mount Sidekiq::Web => '/sidekiq'
-
-  mount LetterOpenerWeb::Engine, at: '/letter_opener' if Rails.env.development?
 
   # for our frontend ui.
   # this should also enable the creation of

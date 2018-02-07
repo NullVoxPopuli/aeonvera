@@ -18,7 +18,7 @@ module Api
       ]
     }
 
-    before_filter :must_be_logged_in, except: [:index, :show]
+    before_action :must_be_logged_in, except: [:index, :show]
 
     def index
       # TODO: add a `self.parent = :method` to SkinnyControllers

@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
-Rails.application.config.assets.precompile += %w[email.css]
 Rails.application.config.filter_parameters += [:password, :password_confirmation, :current_password]
 # Be sure to restart your server when you modify this file.
 Rails.application.config.session_store :disabled
+
+# Specify a serializer for the signed and encrypted cookie jars.
+# Valid options are :json, :marshal, and :hybrid.
+Rails.application.config.action_dispatch.cookies_serializer = :json
+
 
 # AeonVera::Application.config.session_store :disabled
 
@@ -14,7 +18,7 @@ Rails.application.config.session_store :disabled
 
 # Enable parameter wrapping for JSON. You can disable this by setting :format to an empty array.
 ActiveSupport.on_load(:action_controller) do
-  wrap_parameters format: [:json] if respond_to?(:wrap_parameters)
+  wrap_parameters format: [:json]
 end
 
 # To enable root element in JSON for ActiveRecord objects.

@@ -29,7 +29,26 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/web
+      - ./app:/web/app
+      - ./bin:/web/bin
+      - ./config:/web/config
+      - ./coverage:/web/coverage
+      - ./db:/web/db
+      - ./lib:/web/lib
+      - ./public:/web/public
+      - ./scripts:/web/scripts
+      - ./spec:/web/spec
+      - ./vendor/assets:/web/vendor/assets
+
+      - ./.rspec:/web/.rspec
+      - ./.rspec_parallel:/web/.rspec_parallel
+      - ./.rubocop.yml:/web/.rubocop.yml
+      - ./.ruby-version:/web/.ruby-version
+      - ./config.ru:/web/config.ru
+      - ./Gemfile:/web/Gemfile
+      - ./Gemfile.lock:/web/Gemfile.lock
+      - ./Rakefile:/web/Rakefile
+
       - ./backups:/backups
     environment:
       # simulating heroku usage

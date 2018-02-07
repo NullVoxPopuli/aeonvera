@@ -15,10 +15,10 @@ class APIController < ActionController::Base
   protect_from_forgery with: :null_session
 
   before_action :set_default_response_format
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
   # used by ember - over https in production, clear text otherwise
-  before_filter :authenticate_user_from_token!
+  before_action :authenticate_user_from_token!
   before_action :set_time_zone
 
   def error_route

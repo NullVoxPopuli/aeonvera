@@ -1,3 +1,0 @@
-h1 "Before Partial"
-render "arbre/partial_with_assignment"
-h2 "After Partial"

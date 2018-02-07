@@ -16,7 +16,7 @@ module Api
         package: PackageSerializableResource::PUBLIC_FIELDS
       }.freeze
 
-      before_filter :must_be_logged_in
+      before_action :must_be_logged_in
 
       def create
         render_jsonapi(options: { include: 'housing_request,housing_provision,custom_field_responses' })

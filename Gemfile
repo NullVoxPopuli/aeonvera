@@ -8,11 +8,11 @@ ruby '~> 2.4.0'
 # Core
 ##########
 
-gem 'rails', '~> 4.2.0'
+gem 'rails', '~> 5.1.4'
 gem 'i18n'
 gem 'rack-cors', require: 'rack/cors' # for cross-origin resource sharing
-gem 'pg' # database
-gem 'attr_encrypted', '~> 1.3.0' # column encryption
+gem 'pg', '< 1.0' # database
+gem 'attr_encrypted', '3.0.2' # column encryption
 
 # type checking
 # gem 'rtype'
@@ -29,7 +29,7 @@ gem 'reform' # Non-Model Validation
 
 gem 'paranoia', '~> 2.0' # soft deletion
 gem 'mail'
-gem 'roadie', '~> 2.4.3' # enables rails' layouts for emails
+gem 'roadie' # enables rails' layouts for emails
 gem 'ransack' # search
 gem 'rollbar'
 gem 'will_paginate', '~> 3.1.0' # pagination
@@ -74,28 +74,24 @@ gem 'date_validator'
 # fast web server
 gem 'puma'
 
-############
-# JS, CSS and Icons (For Emails)
-############
-gem 'sass', '~> 3.3.14'
-gem 'sass-rails'
-gem 'foundation-rails', '5.0.3.1'
-gem 'font-awesome-rails'
-gem 'sprockets-rails', '2.3.3'
-gem 'uglifier' # for heroku asset precompilation. :-(
-
 #########
 # Templating
 #########
 gem 'render_anywhere', require: false
 gem 'slim-rails'
-gem 'arbre'
 
 group :development do
   # list the fields in models
   gem 'annotate'
-  # capturing emails
-  gem 'letter_opener_web'
+
+  gem 'letter_opener'
+
+  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :development, :test do
@@ -142,3 +138,5 @@ group :test do
   # JSONAPI Validation
   gem 'jsonapi-parser', require: 'jsonapi/parser'
 end
+
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

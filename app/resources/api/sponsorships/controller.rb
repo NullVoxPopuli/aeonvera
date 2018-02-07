@@ -4,7 +4,7 @@ module Api
   class SponsorshipsController < Api::ResourceController
     self.serializer = SponsorshipSerializableResource
 
-    before_filter :must_be_logged_in, except: [:index]
+    before_action :must_be_logged_in, except: [:index]
 
     private
 

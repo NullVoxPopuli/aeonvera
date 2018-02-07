@@ -14,9 +14,12 @@ AeonVera::Application.configure do
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = false
 
-  # Configure static asset server for tests with Cache-Control for performance.
-  config.serve_static_files = true
-  config.static_cache_control = 'public, max-age=3600'
+  # Configure public file server for tests with Cache-Control for performance.
+  config.public_file_server.enabled = true
+  config.public_file_server.headers = {
+    'Cache-Control' => "public, max-age=#{1.hour.seconds.to_i}"
+  }
+
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
@@ -24,10 +27,6 @@ AeonVera::Application.configure do
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = true
-  config.assets.compile = true
-  config.assets.compress = false
-  config.assets.debug = false
-  config.assets.digest = false
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false

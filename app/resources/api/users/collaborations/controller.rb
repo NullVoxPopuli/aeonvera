@@ -6,7 +6,7 @@ module Api
     class CollaborationsController < APIController
       self.serializer = CollaborationSerializableResource
 
-      before_filter :must_be_logged_in
+      before_action :must_be_logged_in
 
       def update
         render_jsonapi

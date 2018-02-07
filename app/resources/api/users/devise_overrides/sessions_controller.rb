@@ -7,7 +7,7 @@ module Api
         clear_respond_to
         respond_to :json
 
-        prepend_before_filter :require_no_authentication, only: [:create]
+        prepend_before_action :require_no_authentication, only: [:create]
 
         # We have to write our own login, cause devise isn't
         # designed for API Authentication

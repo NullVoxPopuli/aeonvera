@@ -11,7 +11,7 @@ module Api
         include Controllers::ModelRendering
 
         self.serializer = UserSerializableResource
-        # skip_before_filter :authenticate_user!
+        # skip_before_action :authenticate_user!
         #
         # def create
         #   build_resource(sign_up_params)

@@ -17,6 +17,8 @@ require 'csv'
 
 module AeonVera
   class Application < Rails::Application
+    config.load_defaults 5.1
+
     # convert all yml files to {file_name}_CONFIG hashes
     Dir["#{Rails.root}/config/*.yml"].each do |file|
       file_name = File.basename(file)
@@ -33,23 +35,12 @@ module AeonVera
     config.active_job.queue_adapter = :sidekiq
 
     config.cache_store = :redis_store, ENV['REDIS_URL'] if ENV['REDIS_URL']
-    # Upgrading from rails 4.1.x to 4.2.x
-    # Currently, Active Record suppresses errors raised within
-    # `after_rollback`/`after_commit` callbacks and only print them to the logs.
-    # In the next version, these errors will no longer be suppressed.
-    # Instead, the errors will propagate normally just like in other
-    # Active Record callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
 
     config.action_view.field_error_proc = proc { |html_tag, _instance| html_tag }
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
-
-    # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
-    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'Eastern Time (US & Canada)'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.default_locale = :de
@@ -95,7 +86,7 @@ module AeonVera
     config.middleware.delete 'Rack::Lock'
     config.middleware.delete 'ActionDispatch::Static'
 
-    config.middleware.insert_before 0, 'Rack::Cors' do
+    config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
         resource '*',

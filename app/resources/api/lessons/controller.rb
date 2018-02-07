@@ -6,7 +6,7 @@ module Api
     # self.model_class = LineItem::Lesson
     # self.model_key = :lesson
 
-    before_filter :must_be_logged_in, except: [:index, :show]
+    before_action :must_be_logged_in, except: [:index, :show]
 
     private
 

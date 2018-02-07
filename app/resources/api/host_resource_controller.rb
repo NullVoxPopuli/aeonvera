@@ -3,7 +3,7 @@
 module Api
   class HostResourceController < Api::ResourceController
     # Why is index allowed via no login?
-    before_filter :must_be_logged_in, except: [:index]
+    before_action :must_be_logged_in, except: [:index]
 
     def index
       model = operation_class.new(current_user, params, index_params).run

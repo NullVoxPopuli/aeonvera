@@ -8,12 +8,12 @@ module Api
 
         respond_to :html, :json
 
-        # prepend_before_filter :logout, only: :edit
-        # skip_before_filter :require_no_authentication
-        # skip_before_filter :verify_authenticity_token
-        # skip_before_filter :authenticate_user_from_token
-        # skip_before_filter :authenticate_user!
-        # skip_before_filter :assert_reset_token_passed
+        # prepend_before_action :logout, only: :edit
+        # skip_before_action :require_no_authentication
+        # skip_before_action :verify_authenticity_token
+        # skip_before_action :authenticate_user_from_token
+        # skip_before_action :authenticate_user!
+        # skip_before_action :assert_reset_token_passed
 
         def update
           # because devise isn't meant for APIs.... :-(

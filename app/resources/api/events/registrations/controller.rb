@@ -5,7 +5,7 @@ module Api
     class RegistrationsController < ResourceController
       self.serializer = ::Api::Events::RegistrationSerializableResource
 
-      before_filter :must_be_logged_in
+      before_action :must_be_logged_in
 
       def index
         model = RegistrationOperations::ReadAll

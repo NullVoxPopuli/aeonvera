@@ -4,7 +4,7 @@ module Api
   class HostedEventsController < APIController
     self.serializer = HostedEventSerializableResource
 
-    before_filter :must_be_logged_in
+    before_action :must_be_logged_in
 
     def index
       search = current_user.hosted_and_collaborated_events.includes(

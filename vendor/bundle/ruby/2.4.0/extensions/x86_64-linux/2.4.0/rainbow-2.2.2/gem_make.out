@@ -1,5 +1,0 @@
-current directory: /web/vendor/bundle/ruby/2.4.0/gems/rainbow-2.2.2/ext
-/usr/local/bin/ruby mkrf_conf.rb
-
-current directory: /web/vendor/bundle/ruby/2.4.0/gems/rainbow-2.2.2/ext
-/usr/local/bin/ruby -rrubygems /web/vendor/bundle/ruby/2.4.0/gems/rake-12.3.0/exe/rake RUBYARCHDIR=/web/vendor/bundle/ruby/2.4.0/extensions/x86_64-linux/2.4.0/rainbow-2.2.2 RUBYLIBDIR=/web/vendor/bundle/ruby/2.4.0/extensions/x86_64-linux/2.4.0/rainbow-2.2.2
