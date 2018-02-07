@@ -164,7 +164,7 @@ production:
   }
 
   function ensure_system_dependencies_are_installed() {
-    apk add --no-cache bash curl
+    # apk add --no-cache bash curl
   }
 
   function print_system_info() {
