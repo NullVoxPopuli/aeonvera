@@ -119,9 +119,14 @@ stages:
 
 production:
   stage: production
-  image: gitlab/dind
-  services:
-    - docker:dind:latest
+  # for a smaller base image:
+  # image: docker:git
+  # however, this is alpine based.
+  # which currently isn't supported by nanobox:
+  # https://github.com/nanobox-io/nanobox/issues/645
+  image: gitlab/dind:latest
+  # services:
+  #   - docker:dind
   variables:
     DOCKER_DRIVER: overlay2
   script:
