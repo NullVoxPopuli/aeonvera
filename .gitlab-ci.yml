@@ -130,7 +130,7 @@ production:
   variables:
     DOCKER_DRIVER: overlay2
   script:
-    - ensure_system_dependencies_are_installed
+    # - ensure_system_dependencies_are_installed
     - print_system_info
     - setup_docker
     - install_nanobox
@@ -163,9 +163,9 @@ production:
     docker run ${cc_opts} codeclimate/codeclimate analyze -f json > codeclimate.json
   }
 
-  function ensure_system_dependencies_are_installed() {
-    # apk add --no-cache bash curl
-  }
+  # function ensure_system_dependencies_are_installed() {
+  #   apk add --no-cache bash curl
+  # }
 
   function print_system_info() {
     uname -a
