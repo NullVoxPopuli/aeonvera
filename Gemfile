@@ -47,7 +47,7 @@ gem 'redis-rails', '5.0.2'
 # gem 'active_model_serializers' , github: 'rails-api/active_model_serializers'
 # gem 'active_model_serializers', path: '../active_model_serializers'
 # gem 'active_model_serializers', github: 'bf4/active_model_serializers', branch: 'smarter_association_id_lookup'
-gem 'active_model_serializers', '0.10.5'
+gem 'active_model_serializers', '0.10.7'
 # held back due to JSONAPI document validations - Not every endpoint is JSONAPI
 # gem 'jsonapi-renderer', '0.1.2'
 gem 'jsonapi-rb'
