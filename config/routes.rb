@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "#{Rails.root}/app/resources/api/custom_fields/controller"
+
 AeonVera::Application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
@@ -145,6 +147,8 @@ AeonVera::Application.routes.draw do
   namespace :auth do
     get 'paypal/callback', to: 'paypal#callback'
   end
+
+  get '/_health', to: 'health_check#k8s'
 
   # redirect everything to ember
   #

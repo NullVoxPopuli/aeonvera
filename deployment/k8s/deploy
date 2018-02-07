@@ -1,0 +1,39 @@
+#!/bin/bash
+
+export CHART_NAME='app-chart'
+
+
+# The directory of the folder this script resides in
+fullPath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function deploy {
+  targetEnvironment=$1
+  releaseName=$2
+  arguments=${@:3}
+
+  if [ "$targetEnvironment" == "production" ]; then
+    releaseName=$CHART_NAME
+  fi
+
+  # Try to see if this has already been deployed
+  releaseResult=$(helm list | grep $CHART_NAME | grep $targetEnvironment)
+
+  ######################
+  # Install or Upgrade?
+  upstall="upgrade $releaseName"
+
+  # No release with the chart name found
+  if [ -z "$releaseResult"]; then
+    upstall="install --name $releaseName"
+  fi
+
+  ############
+  # Deploy!!!
+  cmd="helm $upstall $arguments -f \"$targetEnvironment-values.yaml\" $fullPath/app-chart"
+  echo "Running: $cmd"
+  eval $cmd
+}
+
+if [ $1 ]; then
+  deploy $*
+fi

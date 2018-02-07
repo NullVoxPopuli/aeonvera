@@ -8,5 +8,5 @@ staging:
   host: localhost
   port: 6379
 production:
-  host: localhost
-  port: 6379
+  host: <%= ENV['REDIS_HOST'] %>
+  port: <%= ENV['REDIS_PORT'] %>

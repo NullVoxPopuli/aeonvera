@@ -2,6 +2,12 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
+if ENV['DATA_DB_USER']
+  ENV['DATABASE_HOST'] = ENV['DATA_DB_HOST']
+  ENV['DATABASE_USERNAME'] = ENV['DATA_DB_USER']
+  ENV['DATABASE_PASSWORD'] = ENV['DATA_DB_PASS']
+  ENV['REDIS_URL'] = "redis://#{ENV['DATA_REDIS_HOST']}"
+end
 
 require 'simplecov'
 

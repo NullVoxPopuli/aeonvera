@@ -1,0 +1,6 @@
+config:
+  LEGO_SUPPORTED_INGRESS_CLASS: nginx
+  LEGO_SUPPORTED_INGRESS_PROVIDER: nginx
+  LEGO_DEFAULT_INGRESS_CLASS: nginx
+  LEGO_EMAIL: admin@aeonvera.com
+  LEGO_URL: https://acme-v01.api.letsencrypt.org/directory

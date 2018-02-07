@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Values.appname }}
+    component: {{ .Release.Name }}-web-service
+  name: {{ .Release.Name }}-web-service
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    name: insecure-port
+  selector:
+    app: {{ .Values.appname }}
+    component: {{ template "web.name" . }}
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "web.name" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    component: {{ template "web.name" . }}
+    app: {{ .Values.appname }}
+spec:
+  revisionHistoryLimit: 0
+  progressDeadlineSeconds: 300
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+      component: {{ template "web.name" . }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: {{ template "web.name" . }}
+    spec:
+      containers:
+      - name: {{ template "web.name" . }}
+        image: {{ template "docker.app.image" . }}
+        imagePullPolicy: Always
+        args:
+        - "bash"
+        - "-c"
+        - "service nginx start && bundle exec puma"
+        ports:
+        - containerPort: 80
+          name: {{ template "web.name" .}}
+          protocol: TCP
+        env: {{ indent 8 (include "RUBY_ENV" .) }}
+        resources:
+          requests:
+            memory: 1G
+            cpu: 100m
+          limits:
+            memory: 1.5G
+            cpu: 600m

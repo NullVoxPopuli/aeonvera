@@ -1,0 +1,39 @@
+{{- $sidekiq_name := printf "sidekiq" }}
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.appname }}
+    component: {{ $sidekiq_name }}
+  name: {{ $sidekiq_name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  revisionHistoryLimit: 0
+  progressDeadlineSeconds: 300
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+      component: {{ $sidekiq_name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        component: {{ $sidekiq_name }}
+    spec:
+      containers:
+      - name: {{ $sidekiq_name }}
+        image: {{ template "docker.app.image" . }}
+        imagePullPolicy: Always
+        args: ["bash", "-c", "bundle exec sidekiq" ]
+        env: {{ indent 8 (include "RUBY_ENV" .) }}
+        resources:
+          requests:
+            memory: 0.1G
+            cpu: 20m
+          limits:
+            memory: 3G
+            cpu: 1000m

@@ -1,0 +1,33 @@
+# Default values for rlife-helm-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+#
+# override any of these by specifying -f in the helm install command.
+# e.g.:
+#      helm install --f ci-values.yaml ./rlife-helm-chart
+#      helm install --dry-run --debug -f ci-values.yaml ./rlife-helm-chart
+appname: aeonvera
+namespace: ci
+domain: 'ci.aeonvera.com'
+registry: ""
+tag: develop
+
+
+env:
+  RAILS_ENV: development
+
+  db:
+    # DATABASE_PASSWORD should be set in the secret from the k8s dashboard
+
+  rails:
+    # SECRET_KEY_BASE should be set in the secret from the k8s dashboard
+    # DEVISE_SECRET_KEY should be set in the secret from the k8s dashboard
+
+  aws:
+    S3_BUCKET: ''
+    # AWS_ACCESS_KEY_ID should be set in the secret from the k8s dashboard
+    # AWS_SECRET_ACCESS_KEY should be set in the secret from the k8s dashboard
+
+  rollbar:
+    ROLLBAR_CLIENT_TOKEN: ''
+    # ROLLBAR_SERVER_TOKEN should be set in the secret from the k8s dashboard

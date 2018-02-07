@@ -13,10 +13,14 @@ RUN mkdir /web
 
 WORKDIR /web
 
-ADD Gemfile /web/Gemfile
-ADD Gemfile.lock /web/Gemfile.lock
-RUN bundle install
+ENV BUNDLE_PATH=vendor/bundle
+ENV BUNDLE_DISABLE_SHARED_GEMS=1
 
-ADD . /web
+COPY Gemfile /web/Gemfile
+COPY Gemfile.lock /web/Gemfile.lock
+COPY vendor /web/vendor
+RUN bundle install --path /web/vendor/bundle
+
+COPY . /web
 
 #CMD bundle exec rails s -p 3000
