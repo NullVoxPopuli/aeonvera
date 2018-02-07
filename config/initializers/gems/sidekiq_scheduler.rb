@@ -8,7 +8,7 @@ puts "Sidekiq.server? is #{Sidekiq.server?.inspect}"
 puts "defined?(Rails::Server) is #{defined?(Rails::Server).inspect}"
 puts "defined?(Unicorn) is #{defined?(Unicorn).inspect}"
 puts "defined?(Puma) is #{defined?(Puma).inspect}"
-
+puts ENV['REDIS_HOST']
 Sidekiq::Scheduler.enabled = true
 Sidekiq::Scheduler.dynamic = true
 

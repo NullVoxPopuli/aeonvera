@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Be sure to have 'nanobox tunnel data.db' running".
+pg_restore --verbose --clean --no-acl --no-owner --host localhost --username nanobox --dbname aeonvera_production $1

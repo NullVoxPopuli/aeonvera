@@ -1,0 +1,12 @@
+.DS_Store
+pkg
+.*~
+.yardoc
+
+.rspec
+.idea/*
+.rvmrc
+
+Gemfile.lock
+doc
+tmp

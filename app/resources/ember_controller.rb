@@ -4,7 +4,7 @@
 class EmberController < ActionController::Base
   def index
     # get ember from redis
-    ember_index = APICache.store.get('aeonvera:index:current-content')
+    ember_index = Cache.get('aeonvera:index:current-content')
 
     raise StandardError, 'Ember not deployed!!!' unless ember_index
 

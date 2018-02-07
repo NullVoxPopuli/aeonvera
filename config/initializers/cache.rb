@@ -1,51 +1,54 @@
 # frozen_string_literal: true
 
-# Globally set up redis
+# 'Globally' set up redis
 redis = nil
+
 if ENV['REDIS_URL'].present?
   config = URI.parse(ENV['REDIS_URL'])
   redis = Redis.new(host: config.host, port: config.port, password: config.password)
 else
-  config = YAML.load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
+  config = YAML.safe_load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
   redis = Redis.new(host: config['host'], port: config['port'])
 end
 
 begin
   redis.ping
   puts 'Connection to Redis Caching Server Established'
-  APICache.store = APICache::RedisStore.new(redis)
-rescue => e
+rescue
   # ping throws an exception if redis doesn't exist or the host / port are wrong
-  puts "Redis Server not found, using MemoryStore: #{e.message}."
-  # switch to a MemoryStore if redis is not available
-  APICache.store = APICache::MemoryStore.new
+  puts 'Redis Server not found. Please run/configure redis.'
 end
 
 # this wrapper is just for error handeling
 module Cache
-  def self.set(key, value)
-    APICache.store.set(key, Marshal.dump(value))
-  rescue => e
-    return false
-  end
+  class << self
 
-  def self.delete(key)
-    APICache.store.delete(key)
-  rescue
-    return false
-  end
+    def set(key, value)
+      redis.set(key, Marshal.dump(value))
 
-  def self.get(key)
-    result = APICache.store.get(key)
-    return Marshal.load(result) if result && !result.empty?
-  rescue => e
-    return false
-  end
+      true
+    rescue
+      false
+    end
 
-  def self.expire(key, seconds)
-    result = APICache.store.expire(key, seconds)
-    return result
-  rescue => e
-    return false
+    def delete(key)
+      redis.del(key)
+    rescue
+      false
+    end
+
+    def get(key)
+      result = redis.get(key)
+
+      return Marshal.load(result) if result && !result.empty?
+    rescue
+      false
+    end
+
+    def expire(key, seconds)
+      return redis.expire(key, seconds)
+    rescue
+      false
+    end
   end
 end

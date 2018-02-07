@@ -1,0 +1,26 @@
+namespace: production
+domain: 'aeonvera.com'
+registry: "us.gcr.io/precognition-168700/aeonvera-api"
+tag: master
+
+secrets-name: 'production-secrets'
+
+env:
+  RAILS_ENV: production
+
+  db:
+    # DATABASE_PASSWORD should be set in the secret from the k8s dashboard
+    # DATABASE_URL
+
+  rails:
+    # SECRET_KEY_BASE should be set in the secret from the k8s dashboard
+    # DEVISE_SECRET_KEY should be set in the secret from the k8s dashboard
+
+  aws:
+    S3_BUCKET: 'aeonvera-production'
+    # AWS_ACCESS_KEY_ID should be set in the secret from the k8s dashboard
+    # AWS_SECRET_ACCESS_KEY should be set in the secret from the k8s dashboard
+
+  rollbar:
+    ROLLBAR_CLIENT_TOKEN: ''
+    # ROLLBAR_SERVER_TOKEN should be set in the secret from the k8s dashboard

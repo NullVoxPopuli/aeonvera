@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Adapting for NanoBox
+ENV['REDIS_URL'] ||= "redis://#{ENV['DATA_REDIS_HOST']}"
+
 workers Integer(ENV['WEB_CONCURRENCY'] || 1)
 threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count
@@ -7,7 +10,8 @@ threads threads_count, threads_count
 preload_app!
 
 rackup      DefaultRackup
-port        ENV['PORT']     || 3000
+# Don't need a port because of running on a socket
+# port        ENV['PORT']     || 3000
 environment ENV['RACK_ENV'] || 'development'
 
 # Because we are using preload_app, an instance of our app is created by master process (calling our initializers) and then memory space
