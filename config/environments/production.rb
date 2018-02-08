@@ -22,16 +22,6 @@ AeonVera::Application.configure do
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
   # config.action_dispatch.rack_cache = true
 
-  # Compress JavaScripts and CSS.
-  # config.assets.js_compressor = :uglifier
-  # config.assets.css_compressor = :sass
-
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
-
-  # Generate digests for assets URLs.
-  config.assets.digest = false
-
 
   # Set to :debug to see everything in the log.
   config.log_level = :debug
@@ -66,8 +56,6 @@ AeonVera::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   config.action_mailer.default_url_options = { host: 'aeonvera.com' }
-
-  config.roadie.provider = Roadie::FilesystemProvider.new('/assets', Rails.root.join('public', 'assets'))
 
   ActionMailer::Base.smtp_settings = {
     port: '587',

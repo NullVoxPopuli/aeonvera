@@ -43,6 +43,7 @@ web.main:
     - tmp
     - log
     - sockets
+    - public
 
   # the path to a logfile you want streamed to the nanobox dashboard
   log_watch:

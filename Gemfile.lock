@@ -605,8 +605,6 @@ GEM
     concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
     crass (1.0.3)
-    css_parser (1.6.0)
-      addressable
     dante (0.2.0)
     database_cleaner (1.6.2)
     date_validator (0.9.0)
@@ -827,9 +825,6 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    roadie (3.2.2)
-      css_parser (~> 1.4)
-      nokogiri (~> 1.5)
     rollbar (2.15.5)
       multi_json
     rspec (3.7.0)
@@ -974,7 +969,6 @@ DEPENDENCIES
   redis-rails (= 5.0.2)
   reform
   render_anywhere
-  roadie
   rollbar
   rspec
   rspec-rails
