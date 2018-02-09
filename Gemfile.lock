@@ -161,7 +161,7 @@ GEM
       activesupport (>= 4.2, < 5.2)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.9.3)
+    i18n (0.9.4)
       concurrent-ruby (~> 1.0)
     inflecto (0.0.2)
     jimson-temp (0.9.5)
