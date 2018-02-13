@@ -24,10 +24,6 @@ deploy.config:
 # PG DB
 data.db:
   image: nanobox/postgresql
-  cron:
-    - id: backup
-      schedule: '0 3 * * *'
-      command: 'bash /app/deployment/production/backup-db'
 
 # CACHE
 data.redis:

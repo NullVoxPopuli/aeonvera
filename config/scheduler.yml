@@ -7,3 +7,8 @@ OrderCleanupJob:
   every: ["1d"]
   queue: daemons
   description: "Cleans invalid and old orders"
+
+DatabaseBackupJob:
+  cron: '0 0 * * * *'
+  queue: daemons
+  description: "Back up the database"

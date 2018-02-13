@@ -1,4 +1,16 @@
+FROM golang:1.7.3 as go
+
 FROM ruby:2.4
+# Set environment variables.
+RUN mkdir -p /goroot && mkdir -p /gopath
+
+ENV GOROOT /goroot
+ENV GOPATH /gopath
+ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
+COPY --from=go /gopath /gopath
+COPY --from=go /goroot /goroot
+
+RUN go get github.com/prasmussen/gdrive
 
 USER root
 
