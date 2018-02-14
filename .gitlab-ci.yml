@@ -125,6 +125,8 @@ production:
   # which currently isn't supported by nanobox:
   # https://github.com/nanobox-io/nanobox/issues/645
   image: ubuntu:16.04
+  tags:
+    - docker
   services:
     - docker:dind
   variables:
