@@ -124,9 +124,10 @@ production:
   # however, this is alpine based.
   # which currently isn't supported by nanobox:
   # https://github.com/nanobox-io/nanobox/issues/645
-  image: ubuntu:16.04
+  # image: ubuntu:16.04
   tags:
     - docker
+    - linux
   services:
     - docker:dind
   variables:
