@@ -1,0 +1,9 @@
+.git
+/backups
+/coverage
+/log
+/tmp
+/.env
+/scripts/ci
+/deployment/k8s
+/deployment/local-dev

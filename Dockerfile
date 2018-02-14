@@ -1,18 +1,20 @@
-FROM golang:1.7.3 as go
-
 FROM ruby:2.4
-# Set environment variables.
-RUN mkdir -p /goroot && mkdir -p /gopath
 
-ENV GOROOT /goroot
-ENV GOPATH /gopath
+USER root
+
+# Go is for interacting with Google Drive
+ENV GOROOT /go
+ENV GOPATH /go/packages
+ENV GO_FILE "go1.9.3.linux-amd64.tar.gz"
+RUN \
+  mkdir -p $GOROOT && mkdir -p $GOPATH && \
+  wget https://dl.google.com/go/$GO_FILE && \
+  tar -C / -xzf $GO_FILE
+
 ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
-COPY --from=go /gopath /gopath
-COPY --from=go /goroot /goroot
 
 RUN go get github.com/prasmussen/gdrive
 
-USER root
 
 # Install postgres so we can restore from backups using pg_restore
 RUN \
