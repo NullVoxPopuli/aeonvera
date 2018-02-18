@@ -57,8 +57,10 @@ gem 'oj_mimic_json'
 gem 'stripe' # Stripe Payment Processing
 
 # Uploads
-gem 'paperclip', '~> 5.0.0.beta2'
-gem 'aws-sdk' # Upload Storage on S3
+gem 'aws-sdk', '< 3'
+gem 'paperclip', '> 5.0.0.beta2'
+
+# gem 'aws-sdk' # Upload Storage on S3
 
 # validation
 gem 'date_validator'

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -58,12 +59,12 @@ class User < ApplicationRecord
   has_many :registrations, foreign_key: 'attendee_id'
   has_many :attended_events, through: :registrations, source: :host
 
+  has_many :collaborations
   has_many :collaborated_events, through: :collaborations, source: :collaborated, source_type: Event.name
   has_many :collaborated_organizations,
            through: :collaborations,
            source: :collaborated,
            source_type: Organization.name
-  has_many :collaborations
 
   has_many :membership_renewals
   has_many :memberships, through: :membership_renewals, source: :membership_option
