@@ -39,6 +39,7 @@ services:
       - ./scripts:/web/scripts
       - ./spec:/web/spec
       - ./vendor/assets:/web/vendor/assets
+      - ./tmp:/web/tmp
 
       - ./.rspec:/web/.rspec
       - ./.rspec_parallel:/web/.rspec_parallel

@@ -28,7 +28,9 @@ class Integration < ApplicationRecord
   # TODO: fix/upgrade need iv column :-\
   attr_encrypted :config, key: ENCRYPTION_KEY,
                           marshal: true,
-                          insecure_mode: true
+                          insecure_mode: true,
+                          algorithm: 'aes-256-cbc',
+                          mode: :single_iv_and_salt
 
   STRIPE = 'stripe'
   PAYPAL = 'paypal'
